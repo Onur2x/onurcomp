@@ -15,12 +15,11 @@ uses
 
 
 type
-  TONButtonState      = (bsuzerinde, bsbasili, bsnormal);
+  TONButtonState      = (bshover, bspressed, bsnormal);
   //  TONCheckState       = (bsChecked, bspasif);
   //  TONSwichState       = (Fon, Foff);
-  TONProgressState    = (Fyatay, Fdikey);
-//  TONScrollSatte    = (Fyatay, Fdikey);
-  TONScroll           = (asa,yuk);
+  TONProgressState    = (Fhorizontal, Fvertical);
+  TONScroll           = (FDown,FUp);
   TONMouseEvent       = procedure(Msg: TWMMouse) of object;
   TONMouseOverEvent   = procedure(Sender: TObject) of object;
   TONMouseOutEvent    = procedure(Sender: TObject) of object;
@@ -39,13 +38,13 @@ type
 
   TONCustomCrop = class(TPersistent)//(TonPersistent)
   private
-    FSSOL, FSUST, FSSAG, FSALT: integer;
+    FSleft, FSTop, FSright, FSBottom: integer;
     cropname:string;
   published
-    property OLEFT: integer read FSSOL write FSSOL;
-    property OTOP: integer read FSUST write FSUST;
-    property ORIGHT: integer read FSSAG write FSSAG;
-    property OBOTTOM: integer read FSALT write FSALT;
+    property OLEFT   : integer read FSleft   write FSleft;
+    property OTOP    : integer read FSTop    write FSTop;
+    property ORIGHT  : integer read FSright  write FSright;
+    property OBOTTOM : integer read FSBottom write FSBottom;
   end;
 
 
@@ -53,20 +52,19 @@ type
     Fimage : TBGRABitmap;
     FRes   : TPicture;
     List   : TStringList;
-
-    procedure Resimayarla(Sender: TObject);
+    procedure ImageSet(Sender: TObject);
   public
     constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-    procedure Readskins(formm: TForm);
-    procedure ReadskinsComp(Com:TComponent);
-    property Images: TBGRABitmap read Fimage write Fimage;
+    destructor  Destroy; override;
+    procedure   Readskins(formm: TForm);
+    procedure   ReadskinsComp(Com:TComponent);
+    property    Images  : TBGRABitmap read Fimage write Fimage;
   published
-    property Picture: TPicture read FRes write FRes;
+    property    Picture : TPicture    read FRes   write FRes;
   end;
 
   TONFrom = class(Tcomponent)
-    fromm     :TForm;
+    fromm     : TForm;
     FSkindata : TONImg;
     FSol, FSolust, FSolalt, FSag, FSagust, FSagalt, FUst, FAlt, FOrta: TONCUSTOMCROP;
     procedure SetSkindata(Aimg: TONImg);
@@ -77,20 +75,19 @@ type
 //    procedure paint; override;
   published
     property Skindata: TONImg  read FSkindata write SetSkindata;
-//    property Picture: TPicture read FRes write FRes;
-  end;
+   end;
+
   TONGraphicControl = class(TGraphicControl)
   private
-    FCaption: string;
-    FFont: TFont;
-    Fcrop: boolean;
-    FAlignment: TAlignment;
-    Fresim: TBGRABitmap;// TBitmap32;
-    FSkindata: TONImg;
-    WindowRgn: HRGN;
-
-    FOnMouseEnter: TNotifyEvent;
-    FOnMouseLeave: TNotifyEvent;
+    FCaption      : string;
+    FFont         : TFont;
+    Fcrop         : boolean;
+    FAlignment    : TAlignment;
+    Fresim        : TBGRABitmap;
+    FSkindata     : TONImg;
+    WindowRgn     : HRGN;
+    FOnMouseEnter : TNotifyEvent;
+    FOnMouseLeave : TNotifyEvent;
     procedure CMMouseEnter(var Message: TMessage); message CM_MOUSEENTER;
     procedure CMMouseLeave(var Message: TMessage); message CM_MOUSELEAVE;
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
@@ -99,7 +96,6 @@ type
     procedure SetFont(const Value: TFont);
     procedure SetCrop(Value: boolean);
     procedure SetAlignment(const Value: TAlignment);
-//    procedure SetSkindata(Aimg: TONImg);
     function GetTransparent: boolean;
     procedure SetTransparent(NewTransparent: boolean);
   public
@@ -160,14 +156,13 @@ type
 
   TONControl = class(TCustomControl)
   private
-    FCaption: string;
-    FFont: TFont;
-    Fcrop: boolean;
-    FAlignment: TAlignment;
-    Fresim: TBGRABitmap;// TBitmap32;
-    FSkindata: TONImg;
-    WindowRgn: HRGN;
-
+    FCaption   : string;
+    FFont      : TFont;
+    Fcrop      : boolean;
+    FAlignment : TAlignment;
+    Fresim     : TBGRABitmap;
+    FSkindata  : TONImg;
+    WindowRgn  : HRGN;
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     procedure CreateParams(var Params: TCreateParams);
     procedure SetCaption(Value: string);
@@ -318,30 +313,28 @@ type
     property OnStartDock;
     property OnStartDrag;
     property OnUnDock;
-    property ONLEFT: TONCUSTOMCROP read FSol write FSol;
-    property ONRIGHT: TONCUSTOMCROP read FSag write FSag;
-    property ONCENTER: TONCUSTOMCROP read FOrta write FOrta;
-    property ONBOTTOM: TONCUSTOMCROP read FAlt write FAlt;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FSolalt write FSolalt;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FSagalt write FSagalt;
-    property ONTOP: TONCUSTOMCROP read FUst write FUst;
-    property ONTOPLEFT: TONCUSTOMCROP read FSolust write FSolust;
-    property ONTOPRIGHT: TONCUSTOMCROP read FSagust write FSagust;
+    property ONLEFT        : TONCUSTOMCROP read FSol     write FSol;
+    property ONRIGHT       : TONCUSTOMCROP read FSag     write FSag;
+    property ONCENTER      : TONCUSTOMCROP read FOrta    write FOrta;
+    property ONBOTTOM      : TONCUSTOMCROP read FAlt     write FAlt;
+    property ONBOTTOMLEFT  : TONCUSTOMCROP read FSolalt  write FSolalt;
+    property ONBOTTOMRIGHT : TONCUSTOMCROP read FSagalt  write FSagalt;
+    property ONTOP         : TONCUSTOMCROP read FUst     write FUst;
+    property ONTOPLEFT     : TONCUSTOMCROP read FSolust  write FSolust;
+    property ONTOPRIGHT    : TONCUSTOMCROP read FSagust  write FSagust;
 //    property Skindata;
   end;
 
 type
   TOnCurrencyEdit = class(TCustomMemo)
   private
-    DispFormat: string;
-    FieldValue: extended;
-    FDecimalPlaces: word;
-    FPosColor: TColor;
-
-    FNegColor: TColor;
+    DispFormat     : string;
+    FieldValue     : extended;
+    FDecimalPlaces : word;
+    FPosColor      : TColor;
+    FNegColor      : TColor;
     procedure SetFormat(A: string);
     procedure SetFieldValue(A: extended);
-
     procedure SetDecimalPlaces(A: word);
     procedure SetPosColor(A: TColor);
     procedure SetNegColor(A: TColor);
@@ -387,7 +380,6 @@ type
     property OnEnter;
     property OnExit;
     property OnKeyDown;
-
     property OnKeyPress;
     property OnKeyUp;
     property OnMouseDown;
@@ -399,11 +391,11 @@ type
 
   TONCustomComboBoxe = class(TCustomComboBox)
   private
-    Fbuttonimage: TPicture;
-    FForceDrawFocused: boolean;
-    FMouseInControl: boolean;
-    FOnPaint: TOnPaintEvent;
-    FCustomProperty: string;
+    Fbuttonimage       : TPicture;
+    FForceDrawFocused  : boolean;
+    FMouseInControl    : boolean;
+    FOnPaint           : TOnPaintEvent;
+    FCustomProperty    : string;
     procedure CNCommand(var Message: TWMCommand); message CN_COMMAND;
     procedure PaintCombo;
     procedure ReplaceInvalidateInQueueByRefresh;
@@ -565,16 +557,16 @@ type
     property OnStartDock;
     property OnStartDrag;
     property OnUnDock;
-    property ONLEFT: TONCUSTOMCROP read FSol write FSol;
-    property ONRIGHT: TONCUSTOMCROP read FSag write FSag;
-    property ONCENTER: TONCUSTOMCROP read FOrta write FOrta;
-    property ONBOTTOM: TONCUSTOMCROP read FAlt write FAlt;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FSolalt write FSolalt;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FSagalt write FSagalt;
-    property ONTOP: TONCUSTOMCROP read FUst write FUst;
-    property ONTOPLEFT: TONCUSTOMCROP read FSolust write FSolust;
-    property ONTOPRIGHT: TONCUSTOMCROP read FSagust write FSagust;
-    property ONBUTTON: TONCUSTOMCROP read Fbuton write Fbuton;
+    property ONLEFT        : TONCUSTOMCROP read FSol    write FSol;
+    property ONRIGHT       : TONCUSTOMCROP read FSag    write FSag;
+    property ONCENTER      : TONCUSTOMCROP read FOrta   write FOrta;
+    property ONBOTTOM      : TONCUSTOMCROP read FAlt    write FAlt;
+    property ONBOTTOMLEFT  : TONCUSTOMCROP read FSolalt write FSolalt;
+    property ONBOTTOMRIGHT : TONCUSTOMCROP read FSagalt write FSagalt;
+    property ONTOP         : TONCUSTOMCROP read FUst    write FUst;
+    property ONTOPLEFT     : TONCUSTOMCROP read FSolust write FSolust;
+    property ONTOPRIGHT    : TONCUSTOMCROP read FSagust write FSagust;
+    property ONBUTTON      : TONCUSTOMCROP read Fbuton  write Fbuton;
 
   end;
 
@@ -589,16 +581,25 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Clear;
-    property AutoSelect: boolean read FAutoSelect write FAutoSelect default True;
-    property AutoSelected: boolean read FAutoSelected write FAutoSelected;
+    property AutoSelect   : boolean read FAutoSelect   write FAutoSelect default True;
+    property AutoSelected : boolean read FAutoSelected write FAutoSelected;
     property ParentColor default False;
     procedure SetReadonly(Value: boolean);
     procedure SelectAll;
     procedure Paint override;
   published
-    property Skindata: TONImg  read FSkindata write SetSkindata;
-    property Editi: TEdit read fedit write fEdit;
-    property ReadOnly: boolean read Freadonly write SetReadOnly default False;
+    property Skindata      : TONImg        read FSkindata write SetSkindata;
+    property Editi         : TEdit         read fedit     write fEdit;
+    property ReadOnly      : boolean       read Freadonly write SetReadOnly default False;
+    property ONLEFT        : TONCUSTOMCROP read FSol      write FSol;
+    property ONRIGHT       : TONCUSTOMCROP read FSag      write FSag;
+    property ONCENTER      : TONCUSTOMCROP read FOrta     write FOrta;
+    property ONBOTTOM      : TONCUSTOMCROP read FAlt      write FAlt;
+    property ONBOTTOMLEFT  : TONCUSTOMCROP read FSolalt   write FSolalt;
+    property ONBOTTOMRIGHT : TONCUSTOMCROP read FSagalt   write FSagalt;
+    property ONTOP         : TONCUSTOMCROP read FUst      write FUst;
+    property ONTOPLEFT     : TONCUSTOMCROP read FSolust   write FSolust;
+    property ONTOPRIGHT    : TONCUSTOMCROP read FSagust   write FSagust;
     property TabOrder;
     property TabStop default True;
     property OnKeyDown;
@@ -608,7 +609,6 @@ type
     property Alignment;
     property Anchors;
     property AutoSize default True;
-
     property BorderSpacing;
     property BidiMode;
     property BorderWidth;
@@ -661,16 +661,6 @@ type
     property OnStartDock;
     property OnStartDrag;
     property OnUnDock;
-    property ONLEFT: TONCUSTOMCROP read FSol write FSol;
-    property ONRIGHT: TONCUSTOMCROP read FSag write FSag;
-    property ONCENTER: TONCUSTOMCROP read FOrta write FOrta;
-    property ONBOTTOM: TONCUSTOMCROP read FAlt write FAlt;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FSolalt write FSolalt;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FSagalt write FSagalt;
-    property ONTOP: TONCUSTOMCROP read FUst write FUst;
-    property ONTOPLEFT: TONCUSTOMCROP read FSolust write FSolust;
-    property ONTOPRIGHT: TONCUSTOMCROP read FSagust write FSagust;
-
   end;
 
   TONCURREDIT = class(TONControl)
@@ -684,8 +674,17 @@ type
     destructor Destroy; override;
     procedure Paint override;
   published
-    property Skindata: TONImg  read FSkindata write SetSkindata;
-    property Editi: TOnCurrencyEdit read fedit write fEdit;
+    property Skindata      : TONImg        read FSkindata write SetSkindata;
+    property Editi         : TOnCurrencyEdit read fedit write fEdit;
+    property ONLEFT        : TONCUSTOMCROP read FSol      write FSol;
+    property ONRIGHT       : TONCUSTOMCROP read FSag      write FSag;
+    property ONCENTER      : TONCUSTOMCROP read FOrta     write FOrta;
+    property ONBOTTOM      : TONCUSTOMCROP read FAlt      write FAlt;
+    property ONBOTTOMLEFT  : TONCUSTOMCROP read FSolalt   write FSolalt;
+    property ONBOTTOMRIGHT : TONCUSTOMCROP read FSagalt   write FSagalt;
+    property ONTOP         : TONCUSTOMCROP read FUst      write FUst;
+    property ONTOPLEFT     : TONCUSTOMCROP read FSolust   write FSolust;
+    property ONTOPRIGHT    : TONCUSTOMCROP read FSagust   write FSagust;
     property Align;
     property Alignment;
     property Anchors;
@@ -746,15 +745,6 @@ type
     property OnStartDock;
     property OnStartDrag;
     property OnUnDock;
-    property ONLEFT: TONCUSTOMCROP read FSol write FSol;
-    property ONRIGHT: TONCUSTOMCROP read FSag write FSag;
-    property ONCENTER: TONCUSTOMCROP read FOrta write FOrta;
-    property ONBOTTOM: TONCUSTOMCROP read FAlt write FAlt;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FSolalt write FSolalt;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FSagalt write FSagalt;
-    property ONTOP: TONCUSTOMCROP read FUst write FUst;
-    property ONTOPLEFT: TONCUSTOMCROP read FSolust write FSolust;
-    property ONTOPRIGHT: TONCUSTOMCROP read FSagust write FSagust;
     property OnKeyDown;
     property OnKeyPress;
     property OnKeyUp;
@@ -776,8 +766,18 @@ type
     procedure Paint override;
     //    property Editi:Toeditt read Edit1;
   published
-    property memoo: Tmemo read Fmemo write Fmemo;
-    property Skindata: TONImg  read FSkindata write SetSkindata;
+    property memoo         : Tmemo         read Fmemo     write Fmemo;
+    property Skindata      : TONImg        read FSkindata write SetSkindata;
+    property ONLEFT        : TONCUSTOMCROP read FSol      write FSol;
+    property ONRIGHT       : TONCUSTOMCROP read FSag      write FSag;
+    property ONCENTER      : TONCUSTOMCROP read FOrta     write FOrta;
+    property ONBOTTOM      : TONCUSTOMCROP read FAlt      write FAlt;
+    property ONBOTTOMLEFT  : TONCUSTOMCROP read FSolalt   write FSolalt;
+    property ONBOTTOMRIGHT : TONCUSTOMCROP read FSagalt   write FSagalt;
+    property ONTOP         : TONCUSTOMCROP read FUst      write FUst;
+    property ONTOPLEFT     : TONCUSTOMCROP read FSolust   write FSolust;
+    property ONTOPRIGHT    : TONCUSTOMCROP read FSagust   write FSagust;
+
     property OnKeyDown;
     property OnKeyPress;
     property OnKeyUp;
@@ -841,16 +841,6 @@ type
     property OnStartDock;
     property OnStartDrag;
     property OnUnDock;
-    property ONLEFT: TONCUSTOMCROP read FSol write FSol;
-    property ONRIGHT: TONCUSTOMCROP read FSag write FSag;
-    property ONCENTER: TONCUSTOMCROP read FOrta write FOrta;
-    property ONBOTTOM: TONCUSTOMCROP read FAlt write FAlt;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FSolalt write FSolalt;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FSagalt write FSagalt;
-    property ONTOP: TONCUSTOMCROP read FUst write FUst;
-    property ONTOPLEFT: TONCUSTOMCROP read FSolust write FSolust;
-    property ONTOPRIGHT: TONCUSTOMCROP read FSagust write FSagust;
-//    property Skindata;
   end;
 
   TOnGroupBox = class(TOnControl)
@@ -866,16 +856,16 @@ type
   protected
 
   published
-    property Skindata: TONImg  read FSkindata write SetSkindata;
-    property ONLEFT: TONCUSTOMCROP read FSol write FSol;
-    property ONRIGHT: TONCUSTOMCROP read FSag write FSag;
-    property ONCENTER: TONCUSTOMCROP read FOrta write FOrta;
-    property ONBOTTOM: TONCUSTOMCROP read FAlt write FAlt;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FSolalt write FSolalt;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FSagalt write FSagalt;
-    property ONTOP: TONCUSTOMCROP read FUst write FUst;
-    property ONTOPLEFT: TONCUSTOMCROP read FSolust write FSolust;
-    property ONTOPRIGHT: TONCUSTOMCROP read FSagust write FSagust;
+    property Skindata      : TONImg        read FSkindata write SetSkindata;
+    property ONLEFT        : TONCUSTOMCROP read FSol      write FSol;
+    property ONRIGHT       : TONCUSTOMCROP read FSag      write FSag;
+    property ONCENTER      : TONCUSTOMCROP read FOrta     write FOrta;
+    property ONBOTTOM      : TONCUSTOMCROP read FAlt      write FAlt;
+    property ONBOTTOMLEFT  : TONCUSTOMCROP read FSolalt   write FSolalt;
+    property ONBOTTOMRIGHT : TONCUSTOMCROP read FSagalt   write FSagalt;
+    property ONTOP         : TONCUSTOMCROP read FUst      write FUst;
+    property ONTOPLEFT     : TONCUSTOMCROP read FSolust   write FSolust;
+    property ONTOPRIGHT    : TONCUSTOMCROP read FSagust   write FSagust;
     property Align;
     property Alignment;
     property Anchors;
@@ -946,8 +936,7 @@ type
   TONCropButton = class(TOnControl)
   private
     FNormal, FBasili, FUzerinde, FPasif: TONCUSTOMCROP;
-    FDurum: TONButtonState;
-    //     DR                : TRect;
+    FDurum: TONButtonState;       //     DR                : TRect;
     FAutoWidth: boolean;
     procedure SetSkindata(Aimg: TONImg);
   protected
@@ -970,16 +959,15 @@ type
     property Skindata: TONImg  read FSkindata write SetSkindata;
     property AutoWidth: boolean
       read FAutoWidth write SetAutoWidth default True;
-    property ONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-    property ONBASILI: TONCUSTOMCROP read FBasili write FBasili;
-    property ONUZERINDE: TONCUSTOMCROP read FUzerinde write FUzerinde;
-    property ONPASIF: TONCUSTOMCROP read FPasif write FPasif;
+    property ONNORMAL  : TONCUSTOMCROP read FNormal   write FNormal;
+    property ONPRESSED : TONCUSTOMCROP read FBasili   write FBasili;
+    property ONHOVER   : TONCUSTOMCROP read FUzerinde write FUzerinde;
+    property ONPASIF   : TONCUSTOMCROP read FPasif    write FPasif;
 
     property OnMouseDown;
     property OnMouseEnter;
     property OnMouseLeave;
     property OnMouseUp;
-//    property Skindata;
     property OnMouseMove;
     property OnClick;
     property Align;
@@ -1031,10 +1019,10 @@ type
 
   published
     { Published declarations }
-    property ONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-    property ONBASILI: TONCUSTOMCROP read FBasili write FBasili;
-    property ONUZERINDE: TONCUSTOMCROP read FUzerinde write FUzerinde;
-    property ONPASIF: TONCUSTOMCROP read FPasif write FPasif;
+    property ONNORMAL  : TONCUSTOMCROP read FNormal write FNormal;
+    property ONPRESSED : TONCUSTOMCROP read FBasili write FBasili;
+    property ONHOVER   : TONCUSTOMCROP read FUzerinde write FUzerinde;
+    property ONPASIF   : TONCUSTOMCROP read FPasif write FPasif;
     property OnMouseDown;
     property OnMouseEnter;//  : TOnMouseEvent read FOnMouseEnter write FOnMouseEnter;
     property OnMouseLeave;//  : TOnMouseEvent read FOnMouseLeave write FOnMouseLeave;
@@ -1103,7 +1091,7 @@ type
   published
     { Published declarations }
     property ONNORMAL      : TONCUSTOMCROP read FNormal write FNormal;
-    property ONBASILI      : TONCUSTOMCROP read FBasili write FBasili;
+    property ONPRESSED     : TONCUSTOMCROP read FBasili write FBasili;
     property ONPASIFNORMAL : TONCUSTOMCROP read FPasifnormal write FPasifnormal;
     property ONPASIFCHECK  : TONCUSTOMCROP read FPasifcheck write FPasifcheck;
     property OnMouseDown;//     : TOnMouseEvent read FOnMouseDown   write FOnMouseDown;
@@ -1198,10 +1186,10 @@ type
     procedure CMHittest(var msg: TCMHittest); message CM_HITTEST;
   published
     { Published declarations }
-    property ONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-    property ONBASILI: TONCUSTOMCROP read FBasili write FBasili;
-    property ONPASIFNORMAL: TONCUSTOMCROP read FPasifnormal write FPasifnormal;
-    property ONPASIFCHECK: TONCUSTOMCROP read FPasifcheck write FPasifcheck;
+    property ONNORMAL      : TONCUSTOMCROP read FNormal write FNormal;
+    property ONPRESSED     : TONCUSTOMCROP read FBasili write FBasili;
+    property ONPASIFNORMAL : TONCUSTOMCROP read FPasifnormal write FPasifnormal;
+    property ONPASIFCHECK  : TONCUSTOMCROP read FPasifcheck write FPasifcheck;
     property OnMouseDown;//     : TOnMouseEvent read FOnMouseDown   write FOnMouseDown;
     property OnMouseEnter;//    : TOnMouseEvent read FOnMouseEnter  write FOnMouseEnter;
     property OnMouseLeave;//    : TOnMouseEvent read FOnMouseLeave  write FOnMouseLeave;
@@ -1266,10 +1254,10 @@ type
     procedure CMHittest(var msg: TCMHittest); message CM_HITTEST;
   published
     { Published declarations }
-    property ONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-    property ONBASILI: TONCUSTOMCROP read FBasili write FBasili;
-    property ONPASIFNORMAL: TONCUSTOMCROP read FPasifnormal write FPasifnormal;
-    property ONPASIFBASILI: TONCUSTOMCROP read FPasifbasili write FPasifbasili;
+    property ONNORMAL        : TONCUSTOMCROP read FNormal write FNormal;
+    property ONPRESSED       : TONCUSTOMCROP read FBasili write FBasili;
+    property ONPASIFNORMAL   : TONCUSTOMCROP read FPasifnormal write FPasifnormal;
+    property ONPASIFPRESSED  : TONCUSTOMCROP read FPasifbasili write FPasifbasili;
     property OnMouseDown: TOnMouseEvent read FOnMouseDown write FOnMouseDown;
     property OnMouseEnter: TOnMouseEvent read FOnMouseEnter write FOnMouseEnter;
     property OnMouseLeave: TOnMouseEvent read FOnMouseLeave write FOnMouseLeave;
@@ -1364,14 +1352,14 @@ type
     property Color;
     property Constraints;
     property Enabled;
-    property Min: integer read Fmin write Setaz;
-    property Max: integer read Fmax write Setcok;
-    property ONLEFT: TONCUSTOMCROP read Fsol write Fsol;
-    property ONRIGHT: TONCUSTOMCROP read Fsag write Fsag;
-    property ONTOP: TONCUSTOMCROP read Fust write Fust;
-    property ONBOTTOM: TONCUSTOMCROP read Falt write Falt;
-    property ONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-    property ONBAR: TONCUSTOMCROP read Fbar write Fbar;
+    property Min      : integer       read Fmin    write Setaz;
+    property Max      : integer       read Fmax    write Setcok;
+    property ONLEFT   : TONCUSTOMCROP read Fsol    write Fsol;
+    property ONRIGHT  : TONCUSTOMCROP read Fsag    write Fsag;
+    property ONTOP    : TONCUSTOMCROP read Fust    write Fust;
+    property ONBOTTOM : TONCUSTOMCROP read Falt    write Falt;
+    property ONNORMAL : TONCUSTOMCROP read FNormal write FNormal;
+    property ONBAR    : TONCUSTOMCROP read Fbar    write Fbar;
     property OnClick;
     property OnContextPopup;
     property OnDblClick;
@@ -1733,22 +1721,21 @@ type
       read Fedit write Fedit;
 
     //    property OnEditingDone : TNotifyEvent read FOnEditEditingDone write FOnEditEditingDone;
-    property ONLEFT: TONCUSTOMCROP read FSol write FSol;
-    property ONRIGHT: TONCUSTOMCROP read FSag write FSag;
-    property ONCENTER: TONCUSTOMCROP read FOrta write FOrta;
-    property ONBOTTOM: TONCUSTOMCROP read FAlt write FAlt;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FSolalt write FSolalt;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FSagalt write FSagalt;
-    property ONTOP: TONCUSTOMCROP read FUst write FUst;
-    property ONTOPLEFT: TONCUSTOMCROP read FSolust write FSolust;
-    property ONTOPRIGHT: TONCUSTOMCROP read FSagust write FSagust;
-    property ONBUTTON: TONCUSTOMCROP read Fbutton write Fbutton;
-    property Skindata: TONImg  read FSkindata write SetSkindata;
+    property ONLEFT        : TONCUSTOMCROP read FSol      write FSol;
+    property ONRIGHT       : TONCUSTOMCROP read FSag      write FSag;
+    property ONCENTER      : TONCUSTOMCROP read FOrta     write FOrta;
+    property ONBOTTOM      : TONCUSTOMCROP read FAlt      write FAlt;
+    property ONBOTTOMLEFT  : TONCUSTOMCROP read FSolalt   write FSolalt;
+    property ONBOTTOMRIGHT : TONCUSTOMCROP read FSagalt   write FSagalt;
+    property ONTOP         : TONCUSTOMCROP read FUst      write FUst;
+    property ONTOPLEFT     : TONCUSTOMCROP read FSolust   write FSolust;
+    property ONTOPRIGHT    : TONCUSTOMCROP read FSagust   write FSagust;
+    property ONBUTTON      : TONCUSTOMCROP read Fbutton   write Fbutton;
+    property Skindata      : TONImg        read FSkindata write SetSkindata;
     property Action;
     property Align;
     property Anchors;
     property AutoSize;
-
     property BidiMode;
     property BorderSpacing;
     property BorderStyle;
@@ -1901,7 +1888,6 @@ type
     FMouseInControl : Boolean;
     FOnItemChanged  : TNotifyEvent;
     FOnExpanded     : TOnPanelExpanded;
-//    FArrow          : TUSBitmap32;
     procedure SetItems(Value: TStringList);
     procedure SetItemSpacing(Value: Byte);
     procedure SetActiveItem(Value: SmallInt);
@@ -1909,7 +1895,6 @@ type
     procedure SetItemRect;
     procedure SetPanelSize;
     procedure SetExpanded(Value: Boolean);
-//    procedure SetArrow(Value: TUSBitmap32);
     procedure CheckOthersPanels;
     procedure SetSkindata(Aimg: TONImg);
   protected
@@ -1931,7 +1916,6 @@ type
     property ItemSpacing   : Byte             read FItemSpacing   write SetItemSpacing;
     property ActiveItem    : SmallInt         read FActiveItem    write SetActiveItem;
     property Expanded      : Boolean          read FExpanded      write SetExpanded;
-//    property ArrowImage    : TUSBitmap32      read FArrow         write SetArrow;
     property OnItemChanged : TNotifyEvent     read FOnItemChanged write FOnItemChanged;
     property OnExpanded    : TONPanelExpanded read FOnExpanded    write FOnExpanded;
     property Skindata      : TONImg           read FSkindata      write SetSkindata;
@@ -1939,11 +1923,11 @@ type
 
 
 const
-  // s_invalid_date = 'Invalid Date: ';
-  // s_invalid_integer = 'Invalid Integer';
+   s_invalid_date = 'Invalid Date: ';
+   s_invalid_integer = 'Invalid Integer';
 
-  s_invalid_date = 'Geçersiz Tarih: ';
-  s_invalid_integer = 'Geçersiz Sayı';
+//  s_invalid_date = 'Geçersiz Tarih: ';
+//  s_invalid_integer = 'Geçersiz Sayı';
   NullDate: TDateTime = 0;
 
 procedure Register;
@@ -2262,10 +2246,10 @@ begin
   inherited Create(AOwner);
   Fimage := TBGRABitmap.Create();
   FRes := TPicture.Create;
-  Fres.OnChange := @Resimayarla;
+  Fres.OnChange := @ImageSet;
   Fimage.LoadFromResource('PANEL');
   try
-    List := TStringList.Create;
+      List := TStringList.Create;
       Strm := TResourceStream.Create(HInstance, 'skins', RT_RCDATA);
       Strm.Position := 0;
       try
@@ -2290,7 +2274,7 @@ begin
   inherited;
 end;
 
-procedure TONImg.Resimayarla(Sender: TObject);
+procedure TONImg.ImageSet(Sender: TObject);
 begin
   begin
     FreeAndNil(FImage);
@@ -2577,9 +2561,9 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIFNORMAL,fil,isim);
-              cropRead(ONPASIFBASILI,fil,isim);
+              cropRead(ONPASIFPRESSED,fil,isim);
             end;
 
           if (com is TOnCheckBox) then
@@ -2594,7 +2578,7 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIFNORMAL,fil,isim);
               cropRead(ONPASIFCHECK,fil,isim);
             end;
@@ -2611,7 +2595,7 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIFNORMAL,fil,isim);
               cropRead(ONPASIFCHECK,fil,isim);
             end;
@@ -2623,7 +2607,7 @@ begin
            if (com is TONScrollBar) then
             with (TONScrollBar(com)) do
              begin
-              if State=Fyatay then
+              if State=Fhorizontal then
                 isim := 'SCROLLBAR_H'
                else
                 isim := 'SCROLLBAR_V';
@@ -2635,7 +2619,7 @@ begin
                Font.Size := StrToInt(ReadString(isim, 'Fontsize', '10'));
                Font.Style := [fsBold];
 
-               if State=Fyatay then
+               if State=Fhorizontal then
                begin
                  cropRead(ONNORMAL,fil,isim);
                  cropRead(ONLEFT,fil,isim);
@@ -2679,7 +2663,7 @@ begin
           if (com is TONProgressBar) then
             with (TONProgressBar(com)) do
              begin
-              if State=Fyatay then
+              if State=Fhorizontal then
                 isim := 'PROGRESSBAR_H'
                else
                 isim := 'PROGRESSBAR_V';
@@ -2690,7 +2674,7 @@ begin
                Font.Size := StrToInt(ReadString(isim, 'Fontsize', '10'));
                Font.Style := [fsBold];
 
-               if State=Fyatay then
+               if State=Fhorizontal then
                begin
                  cropRead(ONNORMAL,fil,isim);
                  cropRead(ONLEFT,fil,isim);
@@ -2717,8 +2701,8 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONUZERINDE,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONHOVER,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIF,fil,isim);
 
             end;
@@ -2736,8 +2720,8 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONUZERINDE,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONHOVER,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIF,fil,isim);
             end;
         end;
@@ -3024,9 +3008,9 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIFNORMAL,fil,isim);
-              cropRead(ONPASIFBASILI,fil,isim);
+              cropRead(ONPASIFPRESSED,fil,isim);
             end;
 
           if (formm.Components[i] is TOnCheckBox) then
@@ -3041,7 +3025,7 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIFNORMAL,fil,isim);
               cropRead(ONPASIFCHECK,fil,isim);
             end;
@@ -3058,7 +3042,7 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIFNORMAL,fil,isim);
               cropRead(ONPASIFCHECK,fil,isim);
             end;
@@ -3070,7 +3054,7 @@ begin
            if (formm.Components[i] is TONScrollBar) then
             with (TONScrollBar(formm.Components[i])) do
              begin
-              if State=Fyatay then
+              if State=Fhorizontal then
                 isim := 'SCROLLBAR_H'
                else
                 isim := 'SCROLLBAR_V';
@@ -3082,7 +3066,7 @@ begin
                Font.Size := StrToInt(ReadString(isim, 'Fontsize', '10'));
                Font.Style := [fsBold];
 
-               if State=Fyatay then
+               if State=Fhorizontal then
                begin
                  cropRead(ONNORMAL,fil,isim);
                  cropRead(ONLEFT,fil,isim);
@@ -3126,7 +3110,7 @@ begin
           if (formm.Components[i] is TONProgressBar) then
             with (TONProgressBar(formm.Components[i])) do
              begin
-              if State=Fyatay then
+              if State=Fhorizontal then
                 isim := 'PROGRESSBAR_H'
                else
                 isim := 'PROGRESSBAR_V';
@@ -3137,7 +3121,7 @@ begin
                Font.Size := StrToInt(ReadString(isim, 'Fontsize', '10'));
                Font.Style := [fsBold];
 
-               if State=Fyatay then
+               if State=Fhorizontal then
                begin
                  cropRead(ONNORMAL,fil,isim);
                  cropRead(ONLEFT,fil,isim);
@@ -3164,8 +3148,8 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONUZERINDE,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONHOVER,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIF,fil,isim);
 
             end;
@@ -3183,8 +3167,8 @@ begin
               Font.Style := [fsBold];
 
               cropRead(ONNORMAL,fil,isim);
-              cropRead(ONUZERINDE,fil,isim);
-              cropRead(ONBASILI,fil,isim);
+              cropRead(ONHOVER,fil,isim);
+              cropRead(ONPRESSED,fil,isim);
               cropRead(ONPASIF,fil,isim);
             end;
         end;
@@ -3720,57 +3704,57 @@ begin
     try
 
       //UST TOP
-      KAYNAK := Rect(FUst.FSSOL, FUst.FSUST, FUst.FSSAG, FUst.FSALT);
-      HEDEF := Rect((FSolust.FSSAG - FSolust.FSSOL), 0, self.Width -
-        (FSagust.FSSAG - FSagust.FSSOL), (FUst.FSALT - FUst.FSUST));
+      KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
+      HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, self.Width -
+        (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SOL ÜST TOPLEFT     5-1=5                        63-59
-      KAYNAK := Rect(FSolust.FSSOL, FSolust.FSUST, FSolust.FSSAG, FSolust.FSALT);
-      HEDEF := Rect(0, 0, FSolust.FSSAG - FSolust.FSSOL, FSolust.FSALT - FSolust.FSUST);
+      KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
+      HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //SAĞ ÜST TOPRIGHT
-      KAYNAK := Rect(FSagust.FSSOL, FSagust.FSUST, FSagust.FSSAG, FSagust.FSALT);
-      HEDEF := Rect(Width - (FSagust.FSSAG - FSagust.FSSOL), 0, Width,
-        (FSagust.FSALT - FSagust.FSUST));
+      KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
+      HEDEF := Rect(Width - (FSagust.FSRight - FSagust.FSLeft), 0, Width,
+        (FSagust.FSBottom - FSagust.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SOL ALT BOTTOMLEFT
-      KAYNAK := Rect(FSolalt.FSSOL, FSolalt.FSUST, FSolalt.FSSAG, FSolalt.FSALT);
-      HEDEF := Rect(0, Height - (FSolalt.FSALT - FSolalt.FSUST),
-        (FSolalt.FSSAG - FSolalt.FSSOL), Height);
+      KAYNAK := Rect(FSolalt.FSLeft, FSolalt.FSTop, FSolalt.FSRight, FSolalt.FSBottom);
+      HEDEF := Rect(0, Height - (FSolalt.FSBottom - FSolalt.FSTop),
+        (FSolalt.FSRight - FSolalt.FSLeft), Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SAĞ ALT BOTTOMRIGHT
-      KAYNAK := Rect(FSagalt.FSSOL, FSagalt.FSUST, FSagalt.FSSAG, FSagalt.FSALT);
-      HEDEF := Rect(Width - (FSagalt.FSSAG - FSagalt.FSSOL), Height -
-        (FSagalt.FSALT - FSagalt.FSUST), self.Width, self.Height);
+      KAYNAK := Rect(FSagalt.FSLeft, FSagalt.FSTop, FSagalt.FSRight, FSagalt.FSBottom);
+      HEDEF := Rect(Width - (FSagalt.FSRight - FSagalt.FSLeft), Height -
+        (FSagalt.FSBottom - FSagalt.FSTop), self.Width, self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //ALT BOTTOM
-      KAYNAK := Rect(FAlt.FSSOL, FAlt.FSUST, FAlt.FSSAG, FAlt.FSALT);
-      HEDEF := Rect((FSolalt.FSSAG - FSolalt.FSSOL), self.Height -
-        (FAlt.FSALT - FAlt.FSUST), Width - (FSagalt.FSSAG - FSagalt.FSSOL), self.Height);
+      KAYNAK := Rect(FAlt.FSLeft, FAlt.FSTop, FAlt.FSRight, FAlt.FSBottom);
+      HEDEF := Rect((FSolalt.FSRight - FSolalt.FSLeft), self.Height -
+        (FAlt.FSBottom - FAlt.FSTop), Width - (FSagalt.FSRight - FSagalt.FSLeft), self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SOL ORTA CENTERLEFT
-      KAYNAK := Rect(FSol.FSSOL, FSol.FSUST, FSol.FSSAG, FSol.FSALT);
-      HEDEF := Rect(0, FSolust.FSALT - FSolust.FSUST, (FSol.FSSAG - FSol.FSSOL),
-        Height - (FSolalt.FSALT - FSolalt.FSUST));
+      KAYNAK := Rect(FSol.FSLeft, FSol.FSTop, FSol.FSRight, FSol.FSBottom);
+      HEDEF := Rect(0, FSolust.FSBottom - FSolust.FSTop, (FSol.FSRight - FSol.FSLeft),
+        Height - (FSolalt.FSBottom - FSolalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SAĞ ORTA CENTERRIGHT
-      KAYNAK := Rect(FSag.FSSOL, FSag.FSUST, FSag.FSSAG, FSag.FSALT);
-      HEDEF := Rect(Width - (FSag.FSSAG - FSag.FSSOL), (FSagust.FSALT - FSagust.FSUST),
-        Width, Height - (FSagalt.FSALT - FSagalt.FSUST));
+      KAYNAK := Rect(FSag.FSLeft, FSag.FSTop, FSag.FSRight, FSag.FSBottom);
+      HEDEF := Rect(Width - (FSag.FSRight - FSag.FSLeft), (FSagust.FSBottom - FSagust.FSTop),
+        Width, Height - (FSagalt.FSBottom - FSagalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //ORTA CENTER
-      KAYNAK := Rect(FOrta.FSSOL, FOrta.FSUST, FOrta.FSSAG, FOrta.FSALT);
-      HEDEF := Rect((FSol.FSSAG - FSol.FSSOL), (FUst.FSALT - FUst.FSUST),
-        Width - (FSag.FSSAG - FSag.FSSOL), Height - (FAlt.FSALT - FAlt.FSUST));
+      KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
+      HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        Width - (FSag.FSRight - FSag.FSLeft), Height - (FAlt.FSBottom - FAlt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       if Crop then
@@ -3887,71 +3871,71 @@ begin
     try
 
       //UST TOP
-      KAYNAK := Rect(FUst.FSSOL, FUst.FSUST, FUst.FSSAG, FUst.FSALT);
-      HEDEF := Rect((FSolust.FSSAG - FSolust.FSSOL), 0, self.Width -
-        (FSagust.FSSAG - FSagust.FSSOL), (FUst.FSALT - FUst.FSUST));
+      KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
+      HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, self.Width -
+        (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SOL ÜST TOPLEFT
-      KAYNAK := Rect(FSolust.FSSOL, FSolust.FSUST, FSolust.FSSAG, FSolust.FSALT);
-      HEDEF := Rect(0, 0, FSolust.FSSAG - FSolust.FSSOL, FSolust.FSALT - FSolust.FSUST);
+      KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
+      HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SAĞ ÜST TOPRIGHT
-      KAYNAK := Rect(FSagust.FSSOL, FSagust.FSUST, FSagust.FSSAG, FSagust.FSALT);
-      HEDEF := Rect(Width - (FSagust.FSSAG - FSagust.FSSOL), 0, Width,
-        (FSagust.FSALT - FSagust.FSUST));
+      KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
+      HEDEF := Rect(Width - (FSagust.FSRight - FSagust.FSLeft), 0, Width,
+        (FSagust.FSBottom - FSagust.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       // SOL ALT BOTTOMLEFT
-      KAYNAK := Rect(FSolalt.FSSOL, FSolalt.FSUST, FSolalt.FSSAG, FSolalt.FSALT);
-      HEDEF := Rect(0, Height - (FSolalt.FSALT - FSolalt.FSUST),
-        (FSolalt.FSSAG - FSolalt.FSSOL), Height);
+      KAYNAK := Rect(FSolalt.FSLeft, FSolalt.FSTop, FSolalt.FSRight, FSolalt.FSBottom);
+      HEDEF := Rect(0, Height - (FSolalt.FSBottom - FSolalt.FSTop),
+        (FSolalt.FSRight - FSolalt.FSLeft), Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //SAĞ ALT BOTTOMRIGHT
-      KAYNAK := Rect(FSagalt.FSSOL, FSagalt.FSUST, FSagalt.FSSAG, FSagalt.FSALT);
-      HEDEF := Rect(Width - (FSagalt.FSSAG - FSagalt.FSSOL), Height -
-        (FSagalt.FSALT - FSagalt.FSUST), self.Width, self.Height);
+      KAYNAK := Rect(FSagalt.FSLeft, FSagalt.FSTop, FSagalt.FSRight, FSagalt.FSBottom);
+      HEDEF := Rect(Width - (FSagalt.FSRight - FSagalt.FSLeft), Height -
+        (FSagalt.FSBottom - FSagalt.FSTop), self.Width, self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //ALT BOTTOM
-      KAYNAK := Rect(FAlt.FSSOL, FAlt.FSUST, FAlt.FSSAG, FAlt.FSALT);
-      HEDEF := Rect((FSolalt.FSSAG - FSolalt.FSSOL), self.Height -
-        (FAlt.FSALT - FAlt.FSUST), Width - (FSagalt.FSSAG - FSagalt.FSSOL), self.Height);
+      KAYNAK := Rect(FAlt.FSLeft, FAlt.FSTop, FAlt.FSRight, FAlt.FSBottom);
+      HEDEF := Rect((FSolalt.FSRight - FSolalt.FSLeft), self.Height -
+        (FAlt.FSBottom - FAlt.FSTop), Width - (FSagalt.FSRight - FSagalt.FSLeft), self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SOL ORTA CENTERLEFT
-      KAYNAK := Rect(FSol.FSSOL, FSol.FSUST, FSol.FSSAG, FSol.FSALT);
-      HEDEF := Rect(0, FSolust.FSALT - FSolust.FSUST, (FSol.FSSAG - FSol.FSSOL),
-        Height - (FSolalt.FSALT - FSolalt.FSUST));
+      KAYNAK := Rect(FSol.FSLeft, FSol.FSTop, FSol.FSRight, FSol.FSBottom);
+      HEDEF := Rect(0, FSolust.FSBottom - FSolust.FSTop, (FSol.FSRight - FSol.FSLeft),
+        Height - (FSolalt.FSBottom - FSolalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SAĞ ORTA CENTERRIGHT
-      KAYNAK := Rect(FSag.FSSOL, FSag.FSUST, FSag.FSSAG, FSag.FSALT);
-      HEDEF := Rect(Width - (FSag.FSSAG - FSag.FSSOL), (FSagust.FSALT - FSagust.FSUST),
-        Width, Height - (FSagalt.FSALT - FSagalt.FSUST));
+      KAYNAK := Rect(FSag.FSLeft, FSag.FSTop, FSag.FSRight, FSag.FSBottom);
+      HEDEF := Rect(Width - (FSag.FSRight - FSag.FSLeft), (FSagust.FSBottom - FSagust.FSTop),
+        Width, Height - (FSagalt.FSBottom - FSagalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //ORTA CENTER
-      KAYNAK := Rect(FOrta.FSSOL, FOrta.FSUST, FOrta.FSSAG, FOrta.FSALT);
-      HEDEF := Rect((FSol.FSSAG - FSol.FSSOL), (FUst.FSALT - FUst.FSUST),
-        Width - (FSag.FSSAG - FSag.FSSOL), Height - (FAlt.FSALT - FAlt.FSUST));
+      KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
+      HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        Width - (FSag.FSRight - FSag.FSLeft), Height - (FAlt.FSBottom - FAlt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
-      fmemo.Color := FSkindata.Images.GetPixel(FOrta.FSSOL, FOrta.FSUST).ToColor;
+      fmemo.Color := FSkindata.Images.GetPixel(FOrta.FSLeft, FOrta.FSTop).ToColor;
 
 
       if Crop then
         CropToimg(Fresim);
 
       fmemo.BorderStyle := bsnone;
-      fmemo.Width := self.Width - ((FSag.FSSAG - FSag.FSSOL) + (FSol.FSSAG - FSol.FSSOL));
-      fmemo.Height := self.Height - ((FUst.FSALT - FUst.FSUST) + (FAlt.FSALT - FAlt.FSUST));
-      fmemo.Left := FSol.FSSAG - FSol.FSSOL;
+      fmemo.Width := self.Width - ((FSag.FSRight - FSag.FSLeft) + (FSol.FSRight - FSol.FSLeft));
+      fmemo.Height := self.Height - ((FUst.FSBottom - FUst.FSTop) + (FAlt.FSBottom - FAlt.FSTop));
+      fmemo.Left := FSol.FSRight - FSol.FSLeft;
       fmemo.Top := Round(((self.Height div 2) - (fmemo.Height div 2)));// div 2);
     finally
 
@@ -4063,70 +4047,70 @@ begin
     try
 
       //UST TOP
-      KAYNAK := Rect(FUst.FSSOL, FUst.FSUST, FUst.FSSAG, FUst.FSALT);
-      HEDEF := Rect((FSolust.FSSAG - FSolust.FSSOL), 0, self.Width -
-        (FSagust.FSSAG - FSagust.FSSOL), (FUst.FSALT - FUst.FSUST));
+      KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
+      HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, self.Width -
+        (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SOL ÜST TOPLEFT     5-1=5                        63-59
-      KAYNAK := Rect(FSolust.FSSOL, FSolust.FSUST, FSolust.FSSAG, FSolust.FSALT);
-      HEDEF := Rect(0, 0, FSolust.FSSAG - FSolust.FSSOL, FSolust.FSALT - FSolust.FSUST);
+      KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
+      HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SAĞ ÜST TOPRIGHT
-      KAYNAK := Rect(FSagust.FSSOL, FSagust.FSUST, FSagust.FSSAG, FSagust.FSALT);
-      HEDEF := Rect(Width - (FSagust.FSSAG - FSagust.FSSOL), 0, Width,
-        (FSagust.FSALT - FSagust.FSUST));
+      KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
+      HEDEF := Rect(Width - (FSagust.FSRight - FSagust.FSLeft), 0, Width,
+        (FSagust.FSBottom - FSagust.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       // SOL ALT BOTTOMLEFT
-      KAYNAK := Rect(FSolalt.FSSOL, FSolalt.FSUST, FSolalt.FSSAG, FSolalt.FSALT);
-      HEDEF := Rect(0, Height - (FSolalt.FSALT - FSolalt.FSUST),
-        (FSolalt.FSSAG - FSolalt.FSSOL), Height);
+      KAYNAK := Rect(FSolalt.FSLeft, FSolalt.FSTop, FSolalt.FSRight, FSolalt.FSBottom);
+      HEDEF := Rect(0, Height - (FSolalt.FSBottom - FSolalt.FSTop),
+        (FSolalt.FSRight - FSolalt.FSLeft), Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //SAĞ ALT BOTTOMRIGHT
-      KAYNAK := Rect(FSagalt.FSSOL, FSagalt.FSUST, FSagalt.FSSAG, FSagalt.FSALT);
-      HEDEF := Rect(Width - (FSagalt.FSSAG - FSagalt.FSSOL), Height -
-        (FSagalt.FSALT - FSagalt.FSUST), self.Width, self.Height);
+      KAYNAK := Rect(FSagalt.FSLeft, FSagalt.FSTop, FSagalt.FSRight, FSagalt.FSBottom);
+      HEDEF := Rect(Width - (FSagalt.FSRight - FSagalt.FSLeft), Height -
+        (FSagalt.FSBottom - FSagalt.FSTop), self.Width, self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //ALT BOTTOM
-      KAYNAK := Rect(FAlt.FSSOL, FAlt.FSUST, FAlt.FSSAG, FAlt.FSALT);
-      HEDEF := Rect((FSolalt.FSSAG - FSolalt.FSSOL), self.Height -
-        (FAlt.FSALT - FAlt.FSUST), Width - (FSagalt.FSSAG - FSagalt.FSSOL), self.Height);
+      KAYNAK := Rect(FAlt.FSLeft, FAlt.FSTop, FAlt.FSRight, FAlt.FSBottom);
+      HEDEF := Rect((FSolalt.FSRight - FSolalt.FSLeft), self.Height -
+        (FAlt.FSBottom - FAlt.FSTop), Width - (FSagalt.FSRight - FSagalt.FSLeft), self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       // SOL ORTA CENTERLEFT
-      KAYNAK := Rect(FSol.FSSOL, FSol.FSUST, FSol.FSSAG, FSol.FSALT);
-      HEDEF := Rect(0, FSolust.FSALT - FSolust.FSUST, (FSol.FSSAG - FSol.FSSOL),
-        Height - (FSolalt.FSALT - FSolalt.FSUST));
+      KAYNAK := Rect(FSol.FSLeft, FSol.FSTop, FSol.FSRight, FSol.FSBottom);
+      HEDEF := Rect(0, FSolust.FSBottom - FSolust.FSTop, (FSol.FSRight - FSol.FSLeft),
+        Height - (FSolalt.FSBottom - FSolalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SAĞ ORTA CENTERRIGHT
-      KAYNAK := Rect(FSag.FSSOL, FSag.FSUST, FSag.FSSAG, FSag.FSALT);
-      HEDEF := Rect(Width - (FSag.FSSAG - FSag.FSSOL), (FSagust.FSALT - FSagust.FSUST),
-        Width, Height - (FSagalt.FSALT - FSagalt.FSUST));
+      KAYNAK := Rect(FSag.FSLeft, FSag.FSTop, FSag.FSRight, FSag.FSBottom);
+      HEDEF := Rect(Width - (FSag.FSRight - FSag.FSLeft), (FSagust.FSBottom - FSagust.FSTop),
+        Width, Height - (FSagalt.FSBottom - FSagalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //ORTA CENTER
-      KAYNAK := Rect(FOrta.FSSOL, FOrta.FSUST, FOrta.FSSAG, FOrta.FSALT);
-      HEDEF := Rect((FSol.FSSAG - FSol.FSSOL), (FUst.FSALT - FUst.FSUST),
-        Width - (FSag.FSSAG - FSag.FSSOL), Height - (FAlt.FSALT - FAlt.FSUST));
+      KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
+      HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        Width - (FSag.FSRight - FSag.FSLeft), Height - (FAlt.FSBottom - FAlt.FSTop));
 
       DrawPartnormal(KAYNAK, self, HEDEF, False);
-      fcombo.Color := FSkindata.Images.GetPixel(FOrta.FSSOL, FOrta.FSUST).ToColor;
+      fcombo.Color := FSkindata.Images.GetPixel(FOrta.FSLeft, FOrta.FSTop).ToColor;
 
 
 
 
       //buton image
-      KAYNAK := Rect(Fbuton.FSSOL, Fbuton.FSUST, Fbuton.FSSAG, Fbuton.FSALT);
+      KAYNAK := Rect(Fbuton.FSLeft, Fbuton.FSTop, Fbuton.FSRight, Fbuton.FSBottom);
       img := TBGRABitmap.Create;
       img := FSkindata.Images.GetPart(KAYNAK);
       Fcombo.Butonimage.Assign(img);
@@ -4141,13 +4125,13 @@ begin
       if Crop then
         CropToimg(Fresim);
 
-      Fcombo.Width := self.Width - ((FSag.FSSAG - FSag.FSSOL) + (FSol.FSSAG - FSol.FSSOL));
-      Fcombo.Height := self.Height - ((FUst.FSALT - FUst.FSUST) + (FAlt.FSALT - FAlt.FSUST));
-      Fcombo.Left := FSol.FSSAG - FSol.FSSOL;
+      Fcombo.Width := self.Width - ((FSag.FSRight - FSag.FSLeft) + (FSol.FSRight - FSol.FSLeft));
+      Fcombo.Height := self.Height - ((FUst.FSBottom - FUst.FSTop) + (FAlt.FSBottom - FAlt.FSTop));
+      Fcombo.Left := FSol.FSRight - FSol.FSLeft;
       Fcombo.Top := Round((self.Height div 2) - (fcombo.Height div 2));
 
-      ChildSizing.LeftRightSpacing := (FSag.FSSAG - FSag.FSSOL);
-      ChildSizing.TopBottomSpacing := (FUst.FSALT - FUst.FSUST);
+      ChildSizing.LeftRightSpacing := (FSag.FSRight - FSag.FSLeft);
+      ChildSizing.TopBottomSpacing := (FUst.FSBottom - FUst.FSTop);
 
     finally
       if img <> nil then
@@ -4287,79 +4271,79 @@ begin
     try
 
       //UST TOP
-      KAYNAK := Rect(FUst.FSSOL, FUst.FSUST, FUst.FSSAG, FUst.FSALT);
-      HEDEF := Rect((FSolust.FSSAG - FSolust.FSSOL), 0, self.Width -
-        (FSagust.FSSAG - FSagust.FSSOL), (FUst.FSALT - FUst.FSUST));
+      KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
+      HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, self.Width -
+        (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SOL ÜST TOPLEFT     5-1=5                        63-59
-      KAYNAK := Rect(FSolust.FSSOL, FSolust.FSUST, FSolust.FSSAG, FSolust.FSALT);
-      HEDEF := Rect(0, 0, FSolust.FSSAG - FSolust.FSSOL, FSolust.FSALT - FSolust.FSUST);
+      KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
+      HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //SAĞ ÜST TOPRIGHT
-      KAYNAK := Rect(FSagust.FSSOL, FSagust.FSUST, FSagust.FSSAG, FSagust.FSALT);
-      HEDEF := Rect(Width - (FSagust.FSSAG - FSagust.FSSOL), 0, Width,
-        (FSagust.FSALT - FSagust.FSUST));
+      KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
+      HEDEF := Rect(Width - (FSagust.FSRight - FSagust.FSLeft), 0, Width,
+        (FSagust.FSBottom - FSagust.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       // SOL ALT BOTTOMLEFT
-      KAYNAK := Rect(FSolalt.FSSOL, FSolalt.FSUST, FSolalt.FSSAG, FSolalt.FSALT);
-      HEDEF := Rect(0, Height - (FSolalt.FSALT - FSolalt.FSUST),
-        (FSolalt.FSSAG - FSolalt.FSSOL), Height);
+      KAYNAK := Rect(FSolalt.FSLeft, FSolalt.FSTop, FSolalt.FSRight, FSolalt.FSBottom);
+      HEDEF := Rect(0, Height - (FSolalt.FSBottom - FSolalt.FSTop),
+        (FSolalt.FSRight - FSolalt.FSLeft), Height);
       FSkindata.Images.DrawPart(KAYNAK, Fresim.Canvas, HEDEF, False);
 
 
 
       //SAĞ ALT BOTTOMRIGHT
-      KAYNAK := Rect(FSagalt.FSSOL, FSagalt.FSUST, FSagalt.FSSAG, FSagalt.FSALT);
-      HEDEF := Rect(Width - (FSagalt.FSSAG - FSagalt.FSSOL), Height -
-        (FSagalt.FSALT - FSagalt.FSUST), self.Width, self.Height);
+      KAYNAK := Rect(FSagalt.FSLeft, FSagalt.FSTop, FSagalt.FSRight, FSagalt.FSBottom);
+      HEDEF := Rect(Width - (FSagalt.FSRight - FSagalt.FSLeft), Height -
+        (FSagalt.FSBottom - FSagalt.FSTop), self.Width, self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //ALT BOTTOM
-      KAYNAK := Rect(FAlt.FSSOL, FAlt.FSUST, FAlt.FSSAG, FAlt.FSALT);
-      HEDEF := Rect((FSolalt.FSSAG - FSolalt.FSSOL), self.Height -
-        (FAlt.FSALT - FAlt.FSUST), Width - (FSagalt.FSSAG - FSagalt.FSSOL), self.Height);
+      KAYNAK := Rect(FAlt.FSLeft, FAlt.FSTop, FAlt.FSRight, FAlt.FSBottom);
+      HEDEF := Rect((FSolalt.FSRight - FSolalt.FSLeft), self.Height -
+        (FAlt.FSBottom - FAlt.FSTop), Width - (FSagalt.FSRight - FSagalt.FSLeft), self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       // SOL ORTA CENTERLEFT
-      KAYNAK := Rect(FSol.FSSOL, FSol.FSUST, FSol.FSSAG, FSol.FSALT);
-      HEDEF := Rect(0, FSolust.FSALT - FSolust.FSUST, (FSol.FSSAG - FSol.FSSOL),
-        Height - (FSolalt.FSALT - FSolalt.FSUST));
+      KAYNAK := Rect(FSol.FSLeft, FSol.FSTop, FSol.FSRight, FSol.FSBottom);
+      HEDEF := Rect(0, FSolust.FSBottom - FSolust.FSTop, (FSol.FSRight - FSol.FSLeft),
+        Height - (FSolalt.FSBottom - FSolalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SAĞ ORTA CENTERRIGHT
-      KAYNAK := Rect(FSag.FSSOL, FSag.FSUST, FSag.FSSAG, FSag.FSALT);
-      HEDEF := Rect(Width - (FSag.FSSAG - FSag.FSSOL), (FSagust.FSALT - FSagust.FSUST),
-        Width, Height - (FSagalt.FSALT - FSagalt.FSUST));
+      KAYNAK := Rect(FSag.FSLeft, FSag.FSTop, FSag.FSRight, FSag.FSBottom);
+      HEDEF := Rect(Width - (FSag.FSRight - FSag.FSLeft), (FSagust.FSBottom - FSagust.FSTop),
+        Width, Height - (FSagalt.FSBottom - FSagalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //ORTA CENTER
-      KAYNAK := Rect(FOrta.FSSOL, FOrta.FSUST, FOrta.FSSAG, FOrta.FSALT);
-      HEDEF := Rect((FSol.FSSAG - FSol.FSSOL), (FUst.FSALT - FUst.FSUST),
-        Width - (FSag.FSSAG - FSag.FSSOL), Height - (FAlt.FSALT - FAlt.FSUST));
+      KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
+      HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        Width - (FSag.FSRight - FSag.FSLeft), Height - (FAlt.FSBottom - FAlt.FSTop));
 
       DrawPartnormal(KAYNAK, self, HEDEF, False);
-      fedit.Color := FSkindata.Images.GetPixel(FOrta.FSSOL, FOrta.FSUST).ToColor;
+      fedit.Color := FSkindata.Images.GetPixel(FOrta.FSLeft, FOrta.FSTop).ToColor;
 
       if Crop then
         CropToimg(Fresim);
 
       {
       fedit.BorderStyle:=bsNone;
-      fedit.Width:=self.Width-((FSag.FSSAG-FSag.FSSOL)+(FSol.FSSAG-FSol.FSSOL));
-      fedit.Height:=self.Height-((FUst.FSALT-FUst.FSUST)+(FAlt.FSALT-FAlt.FSUST));
-      fedit.Left:= FSol.FSSAG-FSol.FSSOL;
+      fedit.Width:=self.Width-((FSag.FSRight-FSag.FSLeft)+(FSol.FSRight-FSol.FSLeft));
+      fedit.Height:=self.Height-((FUst.FSBottom-FUst.FSTop)+(FAlt.FSBottom-FAlt.FSTop));
+      fedit.Left:= FSol.FSRight-FSol.FSLeft;
       fedit.Top:=Round((self.Height div 2)-(fedit.Height div 2));
       }
-      ChildSizing.LeftRightSpacing := (FSag.FSSAG - FSag.FSSOL);
-      ChildSizing.TopBottomSpacing := (FUst.FSALT - FUst.FSUST);
+      ChildSizing.LeftRightSpacing := (FSag.FSRight - FSag.FSLeft);
+      ChildSizing.TopBottomSpacing := (FUst.FSBottom - FUst.FSTop);
     finally
       //  if img<>nil then
       //  FreeAndNil(img);
@@ -4463,73 +4447,73 @@ begin
     try
 
       //UST TOP
-      KAYNAK := Rect(FUst.FSSOL, FUst.FSUST, FUst.FSSAG, FUst.FSALT);
-      HEDEF := Rect((FSolust.FSSAG - FSolust.FSSOL), 0, self.Width -
-        (FSagust.FSSAG - FSagust.FSSOL), (FUst.FSALT - FUst.FSUST));
+      KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
+      HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, self.Width -
+        (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
       DrawPartnormal(kaynak, self, hedef, False);
 
       //SOL ÜST TOPLEFT     5-1=5                        63-59
-      KAYNAK := Rect(FSolust.FSSOL, FSolust.FSUST, FSolust.FSSAG, FSolust.FSALT);
-      HEDEF := Rect(0, 0, FSolust.FSSAG - FSolust.FSSOL, FSolust.FSALT - FSolust.FSUST);
+      KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
+      HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
       DrawPartnormal(kaynak, self, hedef, False);
 
       //SAĞ ÜST TOPRIGHT
-      KAYNAK := Rect(FSagust.FSSOL, FSagust.FSUST, FSagust.FSSAG, FSagust.FSALT);
-      HEDEF := Rect(Width - (FSagust.FSSAG - FSagust.FSSOL), 0, Width,
-        (FSagust.FSALT - FSagust.FSUST));
+      KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
+      HEDEF := Rect(Width - (FSagust.FSRight - FSagust.FSLeft), 0, Width,
+        (FSagust.FSBottom - FSagust.FSTop));
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       // SOL ALT BOTTOMLEFT
-      KAYNAK := Rect(FSolalt.FSSOL, FSolalt.FSUST, FSolalt.FSSAG, FSolalt.FSALT);
-      HEDEF := Rect(0, Height - (FSolalt.FSALT - FSolalt.FSUST),
-        (FSolalt.FSSAG - FSolalt.FSSOL), Height);
+      KAYNAK := Rect(FSolalt.FSLeft, FSolalt.FSTop, FSolalt.FSRight, FSolalt.FSBottom);
+      HEDEF := Rect(0, Height - (FSolalt.FSBottom - FSolalt.FSTop),
+        (FSolalt.FSRight - FSolalt.FSLeft), Height);
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       //SAĞ ALT BOTTOMRIGHT
-      KAYNAK := Rect(FSagalt.FSSOL, FSagalt.FSUST, FSagalt.FSSAG, FSagalt.FSALT);
-      HEDEF := Rect(Width - (FSagalt.FSSAG - FSagalt.FSSOL), Height -
-        (FSagalt.FSALT - FSagalt.FSUST), self.Width, self.Height);
+      KAYNAK := Rect(FSagalt.FSLeft, FSagalt.FSTop, FSagalt.FSRight, FSagalt.FSBottom);
+      HEDEF := Rect(Width - (FSagalt.FSRight - FSagalt.FSLeft), Height -
+        (FSagalt.FSBottom - FSagalt.FSTop), self.Width, self.Height);
       DrawPartnormal(kaynak, self, hedef, False);
 
       //ALT BOTTOM
-      KAYNAK := Rect(FAlt.FSSOL, FAlt.FSUST, FAlt.FSSAG, FAlt.FSALT);
-      HEDEF := Rect((FSolalt.FSSAG - FSolalt.FSSOL), self.Height -
-        (FAlt.FSALT - FAlt.FSUST), Width - (FSagalt.FSSAG - FSagalt.FSSOL), self.Height);
+      KAYNAK := Rect(FAlt.FSLeft, FAlt.FSTop, FAlt.FSRight, FAlt.FSBottom);
+      HEDEF := Rect((FSolalt.FSRight - FSolalt.FSLeft), self.Height -
+        (FAlt.FSBottom - FAlt.FSTop), Width - (FSagalt.FSRight - FSagalt.FSLeft), self.Height);
       DrawPartnormal(kaynak, self, hedef, False);
 
       // SOL ORTA CENTERLEFT
-      KAYNAK := Rect(FSol.FSSOL, FSol.FSUST, FSol.FSSAG, FSol.FSALT);
-      HEDEF := Rect(0, FSolust.FSALT - FSolust.FSUST, (FSol.FSSAG - FSol.FSSOL),
-        Height - (FSolalt.FSALT - FSolalt.FSUST));
+      KAYNAK := Rect(FSol.FSLeft, FSol.FSTop, FSol.FSRight, FSol.FSBottom);
+      HEDEF := Rect(0, FSolust.FSBottom - FSolust.FSTop, (FSol.FSRight - FSol.FSLeft),
+        Height - (FSolalt.FSBottom - FSolalt.FSTop));
       DrawPartnormal(kaynak, self, hedef, False);
 
       // SAĞ ORTA CENTERRIGHT
-      KAYNAK := Rect(FSag.FSSOL, FSag.FSUST, FSag.FSSAG, FSag.FSALT);
-      HEDEF := Rect(Width - (FSag.FSSAG - FSag.FSSOL), (FSagust.FSALT - FSagust.FSUST),
-        Width, Height - (FSagalt.FSALT - FSagalt.FSUST));
+      KAYNAK := Rect(FSag.FSLeft, FSag.FSTop, FSag.FSRight, FSag.FSBottom);
+      HEDEF := Rect(Width - (FSag.FSRight - FSag.FSLeft), (FSagust.FSBottom - FSagust.FSTop),
+        Width, Height - (FSagalt.FSBottom - FSagalt.FSTop));
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       //ORTA CENTER
-      KAYNAK := Rect(FOrta.FSSOL, FOrta.FSUST, FOrta.FSSAG, FOrta.FSALT);
-      HEDEF := Rect((FSol.FSSAG - FSol.FSSOL), (FUst.FSALT - FUst.FSUST),
-        Width - (FSag.FSSAG - FSag.FSSOL), Height - (FAlt.FSALT - FAlt.FSUST));
+      KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
+      HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        Width - (FSag.FSRight - FSag.FSLeft), Height - (FAlt.FSBottom - FAlt.FSTop));
       DrawPartnormal(kaynak, self, hedef, False);
-      fedit.Color := FSkindata.Images.GetPixel(FOrta.FSSOL, FOrta.FSUST);
+      fedit.Color := FSkindata.Images.GetPixel(FOrta.FSLeft, FOrta.FSTop);
 
       if Crop then
         CropToimg(Fresim);
 
 
      { fedit.BorderStyle:=bsNone;
-      fedit.Width:=self.Width-((FSag.FSSAG-FSag.FSSOL)+(FSol.FSSAG-FSol.FSSOL));
-      fedit.Height:=self.Height-((FUst.FSALT-FUst.FSUST)+(FAlt.FSALT-FAlt.FSUST));
-      fedit.Left:= FSol.FSSAG-FSol.FSSOL;
+      fedit.Width:=self.Width-((FSag.FSRight-FSag.FSLeft)+(FSol.FSRight-FSol.FSLeft));
+      fedit.Height:=self.Height-((FUst.FSBottom-FUst.FSTop)+(FAlt.FSBottom-FAlt.FSTop));
+      fedit.Left:= FSol.FSRight-FSol.FSLeft;
       fedit.Top:=Round((self.Height div 2)-(fedit.Height div 2));}
-      ChildSizing.LeftRightSpacing := (FSag.FSSAG - FSag.FSSOL);
-      ChildSizing.TopBottomSpacing := (FUst.FSALT - FUst.FSUST);
+      ChildSizing.LeftRightSpacing := (FSag.FSRight - FSag.FSLeft);
+      ChildSizing.TopBottomSpacing := (FUst.FSBottom - FUst.FSTop);
     finally
       //  FreeAndNil(img);
     end;
@@ -4620,57 +4604,57 @@ begin
     try
 
       //UST TOP
-      KAYNAK := Rect(FUst.FSSOL, FUst.FSUST, FUst.FSSAG, FUst.FSALT);
-      HEDEF := Rect((FSolust.FSSAG - FSolust.FSSOL), 0, self.Width -
-        (FSagust.FSSAG - FSagust.FSSOL), (FUst.FSALT - FUst.FSUST));
+      KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
+      HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, self.Width -
+        (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SOL ÜST TOPLEFT     5-1=5                        63-59
-      KAYNAK := Rect(FSolust.FSSOL, FSolust.FSUST, FSolust.FSSAG, FSolust.FSALT);
-      HEDEF := Rect(0, 0, FSolust.FSSAG - FSolust.FSSOL, FSolust.FSALT - FSolust.FSUST);
+      KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
+      HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
 
       //SAĞ ÜST TOPRIGHT
-      KAYNAK := Rect(FSagust.FSSOL, FSagust.FSUST, FSagust.FSSAG, FSagust.FSALT);
-      HEDEF := Rect(Width - (FSagust.FSSAG - FSagust.FSSOL), 0, Width,
-        (FSagust.FSALT - FSagust.FSUST));
+      KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
+      HEDEF := Rect(Width - (FSagust.FSRight - FSagust.FSLeft), 0, Width,
+        (FSagust.FSBottom - FSagust.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SOL ALT BOTTOMLEFT
-      KAYNAK := Rect(FSolalt.FSSOL, FSolalt.FSUST, FSolalt.FSSAG, FSolalt.FSALT);
-      HEDEF := Rect(0, Height - (FSolalt.FSALT - FSolalt.FSUST),
-        (FSolalt.FSSAG - FSolalt.FSSOL), Height);
+      KAYNAK := Rect(FSolalt.FSLeft, FSolalt.FSTop, FSolalt.FSRight, FSolalt.FSBottom);
+      HEDEF := Rect(0, Height - (FSolalt.FSBottom - FSolalt.FSTop),
+        (FSolalt.FSRight - FSolalt.FSLeft), Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //SAĞ ALT BOTTOMRIGHT
-      KAYNAK := Rect(FSagalt.FSSOL, FSagalt.FSUST, FSagalt.FSSAG, FSagalt.FSALT);
-      HEDEF := Rect(Width - (FSagalt.FSSAG - FSagalt.FSSOL), Height -
-        (FSagalt.FSALT - FSagalt.FSUST), self.Width, self.Height);
+      KAYNAK := Rect(FSagalt.FSLeft, FSagalt.FSTop, FSagalt.FSRight, FSagalt.FSBottom);
+      HEDEF := Rect(Width - (FSagalt.FSRight - FSagalt.FSLeft), Height -
+        (FSagalt.FSBottom - FSagalt.FSTop), self.Width, self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //ALT BOTTOM
-      KAYNAK := Rect(FAlt.FSSOL, FAlt.FSUST, FAlt.FSSAG, FAlt.FSALT);
-      HEDEF := Rect((FSolalt.FSSAG - FSolalt.FSSOL), self.Height -
-        (FAlt.FSALT - FAlt.FSUST), Width - (FSagalt.FSSAG - FSagalt.FSSOL), self.Height);
+      KAYNAK := Rect(FAlt.FSLeft, FAlt.FSTop, FAlt.FSRight, FAlt.FSBottom);
+      HEDEF := Rect((FSolalt.FSRight - FSolalt.FSLeft), self.Height -
+        (FAlt.FSBottom - FAlt.FSTop), Width - (FSagalt.FSRight - FSagalt.FSLeft), self.Height);
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SOL ORTA CENTERLEFT
-      KAYNAK := Rect(FSol.FSSOL, FSol.FSUST, FSol.FSSAG, FSol.FSALT);
-      HEDEF := Rect(0, FSolust.FSALT - FSolust.FSUST, (FSol.FSSAG - FSol.FSSOL),
-        Height - (FSolalt.FSALT - FSolalt.FSUST));
+      KAYNAK := Rect(FSol.FSLeft, FSol.FSTop, FSol.FSRight, FSol.FSBottom);
+      HEDEF := Rect(0, FSolust.FSBottom - FSolust.FSTop, (FSol.FSRight - FSol.FSLeft),
+        Height - (FSolalt.FSBottom - FSolalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       // SAĞ ORTA CENTERRIGHT
-      KAYNAK := Rect(FSag.FSSOL, FSag.FSUST, FSag.FSSAG, FSag.FSALT);
-      HEDEF := Rect(Width - (FSag.FSSAG - FSag.FSSOL), (FSagust.FSALT - FSagust.FSUST),
-        Width, Height - (FSagalt.FSALT - FSagalt.FSUST));
+      KAYNAK := Rect(FSag.FSLeft, FSag.FSTop, FSag.FSRight, FSag.FSBottom);
+      HEDEF := Rect(Width - (FSag.FSRight - FSag.FSLeft), (FSagust.FSBottom - FSagust.FSTop),
+        Width, Height - (FSagalt.FSBottom - FSagalt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
 
       //ORTA CENTER
-      KAYNAK := Rect(FOrta.FSSOL, FOrta.FSUST, FOrta.FSSAG, FOrta.FSALT);
-      HEDEF := Rect((FSol.FSSAG - FSol.FSSOL), (FUst.FSALT - FUst.FSUST),
-        Width - (FSag.FSSAG - FSag.FSSOL), Height - (FAlt.FSALT - FAlt.FSUST));
+      KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
+      HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        Width - (FSag.FSRight - FSag.FSLeft), Height - (FAlt.FSBottom - FAlt.FSTop));
       DrawPartnormal(KAYNAK, self, HEDEF, False);
     {  if Crop then
         CropToimg(Fresim); }
@@ -4682,29 +4666,29 @@ begin
         FontHeight := self.Font.Height;//.Canvas.te Font.Height;
         FontAntialias := True;
         FontQuality := fqFineAntialiasing;
-        TextOut((FSol.FSSAG - FSol.FSSOL) + 2, FUst.FSALT - FUst.FSUST, FCaption, self.Font.Color);
+        TextOut((FSol.FSRight - FSol.FSLeft) + 2, FUst.FSBottom - FUst.FSTop, FCaption, self.Font.Color);
       end;
 
       path := TBGRAPath.Create;
 
       // captionleft
-      path.moveTo(0, (FUst.FSALT - FUst.FSUST) + ((FUst.FSALT - FUst.FSUST) div 2));
-      path.lineto(FSol.FSSAG - FSol.FSSOL, (FUst.FSALT - FUst.FSUST) +
-        ((FUst.FSALT - FUst.FSUST) div 2));
+      path.moveTo(0, (FUst.FSBottom - FUst.FSTop) + ((FUst.FSBottom - FUst.FSTop) div 2));
+      path.lineto(FSol.FSRight - FSol.FSLeft, (FUst.FSBottom - FUst.FSTop) +
+        ((FUst.FSBottom - FUst.FSTop) div 2));
 
       // captionright
-      path.moveTo(canvas.TextWidth(FCaption) - (FborderWidth + FSol.FSSAG - FSol.FSSOL),
-        (FUst.FSALT - FUst.FSUST) + ((FUst.FSALT - FUst.FSUST) div 2));
+      path.moveTo(canvas.TextWidth(FCaption) - (FborderWidth + FSol.FSRight - FSol.FSLeft),
+        (FUst.FSBottom - FUst.FSTop) + ((FUst.FSBottom - FUst.FSTop) div 2));
       //canvas.TextWidth(FCaption)+2,5);
-      path.lineTo(self.Width - FborderWidth, (FUst.FSALT - FUst.FSUST) +
-        ((FUst.FSALT - FUst.FSUST) div 2));
+      path.lineTo(self.Width - FborderWidth, (FUst.FSBottom - FUst.FSTop) +
+        ((FUst.FSBottom - FUst.FSTop) div 2));
 
       //left
-      path.moveTo(self.Width - FborderWidth, (FUst.FSALT - FUst.FSUST) +
-        ((FUst.FSALT - FUst.FSUST) div 2));
+      path.moveTo(self.Width - FborderWidth, (FUst.FSBottom - FUst.FSTop) +
+        ((FUst.FSBottom - FUst.FSTop) div 2));
       path.lineTo(self.Width - FborderWidth, self.Height - FborderWidth);
       //right
-      path.moveTo(0, (FUst.FSALT - FUst.FSUST) + ((FUst.FSALT - FUst.FSUST) div 2));
+      path.moveTo(0, (FUst.FSBottom - FUst.FSTop) + ((FUst.FSBottom - FUst.FSTop) div 2));
       path.lineTo(0, self.Height - FborderWidth);
 
       // bottom
@@ -4715,8 +4699,8 @@ begin
       path.stroke(fresim, fbordercolor, FborderWidth);
 //      path.Free;
 
-      ChildSizing.LeftRightSpacing := (FSag.FSSAG - FSag.FSSOL);
-      ChildSizing.TopBottomSpacing := (FUst.FSALT - FUst.FSUST);
+      ChildSizing.LeftRightSpacing := (FSag.FSRight - FSag.FSLeft);
+      ChildSizing.TopBottomSpacing := (FUst.FSBottom - FUst.FSTop);
 
     finally
         FreeAndNil(path);
@@ -4814,17 +4798,17 @@ begin
       if Enabled = True then
       begin
         case FDurum of
-          bsNormal: DR := Rect(FNormal.FSSOL, FNormal.FSUST,
-              FNormal.FSSAG, FNormal.FSALT);
-          bsbasili: DR := Rect(FBasili.FSSOL, FBasili.FSUST,
-              FBasili.FSSAG, FBasili.FSALT);
-          bsuzerinde: DR := Rect(FUzerinde.FSSOL, FUzerinde.FSUST,
-              FUzerinde.FSSAG, FUzerinde.FSALT);
+          bsNormal: DR := Rect(FNormal.FSLeft, FNormal.FSTop,
+              FNormal.FSRight, FNormal.FSBottom);
+          bspressed: DR := Rect(FBasili.FSLeft, FBasili.FSTop,
+              FBasili.FSRight, FBasili.FSBottom);
+          bshover: DR := Rect(FUzerinde.FSLeft, FUzerinde.FSTop,
+              FUzerinde.FSRight, FUzerinde.FSBottom);
         end;
       end
       else
       begin
-        DR := Rect(FPasif.FSSOL, FPasif.FSUST, FPasif.FSSAG, FPasif.FSALT);
+        DR := Rect(FPasif.FSLeft, FPasif.FSTop, FPasif.FSRight, FPasif.FSBottom);
       end;
 //      HEDEF := Rect(0, 0, self.Width, self.Height);
 //      DrawPartstrechRegion(DR,Self,Width,Height,HEDEF,false);
@@ -4852,10 +4836,10 @@ begin
     Exit;
   if not Enabled then
     Exit;
-  if FDurum = bsuzerinde then
+  if FDurum = bshover then
     Exit;
 
-  FDurum := bsuzerinde;
+  FDurum := bshover;
   Paint;
   inherited  MouseMove(Shift, X, Y);
 end;
@@ -4882,10 +4866,10 @@ begin
     Exit;
   if not Enabled then
     Exit;
-  if FDurum = bsbasili then
+  if FDurum = bspressed then
     Exit;
 
-  FDurum := bsbasili;
+  FDurum := bspressed;
   paint;
   inherited MouseDown(Button, Shift, X, Y);
 end;
@@ -4912,11 +4896,11 @@ begin
     Exit;
   if not Enabled then
     Exit;
-  if FDurum = bsuzerinde then
+  if FDurum = bshover then
     Exit;
   if Enabled then
   begin
-    FDurum := bsuzerinde;
+    FDurum := bshover;
     Paint;
     inherited;
   end;
@@ -5004,17 +4988,17 @@ begin
       if Enabled = True then
       begin
         case FDurum of
-          bsNormal: DR := Rect(FNormal.FSSOL, FNormal.FSUST,
-              FNormal.FSSAG, FNormal.FSALT);
-          bsbasili: DR := Rect(FBasili.FSSOL, FBasili.FSUST,
-              FBasili.FSSAG, FBasili.FSALT);
-          bsuzerinde: DR := Rect(FUzerinde.FSSOL, FUzerinde.FSUST,
-              FUzerinde.FSSAG, FUzerinde.FSALT);
+          bsNormal: DR := Rect(FNormal.FSLeft, FNormal.FSTop,
+              FNormal.FSRight, FNormal.FSBottom);
+          bspressed: DR := Rect(FBasili.FSLeft, FBasili.FSTop,
+              FBasili.FSRight, FBasili.FSBottom);
+          bshover: DR := Rect(FUzerinde.FSLeft, FUzerinde.FSTop,
+              FUzerinde.FSRight, FUzerinde.FSBottom);
         end;
       end
       else
       begin
-        DR := Rect(FPasif.FSSOL, FPasif.FSUST, FPasif.FSSAG, FPasif.FSALT);
+        DR := Rect(FPasif.FSLeft, FPasif.FSTop, FPasif.FSRight, FPasif.FSBottom);
       end;
 //      HEDEF := Rect(0, 0, self.Width, self.Height);
 //      DrawPartstrechRegion(DR,Self,Width,Height,HEDEF,false);
@@ -5053,10 +5037,10 @@ begin
     Exit;
   if not Enabled then
     Exit;
-  if FDurum = bsuzerinde then
+  if FDurum = bshover then
     Exit;
 
-  FDurum := bsuzerinde;
+  FDurum := bshover;
   Paint;
   inherited  MouseMove(Shift, X, Y);
 end;
@@ -5082,9 +5066,9 @@ begin
     Exit;
   if not Enabled then
     Exit;
-  if FDurum = bsbasili then
+  if FDurum = bspressed then
     Exit;
-  FDurum := bsbasili;
+  FDurum := bspressed;
   paint;
   inherited MouseDown(Button, Shift, X, Y);
 end;
@@ -5109,13 +5093,13 @@ procedure TONButton.MouseEnter;
 begin
   if csDesigning in ComponentState then
     Exit;
-  if FDurum = bsuzerinde then
+  if FDurum = bshover then
     Exit;
   if not Enabled then
     Exit;
   if Enabled then
   begin
-    FDurum := bsuzerinde;
+    FDurum := bshover;
     Paint;
     inherited;
   end;
@@ -5269,11 +5253,11 @@ begin
     Exit;
   if not Enabled then
     Exit;
-{  if (not FDurum=bsbasili) then
+{  if (not FDurum=bspressed) then
   begin
     if PtInRect(Bounds(0, 0, Width, Height), Point(X, Y)) then
     begin
-      if not (FDurum in  [bsuzerinde]) then
+      if not (FDurum in  [bshover]) then
         Perform(CM_MOUSEENTER, 0, 0);
     end
     else
@@ -5295,18 +5279,18 @@ begin
       if Enabled = True then
       begin
         if FChecked then
-          DR := Rect(FBasili.FSSOL, FBasili.FSUST, FBasili.FSSAG, FBasili.FSALT)
+          DR := Rect(FBasili.FSLeft, FBasili.FSTop, FBasili.FSRight, FBasili.FSBottom)
         else
-          DR := Rect(FNormal.FSSOL, FNormal.FSUST, FNormal.FSSAG, FNormal.FSALT);
+          DR := Rect(FNormal.FSLeft, FNormal.FSTop, FNormal.FSRight, FNormal.FSBottom);
       end
       else
       begin
         if FChecked then
-          DR := Rect(FPasifcheck.FSSOL, FPasifcheck.FSUST,
-            FPasifcheck.FSSAG, FPasifcheck.FSALT)
+          DR := Rect(FPasifcheck.FSLeft, FPasifcheck.FSTop,
+            FPasifcheck.FSRight, FPasifcheck.FSBottom)
         else
-          DR := Rect(FPasifnormal.FSSOL, FPasifnormal.FSUST,
-            FPasifnormal.FSSAG, FPasifnormal.FSALT);
+          DR := Rect(FPasifnormal.FSLeft, FPasifnormal.FSTop,
+            FPasifnormal.FSRight, FPasifnormal.FSBottom);
       end;
 
 
@@ -5502,18 +5486,18 @@ begin
       if Enabled = True then
       begin
         if FChecked then
-          DR := Rect(FBasili.FSSOL, FBasili.FSUST, FBasili.FSSAG, FBasili.FSALT)
+          DR := Rect(FBasili.FSLeft, FBasili.FSTop, FBasili.FSRight, FBasili.FSBottom)
         else
-          DR := Rect(FNormal.FSSOL, FNormal.FSUST, FNormal.FSSAG, FNormal.FSALT);
+          DR := Rect(FNormal.FSLeft, FNormal.FSTop, FNormal.FSRight, FNormal.FSBottom);
       end
       else
       begin
         if FChecked then
-          DR := Rect(FPasifcheck.FSSOL, FPasifcheck.FSUST,
-            FPasifcheck.FSSAG, FPasifcheck.FSALT)
+          DR := Rect(FPasifcheck.FSLeft, FPasifcheck.FSTop,
+            FPasifcheck.FSRight, FPasifcheck.FSBottom)
         else
-          DR := Rect(FPasifnormal.FSSOL, FPasifnormal.FSUST,
-            FPasifnormal.FSSAG, FPasifnormal.FSALT);
+          DR := Rect(FPasifnormal.FSLeft, FPasifnormal.FSTop,
+            FPasifnormal.FSRight, FPasifnormal.FSBottom);
       end;
 
 //      DrawPartstrechRegion(DR,Self,Width,Height,Rect(0,0,Height,Height),false);
@@ -5581,7 +5565,7 @@ begin
   Fbar := TONCUSTOMCROP.Create;
   Fbar.cropname:='BAR';
   ControlStyle := ControlStyle + [csClickEvents, csCaptureMouse];
-  FDurum := Fyatay;
+  FDurum := Fhorizontal;
   Width := 100;
   Height := 30;
   Fresim.SetSize(Width, Height);
@@ -5640,46 +5624,46 @@ begin
   if (FSkindata <> nil) then
   begin
     try
-      if FDurum = Fyatay then   //left image if state horizontal
+      if FDurum = Fhorizontal then   //left image if state horizontal
       begin
-        DR := Rect(Fsol.FSSOL, Fsol.FSUST, Fsol.FSSAG, Fsol.FSALT);
-        DrawPartstrechRegion(DR,self,Fsol.FSSAG-Fsol.FSSOL,Height,rect(0, 0, Fsol.FSSAG - Fsol.FSSOL, Height), False);
-//        DrawPartnormal(DR, self, rect(0, 0, Fsol.FSSAG - Fsol.FSSOL, Height), False);
+        DR := Rect(Fsol.FSLeft, Fsol.FSTop, Fsol.FSRight, Fsol.FSBottom);
+        DrawPartstrechRegion(DR,self,Fsol.FSRight-Fsol.FSLeft,Height,rect(0, 0, Fsol.FSRight - Fsol.FSLeft, Height), False);
+//        DrawPartnormal(DR, self, rect(0, 0, Fsol.FSRight - Fsol.FSLeft, Height), False);
       end
       else         //top image if state vertical
       begin
-        DR := Rect(Fust.FSSOL, Fust.FSUST, Fust.FSSAG, Fust.FSALT);
-        DrawPartstrechRegion(DR,self,self.Width,Fust.FSALT - Fust.FSUST,rect(0, 0, Width, Fust.FSALT - Fust.FSUST), False);
-//        DrawPartnormal(DR, self, rect(0, 0, Width, Fust.FSALT - Fust.FSUST), False);
+        DR := Rect(Fust.FSLeft, Fust.FSTop, Fust.FSRight, Fust.FSBottom);
+        DrawPartstrechRegion(DR,self,self.Width,Fust.FSBottom - Fust.FSTop,rect(0, 0, Width, Fust.FSBottom - Fust.FSTop), False);
+//        DrawPartnormal(DR, self, rect(0, 0, Width, Fust.FSBottom - Fust.FSTop), False);
       end;
 
 
-      if FDurum = Fyatay then  //right image if state horizontal
+      if FDurum = Fhorizontal then  //right image if state horizontal
       begin
-        DR := Rect(Fsag.FSSOL, Fsag.FSUST, Fsag.FSSAG, Fsag.FSALT);
-        DrawPartstrechRegion(DR,self,(fsag.FSSAG - Fsag.FSSOL),self.Height,Rect(self.Width -(fsag.FSSAG - Fsag.FSSOL), 0, self.Width, self.Height),false);
-//        DrawPartnormal(DR, self, Rect(Width - (fsag.FSSAG - Fsag.FSSOL), 0, Width, Height), False);
+        DR := Rect(Fsag.FSLeft, Fsag.FSTop, Fsag.FSRight, Fsag.FSBottom);
+        DrawPartstrechRegion(DR,self,(fsag.FSRight - Fsag.FSLeft),self.Height,Rect(self.Width -(fsag.FSRight - Fsag.FSLeft), 0, self.Width, self.Height),false);
+//        DrawPartnormal(DR, self, Rect(Width - (fsag.FSRight - Fsag.FSLeft), 0, Width, Height), False);
       end
       else       //bottom image if state vertical
       begin
-        DR := Rect(Falt.FSSOL, Falt.FSUST, Falt.FSSAG, Falt.FSALT);
-        DrawPartstrechRegion(DR,self,self.Width,(Falt.FSALT - Falt.FSUST),Rect(0, self.Height-(Falt.FSALT - Falt.FSUST), self.Width, self.Height),false);
- //       DrawPartnormal(DR, self, Rect(0, Height - (Falt.FSALT - Falt.FSUST), Width, Height), False);
+        DR := Rect(Falt.FSLeft, Falt.FSTop, Falt.FSRight, Falt.FSBottom);
+        DrawPartstrechRegion(DR,self,self.Width,(Falt.FSBottom - Falt.FSTop),Rect(0, self.Height-(Falt.FSBottom - Falt.FSTop), self.Width, self.Height),false);
+ //       DrawPartnormal(DR, self, Rect(0, Height - (Falt.FSBottom - Falt.FSTop), Width, Height), False);
       end;
 
-      DR := Rect(FNormal.FSSOL, FNormal.FSUST, FNormal.FSSAG, FNormal.FSALT);
-      if FDurum = Fyatay then  //center image if state horizontal
+      DR := Rect(FNormal.FSLeft, FNormal.FSTop, FNormal.FSRight, FNormal.FSBottom);
+      if FDurum = Fhorizontal then  //center image if state horizontal
       begin
-        DrawPartstrechRegion(DR,self,self.Width-((Fsol.FSSAG - Fsol.FSSOL)+(fsag.FSSAG - Fsag.FSSOL)),self.Height,Rect((Fsol.FSSAG - Fsol.FSSOL), 0, (Width - (fsag.FSSAG - Fsag.FSSOL)), Height),false);
-//        DrawPartnormal(DR, self, Rect((Fsol.FSSAG - Fsol.FSSOL), 0,
-//          (Width - (fsag.FSSAG - Fsag.FSSOL)), Height), False);
+        DrawPartstrechRegion(DR,self,self.Width-((Fsol.FSRight - Fsol.FSLeft)+(fsag.FSRight - Fsag.FSLeft)),self.Height,Rect((Fsol.FSRight - Fsol.FSLeft), 0, (Width - (fsag.FSRight - Fsag.FSLeft)), Height),false);
+//        DrawPartnormal(DR, self, Rect((Fsol.FSRight - Fsol.FSLeft), 0,
+//          (Width - (fsag.FSRight - Fsag.FSLeft)), Height), False);
       end
       else         //center image if state vertical
       begin
-        DrawPartstrechRegion(DR,self,Width,Height-((Fust.FSALT - Fust.FSUST)+(Falt.FSALT - Falt.FSUST)),Rect(0, (Fust.FSALT - Fust.FSUST), Width, Height-(Falt.FSALT - Falt.FSUST)),false);
-//        DrawPartnormal(DR, Self, Rect(0, (Fust.FSALT - Fust.FSUST), Width, Height -
-//          (Falt.FSALT - Falt.FSUST)), False);
-        // self.Width,Height-((Fust.FSALT-Falt.FSUST)+(Fust.FSALT-Falt.FSUST)) );
+        DrawPartstrechRegion(DR,self,Width,Height-((Fust.FSBottom - Fust.FSTop)+(Falt.FSBottom - Falt.FSTop)),Rect(0, (Fust.FSBottom - Fust.FSTop), Width, Height-(Falt.FSBottom - Falt.FSTop)),false);
+//        DrawPartnormal(DR, Self, Rect(0, (Fust.FSBottom - Fust.FSTop), Width, Height -
+//          (Falt.FSBottom - Falt.FSTop)), False);
+        // self.Width,Height-((Fust.FSBottom-Falt.FSTop)+(Fust.FSBottom-Falt.FSTop)) );
       end;
 
 
@@ -5694,7 +5678,7 @@ begin
       if position > 0 then
       begin
         if fMin <> fMax then
-          if FDurum = Fyatay then
+          if FDurum = Fhorizontal then
             Freh := Round(Abs((position - fMin) / (fMax - fMin)) * self.Width)
           else
             Freh := Round(Abs((position - FMin) / (FMax - FMin)) * self.Height)
@@ -5708,54 +5692,54 @@ begin
         FCaption := '%' + floattostr(Round(Abs((position - fMin) / (fmax - fMin)) * 100));
 
 
-      if FDurum = Fyatay then
+      if FDurum = Fhorizontal then
       begin
-        //  if Freh-abs((fsol.FSSAG-Fsol.FSSOL)+(fsag.FSSAG-Fsag.FSSOL))>=Width then
-        if (Fbar.FSSAG + Fbar.FSSOL) - abs((fsol.FSSAG - Fsol.FSSOL) +
-          (fsag.FSSAG - Fsag.FSSOL)) >= Width then
-          asd := Freh - abs((fsol.FSSAG - Fsol.FSSOL) + (fsag.FSSAG - Fsag.FSSOL))
+        //  if Freh-abs((fsol.FSRight-Fsol.FSLeft)+(fsag.FSRight-Fsag.FSLeft))>=Width then
+        if (Fbar.FSRight + Fbar.FSLeft) - abs((fsol.FSRight - Fsol.FSLeft) +
+          (fsag.FSRight - Fsag.FSLeft)) >= Width then
+          asd := Freh - abs((fsol.FSRight - Fsol.FSLeft) + (fsag.FSRight - Fsag.FSLeft))
         else
           asd := Freh;
       end
       else
       begin
-        //  if Freh-abs((Falt.FSALT-Falt.FSUST)+(Fust.FSALT-Fust.FSUST))>position then
-        if (Fbar.FSALT + Fbar.FSUST) - abs((Falt.FSALT - Falt.FSUST) +
-          (Fust.FSALT - Fust.FSUST)) >= Height then
+        //  if Freh-abs((Falt.FSBottom-Falt.FSTop)+(Fust.FSBottom-Fust.FSTop))>position then
+        if (Fbar.FSBottom + Fbar.FSTop) - abs((Falt.FSBottom - Falt.FSTop) +
+          (Fust.FSBottom - Fust.FSTop)) >= Height then
 
-          asd := Freh - abs((Falt.FSALT - Falt.FSUST) + (Fust.FSALT - Fust.FSUST))
+          asd := Freh - abs((Falt.FSBottom - Falt.FSTop) + (Fust.FSBottom - Fust.FSTop))
         else
           asd := Freh;
       end;
 
 
-      if FDurum = Fyatay then
+      if FDurum = Fhorizontal then
       begin
-        if (Height < (Fbar.FSALT - Fbar.FSUST)) then
-          FbarResim := TBGRABitmap.Create(asd, abs(((Fbar.FSALT - Fbar.FSUST) div 2) - Height))
+        if (Height < (Fbar.FSBottom - Fbar.FSTop)) then
+          FbarResim := TBGRABitmap.Create(asd, abs(((Fbar.FSBottom - Fbar.FSTop) div 2) - Height))
         else
-          FbarResim := TBGRABitmap.Create(asd, (Fbar.FSALT - Fbar.FSUST));
+          FbarResim := TBGRABitmap.Create(asd, (Fbar.FSBottom - Fbar.FSTop));
       end
       else
       begin
-        if (Width < (Fbar.FSSAG - Fbar.FSSOL)) then
-          FbarResim := TBGRABitmap.Create(abs(((Fbar.FSSAG - Fbar.FSSOL) div 2) - Width), asd)
+        if (Width < (Fbar.FSRight - Fbar.FSLeft)) then
+          FbarResim := TBGRABitmap.Create(abs(((Fbar.FSRight - Fbar.FSLeft) div 2) - Width), asd)
         else
-          FbarResim := TBGRABitmap.Create((Fbar.FSSAG - Fbar.FSSOL), asd);
+          FbarResim := TBGRABitmap.Create((Fbar.FSRight - Fbar.FSLeft), asd);
       end;
 
-      FbarRect := Rect(Fbar.FSSOL, Fbar.FSUST, Fbar.FSSAG, Fbar.FSALT);
+      FbarRect := Rect(Fbar.FSLeft, Fbar.FSTop, Fbar.FSRight, Fbar.FSBottom);
       FSkindata.Images.DrawPart(FbarRect, FbarResim.Canvas, Rect(
         0, 0, FbarResim.Width, FbarResim.Height), False);
 
 
 
-      if FDurum = Fyatay then
-        Fresim.BlendImage((fsol.FSSAG - fsol.FSSOL), abs(
+      if FDurum = Fhorizontal then
+        Fresim.BlendImage((fsol.FSRight - fsol.FSLeft), abs(
           (Fresim.Height div 2) - (FbarResim.Height div 2)), FbarResim, boTransparent)
       else
         Fresim.BlendImage(abs((Fresim.Width div 2) - (FbarResim.Width div 2)),
-          (Fust.FSALT - Fust.FSUST), FbarResim, boTransparent);
+          (Fust.FSBottom - Fust.FSTop), FbarResim, boTransparent);
 
     finally
       FreeAndNil(FbarResim);
@@ -6009,18 +5993,18 @@ begin
       if Enabled = True then
       begin
         if FChecked = True then
-          DR := Rect(FBasili.FSSOL, FBasili.FSUST, FBasili.FSSAG, FBasili.FSALT)
+          DR := Rect(FBasili.FSLeft, FBasili.FSTop, FBasili.FSRight, FBasili.FSBottom)
         else
-          DR := Rect(FNormal.FSSOL, FNormal.FSUST, FNormal.FSSAG, FNormal.FSALT);
+          DR := Rect(FNormal.FSLeft, FNormal.FSTop, FNormal.FSRight, FNormal.FSBottom);
       end
       else
       begin
         if FChecked = True then
-          DR := Rect(FPasifbasili.FSSOL, FPasifbasili.FSUST,
-            FPasifbasili.FSSAG, FPasifbasili.FSALT)
+          DR := Rect(FPasifbasili.FSLeft, FPasifbasili.FSTop,
+            FPasifbasili.FSRight, FPasifbasili.FSBottom)
         else
-          DR := Rect(FPasifnormal.FSSOL, FPasifnormal.FSUST,
-            FPasifnormal.FSSAG, FPasifnormal.FSALT);
+          DR := Rect(FPasifnormal.FSLeft, FPasifnormal.FSTop,
+            FPasifnormal.FSRight, FPasifnormal.FSBottom);
       end;
 
       Fresim.SetSize(self.Width, Self.Height);
@@ -6449,7 +6433,7 @@ begin
   Fbuttonu.Name := self.Name + 'Subdateeditbutton';
   Fbuttonu.Width := 20;
   Fbuttonu.Height := Height - 5;
-  //  Fbuttonu.Left:=self.Width-Fbuttonu.Width;//+(fsag.FSSAG-FSag.FSSOL));
+  //  Fbuttonu.Left:=self.Width-Fbuttonu.Width;//+(fsag.FSRight-FSag.FSLeft));
   //  Fbuttonu.Top:=5;
   //  Fbuttonu.Align:=alRight;
   Fbuttonu.OnClick := @ButtonClick;
@@ -6547,77 +6531,77 @@ begin
     try
 
       //UST TOP
-      KAYNAK := Rect(FUst.FSSOL, FUst.FSUST, FUst.FSSAG, FUst.FSALT);
-      HEDEF := Rect((FSolust.FSSAG - FSolust.FSSOL), 0, self.Width -
-        (FSagust.FSSAG - FSagust.FSSOL), (FUst.FSALT - FUst.FSUST));
+      KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
+      HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, self.Width -
+        (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       //SOL ÜST TOPLEFT     5-1=5                        63-59
-      KAYNAK := Rect(FSolust.FSSOL, FSolust.FSUST, FSolust.FSSAG, FSolust.FSALT);
-      HEDEF := Rect(0, 0, FSolust.FSSAG - FSolust.FSSOL, FSolust.FSALT - FSolust.FSUST);
+      KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
+      HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       //SAĞ ÜST TOPRIGHT
-      KAYNAK := Rect(FSagust.FSSOL, FSagust.FSUST, FSagust.FSSAG, FSagust.FSALT);
-      HEDEF := Rect(Width - (FSagust.FSSAG - FSagust.FSSOL), 0, Width,
-        (FSagust.FSALT - FSagust.FSUST));
+      KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
+      HEDEF := Rect(Width - (FSagust.FSRight - FSagust.FSLeft), 0, Width,
+        (FSagust.FSBottom - FSagust.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       // SOL ALT BOTTOMLEFT
-      KAYNAK := Rect(FSolalt.FSSOL, FSolalt.FSUST, FSolalt.FSSAG, FSolalt.FSALT);
-      HEDEF := Rect(0, Height - (FSolalt.FSALT - FSolalt.FSUST),
-        (FSolalt.FSSAG - FSolalt.FSSOL), Height);
+      KAYNAK := Rect(FSolalt.FSLeft, FSolalt.FSTop, FSolalt.FSRight, FSolalt.FSBottom);
+      HEDEF := Rect(0, Height - (FSolalt.FSBottom - FSolalt.FSTop),
+        (FSolalt.FSRight - FSolalt.FSLeft), Height);
 
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       //SAĞ ALT BOTTOMRIGHT
-      KAYNAK := Rect(FSagalt.FSSOL, FSagalt.FSUST, FSagalt.FSSAG, FSagalt.FSALT);
-      HEDEF := Rect(Width - (FSagalt.FSSAG - FSagalt.FSSOL), Height -
-        (FSagalt.FSALT - FSagalt.FSUST), self.Width, self.Height);
+      KAYNAK := Rect(FSagalt.FSLeft, FSagalt.FSTop, FSagalt.FSRight, FSagalt.FSBottom);
+      HEDEF := Rect(Width - (FSagalt.FSRight - FSagalt.FSLeft), Height -
+        (FSagalt.FSBottom - FSagalt.FSTop), self.Width, self.Height);
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       //ALT BOTTOM
-      KAYNAK := Rect(FAlt.FSSOL, FAlt.FSUST, FAlt.FSSAG, FAlt.FSALT);
-      HEDEF := Rect((FSolalt.FSSAG - FSolalt.FSSOL), self.Height -
-        (FAlt.FSALT - FAlt.FSUST), Width - (FSagalt.FSSAG - FSagalt.FSSOL), self.Height);
+      KAYNAK := Rect(FAlt.FSLeft, FAlt.FSTop, FAlt.FSRight, FAlt.FSBottom);
+      HEDEF := Rect((FSolalt.FSRight - FSolalt.FSLeft), self.Height -
+        (FAlt.FSBottom - FAlt.FSTop), Width - (FSagalt.FSRight - FSagalt.FSLeft), self.Height);
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       // SOL ORTA CENTERLEFT
-      KAYNAK := Rect(FSol.FSSOL, FSol.FSUST, FSol.FSSAG, FSol.FSALT);
-      HEDEF := Rect(0, FSolust.FSALT - FSolust.FSUST, (FSol.FSSAG - FSol.FSSOL),
-        Height - (FSolalt.FSALT - FSolalt.FSUST));
+      KAYNAK := Rect(FSol.FSLeft, FSol.FSTop, FSol.FSRight, FSol.FSBottom);
+      HEDEF := Rect(0, FSolust.FSBottom - FSolust.FSTop, (FSol.FSRight - FSol.FSLeft),
+        Height - (FSolalt.FSBottom - FSolalt.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       // SAĞ ORTA CENTERRIGHT
-      KAYNAK := Rect(FSag.FSSOL, FSag.FSUST, FSag.FSSAG, FSag.FSALT);
-      HEDEF := Rect(Width - (FSag.FSSAG - FSag.FSSOL), (FSagust.FSALT - FSagust.FSUST),
-        Width, Height - (FSagalt.FSALT - FSagalt.FSUST));
+      KAYNAK := Rect(FSag.FSLeft, FSag.FSTop, FSag.FSRight, FSag.FSBottom);
+      HEDEF := Rect(Width - (FSag.FSRight - FSag.FSLeft), (FSagust.FSBottom - FSagust.FSTop),
+        Width, Height - (FSagalt.FSBottom - FSagalt.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       //ORTA CENTER
-      KAYNAK := Rect(FOrta.FSSOL, FOrta.FSUST, FOrta.FSSAG, FOrta.FSALT);
-      HEDEF := Rect((FSol.FSSAG - FSol.FSSOL), (FUst.FSALT - FUst.FSUST),
-        Width - (FSag.FSSAG - FSag.FSSOL), Height - (FAlt.FSALT - FAlt.FSUST));
+      KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
+      HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        Width - (FSag.FSRight - FSag.FSLeft), Height - (FAlt.FSBottom - FAlt.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
-      fedit.Color := FSkindata.Images.GetPixel(FOrta.FSSOL, FOrta.FSUST);
+      fedit.Color := FSkindata.Images.GetPixel(FOrta.FSLeft, FOrta.FSTop);
 
 
 
       if self.Skindata <> nil then
         Fbuttonu.FSkindata := self.Skindata;
 
-      KAYNAK := Rect(Fbutton.FSSOL, Fbutton.FSUST, Fbutton.FSSAG, Fbutton.FSALT);
+      KAYNAK := Rect(Fbutton.FSLeft, Fbutton.FSTop, Fbutton.FSRight, Fbutton.FSBottom);
       DrawPartstrech(KAYNAK, Fbuttonu, Fbuttonu.Width, Fbuttonu.Height);
 
       if Crop then
@@ -6626,18 +6610,18 @@ begin
 
 
 
-      fedit.Width := 5 + self.Width - (Fbuttonu.Width + (FSag.FSSAG - FSag.FSSOL) +
-        (FSol.FSSAG - FSol.FSSOL));
-      fedit.Height := 5 + self.Height - ((FUst.FSALT - FUst.FSUST) + (FAlt.FSALT - FAlt.FSUST));
-      fedit.Left := FSol.FSSAG - FSol.FSSOL;
+      fedit.Width := 5 + self.Width - (Fbuttonu.Width + (FSag.FSRight - FSag.FSLeft) +
+        (FSol.FSRight - FSol.FSLeft));
+      fedit.Height := 5 + self.Height - ((FUst.FSBottom - FUst.FSTop) + (FAlt.FSBottom - FAlt.FSTop));
+      fedit.Left := FSol.FSRight - FSol.FSLeft;
       fedit.Top := Round((self.Height div 2) - (fedit.Height div 2));
 
 
 
-      ChildSizing.LeftRightSpacing := (FSag.FSSAG - FSag.FSSOL);
-      //-ChildSizing.VerticalSpacing;//+(FSol.FSSAG-FSol.FSSOL);
-      ChildSizing.TopBottomSpacing := (FUst.FSALT - FUst.FSUST);
-      //-ChildSizing.HorizontalSpacing;//+(FAlt.FSALT-FAlt.FSUST);
+      ChildSizing.LeftRightSpacing := (FSag.FSRight - FSag.FSLeft);
+      //-ChildSizing.VerticalSpacing;//+(FSol.FSRight-FSol.FSLeft);
+      ChildSizing.TopBottomSpacing := (FUst.FSBottom - FUst.FSTop);
+      //-ChildSizing.HorizontalSpacing;//+(FAlt.FSBottom-FAlt.FSTop);
 
       //Fedit.Text:=Fedit.Text;
     finally
@@ -7239,7 +7223,7 @@ begin
     Exit;
   if not Enabled then
     Exit;
-   if (Fdurum=bsbasili) or (Fdurum=bsuzerinde)  then
+   if (Fdurum=bspressed) or (Fdurum=bshover)  then
    begin
     FDurum := bsnormal;
     paint;
@@ -7264,7 +7248,7 @@ begin
     with TONScrollBar(Parent).FButtonCNTR do
     begin
 
-      if Fdurum=bsbasili then
+      if Fdurum=bspressed then
       begin
           if TONScrollBar(Parent).State = Fdikey then
           begin
@@ -7341,13 +7325,13 @@ begin
     Exit;
   if not Enabled then
     Exit;
-//  if FDurum = bsbasili then
+//  if FDurum = bspressed then
 //    Exit;
 
-  if (Button = mbleft) and (FDurum<>bsbasili) then FDurum := bsbasili;
+  if (Button = mbleft) and (FDurum<>bspressed) then FDurum := bspressed;
   FXo := X;
   FYo := Y;
-//  FDurum := bsbasili;
+//  FDurum := bspressed;
   paint;
 
   inherited MouseDown(Button,Shift,X,Y);
@@ -7359,10 +7343,10 @@ begin
     Exit;
   if not Enabled then
     Exit;
-  if FDurum = bsuzerinde then
+  if FDurum = bshover then
     Exit;
 
-  FDurum := bsuzerinde;
+  FDurum := bshover;
   Paint;
   inherited;
 end;
@@ -7381,18 +7365,18 @@ begin
       begin
 
           case FDurum of
-            bsNormal: DR := Rect(FNormal.FSSOL, FNormal.FSUST,
-                FNormal.FSSAG, FNormal.FSALT);
-            bsbasili: DR := Rect(FPressed.FSSOL, FPressed.FSUST,
-                FPressed.FSSAG, FPressed.FSALT);
-            bsuzerinde: DR := Rect(FHover.FSSOL, FHover.FSUST,
-                FHover.FSSAG, FHover.FSALT);
+            bsNormal: DR := Rect(FNormal.FSLeft, FNormal.FSTop,
+                FNormal.FSRight, FNormal.FSBottom);
+            bspressed: DR := Rect(FPressed.FSLeft, FPressed.FSTop,
+                FPressed.FSRight, FPressed.FSBottom);
+            bshover: DR := Rect(FHover.FSLeft, FHover.FSTop,
+                FHover.FSRight, FHover.FSBottom);
           end;
 
       end else
       begin
 
-           DR := Rect(FDisabled.FSSOL, FDisabled.FSUST, FDisabled.FSSAG, FDisabled.FSALT);
+           DR := Rect(FDisabled.FSLeft, FDisabled.FSTop, FDisabled.FSRight, FDisabled.FSBottom);
 
       end;
 //      HEDEF := Rect(0, 0, self.Width, self.Height);
@@ -7859,7 +7843,7 @@ begin
   FbuttonCD          := TONCUSTOMCROP.Create;
   FbuttonCD.cropname := 'CENTERBUTTONDISABLE';
 
-  FDurump           := Fyatay;
+  FDurump           := Fhorizontal;
   Fdurum            := bsnormal;
   FdurumCNTR        := bsnormal;
   FdurumLR          := bsnormal;
@@ -7874,7 +7858,7 @@ begin
   FCaption          := '';
   Fpagesize         := 20;
 {  FbuttonLT         := Rect(0,0,FbuttonLT.Width,self.Height);
-  FbuttonRB         := Rect(self.Width-(Fsol.FSSAG - Fsol.FSSOL),0,self.Width,self.Height);
+  FbuttonRB         := Rect(self.Width-(Fsol.FSRight - Fsol.FSLeft),0,self.Width,self.Height);
   trackarea         := Rect(FbuttonLT.Right-FbuttonLT.Left,0,self.Width-(FbuttonRB.Right-FbuttonRB.Left),Height);
 //  Fthumbsize        := abs(100 * round((trackarea.Width - Fmax) / Fmax));
   Fthumbsize        := FbuttonCN.ORIGHT-FbuttonCN.OLEFT;
@@ -7970,11 +7954,11 @@ begin
   GetCursorPos(Cursorpos);
   Cursorpos := ScreenToClient(Cursorpos);
 
-  if (FdurumCNTR=bsbasili) then
+  if (FdurumCNTR=bspressed) then
    begin
 //    if PtInRect(FButtonCNTR, Cursorpos) then
 //    begin
-       if FDurump = Fdikey then
+       if FDurump = Fvertical then
        begin
 
          Ftop_left     := FbuttonLT.Bottom-FbuttonLT.Top;
@@ -8079,32 +8063,32 @@ begin
     Exit;
   if not Enabled then
     Exit;
-//  if(not Enabled) or (FDurum = bsuzerinde) and (FdurumRB=bsuzerinde) and (FdurumLR=bsuzerinde) and (FdurumCNTR=bsuzerinde) then
+//  if(not Enabled) or (FDurum = bshover) and (FdurumRB=bshover) and (FdurumLR=bshover) and (FdurumCNTR=bshover) then
 //    Exit;
 
     GetCursorPos(Cursorpos);
     Cursorpos := ScreenToClient(Cursorpos);
     if  (PtInRect(FbuttonLT, Cursorpos)) then
     begin
-        FdurumLR   := bsuzerinde;
+        FdurumLR   := bshover;
         FdurumRB   := bsnormal;
         FdurumCNTR := bsnormal;
     end else
 
     if  (PtInRect(FbuttonRB, Cursorpos)) then
     begin
-        FdurumRB   := bsuzerinde;
+        FdurumRB   := bshover;
         FdurumLR   := bsnormal;
         FdurumCNTR := bsnormal;
     end else
 
     if (PtInRect(FButtonCNTR, Cursorpos)) then
     begin
-        FdurumCNTR := bsuzerinde;
+        FdurumCNTR := bshover;
         FdurumRB   := bsnormal;
         FdurumLR   := bsnormal;
     end else
-    FDurum := bsuzerinde;
+    FDurum := bshover;
 
     Paint;
   inherited MouseUp(Button, Shift, X, Y);
@@ -8118,18 +8102,18 @@ begin
     Exit;
   if not Enabled then
     Exit;
-//  if (FDurum = bsbasili) and (FdurumRB=bsbasili) and (FdurumLR=bsbasili) and (FdurumCNTR=bsbasili) then
+//  if (FDurum = bspressed) and (FdurumRB=bspressed) and (FdurumLR=bspressed) and (FdurumCNTR=bspressed) then
 //    Exit;
 
   GetCursorPos(Cursorpos);
   Cursorpos := ScreenToClient(Cursorpos);
   if (Button = mbleft) and (PtInRect(FbuttonLT, Cursorpos)) then// or  PtInRect(FbuttonRB, Cursorp) then
   begin
-      FdurumLR   := bsbasili;
+      FdurumLR   := bspressed;
       FdurumRB   := bsnormal;
       FdurumCNTR := bsnormal;
 
-      if FDurump=Fyatay then
+      if FDurump=Fhorizontal then
       begin
           trackarea     := Rect(FbuttonLT.Right-FbuttonLT.Left,0,Width-(FbuttonRB.Right-FbuttonRB.Left),Height);
 
@@ -8195,11 +8179,11 @@ begin
 
   if  (Button = mbleft) and (PtInRect(FbuttonRB, Cursorpos)) then
   begin
-      FdurumRB   := bsbasili;
+      FdurumRB   := bspressed;
       FdurumLR   := bsnormal;
       FdurumCNTR := bsnormal;
 
-      if FDurump=Fyatay then
+      if FDurump=Fhorizontal then
       begin
         trackarea     := Rect(FbuttonLT.Right-FbuttonLT.Left,0,Width-(FbuttonRB.Right-FbuttonRB.Left),Height);
 
@@ -8263,11 +8247,11 @@ begin
 
   if (Button = mbleft) and (PtInRect(FButtonCNTR, Cursorpos)) then
   begin
-      FdurumCNTR := bsbasili;
+      FdurumCNTR := bspressed;
       FdurumRB   := bsnormal;
       FdurumLR   := bsnormal;
   end else
-  FDurum := bsbasili;
+  FDurum := bspressed;
 
   paint;
 
@@ -8280,32 +8264,32 @@ begin
     Exit;
   if not Enabled then
     Exit;
-  if (FDurum = bsuzerinde) and (FdurumRB=bsuzerinde) and (FdurumLR=bsuzerinde) and (FdurumCNTR=bsuzerinde) then
+  if (FDurum = bshover) and (FdurumRB=bshover) and (FdurumLR=bshover) and (FdurumCNTR=bshover) then
     Exit;
 
    GetCursorPos(Cursorpos);
     Cursorpos := ScreenToClient(Cursorpos);
     if  (PtInRect(FbuttonLT, Cursorpos)) then
     begin
-        FdurumLR   := bsuzerinde;
+        FdurumLR   := bshover;
         FdurumRB   := bsnormal;
         FdurumCNTR := bsnormal;
     end else
 
     if  (PtInRect(FbuttonRB, Cursorpos)) then
     begin
-        FdurumRB   := bsuzerinde;
+        FdurumRB   := bshover;
         FdurumLR   := bsnormal;
         FdurumCNTR := bsnormal;
     end else
 
     if (PtInRect(FButtonCNTR, Cursorpos)) then
     begin
-        FdurumCNTR := bsuzerinde;
+        FdurumCNTR := bshover;
         FdurumRB   := bsnormal;
         FdurumLR   := bsnormal;
     end else
-    FDurum := bsuzerinde;
+    FDurum := bshover;
 
     Paint;
   inherited;
@@ -8323,49 +8307,49 @@ begin
      if (trackarea=EmptyRect) or (trackarea=Rect(0,0,0,0)) or (position=0) then
      buttonsizeset;
 
-      if FDurump=Fyatay then
+      if FDurump=Fhorizontal then
       begin
-       FbuttonLT   := Rect(0,0,(Fsol.FSSAG - Fsol.FSSOL),self.Height);
-       FbuttonRB   := Rect(self.Width-(Fsol.FSSAG - Fsol.FSSOL),0,self.Width,self.Height);
+       FbuttonLT   := Rect(0,0,(Fsol.FSRight - Fsol.FSLeft),self.Height);
+       FbuttonRB   := Rect(self.Width-(Fsol.FSRight - Fsol.FSLeft),0,self.Width,self.Height);
       end else
       begin
-       FbuttonLT := Rect(0,0,self.Width,(Fust.FSALT - Fust.FSUST));
-       FbuttonRB := Rect(0,self.Height-(Fust.FSALT - Fust.FSUST),self.Width,self.Height);
+       FbuttonLT := Rect(0,0,self.Width,(Fust.FSBottom - Fust.FSTop));
+       FbuttonRB := Rect(0,self.Height-(Fust.FSBottom - Fust.FSTop),self.Width,self.Height);
       end;
 
 
 
-      if FDurump = Fyatay then   //left image if state horizontal
+      if FDurump = Fhorizontal then   //left image if state horizontal
       begin
-        DR := Rect(Fsol.FSSOL, Fsol.FSUST, Fsol.FSSAG, Fsol.FSALT);
-        DrawPartstrechRegion(DR,self,Fsol.FSSAG-Fsol.FSSOL,Height,rect(0, 0, Fsol.FSSAG - Fsol.FSSOL, Height), False);
+        DR := Rect(Fsol.FSLeft, Fsol.FSTop, Fsol.FSRight, Fsol.FSBottom);
+        DrawPartstrechRegion(DR,self,Fsol.FSRight-Fsol.FSLeft,Height,rect(0, 0, Fsol.FSRight - Fsol.FSLeft, Height), False);
       end
       else         //top image if state vertical
       begin
-        DR := Rect(Fust.FSSOL, Fust.FSUST, Fust.FSSAG, Fust.FSALT);
-        DrawPartstrechRegion(DR,self,self.Width,Fust.FSALT - Fust.FSUST,rect(0, 0, Width, Fust.FSALT - Fust.FSUST), False);
+        DR := Rect(Fust.FSLeft, Fust.FSTop, Fust.FSRight, Fust.FSBottom);
+        DrawPartstrechRegion(DR,self,self.Width,Fust.FSBottom - Fust.FSTop,rect(0, 0, Width, Fust.FSBottom - Fust.FSTop), False);
       end;
 
 
-      if FDurump = Fyatay then  //right image if state horizontal
+      if FDurump = Fhorizontal then  //right image if state horizontal
       begin
-        DR := Rect(Fsag.FSSOL, Fsag.FSUST, Fsag.FSSAG, Fsag.FSALT);
-        DrawPartstrechRegion(DR,self,(fsag.FSSAG - Fsag.FSSOL),self.Height,Rect(self.Width -(fsag.FSSAG - Fsag.FSSOL), 0, self.Width, self.Height),false);
+        DR := Rect(Fsag.FSLeft, Fsag.FSTop, Fsag.FSRight, Fsag.FSBottom);
+        DrawPartstrechRegion(DR,self,(fsag.FSRight - Fsag.FSLeft),self.Height,Rect(self.Width -(fsag.FSRight - Fsag.FSLeft), 0, self.Width, self.Height),false);
       end
       else       //bottom image if state vertical
       begin
-        DR := Rect(Falt.FSSOL, Falt.FSUST, Falt.FSSAG, Falt.FSALT);
-        DrawPartstrechRegion(DR,self,self.Width,(Falt.FSALT - Falt.FSUST),Rect(0, self.Height-(Falt.FSALT - Falt.FSUST), self.Width, self.Height),false);
+        DR := Rect(Falt.FSLeft, Falt.FSTop, Falt.FSRight, Falt.FSBottom);
+        DrawPartstrechRegion(DR,self,self.Width,(Falt.FSBottom - Falt.FSTop),Rect(0, self.Height-(Falt.FSBottom - Falt.FSTop), self.Width, self.Height),false);
       end;
 
-      DR := Rect(FNormali.FSSOL, FNormali.FSUST, FNormali.FSSAG, FNormali.FSALT);
-      if FDurump = Fyatay then  //center image if state horizontal
+      DR := Rect(FNormali.FSLeft, FNormali.FSTop, FNormali.FSRight, FNormali.FSBottom);
+      if FDurump = Fhorizontal then  //center image if state horizontal
       begin
-        DrawPartstrechRegion(DR,self,self.Width-((Fsol.FSSAG - Fsol.FSSOL)+(fsag.FSSAG - Fsag.FSSOL)),self.Height,Rect((Fsol.FSSAG - Fsol.FSSOL), 0, (Width - (fsag.FSSAG - Fsag.FSSOL)), Height),false);
+        DrawPartstrechRegion(DR,self,self.Width-((Fsol.FSRight - Fsol.FSLeft)+(fsag.FSRight - Fsag.FSLeft)),self.Height,Rect((Fsol.FSRight - Fsol.FSLeft), 0, (Width - (fsag.FSRight - Fsag.FSLeft)), Height),false);
       end
       else         //center image if state vertical
       begin
-        DrawPartstrechRegion(DR,self,Width,Height-((Fust.FSALT - Fust.FSUST)+(Falt.FSALT - Falt.FSUST)),Rect(0, (Fust.FSALT - Fust.FSUST), Width, Height-(Falt.FSALT - Falt.FSUST)),false);
+        DrawPartstrechRegion(DR,self,Width,Height-((Fust.FSBottom - Fust.FSTop)+(Falt.FSBottom - Falt.FSTop)),Rect(0, (Fust.FSBottom - Fust.FSTop), Width, Height-(Falt.FSBottom - Falt.FSTop)),false);
       end;
 
 
@@ -8377,13 +8361,13 @@ begin
       if Enabled=true then
       begin
         case FdurumLR of
-           bsnormal   : DR := Rect(FbuttonNL.FSSOL, FbuttonNL.FSUST, FbuttonNL.FSSAG, FbuttonNL.FSALT);
-           bsuzerinde : DR := Rect(FbuttonUL.FSSOL, FbuttonUL.FSUST, FbuttonUL.FSSAG, FbuttonUL.FSALT);
-           bsbasili   : DR := Rect(FbuttonBL.FSSOL, FbuttonBL.FSUST, FbuttonBL.FSSAG, FbuttonBL.FSALT);
+           bsnormal   : DR := Rect(FbuttonNL.FSLeft, FbuttonNL.FSTop, FbuttonNL.FSRight, FbuttonNL.FSBottom);
+           bshover : DR := Rect(FbuttonUL.FSLeft, FbuttonUL.FSTop, FbuttonUL.FSRight, FbuttonUL.FSBottom);
+           bspressed   : DR := Rect(FbuttonBL.FSLeft, FbuttonBL.FSTop, FbuttonBL.FSRight, FbuttonBL.FSBottom);
         end;
       end else
       begin
-       DR := Rect(FbuttonDL.FSSOL, FbuttonDL.FSUST, FbuttonDL.FSSAG, FbuttonDL.FSALT);
+       DR := Rect(FbuttonDL.FSLeft, FbuttonDL.FSTop, FbuttonDL.FSRight, FbuttonDL.FSBottom);
       end;
 
        //{top}
@@ -8392,13 +8376,13 @@ begin
        if Enabled=true then
       begin
         case FdurumRB of
-           bsnormal   : DR := Rect(FbuttonNR.FSSOL, FbuttonNR.FSUST, FbuttonNR.FSSAG, FbuttonNR.FSALT);
-           bsuzerinde : DR := Rect(FbuttonUR.FSSOL, FbuttonUR.FSUST, FbuttonUR.FSSAG, FbuttonUR.FSALT);
-           bsbasili   : DR := Rect(FbuttonBR.FSSOL, FbuttonBR.FSUST, FbuttonBR.FSSAG, FbuttonBR.FSALT);
+           bsnormal   : DR := Rect(FbuttonNR.FSLeft, FbuttonNR.FSTop, FbuttonNR.FSRight, FbuttonNR.FSBottom);
+           bshover : DR := Rect(FbuttonUR.FSLeft, FbuttonUR.FSTop, FbuttonUR.FSRight, FbuttonUR.FSBottom);
+           bspressed   : DR := Rect(FbuttonBR.FSLeft, FbuttonBR.FSTop, FbuttonBR.FSRight, FbuttonBR.FSBottom);
         end;
       end else
       begin
-       DR := Rect(FbuttonDR.FSSOL, FbuttonDR.FSUST, FbuttonDR.FSSAG, FbuttonDR.FSALT);
+       DR := Rect(FbuttonDR.FSLeft, FbuttonDR.FSTop, FbuttonDR.FSRight, FbuttonDR.FSBottom);
       end;
 
        {bottom} DrawPartnormal(DR,self,FbuttonRB,false);
@@ -8411,13 +8395,13 @@ begin
       if Enabled=true then
       begin
       case FdurumCNTR of
-         bsnormal   : DR := Rect(FbuttonCN.FSSOL, FbuttonCN.FSUST, FbuttonCN.FSSAG, FbuttonCN.FSALT);
-         bsuzerinde : DR := Rect(FbuttonCU.FSSOL, FbuttonCU.FSUST, FbuttonCU.FSSAG, FbuttonCU.FSALT);
-         bsbasili   : DR := Rect(FbuttonCB.FSSOL, FbuttonCB.FSUST, FbuttonCB.FSSAG, FbuttonCB.FSALT);
+         bsnormal   : DR := Rect(FbuttonCN.FSLeft, FbuttonCN.FSTop, FbuttonCN.FSRight, FbuttonCN.FSBottom);
+         bshover : DR := Rect(FbuttonCU.FSLeft, FbuttonCU.FSTop, FbuttonCU.FSRight, FbuttonCU.FSBottom);
+         bspressed   : DR := Rect(FbuttonCB.FSLeft, FbuttonCB.FSTop, FbuttonCB.FSRight, FbuttonCB.FSBottom);
        end;
       end else
       begin
-       DR := Rect(FbuttonCD.FSSOL, FbuttonCD.FSUST, FbuttonCD.FSSAG, FbuttonCD.FSALT);
+       DR := Rect(FbuttonCD.FSLeft, FbuttonCD.FSTop, FbuttonCD.FSRight, FbuttonCD.FSBottom);
       end;
 
        DrawPartnormal(DR,self,FButtonCNTR,false);
@@ -8484,10 +8468,10 @@ end;
 
 procedure TONScrollBar.Buttonsizeset;
 begin
-  if FDurump=Fyatay then
+  if FDurump=Fhorizontal then
     begin
-     FbuttonLT          := Rect(0,0,(Fsol.FSSAG - Fsol.FSSOL),self.Height);
-     FbuttonRB          := Rect(self.Width-(Fsol.FSSAG - Fsol.FSSOL),0,self.Width,self.Height);
+     FbuttonLT          := Rect(0,0,(Fsol.FSRight - Fsol.FSLeft),self.Height);
+     FbuttonRB          := Rect(self.Width-(Fsol.FSRight - Fsol.FSLeft),0,self.Width,self.Height);
      trackarea          := Rect(FbuttonLT.Right-FbuttonLT.Left,0,self.Width-(FbuttonRB.Right-FbuttonRB.Left),Height);
      Fthumbsize         := FbuttonCN.ORIGHT-FbuttonCN.OLEFT;
 
@@ -8505,8 +8489,8 @@ begin
 
     end else
     begin
-     FbuttonLT          := Rect(0,0,self.Width,(Fust.FSALT - Fust.FSUST));
-     FbuttonRB          := Rect(0,self.Height-(Fust.FSALT - Fust.FSUST),self.Width,self.Height);
+     FbuttonLT          := Rect(0,0,self.Width,(Fust.FSBottom - Fust.FSTop));
+     FbuttonRB          := Rect(0,self.Height-(Fust.FSBottom - Fust.FSTop),self.Width,self.Height);
      trackarea          := Rect(FbuttonLT.Bottom-FbuttonLT.Top,0,self.Height-(FbuttonRB.Bottom-FbuttonRB.Top),Width);
      Fthumbsize         := FbuttonCN.OBOTTOM-FbuttonCN.OTOP;
 
@@ -8526,7 +8510,7 @@ procedure TONScrollBar.Resize(sender:TObject);
 begin
  if (csDesigning in ComponentState)  then
   begin
-   if FDurump = Fyatay then
+   if FDurump = Fhorizontal then
    begin
     Buttonsizeset;
    end;
@@ -8588,7 +8572,7 @@ begin
      begin
       Parent      := self;
       name        := 'right_scroll';
-      State       := Fdikey;
+      State       := Fvertical;
       Height      := self.Height;
       Width       := 20;
       Top         := 0;
@@ -8603,7 +8587,7 @@ begin
      begin
       Parent      := self;
       name        := 'bottom_scroll';
-      State       := Fyatay;
+      State       := Fhorizontal;
       Height      := 20;
       Width       := Self.Width;
       Top         := self.Height-Height;
@@ -8834,9 +8818,9 @@ end;
       Fresim.SetSize(w, H);
 
 
-      KAYNAK := Rect(FUst.FSSOL, FUst.FSUST, FUst.FSSAG, FUst.FSALT);
-      HEDEF := Rect((FSolust.FSSAG - FSolust.FSSOL), 0, w -
-        (FSagust.FSSAG - FSagust.FSSOL), (FUst.FSALT - FUst.FSUST));
+      KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
+      HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, w -
+        (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
 
 
 
@@ -8846,60 +8830,60 @@ end;
 //      ShowMessage('sıkıntı yok');
 
       //SOL ÜST TOPLEFT     5-1=5                        63-59
-      KAYNAK := Rect(FSolust.FSSOL, FSolust.FSUST, FSolust.FSSAG, FSolust.FSALT);
-      HEDEF := Rect(0, 0, FSolust.FSSAG - FSolust.FSSOL, FSolust.FSALT - FSolust.FSUST);
+      KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
+      HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       //SAĞ ÜST TOPRIGHT
-      KAYNAK := Rect(FSagust.FSSOL, FSagust.FSUST, FSagust.FSSAG, FSagust.FSALT);
-      HEDEF := Rect(w - (FSagust.FSSAG - FSagust.FSSOL), 0, w,
-        (FSagust.FSALT - FSagust.FSUST));
+      KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
+      HEDEF := Rect(w - (FSagust.FSRight - FSagust.FSLeft), 0, w,
+        (FSagust.FSBottom - FSagust.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       // SOL ALT BOTTOMLEFT
-      KAYNAK := Rect(FSolalt.FSSOL, FSolalt.FSUST, FSolalt.FSSAG, FSolalt.FSALT);
-      HEDEF := Rect(0, h - (FSolalt.FSALT - FSolalt.FSUST),
-        (FSolalt.FSSAG - FSolalt.FSSOL), h);
+      KAYNAK := Rect(FSolalt.FSLeft, FSolalt.FSTop, FSolalt.FSRight, FSolalt.FSBottom);
+      HEDEF := Rect(0, h - (FSolalt.FSBottom - FSolalt.FSTop),
+        (FSolalt.FSRight - FSolalt.FSLeft), h);
 
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       //SAĞ ALT BOTTOMRIGHT
-      KAYNAK := Rect(FSagalt.FSSOL, FSagalt.FSUST, FSagalt.FSSAG, FSagalt.FSALT);
-      HEDEF := Rect(w - (FSagalt.FSSAG - FSagalt.FSSOL), h -
-        (FSagalt.FSALT - FSagalt.FSUST), w, h);
+      KAYNAK := Rect(FSagalt.FSLeft, FSagalt.FSTop, FSagalt.FSRight, FSagalt.FSBottom);
+      HEDEF := Rect(w - (FSagalt.FSRight - FSagalt.FSLeft), h -
+        (FSagalt.FSBottom - FSagalt.FSTop), w, h);
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       //ALT BOTTOM
-      KAYNAK := Rect(FAlt.FSSOL, FAlt.FSUST, FAlt.FSSAG, FAlt.FSALT);
-      HEDEF := Rect((FSolalt.FSSAG - FSolalt.FSSOL), h -
-        (FAlt.FSALT - FAlt.FSUST), w - (FSagalt.FSSAG - FSagalt.FSSOL), h);
+      KAYNAK := Rect(FAlt.FSLeft, FAlt.FSTop, FAlt.FSRight, FAlt.FSBottom);
+      HEDEF := Rect((FSolalt.FSRight - FSolalt.FSLeft), h -
+        (FAlt.FSBottom - FAlt.FSTop), w - (FSagalt.FSRight - FSagalt.FSLeft), h);
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       // SOL ORTA CENTERLEFT
-      KAYNAK := Rect(FSol.FSSOL, FSol.FSUST, FSol.FSSAG, FSol.FSALT);
-      HEDEF := Rect(0, FSolust.FSALT - FSolust.FSUST, (FSol.FSSAG - FSol.FSSOL),
-        Height - (FSolalt.FSALT - FSolalt.FSUST));
+      KAYNAK := Rect(FSol.FSLeft, FSol.FSTop, FSol.FSRight, FSol.FSBottom);
+      HEDEF := Rect(0, FSolust.FSBottom - FSolust.FSTop, (FSol.FSRight - FSol.FSLeft),
+        Height - (FSolalt.FSBottom - FSolalt.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
 
       // SAĞ ORTA CENTERRIGHT
-      KAYNAK := Rect(FSag.FSSOL, FSag.FSUST, FSag.FSSAG, FSag.FSALT);
-      HEDEF := Rect(w - (FSag.FSSAG - FSag.FSSOL), (FSagust.FSALT - FSagust.FSUST),
-        w, h - (FSagalt.FSALT - FSagalt.FSUST));
+      KAYNAK := Rect(FSag.FSLeft, FSag.FSTop, FSag.FSRight, FSag.FSBottom);
+      HEDEF := Rect(w - (FSag.FSRight - FSag.FSLeft), (FSagust.FSBottom - FSagust.FSTop),
+        w, h - (FSagalt.FSBottom - FSagalt.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
 
 
       //ORTA CENTER
-      KAYNAK := Rect(FOrta.FSSOL, FOrta.FSUST, FOrta.FSSAG, FOrta.FSALT);
-      HEDEF := Rect((FSol.FSSAG - FSol.FSSOL), (FUst.FSALT - FUst.FSUST),
-        w - (FSag.FSSAG - FSag.FSSOL), h - (FAlt.FSALT - FAlt.FSUST));
+      KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
+      HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        w - (FSag.FSRight - FSag.FSLeft), h - (FAlt.FSBottom - FAlt.FSTop));
 
       DrawPartnormal(kaynak, self, hedef, False);
 
@@ -8912,7 +8896,7 @@ end;
       begin
         if TabCount = FActiveItem then
         begin
-          KAYNAK := Rect(Factiveitems.FSSOL, Factiveitems.FSUST, Factiveitems.FSSAG, Factiveitems.FSALT);
+          KAYNAK := Rect(Factiveitems.FSLeft, Factiveitems.FSTop, Factiveitems.FSRight, Factiveitems.FSBottom);
           HEDEF := PRect(FItemsRect.Items[TabCount])^;
           DrawPartnormal(kaynak, self, hedef, False);
         end;
