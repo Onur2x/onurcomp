@@ -3391,7 +3391,7 @@ begin
   end
   else
   begin
-     Fresim.Fill(BGRA(207, 220, 207), dmSet);
+    Fresim.Fill(BGRA(207, 220, 207), dmSet);
     Fresim.Draw(self.canvas, 0, 0, False);
   end;
 
@@ -7594,6 +7594,8 @@ var
 begin
 
   try
+    if Skindata<> nil then
+     begin
     Fresim.SetSize(Width, Height);
  //   Buffer.Font := Font;
 
@@ -7683,6 +7685,8 @@ begin
       //  DrawText(Fresim.canvas.Handle, PChar(FItems[TabCount]), Length(FItems[TabCount]), TempRect, DT_VCENTER or DT_SINGLELINE);
      // Fresim.TextOut(5,(11*TabCount)+fresim.Canvas.TextHeight(FItems[TabCount]),FItems[TabCount],BGRABlack);
       end;
+
+     end;
 Inherited;
   //  buffer.Draw(fresim.canvas,0,0,false);
   //  MyBitBlt(Canvas.Handle, 0, 0, Buffer.Width, Buffer.Height, Buffer.bitmap.Handle, 0, 0);
@@ -8537,7 +8541,7 @@ constructor TONListbox.Create(AOwner: TComponent);
 begin
    inherited Create(AOwner);
    parent               := TWinControl(AOwner);
-   ControlStyle         := ControlStyle + [csClickEvents, csCaptureMouse];
+   ControlStyle         := ControlStyle + [csClickEvents, csCaptureMouse, csAcceptsControls];
    FUst                 := TONCUSTOMCROP.Create;
    FUST.cropname        := 'TOP';
    FAlt                 := TONCUSTOMCROP.Create;
@@ -8578,8 +8582,9 @@ begin
       Top         := 0;
       left        := self.Width-Width;
   //    Skindata    := self.Skindata;
-  //    SetSubComponent(true);
+      SetSubComponent(true);
       Position    := 0;
+      Visible     := true;
      end;
 
      FHScrollbar     := TONScrollBar.Create(self);
@@ -8595,7 +8600,9 @@ begin
   //    Skindata    := self.Skindata;
       SetSubComponent(true);
       Position    := 0;
+      Visible     := true;
      end;
+
 
 
    FItems             := TStringList.Create;
@@ -8773,8 +8780,7 @@ begin
   Paint;
 end;
 
-
-  procedure TONListbox.Paint;
+procedure TONListbox.Paint;
   var
     TabCount  : Integer;
     aa:TTextStyle;
@@ -8783,12 +8789,13 @@ end;
   begin
 
     try
-
-     if FHScrollbar.Skindata<> nil then
-      FHScrollbar.Skindata := self.Skindata;
+     if Skindata<> nil then
+     begin
+     if FHScrollbar.Skindata<>nil then
+      FHScrollbar.Skindata := Skindata;
 
      if FVScrollbar.Skindata<> nil then
-      FVScrollbar.Skindata := self.Skindata;
+      FVScrollbar.Skindata := Skindata;
 
       w:=Width;
       h:=Height;
@@ -8798,26 +8805,30 @@ end;
 
       if FvScrollbar.Visible=true then
       begin
-      FVScrollbar.Left:=w-FVScrollbar.Width+5;
-
+       FVScrollbar.Left:=w-FVScrollbar.Width+5;
       end;
 
      if FHScrollbar.Visible=true then
-       w:=Width-FHScrollbar.Height;
+       w:=self.Width-FHScrollbar.Height;
      // else
      if FVScrollbar.Visible=true then
-       h:=Height-FVScrollbar.Width;
+       h:=self.Height-FVScrollbar.Width;
 
-
-      if FHScrollbar.Visible=true then
+  //    FHScrollbar.Caption:='yatay';
+ //     FVScrollbar.Caption:='dikey';
+     if FHScrollbar.Visible=true then
        FhScrollbar.Paint;
 
      if FVScrollbar.Visible=true then
       FVScrollbar.Paint;
 
+
+
+
       Fresim.SetSize(w, H);
 
 
+      // UST   TOP
       KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
       HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, w -
         (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
@@ -8827,13 +8838,13 @@ end;
 
       DrawPartnormal(kaynak, self, hedef, False);
 
-//      ShowMessage('sıkıntı yok');
 
       //SOL ÜST TOPLEFT     5-1=5                        63-59
       KAYNAK := Rect(FSolust.FSLeft, FSolust.FSTop, FSolust.FSRight, FSolust.FSBottom);
       HEDEF := Rect(0, 0, FSolust.FSRight - FSolust.FSLeft, FSolust.FSBottom - FSolust.FSTop);
-
       DrawPartnormal(kaynak, self, hedef, False);
+
+
 
       //SAĞ ÜST TOPRIGHT
       KAYNAK := Rect(FSagust.FSLeft, FSagust.FSTop, FSagust.FSRight, FSagust.FSBottom);
@@ -8880,6 +8891,7 @@ end;
       DrawPartnormal(kaynak, self, hedef, False);
 
 
+
       //ORTA CENTER
       KAYNAK := Rect(FOrta.FSLeft, FOrta.FSTop, FOrta.FSRight, FOrta.FSBottom);
       HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
@@ -8889,9 +8901,6 @@ end;
 
 
 
-      if Crop then
-        CropToimg(Fresim);
-
       for TabCount := 0 to FItems.Count - 1 do
       begin
         if TabCount = FActiveItem then
@@ -8899,10 +8908,42 @@ end;
           KAYNAK := Rect(Factiveitems.FSLeft, Factiveitems.FSTop, Factiveitems.FSRight, Factiveitems.FSBottom);
           HEDEF := PRect(FItemsRect.Items[TabCount])^;
           DrawPartnormal(kaynak, self, hedef, False);
-        end;
+          Fresim.TextRect(HEDEF,HEDEF.Left+10,FItemSpacing*TabCount,FItems[TabCount],aa,BGRABlack);
+        end else
+        begin
+        HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
+        w - (FSag.FSRight - FSag.FSLeft), h - (FAlt.FSBottom - FAlt.FSTop));
         Fresim.TextRect(HEDEF,HEDEF.Left+10,FItemSpacing*TabCount,FItems[TabCount],aa,BGRABlack);
+        end;
       end;
 
+     { //FVScrollbar.Position:=FActiveItem;
+       with FVScrollbar do
+       begin
+        Height      := self.Height;
+        Width       := 20;
+        Top         := 0;
+        left        := self.Width-FVScrollbar.Width;
+        Visible     := true;
+        Skindata    :=self.Skindata;
+       end;
+
+     with FHScrollbar do
+     begin
+      parent      := Self;
+      Height      := 20;
+      Width       := Self.Width;
+      Top         := self.Height-FHScrollbar.Height;
+      left        := 0;
+      Visible     := true;
+      Skindata    :=self.Skindata;
+     end;
+      }
+
+     if Crop then
+        CropToimg(Fresim);
+
+     end;
 
 
     finally
