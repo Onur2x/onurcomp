@@ -1014,7 +1014,7 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X: integer;
       Y: integer); override;
     //    procedure WMMouseLeave(var Msg: TWMMouse); message CM_MOUSELEAVE;
-    procedure CMHittest(var msg: TCMHittest); message CM_HITTEST;
+   //* procedure CMHittest(var msg: TCMHittest); message CM_HITTEST;
     //    property OnClick       : TNotifyEvent read FOnClick      write FOnClick;
 
   published
@@ -1430,6 +1430,7 @@ type
     FdurumLR             : TONButtonState;
     FdurumRB             : TONButtonState;
     FdurumCNTR           : TONButtonState;
+    FOnChange            : TNotifyEvent;
     Fmin, Fmax,
     Fposition,
     Fthumbsize,
@@ -1448,12 +1449,12 @@ type
   protected
 
     procedure CMHittest(var msg: TCMHittest); message CM_HITTEST;
-    procedure Setaz(val: integer);
-    procedure Setcok(val: integer);
+    procedure Setmin(val: integer);
+    procedure Setmax(val: integer);
     procedure Setdeger(val: integer);
     procedure SetState(val: TONProgressState);
     procedure SetFpagesize(val: integer);
-    procedure Butonclick(Sender:Tobject);
+//    procedure Butonclick(Sender:Tobject);
     procedure Buttonsizeset;
     procedure Resize(sender:TObject);
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -1471,8 +1472,8 @@ type
     property Color;
     property Constraints;
     property Enabled;
-    property Min               : integer       read Fmin      write Setaz;
-    property Max               : integer       read Fmax      write Setcok;
+    property Min               : integer       read Fmin      write Setmin;
+    property Max               : integer       read Fmax      write Setmax;
     property ONLEFT            : TONCUSTOMCROP read Fsol      write Fsol;
     property ONRIGHT           : TONCUSTOMCROP read Fsag      write Fsag;
     property ONTOP             : TONCUSTOMCROP read Fust      write Fust;
@@ -1500,15 +1501,16 @@ type
     property OnMouseMove;
     property OnPaint;
     property OnResize;
-    property Pagesize        : integer          read Fpagesize write SetFpagesize;
+    property Pagesize        : integer          read Fpagesize     write SetFpagesize;
     property ParentBidiMode;
     property ParentFont;
     property ParentShowHint;
     property PopupMenu;
-    property Position        : integer          read Fposition write Setdeger;
+    property Position        : integer          read Fposition     write Setdeger;
     property ShowHint;
-    property Skindata        : TONImg           read FSkindata write SetSkindata;
-    property State           : TONProgressState read FDurump   write SetState;
+    property Skindata        : TONImg           read FSkindata     write SetSkindata;
+    property State           : TONProgressState read FDurump       write SetState;
+    property OnChange        : TNotifyEvent     read FOnChange     write FOnChange;
     property Visible;
 
   end;
@@ -1784,6 +1786,7 @@ type
   end;
 
 
+
  TONListbox = class(TONControl)
   private
     FSol, FSolust, FSolalt, FSag, FSagust, FSagalt, FUst, FAlt, FOrta,Factiveitems: TONCUSTOMCROP;
@@ -1792,9 +1795,11 @@ type
     FItemsRect      : TList;
     FItemSpacing    : Byte;
     FActiveItem     : integer;
+    FItemOffset     : integer;
     FMouseInControl : Boolean;
     Fscrollvsbl     : Boolean;
     FOnItemChanged  : TNotifyEvent;
+//    FOnMouseDownHrz : TONMouseEvent;
     FHScrollbar     : TONScrollBar;
     FVScrollbar     : TONScrollBar;
     procedure SetItems(Value: TStringList);
@@ -1802,14 +1807,17 @@ type
     procedure SetActiveItem(Val: integer);
     procedure SetItemRect;
     procedure SetSkindata(Aimg: TONImg);
+    procedure ScrollBarChange(Sender: TObject);
+    function  ItemRect(Item: Integer): TRect;
 //    procedure CheckOthersPanels;
   protected
     { Protected declarations }
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+  //  procedure MouseDownhrz(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure Paint; override;
     procedure ItemsChanged(Sender: TObject);
-
+    procedure DrawItem(ACanvas: TBGRABitmap; Itemi: String; X1, X2: SmallInt);
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -1833,6 +1841,8 @@ type
     property ONTOPRIGHT       : TONCUSTOMCROP    read FSagust        write FSagust;
     property ONACTIVEITEM     : TONCUSTOMCROP    read Factiveitems   write Factiveitems;
     property Skindata         : TONImg           read FSkindata      write SetSkindata;
+    property HScrollbar       : TONScrollBar     read FHScrollbar    write FHScrollbar;
+    property VScrollbar       : TONScrollBar     read FVScrollbar    write FVScrollbar;
 //    property OnExpanded    : TONPanelExpanded read FOnExpanded    write FOnExpanded;
      property Align;
     property Alignment        : TAlignment       read FAlignment     write SetAlignment default taCenter;
@@ -1897,6 +1907,7 @@ type
     procedure SetExpanded(Value: Boolean);
     procedure CheckOthersPanels;
     procedure SetSkindata(Aimg: TONImg);
+
   protected
     { Protected declarations }
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -2522,6 +2533,61 @@ begin
               cropRead(ONBOTTOMLEFT,fil,isim);
               cropRead(ONBOTTOMRIGHT,fil,isim);
               cropRead(ONACTIVEITEM,fil,isim);
+
+              //if HScrollbar.Skindata<>nil then
+
+
+            // if FVScrollbar.Skindata<> nil then
+            {  if HScrollbar<>nil then
+              begin
+                HScrollbar.Skindata := Self;
+                isim := 'SCROLLBAR_H';
+                with HScrollbar do
+                 begin
+                   cropRead(ONNORMAL,fil,isim);
+                   cropRead(ONLEFT,fil,isim);
+                   cropRead(ONRIGHT,fil,isim);
+                   cropRead(ONBAR,fil,isim);
+                   cropRead(FbuttonNL,fil,isim);
+                   cropRead(FbuttonUL,fil,isim);
+                   cropRead(FbuttonBL,fil,isim);
+                   cropRead(FbuttonDL,fil,isim);
+                   cropRead(FbuttonNR,fil,isim);
+                   cropRead(FbuttonUR,fil,isim);
+                   cropRead(FbuttonBR,fil,isim);
+                   cropRead(FbuttonDR,fil,isim);
+                   cropRead(FbuttonCN,fil,isim);
+                   cropRead(FbuttonCU,fil,isim);
+                   cropRead(FbuttonCB,fil,isim);
+                   cropRead(FbuttonCD,fil,isim);
+                end;
+              end;
+
+              if VScrollbar<>nil then
+              begin
+                VScrollbar.Skindata := Self;
+                isim := 'SCROLLBAR_V';
+                 with VScrollbar do
+                 begin
+                   cropRead(ONNORMAL,fil,isim);
+                   cropRead(ONTOP,fil,isim);
+                   cropRead(ONBOTTOM,fil,isim);
+                   cropRead(ONBAR,fil,isim);
+                   cropRead(FbuttonNL,fil,isim);
+                   cropRead(FbuttonUL,fil,isim);
+                   cropRead(FbuttonBL,fil,isim);
+                   cropRead(FbuttonDL,fil,isim);
+                   cropRead(FbuttonNR,fil,isim);
+                   cropRead(FbuttonUR,fil,isim);
+                   cropRead(FbuttonBR,fil,isim);
+                   cropRead(FbuttonDR,fil,isim);
+                   cropRead(FbuttonCN,fil,isim);
+                   cropRead(FbuttonCU,fil,isim);
+                   cropRead(FbuttonCB,fil,isim);
+                   cropRead(FbuttonCD,fil,isim);
+                 end;
+              end;
+              }
             end;
 
 
@@ -5018,7 +5084,7 @@ end;
 
 
 // -----------------------------------------------------------------------------
-
+{
 procedure TONButton.CMHittest(var msg: TCMHIttest);
 begin
   inherited;
@@ -5029,7 +5095,7 @@ begin
   else
     msg.Result := HTNOWHERE;
 end;
-
+}
 // -----------------------------------------------------------------------------
 procedure TONButton.MouseMove(Shift: TShiftState; X: integer; Y: integer);
 begin
@@ -7525,6 +7591,7 @@ begin
   end;
 
   FItemsRect.Capacity := FItemsRect.Count;
+
 end;
 
 // -----------------------------------------------------------------------------
@@ -7869,7 +7936,7 @@ begin
   FButtonCNTR       := rect(trackarea.Left,0, Fthumbsize,self.Height);
   }
   OnResize          := @Resize;
-  OnClick           := @Butonclick;
+//  OnClick           := @Butonclick;
   trackarea         := Rect(0,0,0,0);
   Parent            := AOwner as TWinControl;
   Buttonsizeset;
@@ -7994,9 +8061,9 @@ begin
           Fposition:=0
          else
          if FButtonCNTR.bottom=trackarea.Height then
-          Fposition:=100
+          Fposition:=Fmax
          else
-          FPosition:=Round(100 * abs((iTop_left+Fthumbsize)-trackarea.top)/trackarea.Height);
+          FPosition:=Round(Fmax * abs((iTop_left+Fthumbsize)-trackarea.top)/trackarea.Height);
 
 
 
@@ -8044,13 +8111,20 @@ begin
           Fposition:=0
          else
          if FButtonCNTR.Right=trackarea.Width then
-          Fposition:=100
+          Fposition:=Fmax
          else
-          FPosition:=Round(100 * abs((iTop_left+Fthumbsize)-trackarea.left)/trackarea.Width);
+          FPosition:=Round(Fmax * abs((iTop_left+Fthumbsize)-trackarea.left)/trackarea.Width);
 
 
       //    end;
+
+
+       if Assigned(FOnChange) then
+      FOnChange(Self);
+
        end;
+
+
    paint;
  end;
   inherited MouseMove(Shift,X,Y);
@@ -8143,9 +8217,9 @@ begin
           Fposition:=0
          else
          if FButtonCNTR.Right=trackarea.Width then
-          Fposition:=100
+          Fposition:=Fmax
          else
-          FPosition:=Round(100 * abs((iTop_left+Fthumbsize)-trackarea.left)/trackarea.Width);
+          FPosition:=Round(Fmax * abs((iTop_left+Fthumbsize)-trackarea.left)/trackarea.Width);
 
       end else
       begin
@@ -8173,9 +8247,9 @@ begin
           Fposition:=0
          else
          if FButtonCNTR.Bottom=trackarea.Height then
-          Fposition:=100
+          Fposition:=Fmax
          else
-          FPosition:=Round(100 * abs((iTop_left+Fthumbsize)-trackarea.Top)/trackarea.Height);
+          FPosition:=Round(Fmax * abs((iTop_left+Fthumbsize)-trackarea.Top)/trackarea.Height);
 
       end;
 
@@ -8212,9 +8286,9 @@ begin
         Fposition:=0
        else
        if FButtonCNTR.Right=trackarea.Width then
-        Fposition:=100
+        Fposition:=Fmax
        else
-        FPosition:=Round(100 * abs((iTop_left+Fthumbsize)-trackarea.left)/trackarea.Width);
+        FPosition:=Round(Fmax * abs((iTop_left+Fthumbsize)-trackarea.left)/trackarea.Width);
       end else
       begin
 
@@ -8241,9 +8315,9 @@ begin
         Fposition:=0
        else
        if FButtonCNTR.Bottom=trackarea.Height then
-        Fposition:=100
+        Fposition:=Fmax
        else
-        FPosition:=Round(100 * abs((iTop_left+Fthumbsize)-trackarea.Top)/trackarea.Height);
+        FPosition:=Round(Fmax * abs((iTop_left+Fthumbsize)-trackarea.Top)/trackarea.Height);
       end;
 
 
@@ -8257,6 +8331,9 @@ begin
   end else
   FDurum := bspressed;
 
+
+  if Assigned(FOnChange) then
+      FOnChange(Self);
   paint;
 
   inherited MouseDown(Button,Shift,X,Y);
@@ -8366,8 +8443,8 @@ begin
       begin
         case FdurumLR of
            bsnormal   : DR := Rect(FbuttonNL.FSLeft, FbuttonNL.FSTop, FbuttonNL.FSRight, FbuttonNL.FSBottom);
-           bshover : DR := Rect(FbuttonUL.FSLeft, FbuttonUL.FSTop, FbuttonUL.FSRight, FbuttonUL.FSBottom);
-           bspressed   : DR := Rect(FbuttonBL.FSLeft, FbuttonBL.FSTop, FbuttonBL.FSRight, FbuttonBL.FSBottom);
+           bshover    : DR := Rect(FbuttonUL.FSLeft, FbuttonUL.FSTop, FbuttonUL.FSRight, FbuttonUL.FSBottom);
+           bspressed  : DR := Rect(FbuttonBL.FSLeft, FbuttonBL.FSTop, FbuttonBL.FSRight, FbuttonBL.FSBottom);
         end;
       end else
       begin
@@ -8381,8 +8458,8 @@ begin
       begin
         case FdurumRB of
            bsnormal   : DR := Rect(FbuttonNR.FSLeft, FbuttonNR.FSTop, FbuttonNR.FSRight, FbuttonNR.FSBottom);
-           bshover : DR := Rect(FbuttonUR.FSLeft, FbuttonUR.FSTop, FbuttonUR.FSRight, FbuttonUR.FSBottom);
-           bspressed   : DR := Rect(FbuttonBR.FSLeft, FbuttonBR.FSTop, FbuttonBR.FSRight, FbuttonBR.FSBottom);
+           bshover    : DR := Rect(FbuttonUR.FSLeft, FbuttonUR.FSTop, FbuttonUR.FSRight, FbuttonUR.FSBottom);
+           bspressed  : DR := Rect(FbuttonBR.FSLeft, FbuttonBR.FSTop, FbuttonBR.FSRight, FbuttonBR.FSBottom);
         end;
       end else
       begin
@@ -8400,8 +8477,8 @@ begin
       begin
       case FdurumCNTR of
          bsnormal   : DR := Rect(FbuttonCN.FSLeft, FbuttonCN.FSTop, FbuttonCN.FSRight, FbuttonCN.FSBottom);
-         bshover : DR := Rect(FbuttonCU.FSLeft, FbuttonCU.FSTop, FbuttonCU.FSRight, FbuttonCU.FSBottom);
-         bspressed   : DR := Rect(FbuttonCB.FSLeft, FbuttonCB.FSTop, FbuttonCB.FSRight, FbuttonCB.FSBottom);
+         bshover    : DR := Rect(FbuttonCU.FSLeft, FbuttonCU.FSTop, FbuttonCU.FSRight, FbuttonCU.FSBottom);
+         bspressed  : DR := Rect(FbuttonCB.FSLeft, FbuttonCB.FSTop, FbuttonCB.FSRight, FbuttonCB.FSBottom);
        end;
       end else
       begin
@@ -8435,7 +8512,7 @@ begin
 
 end;
 
-procedure TONScrollBar.Setaz(Val: integer);
+procedure TONScrollBar.Setmin(Val: integer);
 begin
   if Fmin <> Val then
   begin
@@ -8444,7 +8521,7 @@ begin
   end;
 end;
 
-procedure TONScrollBar.Setcok(Val: integer);
+procedure TONScrollBar.Setmax(Val: integer);
 begin
   if Fmax <> Val then
   begin
@@ -8463,9 +8540,7 @@ begin
 end;
 
 
-procedure TONScrollBar.Butonclick(sender:Tobject);
-begin
-end;
+
 
 
 
@@ -8477,7 +8552,7 @@ begin
      FbuttonLT          := Rect(0,0,(Fsol.FSRight - Fsol.FSLeft),self.Height);
      FbuttonRB          := Rect(self.Width-(Fsol.FSRight - Fsol.FSLeft),0,self.Width,self.Height);
      trackarea          := Rect(FbuttonLT.Right-FbuttonLT.Left,0,self.Width-(FbuttonRB.Right-FbuttonRB.Left),Height);
-     Fthumbsize         := FbuttonCN.ORIGHT-FbuttonCN.OLEFT;
+     Fthumbsize         := Fmax-(FbuttonCN.ORIGHT+FbuttonCN.OLEFT);
 
 
      if Position=0 then
@@ -8507,6 +8582,7 @@ begin
      FButtonCNTR.Left   := 0;
      FButtonCNTR.Right  := self.Width;
     end;
+ //   paint;
 end;
 
 
@@ -8570,49 +8646,49 @@ begin
    FCrop              := True;
    Fresim.SetSize(Width,Height);
    
-     FVScrollbar        := TONScrollBar.Create(self);
+   FVScrollbar        := TONScrollBar.Create(self);
+   with FVScrollbar do
+   begin
+    Parent      := self;
+    name        := 'right_scroll';
+    State       := Fvertical;
+    Height      := self.Height;
+    Width       := 20;
+    Top         := 0;
+    left        := self.Width-20;
+    Pagesize    := 1;
+    Position    := 0;
+    Visible     := true;
+    Caption     := '';
+   end;
 
-     with FVScrollbar do
-     begin
-      Parent      := self;
-      name        := 'right_scroll';
-      State       := Fvertical;
-      Height      := self.Height;
-      Width       := 20;
-      Top         := 0;
-      left        := self.Width-Width;
-  //    Skindata    := self.Skindata;
-      SetSubComponent(true);
-      Position    := 0;
-      Visible     := true;
-     end;
-
-     FHScrollbar     := TONScrollBar.Create(self);
-     with FHScrollbar do
-     begin
-      Parent      := self;
-      name        := 'bottom_scroll';
-      State       := Fhorizontal;
-      Height      := 20;
-      Width       := Self.Width;
-      Top         := self.Height-Height;
-      left        := 0;
-  //    Skindata    := self.Skindata;
-      SetSubComponent(true);
-      Position    := 0;
-      Visible     := true;
-     end;
+   FHScrollbar     := TONScrollBar.Create(self);
+   with FHScrollbar do
+   begin
+    Parent      := self;
+    name        := 'bottom_scroll';
+    State       := Fhorizontal;
+    Height      := 20;
+    Width       := Self.Width;
+    Top         := self.Height-20;
+    left        := 0;
+    Pagesize    := 1;
+    Position    := 0;
+    Visible     := true;
+    Caption     := '';
+    OnChange   := @ScrollBarChange;
+   end;
 
 
 
    FItems             := TStringList.Create;
    FItemsRect         := TList.Create;
    FItems.OnChange    := @ItemsChanged;
-   FItemSpacing       := 15;
+   FItemSpacing       := 20;
    FActiveItem        := -1;
    FMouseInControl    := False;
    Fscrollvsbl        := True;
-
+   FItemOffset        := 0;
 
 
 end;
@@ -8637,6 +8713,15 @@ begin
   inherited;
 end;
 
+
+procedure TONListbox.ScrollBarChange(Sender: TObject);
+begin
+ FItemOffset := VScrollbar.Position;
+ paint;
+end;
+
+
+
 procedure TONListbox.SetSkindata(Aimg: TONImg);
 begin
   if Aimg <> nil then
@@ -8649,6 +8734,7 @@ begin
   FSkindata:=nil;
   end;
 end;
+
 procedure TONListbox.SetActiveItem(Val: Integer);
 begin
   if FItems <> NIL then
@@ -8663,7 +8749,9 @@ begin
     Paint;
   end
   else
+  begin
     FActiveItem := -1;
+  end;
 end;
 
 procedure TONListbox.SetItems(Value: TStringList);
@@ -8679,6 +8767,7 @@ begin
     for i := 0 to FItems.Count - 1 do
       FItems[i] := Trim(FItems[i]);
   end;
+
 
   SetItemRect;
   Paint;
@@ -8716,6 +8805,7 @@ begin
   end;
 
   FItemsRect.Capacity := FItemsRect.Count;
+
 end;
 
 //    procedure CheckOthersPanels;
@@ -8768,7 +8858,7 @@ end;
 procedure TONListbox.MouseLeave;
 begin
   FMouseInControl := False;
- Paint;
+  Paint;
   inherited;
 end;
 
@@ -8785,43 +8875,43 @@ procedure TONListbox.Paint;
     TabCount  : Integer;
     aa:TTextStyle;
     Kaynak,HEDEF : TRect;
-    w,h:integer;
+    w,h,FItemsShown,a:integer;
   begin
 
     try
      if Skindata<> nil then
      begin
-     if FHScrollbar.Skindata<>nil then
-      FHScrollbar.Skindata := Skindata;
 
-     if FVScrollbar.Skindata<> nil then
-      FVScrollbar.Skindata := Skindata;
 
-      w:=Width;
-      h:=Height;
+      w:=self.Width;
+      h:=self.Height;
 
-      if FHScrollbar.Visible=true then
-      FHScrollbar.Top:=h-FHScrollbar.Height+5;
+       with VScrollbar do
+       begin
+          if Visible=true then
+          begin
+           Left        := w-40;
+           h           := self.Height-20;
+           Pagesize:=1;
+           if Skindata<>nil then
+           Skindata := self.Skindata;
 
-      if FvScrollbar.Visible=true then
-      begin
-       FVScrollbar.Left:=w-FVScrollbar.Width+5;
-      end;
+          end;
+       end;
 
-     if FHScrollbar.Visible=true then
-       w:=self.Width-FHScrollbar.Height;
-     // else
-     if FVScrollbar.Visible=true then
-       h:=self.Height-FVScrollbar.Width;
+       with HScrollbar do
+       begin
+         if Visible=true then
+         begin
+          Top         := h-20;
+          w           := self.Width-20;
+          Pagesize:=1;
 
-  //    FHScrollbar.Caption:='yatay';
- //     FVScrollbar.Caption:='dikey';
-     if FHScrollbar.Visible=true then
-       FhScrollbar.Paint;
-
-     if FVScrollbar.Visible=true then
-      FVScrollbar.Paint;
-
+         if Skindata<>nil then
+         Skindata := self.Skindata;
+       //  Caption:=inttostr(w)+' '+inttostr(h);
+         end;
+       end;
 
 
 
@@ -8832,8 +8922,6 @@ procedure TONListbox.Paint;
       KAYNAK := Rect(FUst.FSLeft, FUst.FSTop, FUst.FSRight, FUst.FSBottom);
       HEDEF := Rect((FSolust.FSRight - FSolust.FSLeft), 0, w -
         (FSagust.FSRight - FSagust.FSLeft), (FUst.FSBottom - FUst.FSTop));
-
-
 
 
       DrawPartnormal(kaynak, self, hedef, False);
@@ -8901,8 +8989,52 @@ procedure TONListbox.Paint;
 
 
 
-      for TabCount := 0 to FItems.Count - 1 do
+
+       FItemsShown := h div FItemSpacing;
+        if Items.Count-FItemsShown+1 > 0 then
+        begin
+          VScrollbar.Max      := Items.Count-FItemsShown;
+          VScrollbar.OnChange := NIL;
+          VScrollbar.Position := FItemOffset;
+          VScrollbar.OnChange := @ScrollBarChange;
+         VScrollbar.Caption  := IntToStr(FItemsShown)+'  '+IntToStr(FActiveItem);
+        end
+        else
+          VScrollbar.Max := 0;
+
+        if Items.Count * FItemSpacing > h then
+          VScrollbar.Visible := True
+        else
+          VScrollbar.Visible := False;
+
+      //  VScrollbar.Max:=FItems.Count-1;
+
+
+
+
+         if VScrollbar.Visible=false then
+          HScrollbar.Width       := Self.Width-20
+          else
+          HScrollbar.Width       := Self.Width-40;
+
+
+         if HScrollbar.Visible=false then
+          VScrollbar.Height       := Self.Height-20
+         else
+          VScrollbar.Height       := Self.Height-40;
+
+     // aa.Layout:=tlCenter;
+      aa.Alignment:=taLeftJustify;
+      Fresim.FontName:=self.Font.Name;
+      Fresim.FontStyle:=self.Font.Style;
+      Fresim.FontAntialias:=true;
+      Fresim.FontHeight:=self.Font.Height;
+
+      a:=0;
+      for TabCount := FItemOffset to FItems.Count - 1 do
       begin
+     //   DrawItem(fresim, Items[TabCount], length(items[TabCount]), 0);
+
         if TabCount = FActiveItem then
         begin
           KAYNAK := Rect(Factiveitems.FSLeft, Factiveitems.FSTop, Factiveitems.FSRight, Factiveitems.FSBottom);
@@ -8912,33 +9044,13 @@ procedure TONListbox.Paint;
         end else
         begin
         HEDEF := Rect((FSol.FSRight - FSol.FSLeft), (FUst.FSBottom - FUst.FSTop),
-        w - (FSag.FSRight - FSag.FSLeft), h - (FAlt.FSBottom - FAlt.FSTop));
-        Fresim.TextRect(HEDEF,HEDEF.Left+10,FItemSpacing*TabCount,FItems[TabCount],aa,BGRABlack);
+        w {- (FSag.FSRight - FSag.FSLeft)}+Fresim.canvas.TextWidth(FItems[TabCount]), h - (FAlt.FSBottom - FAlt.FSTop));
+        Fresim.TextRect(HEDEF,HEDEF.Left+10,FItemSpacing*(a),FItems[TabCount],aa,BGRABlack);
         end;
+        inc(a);
+
       end;
 
-     { //FVScrollbar.Position:=FActiveItem;
-       with FVScrollbar do
-       begin
-        Height      := self.Height;
-        Width       := 20;
-        Top         := 0;
-        left        := self.Width-FVScrollbar.Width;
-        Visible     := true;
-        Skindata    :=self.Skindata;
-       end;
-
-     with FHScrollbar do
-     begin
-      parent      := Self;
-      Height      := 20;
-      Width       := Self.Width;
-      Top         := self.Height-FHScrollbar.Height;
-      left        := 0;
-      Visible     := true;
-      Skindata    :=self.Skindata;
-     end;
-      }
 
      if Crop then
         CropToimg(Fresim);
@@ -8951,6 +9063,70 @@ procedure TONListbox.Paint;
     end;
     Inherited;
   end;
+
+
+function TONListbox.ItemRect(Item: Integer): TRect;
+var
+  r :TRect;
+begin
+  r := Rect(0, 0, 0, 0);
+
+  if (Item >= FItemOffset - 1) and ((Item - FItemOffset) * FItemSpacing < Height) then
+  begin
+    r.Top    := (Item - FItemOffset) * FItemSpacing; // + 2; // 2 = TOP MARGIN!!
+    r.Bottom := r.Top + FItemSpacing;
+    r.Left   := 0;
+
+    if VScrollbar.Visible then
+      r.Right := VScrollbar.Left
+    else
+      r.Right := Width;
+  end;
+
+  Result := r;
+end;
+
+// -----------------------------------------------------------------------------
+
+procedure TONListbox.DrawItem(ACanvas: TBGRABitmap; Itemi: String; X1, X2: SmallInt);
+var
+  r : TRect;
+begin
+  r := ItemRect(x1);//.Index);
+{
+  if Item.FSelected then
+  begin
+    ACanvas.FillRect(r.Left, r.Top, r.Right, r.Bottom, FSelectedColor);
+    ACanvas.Font.Color := USBitmap32.Color(FTextSelectedColor);
+  end
+  else
+    ACanvas.Font.Color := USBitmap32.Color(FTextColor);
+
+  if (Item.Index = FCurrentItem) and not FNoPaintCurrent then
+    ACanvas.Font.Color := USBitmap32.Color(FTextCurrentColor);
+
+  if FShowNumbers then
+  begin
+    ACanvas.TextOut(r.Left+3, r.Top, IntToStr(Item.Index+1)+'.');
+    Inc(r.Left, X1);
+  end
+  else
+    ACanvas.UpdateFont;
+
+  if FShowNumbers or FShowLength then
+    Dec(r.Right, (3+X2));
+
+  DrawText(ACanvas.Handle, PChar(Item.FCaption), -1, r, DT_END_ELLIPSIS);
+
+  if FShowLength then
+  begin
+    r.Left  := r.Right;
+    r.Right := r.Left + X2;
+    DrawText(ACanvas.Handle, PChar(String(Item.FStrLength)), -1, r, DT_RIGHT);
+  end;
+  }
+  DrawText(ACanvas.bitmap.Handle, PChar(Itemi), -1, r, DT_END_ELLIPSIS);
+end;
 
 
 
