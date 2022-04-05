@@ -1,0 +1,1711 @@
+object Form1: TForm1
+  Left = 352
+  Height = 670
+  Top = 250
+  Width = 1312
+  ClientHeight = 670
+  ClientWidth = 1312
+  Color = clNone
+  Font.Color = clBlack
+  Font.Height = -12
+  Font.Name = 'Calibri'
+  Font.Style = [fsBold]
+  OnClose = FormClose
+  OnCreate = FormCreate
+  Position = poDesktopCenter
+  object Panel1: TPanel
+    Left = 0
+    Height = 644
+    Top = 26
+    Width = 154
+    Align = alLeft
+    ClientHeight = 644
+    ClientWidth = 154
+    TabOrder = 0
+    object ComboBox1: TComboBox
+      Left = 1
+      Height = 22
+      Top = 1
+      Width = 152
+      Align = alTop
+      ItemHeight = 14
+      ItemIndex = 0
+      Items.Strings = (
+        'BUTTON'
+        'CROPBUTTON'
+        'PANEL'
+        'HEADERPANEL'
+        'EDIT'
+        'SPINEDIT'
+        'COMBOBOX'
+        'LISTBOX'
+        'SWICH'
+        'SCROLLBAR H'
+        'SCROLLBAR V'
+        'MEMO'
+        'CHECKBOX'
+        'RADIOBOX'
+        'PROGRESSBAR H'
+        'PROGRESSBAR V'
+        'TRACKBAR H'
+        'TRACKBAR V'
+        'COLLAPSEDPANEL'
+      )
+      OnChange = ComboBox1Change
+      Style = csDropDownList
+      TabOrder = 0
+      Text = 'BUTTON'
+    end
+    object RadioGroup1: TRadioGroup
+      Left = 1
+      Height = 4
+      Top = 65
+      Width = 152
+      Align = alTop
+      AutoFill = False
+      AutoSize = True
+      ChildSizing.LeftRightSpacing = 6
+      ChildSizing.ShrinkHorizontal = crsScaleChilds
+      ChildSizing.ShrinkVertical = crsScaleChilds
+      ChildSizing.Layout = cclLeftToRightThenTopToBottom
+      ChildSizing.ControlsPerLine = 1
+      OnClick = RadioGroup1Click
+      TabOrder = 1
+    end
+    object Panel7: TPanel
+      Left = 1
+      Height = 94
+      Top = 69
+      Width = 152
+      Align = alTop
+      ClientHeight = 94
+      ClientWidth = 152
+      TabOrder = 2
+      Visible = False
+      object Label17: TLabel
+        Left = 7
+        Height = 14
+        Top = 6
+        Width = 19
+        Caption = 'Left'
+      end
+      object Edit1: TEdit
+        Left = 34
+        Height = 14
+        Top = 6
+        Width = 27
+        Alignment = taRightJustify
+        BorderStyle = bsNone
+        OnKeyPress = Edit3KeyPress
+        TabOrder = 0
+        Text = '0'
+      end
+      object Label18: TLabel
+        Left = 7
+        Height = 14
+        Top = 26
+        Width = 26
+        Caption = 'Right'
+      end
+      object Edit2: TEdit
+        Left = 34
+        Height = 14
+        Top = 26
+        Width = 27
+        Alignment = taRightJustify
+        BorderStyle = bsNone
+        OnKeyPress = Edit3KeyPress
+        TabOrder = 1
+        Text = '0'
+      end
+      object Label19: TLabel
+        Left = 66
+        Height = 14
+        Top = 6
+        Width = 17
+        Caption = 'Top'
+      end
+      object Label20: TLabel
+        Left = 66
+        Height = 14
+        Top = 26
+        Width = 37
+        Caption = 'Bottom'
+      end
+      object Edit4: TEdit
+        Left = 104
+        Height = 14
+        Top = 26
+        Width = 30
+        Alignment = taRightJustify
+        BorderStyle = bsNone
+        OnKeyPress = Edit3KeyPress
+        TabOrder = 3
+        Text = '0'
+      end
+      object Edit3: TEdit
+        Left = 104
+        Height = 14
+        Top = 6
+        Width = 30
+        Alignment = taRightJustify
+        BorderStyle = bsNone
+        OnKeyPress = Edit3KeyPress
+        TabOrder = 2
+        Text = '0'
+      end
+      object Label21: TLabel
+        Left = 7
+        Height = 14
+        Top = 47
+        Width = 46
+        Caption = 'Fontcolor'
+      end
+      object ColorBox2: TColorBox
+        Left = 64
+        Height = 22
+        Top = 43
+        Width = 75
+        ItemHeight = 16
+        TabOrder = 4
+      end
+      object Button1: TButton
+        Left = 32
+        Height = 25
+        Top = 66
+        Width = 75
+        Caption = 'APPLY'
+        OnClick = Button1Click
+        TabOrder = 5
+      end
+    end
+    object Panel6: TPanel
+      Left = 1
+      Height = 42
+      Top = 23
+      Width = 152
+      Align = alTop
+      BevelOuter = bvNone
+      ClientHeight = 42
+      ClientWidth = 152
+      TabOrder = 3
+      object Label22: TLabel
+        Left = 6
+        Height = 14
+        Top = 22
+        Width = 61
+        Caption = 'SKINSNAME'
+      end
+      object Label23: TLabel
+        Left = 0
+        Height = 18
+        Top = 0
+        Width = 152
+        Align = alTop
+        Alignment = taCenter
+        AutoSize = False
+        Caption = 'panel1'
+        Layout = tlCenter
+      end
+      object Edit5: TEdit
+        Left = 70
+        Height = 22
+        Top = 21
+        Width = 80
+        OnChange = Edit5Change
+        TabOrder = 0
+      end
+    end
+  end
+  object Panel2: TPanel
+    Left = 154
+    Height = 644
+    Top = 26
+    Width = 940
+    Align = alClient
+    ClientHeight = 644
+    ClientWidth = 940
+    TabOrder = 1
+    object mainpicture: TBGRAVirtualScreen
+      Cursor = crCross
+      Left = 1
+      Height = 642
+      Top = 1
+      Width = 938
+      OnRedraw = mainpictureRedraw
+      Align = alClient
+      Alignment = taLeftJustify
+      Color = clWhite
+      ParentColor = False
+      TabOrder = 0
+      OnMouseDown = mainpictureMouseDown
+      OnMouseMove = mainpictureMouseMove
+      OnMouseUp = mainpictureMouseUp
+    end
+  end
+  object ToolBar1: TToolBar
+    Left = 0
+    Height = 26
+    Top = 0
+    Width = 1312
+    Images = ImageList1
+    TabOrder = 2
+    object ToolButton1: TToolButton
+      Left = 9
+      Top = 2
+      Caption = 'Open'
+      ImageIndex = 0
+      OnClick = ToolButton1Click
+    end
+    object ToolButton2: TToolButton
+      Left = 1
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton2'
+      Style = tbsSeparator
+    end
+    object ToolButton3: TToolButton
+      Left = 32
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton3'
+      Style = tbsDivider
+    end
+    object ToolButton4: TToolButton
+      Left = 37
+      Top = 2
+      Caption = 'ToolButton4'
+      ImageIndex = 1
+      OnClick = ToolButton4Click
+    end
+    object ToolButton5: TToolButton
+      Left = 65
+      Top = 2
+      Caption = 'ToolButton5'
+      ImageIndex = 2
+      OnClick = ToolButton5Click
+    end
+    object ToolButton6: TToolButton
+      Left = 60
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton6'
+      Style = tbsDivider
+    end
+    object ToolButton7: TToolButton
+      Left = 88
+      Height = 22
+      Top = 2
+      Caption = 'ToolButton7'
+      Style = tbsDivider
+    end
+    object Label6: TLabel
+      Left = 93
+      Height = 22
+      Top = 2
+      Width = 125
+      Alignment = taCenter
+      AutoSize = False
+      Layout = tlCenter
+    end
+  end
+  object Panel3: TPanel
+    Left = 1094
+    Height = 644
+    Top = 26
+    Width = 218
+    Align = alRight
+    BevelOuter = bvNone
+    ChildSizing.LeftRightSpacing = 4
+    ChildSizing.TopBottomSpacing = 4
+    ChildSizing.HorizontalSpacing = 2
+    ChildSizing.VerticalSpacing = 2
+    ClientHeight = 644
+    ClientWidth = 218
+    TabOrder = 3
+    object Panel4: TPanel
+      Left = 4
+      Height = 60
+      Top = 309
+      Width = 210
+      Align = alBottom
+      BevelOuter = bvNone
+      ClientHeight = 60
+      ClientWidth = 210
+      TabOrder = 0
+      object Label1: TLabel
+        Left = 1
+        Height = 14
+        Top = 38
+        Width = 28
+        Caption = 'Zoom'
+        Layout = tlCenter
+      end
+      object TrackBar1: TTrackBar
+        Left = 33
+        Height = 31
+        Top = 7
+        Width = 182
+        Frequency = 20
+        LineSize = 20
+        Max = 80
+        Min = 8
+        OnChange = TrackBar1Change
+        PageSize = 10
+        Position = 80
+        Reversed = True
+        TabOrder = 0
+      end
+      object Label2: TLabel
+        Left = 42
+        Height = 14
+        Top = 38
+        Width = 12
+        Caption = '2x'
+      end
+      object Label3: TLabel
+        Left = 92
+        Height = 14
+        Top = 38
+        Width = 12
+        Caption = '4x'
+      end
+      object Label4: TLabel
+        Left = 144
+        Height = 14
+        Top = 38
+        Width = 12
+        Caption = '6x'
+      end
+      object Label5: TLabel
+        Left = 196
+        Height = 14
+        Top = 38
+        Width = 12
+        Caption = '8x'
+      end
+    end
+    object zoomx: TBGRAVirtualScreen
+      Left = 4
+      Height = 238
+      Top = 402
+      Width = 210
+      OnRedraw = zoomxRedraw
+      Align = alBottom
+      Alignment = taLeftJustify
+      Color = clNone
+      ParentColor = False
+      ParentFont = False
+      ParentShowHint = False
+      TabOrder = 1
+    end
+    object ONPanel1: TONPanel
+      Left = 4
+      Height = 303
+      Top = 4
+      Width = 210
+      Align = alClient
+      Skindata = ONImg1
+      Skinname = 'panel'
+      Crop = True
+      DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      ParentFont = False
+      TabOrder = 2
+      UseDockManager = False
+      Visible = False
+      ONLEFT.Left = 148
+      ONLEFT.Top = 10
+      ONLEFT.Right = 158
+      ONLEFT.Bottom = 112
+      ONRIGHT.Left = 283
+      ONRIGHT.Top = 10
+      ONRIGHT.Right = 294
+      ONRIGHT.Bottom = 112
+      ONCENTER.Left = 155
+      ONCENTER.Top = 10
+      ONCENTER.Right = 283
+      ONCENTER.Bottom = 112
+      ONBOTTOM.Left = 158
+      ONBOTTOM.Top = 112
+      ONBOTTOM.Right = 280
+      ONBOTTOM.Bottom = 122
+      ONBOTTOMLEFT.Left = 148
+      ONBOTTOMLEFT.Top = 112
+      ONBOTTOMLEFT.Right = 158
+      ONBOTTOMLEFT.Bottom = 122
+      ONBOTTOMRIGHT.Left = 283
+      ONBOTTOMRIGHT.Top = 112
+      ONBOTTOMRIGHT.Right = 294
+      ONBOTTOMRIGHT.Bottom = 122
+      ONTOP.Left = 158
+      ONTOP.Top = 1
+      ONTOP.Right = 283
+      ONTOP.Bottom = 10
+      ONTOPLEFT.Left = 148
+      ONTOPLEFT.Top = 1
+      ONTOPLEFT.Right = 158
+      ONTOPLEFT.Bottom = 10
+      ONTOPRIGHT.Left = 283
+      ONTOPRIGHT.Top = 1
+      ONTOPRIGHT.Right = 294
+      ONTOPRIGHT.Bottom = 10
+    end
+    object ONGraphicPanel1: TONGraphicPanel
+      Left = 4
+      Height = 303
+      Top = 4
+      Width = 210
+      Align = alClient
+      Skindata = ONImg1
+      Skinname = 'graphicpanel'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Visible = False
+      ONLEFT.Left = 0
+      ONLEFT.Top = 0
+      ONLEFT.Right = 0
+      ONLEFT.Bottom = 0
+      ONRIGHT.Left = 0
+      ONRIGHT.Top = 0
+      ONRIGHT.Right = 0
+      ONRIGHT.Bottom = 0
+      ONCENTER.Left = 0
+      ONCENTER.Top = 0
+      ONCENTER.Right = 0
+      ONCENTER.Bottom = 0
+      ONBOTTOM.Left = 0
+      ONBOTTOM.Top = 0
+      ONBOTTOM.Right = 0
+      ONBOTTOM.Bottom = 0
+      ONBOTTOMLEFT.Left = 0
+      ONBOTTOMLEFT.Top = 0
+      ONBOTTOMLEFT.Right = 0
+      ONBOTTOMLEFT.Bottom = 0
+      ONBOTTOMRIGHT.Left = 0
+      ONBOTTOMRIGHT.Top = 0
+      ONBOTTOMRIGHT.Right = 0
+      ONBOTTOMRIGHT.Bottom = 0
+      ONTOP.Left = 0
+      ONTOP.Top = 0
+      ONTOP.Right = 0
+      ONTOP.Bottom = 0
+      ONTOPLEFT.Left = 0
+      ONTOPLEFT.Top = 0
+      ONTOPLEFT.Right = 0
+      ONTOPLEFT.Bottom = 0
+      ONTOPRIGHT.Left = 0
+      ONTOPRIGHT.Top = 0
+      ONTOPRIGHT.Right = 0
+      ONTOPRIGHT.Bottom = 0
+    end
+    object onEdit1: TonEdit
+      Cursor = crIBeam
+      Left = 64
+      Height = 30
+      Top = 32
+      Width = 80
+      Skindata = ONImg1
+      Skinname = 'edit'
+      Crop = True
+      DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      ParentFont = False
+      TabOrder = 3
+      TabStop = True
+      UseDockManager = False
+      Visible = False
+      NumberOnly = False
+      Selstart = 0
+      CharCase = ecNormal
+      ONLEFT.Left = 268
+      ONLEFT.Top = 190
+      ONLEFT.Right = 278
+      ONLEFT.Bottom = 206
+      ONRIGHT.Left = 317
+      ONRIGHT.Top = 190
+      ONRIGHT.Right = 326
+      ONRIGHT.Bottom = 206
+      ONCENTER.Left = 278
+      ONCENTER.Top = 190
+      ONCENTER.Right = 317
+      ONCENTER.Bottom = 206
+      ONBOTTOM.Left = 278
+      ONBOTTOM.Top = 206
+      ONBOTTOM.Right = 317
+      ONBOTTOM.Bottom = 216
+      ONBOTTOMLEFT.Left = 268
+      ONBOTTOMLEFT.Top = 206
+      ONBOTTOMLEFT.Right = 278
+      ONBOTTOMLEFT.Bottom = 216
+      ONBOTTOMRIGHT.Left = 317
+      ONBOTTOMRIGHT.Top = 206
+      ONBOTTOMRIGHT.Right = 326
+      ONBOTTOMRIGHT.Bottom = 216
+      ONTOP.Left = 278
+      ONTOP.Top = 182
+      ONTOP.Right = 316
+      ONTOP.Bottom = 190
+      ONTOPLEFT.Left = 268
+      ONTOPLEFT.Top = 182
+      ONTOPLEFT.Right = 278
+      ONTOPLEFT.Bottom = 190
+      ONTOPRIGHT.Left = 317
+      ONTOPRIGHT.Top = 182
+      ONTOPRIGHT.Right = 326
+      ONTOPRIGHT.Bottom = 195
+    end
+    object ONMemo1: TONMemo
+      Cursor = crIBeam
+      Left = 4
+      Height = 303
+      Top = 4
+      Width = 210
+      Align = alClient
+      Skindata = ONImg1
+      Skinname = 'memo'
+      Crop = True
+      DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'calibri'
+      Font.Style = [fsBold]
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      ParentFont = False
+      TabOrder = 4
+      TabStop = True
+      UseDockManager = False
+      Visible = False
+      NumberOnly = False
+      Selstart = 0
+      CharCase = ecNormal
+      ONLEFT.Left = 266
+      ONLEFT.Top = 190
+      ONLEFT.Right = 278
+      ONLEFT.Bottom = 209
+      ONRIGHT.Left = 316
+      ONRIGHT.Top = 190
+      ONRIGHT.Right = 326
+      ONRIGHT.Bottom = 209
+      ONCENTER.Left = 274
+      ONCENTER.Top = 189
+      ONCENTER.Right = 316
+      ONCENTER.Bottom = 210
+      ONBOTTOM.Left = 276
+      ONBOTTOM.Top = 209
+      ONBOTTOM.Right = 316
+      ONBOTTOM.Bottom = 216
+      ONBOTTOMLEFT.Left = 268
+      ONBOTTOMLEFT.Top = 209
+      ONBOTTOMLEFT.Right = 278
+      ONBOTTOMLEFT.Bottom = 216
+      ONBOTTOMRIGHT.Left = 316
+      ONBOTTOMRIGHT.Top = 209
+      ONBOTTOMRIGHT.Right = 325
+      ONBOTTOMRIGHT.Bottom = 216
+      ONTOP.Left = 277
+      ONTOP.Top = 182
+      ONTOP.Right = 316
+      ONTOP.Bottom = 190
+      ONTOPLEFT.Left = 266
+      ONTOPLEFT.Top = 182
+      ONTOPLEFT.Right = 278
+      ONTOPLEFT.Bottom = 190
+      ONTOPRIGHT.Left = 316
+      ONTOPRIGHT.Top = 182
+      ONTOPRIGHT.Right = 325
+      ONTOPRIGHT.Bottom = 190
+    end
+    object ONcombobox1: TONcombobox
+      Cursor = crIBeam
+      Left = 48
+      Height = 30
+      Top = 37
+      Width = 150
+      Skindata = ONImg1
+      Skinname = 'combobox'
+      DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      ParentFont = False
+      TabOrder = 5
+      TabStop = True
+      UseDockManager = False
+      Visible = False
+      NumberOnly = False
+      Selstart = 0
+      CharCase = ecNormal
+      Items.Strings = (
+        'TEST 1'
+        'TEST 2'
+        'TEST 3'
+        'TEST 4'
+        'TEST 5'
+        'TEST 6'
+        'TEST 7'
+        'TEST 8'
+        'TEST 9'
+        'TEST 10'
+        'TEST 11'
+        'TEST 12'
+        'TEST 13'
+        'TEST 14'
+        'TEST 15'
+        'TEST 16'
+        'TEST 17'
+        'TEST 18'
+        'TEST 19'
+        'TEST 20'
+      )
+      Itemindex = -1
+      Selectedcolor = clBlue
+      ItemHeight = 0
+      ONLEFT.Left = 1
+      ONLEFT.Top = 130
+      ONLEFT.Right = 8
+      ONLEFT.Bottom = 149
+      ONRIGHT.Left = 65
+      ONRIGHT.Top = 130
+      ONRIGHT.Right = 81
+      ONRIGHT.Bottom = 148
+      ONCENTER.Left = 8
+      ONCENTER.Top = 129
+      ONCENTER.Right = 71
+      ONCENTER.Bottom = 148
+      ONBOTTOM.Left = 10
+      ONBOTTOM.Top = 149
+      ONBOTTOM.Right = 70
+      ONBOTTOM.Bottom = 155
+      ONBOTTOMLEFT.Left = 1
+      ONBOTTOMLEFT.Top = 149
+      ONBOTTOMLEFT.Right = 8
+      ONBOTTOMLEFT.Bottom = 155
+      ONBOTTOMRIGHT.Left = 65
+      ONBOTTOMRIGHT.Top = 149
+      ONBOTTOMRIGHT.Right = 81
+      ONBOTTOMRIGHT.Bottom = 155
+      ONTOP.Left = 10
+      ONTOP.Top = 124
+      ONTOP.Right = 70
+      ONTOP.Bottom = 130
+      ONTOPLEFT.Left = 1
+      ONTOPLEFT.Top = 124
+      ONTOPLEFT.Right = 8
+      ONTOPLEFT.Bottom = 130
+      ONTOPRIGHT.Left = 65
+      ONTOPRIGHT.Top = 124
+      ONTOPRIGHT.Right = 81
+      ONTOPRIGHT.Bottom = 130
+      ONBUTONNORMAL.Left = 80
+      ONBUTONNORMAL.Top = 124
+      ONBUTONNORMAL.Right = 107
+      ONBUTONNORMAL.Bottom = 155
+      ONBUTONPRESS.Left = 140
+      ONBUTONPRESS.Top = 124
+      ONBUTONPRESS.Right = 167
+      ONBUTONPRESS.Bottom = 155
+      ONBUTONHOVER.Left = 110
+      ONBUTONHOVER.Top = 124
+      ONBUTONHOVER.Right = 137
+      ONBUTONHOVER.Bottom = 155
+      ONBUTONDISABLE.Left = 80
+      ONBUTONDISABLE.Top = 125
+      ONBUTONDISABLE.Right = 107
+      ONBUTONDISABLE.Bottom = 155
+    end
+    object oNScrollBar1: ToNScrollBar
+      Left = 5
+      Height = 22
+      Top = 36
+      Width = 200
+      Skindata = ONImg1
+      Skinname = 'scrollbarh'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Visible = False
+      Min = 0
+      Max = 100
+      Position = 0
+      ONLEFT.Left = 60
+      ONLEFT.Top = 275
+      ONLEFT.Right = 75
+      ONLEFT.Bottom = 291
+      ONRIGHT.Left = 220
+      ONRIGHT.Top = 275
+      ONRIGHT.Right = 230
+      ONRIGHT.Bottom = 291
+      ONTOP.Left = 0
+      ONTOP.Top = 0
+      ONTOP.Right = 0
+      ONTOP.Bottom = 0
+      ONBOTTOM.Left = 0
+      ONBOTTOM.Top = 0
+      ONBOTTOM.Right = 0
+      ONBOTTOM.Bottom = 0
+      ONNORMAL.Left = 73
+      ONNORMAL.Top = 274
+      ONNORMAL.Right = 220
+      ONNORMAL.Bottom = 292
+      ONBAR.Left = 75
+      ONBAR.Top = 280
+      ONBAR.Right = 221
+      ONBAR.Bottom = 286
+      ONLEFTBUTNORMAL.Left = 69
+      ONLEFTBUTNORMAL.Top = 295
+      ONLEFTBUTNORMAL.Right = 91
+      ONLEFTBUTNORMAL.Bottom = 311
+      ONLEFTBUTONHOVER.Left = 69
+      ONLEFTBUTONHOVER.Top = 315
+      ONLEFTBUTONHOVER.Right = 91
+      ONLEFTBUTONHOVER.Bottom = 331
+      ONLEFTBUTPRESS.Left = 69
+      ONLEFTBUTPRESS.Top = 335
+      ONLEFTBUTPRESS.Right = 91
+      ONLEFTBUTPRESS.Bottom = 351
+      ONLEFTBUTDISABLE.Left = 69
+      ONLEFTBUTDISABLE.Top = 355
+      ONLEFTBUTDISABLE.Right = 91
+      ONLEFTBUTDISABLE.Bottom = 371
+      ONRIGHTBUTNORMAL.Left = 96
+      ONRIGHTBUTNORMAL.Top = 295
+      ONRIGHTBUTNORMAL.Right = 119
+      ONRIGHTBUTNORMAL.Bottom = 311
+      ONRIGHTBUTONHOVER.Left = 96
+      ONRIGHTBUTONHOVER.Top = 315
+      ONRIGHTBUTONHOVER.Right = 119
+      ONRIGHTBUTONHOVER.Bottom = 331
+      ONRIGHTBUTPRESS.Left = 96
+      ONRIGHTBUTPRESS.Top = 335
+      ONRIGHTBUTPRESS.Right = 119
+      ONRIGHTBUTPRESS.Bottom = 351
+      ONRIGHTBUTDISABLE.Left = 96
+      ONRIGHTBUTDISABLE.Top = 355
+      ONRIGHTBUTDISABLE.Right = 119
+      ONRIGHTBUTDISABLE.Bottom = 371
+      ONCENTERBUTNORMAL.Left = 28
+      ONCENTERBUTNORMAL.Top = 274
+      ONCENTERBUTNORMAL.Right = 45
+      ONCENTERBUTNORMAL.Bottom = 291
+      ONCENTERBUTONHOVER.Left = 6
+      ONCENTERBUTONHOVER.Top = 274
+      ONCENTERBUTONHOVER.Right = 24
+      ONCENTERBUTONHOVER.Bottom = 291
+      ONCENTERBUTPRESS.Left = 8
+      ONCENTERBUTPRESS.Top = 293
+      ONCENTERBUTPRESS.Right = 25
+      ONCENTERBUTPRESS.Bottom = 310
+      ONCENTERBUTDISABLE.Left = 28
+      ONCENTERBUTDISABLE.Top = 292
+      ONCENTERBUTDISABLE.Right = 45
+      ONCENTERBUTDISABLE.Bottom = 310
+    end
+    object oNListBox1: ToNListBox
+      Left = 4
+      Height = 303
+      Top = 4
+      Width = 210
+      Align = alClient
+      Skindata = ONImg1
+      Skinname = 'listbox'
+      ClientHeight = 303
+      ClientWidth = 210
+      Crop = True
+      DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      ParentFont = False
+      TabOrder = 6
+      UseDockManager = False
+      Visible = False
+      Items.Strings = (
+        'TEST 1'
+        'TEST 2'
+        'TEST 3'
+        'TEST 4'
+        'TEST 5'
+        'TEST 6'
+        'TEST 7'
+        'TEST 8'
+        'TEST 9'
+        'TEST 10'
+        'TEST 11'
+        'TEST 12'
+        'TEST 13'
+        'TEST 14'
+        'TEST 15'
+        'TEST 16'
+        'TEST 17'
+        'TEST 18'
+        'TEST 19'
+        'TEST 20'
+      )
+      ItemIndex = -1
+      ItemHeight = 20
+      Selectedcolor = clBlue
+      ONLEFT.Left = 0
+      ONLEFT.Top = 18
+      ONLEFT.Right = 17
+      ONLEFT.Bottom = 107
+      ONRIGHT.Left = 125
+      ONRIGHT.Top = 17
+      ONRIGHT.Right = 145
+      ONRIGHT.Bottom = 107
+      ONCENTER.Left = 18
+      ONCENTER.Top = 19
+      ONCENTER.Right = 125
+      ONCENTER.Bottom = 102
+      ONBOTTOM.Left = 18
+      ONBOTTOM.Top = 108
+      ONBOTTOM.Right = 125
+      ONBOTTOM.Bottom = 122
+      ONBOTTOMLEFT.Left = 0
+      ONBOTTOMLEFT.Top = 108
+      ONBOTTOMLEFT.Right = 17
+      ONBOTTOMLEFT.Bottom = 122
+      ONBOTTOMRIGHT.Left = 125
+      ONBOTTOMRIGHT.Top = 108
+      ONBOTTOMRIGHT.Right = 145
+      ONBOTTOMRIGHT.Bottom = 122
+      ONTOP.Left = 18
+      ONTOP.Top = 1
+      ONTOP.Right = 120
+      ONTOP.Bottom = 17
+      ONTOPLEFT.Left = 0
+      ONTOPLEFT.Top = 1
+      ONTOPLEFT.Right = 18
+      ONTOPLEFT.Bottom = 17
+      ONTOPRIGHT.Left = 125
+      ONTOPRIGHT.Top = 1
+      ONTOPRIGHT.Right = 145
+      ONTOPRIGHT.Bottom = 17
+      ONACTIVEITEM.Left = 420
+      ONACTIVEITEM.Top = 367
+      ONACTIVEITEM.Right = 564
+      ONACTIVEITEM.Bottom = 378
+    end
+    object ONCropButton1: TONCropButton
+      Left = 64
+      Height = 30
+      Top = 32
+      Width = 100
+      Skindata = ONImg1
+      Skinname = 'cropbutton'
+      Caption = 'TEST'
+      Crop = True
+      DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      ParentFont = False
+      TabOrder = 7
+      UseDockManager = False
+      Visible = False
+      ONNORMAL.Left = 681
+      ONNORMAL.Top = 4
+      ONNORMAL.Right = 782
+      ONNORMAL.Bottom = 29
+      ONPRESSED.Left = 681
+      ONPRESSED.Top = 56
+      ONPRESSED.Right = 782
+      ONPRESSED.Bottom = 81
+      ONHOVER.Left = 681
+      ONHOVER.Top = 30
+      ONHOVER.Right = 782
+      ONHOVER.Bottom = 55
+      ONDISABLE.Left = 681
+      ONDISABLE.Top = 82
+      ONDISABLE.Right = 782
+      ONDISABLE.Bottom = 107
+    end
+    object ONHeaderPanel1: TONHeaderPanel
+      Left = 6
+      Height = 20
+      Top = 37
+      Width = 207
+      Skindata = ONImg1
+      Skinname = 'headerpanel'
+      DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      ParentFont = False
+      TabOrder = 9
+      UseDockManager = False
+      Visible = False
+      ONLEFT.Left = 87
+      ONLEFT.Top = 189
+      ONLEFT.Right = 98
+      ONLEFT.Bottom = 197
+      ONRIGHT.Left = 165
+      ONRIGHT.Top = 189
+      ONRIGHT.Right = 173
+      ONRIGHT.Bottom = 197
+      ONCENTER.Left = 99
+      ONCENTER.Top = 182
+      ONCENTER.Right = 165
+      ONCENTER.Bottom = 203
+      ONBOTTOM.Left = 98
+      ONBOTTOM.Top = 197
+      ONBOTTOM.Right = 160
+      ONBOTTOM.Bottom = 206
+      ONBOTTOMLEFT.Left = 87
+      ONBOTTOMLEFT.Top = 197
+      ONBOTTOMLEFT.Right = 98
+      ONBOTTOMLEFT.Bottom = 206
+      ONBOTTOMRIGHT.Left = 165
+      ONBOTTOMRIGHT.Top = 197
+      ONBOTTOMRIGHT.Right = 173
+      ONBOTTOMRIGHT.Bottom = 206
+      ONTOP.Left = 98
+      ONTOP.Top = 179
+      ONTOP.Right = 161
+      ONTOP.Bottom = 189
+      ONTOPLEFT.Left = 87
+      ONTOPLEFT.Top = 179
+      ONTOPLEFT.Right = 98
+      ONTOPLEFT.Bottom = 189
+      ONTOPRIGHT.Left = 165
+      ONTOPRIGHT.Top = 179
+      ONTOPRIGHT.Right = 173
+      ONTOPRIGHT.Bottom = 189
+    end
+    object ONGraphicsButton1: TONGraphicsButton
+      Left = 65
+      Height = 30
+      Top = 31
+      Width = 100
+      Skindata = ONImg1
+      Skinname = 'button'
+      Caption = 'TEST'
+      Color = clNone
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentColor = False
+      ParentFont = False
+      Visible = False
+      ONNORMAL.Left = 681
+      ONNORMAL.Top = 4
+      ONNORMAL.Right = 782
+      ONNORMAL.Bottom = 29
+      ONPRESSED.Left = 681
+      ONPRESSED.Top = 56
+      ONPRESSED.Right = 782
+      ONPRESSED.Bottom = 81
+      ONHOVER.Left = 681
+      ONHOVER.Top = 30
+      ONHOVER.Right = 782
+      ONHOVER.Bottom = 55
+      ONDISABLE.Left = 681
+      ONDISABLE.Top = 82
+      ONDISABLE.Right = 782
+      ONDISABLE.Bottom = 107
+    end
+    object Panel5: TPanel
+      Left = 4
+      Height = 29
+      Top = 371
+      Width = 210
+      Align = alBottom
+      BevelOuter = bvNone
+      ClientHeight = 29
+      ClientWidth = 210
+      TabOrder = 8
+      object ColorBox1: TColorBox
+        Left = 106
+        Height = 22
+        Top = 4
+        Width = 100
+        NoneColorColor = clYellow
+        Selected = clSilver
+        ItemHeight = 16
+        TabOrder = 0
+      end
+      object Label16: TLabel
+        Left = 45
+        Height = 14
+        Top = 10
+        Width = 57
+        Caption = 'Arrow color'
+      end
+    end
+    object OnSpinEdit1: TOnSpinEdit
+      Cursor = crIBeam
+      Left = 26
+      Height = 25
+      Top = 42
+      Width = 45
+      Skindata = ONImg1
+      Skinname = 'spinedit'
+      Caption = '0'
+      DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'calibri'
+      Font.Style = [fsBold]
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      ParentFont = False
+      TabOrder = 10
+      TabStop = True
+      UseDockManager = False
+      Visible = False
+      NumberOnly = True
+      Selstart = 0
+      CharCase = ecNormal
+      Value = 0
+      MaxValue = 0
+      MinValue = 0
+      Buttonwidth = 0
+      Buttonheight = 0
+      ONLEFT.Left = 328
+      ONLEFT.Top = 238
+      ONLEFT.Right = 338
+      ONLEFT.Bottom = 258
+      ONRIGHT.Left = 374
+      ONRIGHT.Top = 238
+      ONRIGHT.Right = 380
+      ONRIGHT.Bottom = 258
+      ONCENTER.Left = 336
+      ONCENTER.Top = 238
+      ONCENTER.Right = 376
+      ONCENTER.Bottom = 257
+      ONBOTTOM.Left = 338
+      ONBOTTOM.Top = 258
+      ONBOTTOM.Right = 374
+      ONBOTTOM.Bottom = 265
+      ONBOTTOMLEFT.Left = 328
+      ONBOTTOMLEFT.Top = 258
+      ONBOTTOMLEFT.Right = 338
+      ONBOTTOMLEFT.Bottom = 265
+      ONBOTTOMRIGHT.Left = 374
+      ONBOTTOMRIGHT.Top = 258
+      ONBOTTOMRIGHT.Right = 380
+      ONBOTTOMRIGHT.Bottom = 265
+      ONTOP.Left = 338
+      ONTOP.Top = 231
+      ONTOP.Right = 374
+      ONTOP.Bottom = 238
+      ONTOPLEFT.Left = 328
+      ONTOPLEFT.Top = 231
+      ONTOPLEFT.Right = 338
+      ONTOPLEFT.Bottom = 238
+      ONTOPRIGHT.Left = 374
+      ONTOPRIGHT.Top = 231
+      ONTOPRIGHT.Right = 380
+      ONTOPRIGHT.Bottom = 238
+      ONUPBUTONNORMAL.Left = 379
+      ONUPBUTONNORMAL.Top = 231
+      ONUPBUTONNORMAL.Right = 400
+      ONUPBUTONNORMAL.Bottom = 248
+      ONUPBUTONPRESS.Left = 430
+      ONUPBUTONPRESS.Top = 231
+      ONUPBUTONPRESS.Right = 451
+      ONUPBUTONPRESS.Bottom = 247
+      ONUPBUTONHOVER.Left = 404
+      ONUPBUTONHOVER.Top = 231
+      ONUPBUTONHOVER.Right = 425
+      ONUPBUTONHOVER.Bottom = 247
+      ONUPBUTONDISABLE.Left = 287
+      ONUPBUTONDISABLE.Top = 122
+      ONUPBUTONDISABLE.Right = 310
+      ONUPBUTONDISABLE.Bottom = 139
+      ONDOWNBUTONNORMAL.Left = 379
+      ONDOWNBUTONNORMAL.Top = 247
+      ONDOWNBUTONNORMAL.Right = 400
+      ONDOWNBUTONNORMAL.Bottom = 265
+      ONDOWNBUTONPRESS.Left = 430
+      ONDOWNBUTONPRESS.Top = 247
+      ONDOWNBUTONPRESS.Right = 451
+      ONDOWNBUTONPRESS.Bottom = 265
+      ONDOWNBUTONHOVER.Left = 404
+      ONDOWNBUTONHOVER.Top = 247
+      ONDOWNBUTONHOVER.Right = 425
+      ONDOWNBUTONHOVER.Bottom = 265
+      ONDOWNBUTONDISABLE.Left = 288
+      ONDOWNBUTONDISABLE.Top = 138
+      ONDOWNBUTONDISABLE.Right = 310
+      ONDOWNBUTONDISABLE.Bottom = 156
+    end
+    object oNScrollBar2: ToNScrollBar
+      Left = 96
+      Height = 173
+      Top = 31
+      Width = 24
+      Skindata = ONImg1
+      Skinname = 'scrollbarv'
+      Color = clNone
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentBidiMode = False
+      ParentColor = False
+      ParentFont = False
+      ParentShowHint = False
+      Visible = False
+      Min = 0
+      Max = 100
+      Position = 0
+      ONLEFT.Left = 0
+      ONLEFT.Top = 0
+      ONLEFT.Right = 0
+      ONLEFT.Bottom = 0
+      ONRIGHT.Left = 0
+      ONRIGHT.Top = 0
+      ONRIGHT.Right = 0
+      ONRIGHT.Bottom = 0
+      ONTOP.Left = 226
+      ONTOP.Top = 269
+      ONTOP.Right = 241
+      ONTOP.Bottom = 270
+      ONBOTTOM.Left = 225
+      ONBOTTOM.Top = 266
+      ONBOTTOM.Right = 241
+      ONBOTTOM.Bottom = 268
+      ONNORMAL.Left = 226
+      ONNORMAL.Top = 271
+      ONNORMAL.Right = 241
+      ONNORMAL.Bottom = 421
+      ONBAR.Left = 796
+      ONBAR.Top = 126
+      ONBAR.Right = 807
+      ONBAR.Bottom = 271
+      ONLEFTBUTNORMAL.Left = 255
+      ONLEFTBUTNORMAL.Top = 277
+      ONLEFTBUTNORMAL.Right = 271
+      ONLEFTBUTNORMAL.Bottom = 299
+      ONLEFTBUTONHOVER.Left = 275
+      ONLEFTBUTONHOVER.Top = 277
+      ONLEFTBUTONHOVER.Right = 292
+      ONLEFTBUTONHOVER.Bottom = 299
+      ONLEFTBUTPRESS.Left = 295
+      ONLEFTBUTPRESS.Top = 277
+      ONLEFTBUTPRESS.Right = 312
+      ONLEFTBUTPRESS.Bottom = 299
+      ONLEFTBUTDISABLE.Left = 315
+      ONLEFTBUTDISABLE.Top = 277
+      ONLEFTBUTDISABLE.Right = 331
+      ONLEFTBUTDISABLE.Bottom = 299
+      ONRIGHTBUTNORMAL.Left = 256
+      ONRIGHTBUTNORMAL.Top = 300
+      ONRIGHTBUTNORMAL.Right = 272
+      ONRIGHTBUTNORMAL.Bottom = 322
+      ONRIGHTBUTONHOVER.Left = 275
+      ONRIGHTBUTONHOVER.Top = 300
+      ONRIGHTBUTONHOVER.Right = 291
+      ONRIGHTBUTONHOVER.Bottom = 322
+      ONRIGHTBUTPRESS.Left = 295
+      ONRIGHTBUTPRESS.Top = 300
+      ONRIGHTBUTPRESS.Right = 312
+      ONRIGHTBUTPRESS.Bottom = 322
+      ONRIGHTBUTDISABLE.Left = 315
+      ONRIGHTBUTDISABLE.Top = 300
+      ONRIGHTBUTDISABLE.Right = 330
+      ONRIGHTBUTDISABLE.Bottom = 322
+      ONCENTERBUTNORMAL.Left = 27
+      ONCENTERBUTNORMAL.Top = 274
+      ONCENTERBUTNORMAL.Right = 45
+      ONCENTERBUTNORMAL.Bottom = 291
+      ONCENTERBUTONHOVER.Left = 6
+      ONCENTERBUTONHOVER.Top = 274
+      ONCENTERBUTONHOVER.Right = 24
+      ONCENTERBUTONHOVER.Bottom = 291
+      ONCENTERBUTPRESS.Left = 8
+      ONCENTERBUTPRESS.Top = 293
+      ONCENTERBUTPRESS.Right = 25
+      ONCENTERBUTPRESS.Bottom = 310
+      ONCENTERBUTDISABLE.Left = 28
+      ONCENTERBUTDISABLE.Top = 292
+      ONCENTERBUTDISABLE.Right = 45
+      ONCENTERBUTDISABLE.Bottom = 310
+      Kind = oVertical
+    end
+    object OnSwich1: TOnSwich
+      Left = 64
+      Height = 30
+      Top = 81
+      Width = 100
+      Skindata = ONImg1
+      Skinname = 'swich'
+      Caption = 'OnSwich1'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Visible = False
+      ONOPEN.Left = 181
+      ONOPEN.Top = 125
+      ONOPEN.Right = 216
+      ONOPEN.Bottom = 139
+      ONCLOSE.Left = 218
+      ONCLOSE.Top = 125
+      ONCLOSE.Right = 253
+      ONCLOSE.Bottom = 139
+      ONOPENHOVER.Left = 181
+      ONOPENHOVER.Top = 142
+      ONOPENHOVER.Right = 216
+      ONOPENHOVER.Bottom = 156
+      ONCLOSEHOVER.Left = 218
+      ONCLOSEHOVER.Top = 142
+      ONCLOSEHOVER.Right = 253
+      ONCLOSEHOVER.Bottom = 156
+      ONDISABLE.Left = 181
+      ONDISABLE.Top = 160
+      ONDISABLE.Right = 218
+      ONDISABLE.Bottom = 172
+    end
+    object OnCheckbox1: TOnCheckbox
+      Left = 33
+      Height = 30
+      Top = 70
+      Width = 100
+      Skindata = ONImg1
+      Skinname = 'checkbox'
+      Caption = 'OnCheckbox1'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Visible = False
+      CheckWidth = 12
+      CaptionDirection = ocright
+      ONNORMAL.Left = 317
+      ONNORMAL.Top = 1
+      ONNORMAL.Right = 332
+      ONNORMAL.Bottom = 16
+      ONNORMALHOVER.Left = 317
+      ONNORMALHOVER.Top = 17
+      ONNORMALHOVER.Right = 332
+      ONNORMALHOVER.Bottom = 32
+      ONNORMALDOWN.Left = 317
+      ONNORMALDOWN.Top = 33
+      ONNORMALDOWN.Right = 332
+      ONNORMALDOWN.Bottom = 48
+      ONCHECKED.Left = 317
+      ONCHECKED.Top = 65
+      ONCHECKED.Right = 332
+      ONCHECKED.Bottom = 81
+      ONCHECKEDHOVER.Left = 317
+      ONCHECKEDHOVER.Top = 49
+      ONCHECKEDHOVER.Right = 332
+      ONCHECKEDHOVER.Bottom = 64
+      ONDISABLE.Left = 322
+      ONDISABLE.Top = 88
+      ONDISABLE.Right = 334
+      ONDISABLE.Bottom = 105
+    end
+    object OnRadioButton1: TOnRadioButton
+      Left = 34
+      Height = 30
+      Top = 114
+      Width = 100
+      Skindata = ONImg1
+      Skinname = 'radiobox'
+      Caption = 'OnRadioButton1'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Visible = False
+      CheckWidth = 12
+      CaptionDirection = ocright
+      ONNORMAL.Left = 299
+      ONNORMAL.Top = 1
+      ONNORMAL.Right = 315
+      ONNORMAL.Bottom = 16
+      ONNORMALHOVER.Left = 299
+      ONNORMALHOVER.Top = 17
+      ONNORMALHOVER.Right = 315
+      ONNORMALHOVER.Bottom = 31
+      ONNORMALDOWN.Left = 299
+      ONNORMALDOWN.Top = 32
+      ONNORMALDOWN.Right = 315
+      ONNORMALDOWN.Bottom = 48
+      ONCHECKED.Left = 299
+      ONCHECKED.Top = 65
+      ONCHECKED.Right = 315
+      ONCHECKED.Bottom = 81
+      ONCHECKEDHOVER.Left = 299
+      ONCHECKEDHOVER.Top = 49
+      ONCHECKEDHOVER.Right = 315
+      ONCHECKEDHOVER.Bottom = 64
+      ONDISABLE.Left = 301
+      ONDISABLE.Top = 81
+      ONDISABLE.Right = 315
+      ONDISABLE.Bottom = 93
+    end
+    object ONProgressBar1: TONProgressBar
+      Left = 37
+      Height = 20
+      Top = 130
+      Width = 150
+      Skindata = ONImg1
+      Skinname = 'progressbarh'
+      Caption = '50'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Visible = False
+      Textvisible = True
+      ONLEFT_TOP.Left = 418
+      ONLEFT_TOP.Top = 312
+      ONLEFT_TOP.Right = 434
+      ONLEFT_TOP.Bottom = 330
+      ONRIGHT_BOTTOM.Left = 670
+      ONRIGHT_BOTTOM.Top = 312
+      ONRIGHT_BOTTOM.Right = 690
+      ONRIGHT_BOTTOM.Bottom = 330
+      ONCENTER.Left = 436
+      ONCENTER.Top = 312
+      ONCENTER.Right = 674
+      ONCENTER.Bottom = 330
+      ONBAR.Left = 419
+      ONBAR.Top = 282
+      ONBAR.Right = 590
+      ONBAR.Bottom = 300
+      Min = 0
+      Max = 100
+      Position = 50
+    end
+    object ONProgressBar2: TONProgressBar
+      Left = 88
+      Height = 150
+      Top = 85
+      Width = 15
+      Skindata = ONImg1
+      Skinname = 'progressbarv'
+      Caption = '30'
+      Font.Color = clBlack
+      Font.Height = -13
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
+      Visible = False
+      Textvisible = True
+      ONLEFT_TOP.Left = 816
+      ONLEFT_TOP.Top = 126
+      ONLEFT_TOP.Right = 827
+      ONLEFT_TOP.Bottom = 142
+      ONRIGHT_BOTTOM.Left = 816
+      ONRIGHT_BOTTOM.Top = 464
+      ONRIGHT_BOTTOM.Right = 827
+      ONRIGHT_BOTTOM.Bottom = 477
+      ONCENTER.Left = 816
+      ONCENTER.Top = 143
+      ONCENTER.Right = 827
+      ONCENTER.Bottom = 195
+      ONBAR.Left = 796
+      ONBAR.Top = 126
+      ONBAR.Right = 808
+      ONBAR.Bottom = 269
+      Min = 0
+      Max = 100
+      Position = 30
+      Kind = oVertical
+    end
+    object ONTrackBar1: TONTrackBar
+      Left = 25
+      Height = 25
+      Top = 103
+      Width = 174
+      Skindata = ONImg1
+      Skinname = 'trackbarh'
+      Visible = False
+      ONLEFT.Left = 0
+      ONLEFT.Top = 0
+      ONLEFT.Right = 0
+      ONLEFT.Bottom = 0
+      ONRIGHT.Left = 0
+      ONRIGHT.Top = 0
+      ONRIGHT.Right = 0
+      ONRIGHT.Bottom = 0
+      ONCENTER.Left = 0
+      ONCENTER.Top = 0
+      ONCENTER.Right = 0
+      ONCENTER.Bottom = 0
+      ONBUTONNORMAL.Left = 0
+      ONBUTONNORMAL.Top = 0
+      ONBUTONNORMAL.Right = 0
+      ONBUTONNORMAL.Bottom = 0
+      ONBUTONPRESS.Left = 0
+      ONBUTONPRESS.Top = 0
+      ONBUTONPRESS.Right = 0
+      ONBUTONPRESS.Bottom = 0
+      ONBUTONHOVER.Left = 0
+      ONBUTONHOVER.Top = 0
+      ONBUTONHOVER.Right = 0
+      ONBUTONHOVER.Bottom = 0
+      ONBUTONDISABLE.Left = 0
+      ONBUTONDISABLE.Top = 0
+      ONBUTONDISABLE.Right = 0
+      ONBUTONDISABLE.Bottom = 0
+      Position = 0
+      Percentage = 0
+      Max = 100
+      Min = 0
+    end
+    object ONTrackBar2: TONTrackBar
+      Left = 96
+      Height = 205
+      Top = 16
+      Width = 26
+      Skindata = ONImg1
+      Skinname = 'trackbarv'
+      Caption = 'ONTrackBar2'
+      Visible = False
+      ONLEFT.Left = 0
+      ONLEFT.Top = 0
+      ONLEFT.Right = 0
+      ONLEFT.Bottom = 0
+      ONRIGHT.Left = 0
+      ONRIGHT.Top = 0
+      ONRIGHT.Right = 0
+      ONRIGHT.Bottom = 0
+      ONCENTER.Left = 0
+      ONCENTER.Top = 0
+      ONCENTER.Right = 0
+      ONCENTER.Bottom = 0
+      ONBUTONNORMAL.Left = 0
+      ONBUTONNORMAL.Top = 0
+      ONBUTONNORMAL.Right = 0
+      ONBUTONNORMAL.Bottom = 0
+      ONBUTONPRESS.Left = 0
+      ONBUTONPRESS.Top = 0
+      ONBUTONPRESS.Right = 0
+      ONBUTONPRESS.Bottom = 0
+      ONBUTONHOVER.Left = 0
+      ONBUTONHOVER.Top = 0
+      ONBUTONHOVER.Right = 0
+      ONBUTONHOVER.Bottom = 0
+      ONBUTONDISABLE.Left = 0
+      ONBUTONDISABLE.Top = 0
+      ONBUTONDISABLE.Right = 0
+      ONBUTONDISABLE.Bottom = 0
+      Position = 0
+      Percentage = 100
+      Kind = oVertical
+      Max = 100
+      Min = 0
+    end
+    object ONCollapExpandPanel1: TONCollapExpandPanel
+      Left = 0
+      Height = 262
+      Top = 2
+      Width = 213
+      Skindata = ONImg1
+      Skinname = 'expandpanel'
+      Caption = 'ONCollapExpandPanel1'
+      Crop = True
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      TabOrder = 11
+      UseDockManager = False
+      Visible = False
+      AutoCollapse = False
+      Status = oExpanded
+      Minheight = 30
+      Normalheight = 150
+      ButtonPosition = obright
+      ONLEFT.Left = 0
+      ONLEFT.Top = 0
+      ONLEFT.Right = 0
+      ONLEFT.Bottom = 0
+      ONRIGHT.Left = 0
+      ONRIGHT.Top = 0
+      ONRIGHT.Right = 0
+      ONRIGHT.Bottom = 0
+      ONCENTER.Left = 0
+      ONCENTER.Top = 0
+      ONCENTER.Right = 0
+      ONCENTER.Bottom = 0
+      ONBOTTOM.Left = 0
+      ONBOTTOM.Top = 0
+      ONBOTTOM.Right = 0
+      ONBOTTOM.Bottom = 0
+      ONBOTTOMLEFT.Left = 0
+      ONBOTTOMLEFT.Top = 0
+      ONBOTTOMLEFT.Right = 0
+      ONBOTTOMLEFT.Bottom = 0
+      ONBOTTOMRIGHT.Left = 0
+      ONBOTTOMRIGHT.Top = 0
+      ONBOTTOMRIGHT.Right = 0
+      ONBOTTOMRIGHT.Bottom = 0
+      ONTOP.Left = 0
+      ONTOP.Top = 0
+      ONTOP.Right = 0
+      ONTOP.Bottom = 0
+      ONTOPLEFT.Left = 0
+      ONTOPLEFT.Top = 0
+      ONTOPLEFT.Right = 0
+      ONTOPLEFT.Bottom = 0
+      ONTOPRIGHT.Left = 0
+      ONTOPRIGHT.Top = 0
+      ONTOPRIGHT.Right = 0
+      ONTOPRIGHT.Bottom = 0
+      ONNORMAL.Left = 0
+      ONNORMAL.Top = 0
+      ONNORMAL.Right = 0
+      ONNORMAL.Bottom = 0
+      ONPRESSED.Left = 0
+      ONPRESSED.Top = 0
+      ONPRESSED.Right = 0
+      ONPRESSED.Bottom = 0
+      ONHOVER.Left = 0
+      ONHOVER.Top = 0
+      ONHOVER.Right = 0
+      ONHOVER.Bottom = 0
+      ONDISABLE.Left = 0
+      ONDISABLE.Top = 0
+      ONDISABLE.Right = 0
+      ONDISABLE.Bottom = 0
+    end
+  end
+  object ONImg1: TONImg
+    Left = 534
+    Top = 106
+  end
+  object opd: TOpenPictureDialog
+    Left = 248
+    Top = 32
+  end
+  object odf: TOpenDialog
+    DefaultExt = '.ini'
+    Filter = 'Ini Files|.ini'
+    Left = 218
+    Top = 77
+  end
+  object sdf: TSaveDialog
+    DefaultExt = '.ini'
+    Filter = 'Ini Files|.ini'
+    Left = 103
+    Top = 79
+  end
+  object ImageList1: TImageList
+    Left = 57
+    Top = 212
+    Bitmap = {
+      4C7A060000001000000010000000C30900000000000078DAED98697056D519C7
+      3FF6931F3B9DCE74A6B6CAB49551C7DA22626B711B6B700AD252AD2DB832A2AD
+      828A0B0C288425184408A62E8190B01A08218B59C8F286EC648510DFAC90FD25
+      09D9DFFDBEEFBDF7FDF5B98B11924C3ED9193F70F39EDC7BCF3DFFF33CE73CCF
+      73CEFF39F0FD5C9148C4F82F7F3A6A3840440FC9BB2A252C459E2321EB2E458F
+      84CD76D3F1114D65627C98EE2BADB43537E2BC54C385BA722ED657488BA055A6
+      FA5167CA8FE80C5DEDC53D364438E0A6BFB385CA736739F0D91E6A2A0AA59562
+      F7233A69CA2CA3D0B8E6EA657CF8AA34F1E29F1CC4D5E9A4AC308B3AC1971664
+      821EB0C7A44E83AA267EA8B78BB1C13EF9EC93666EF90DD2D55C87B3AE94FDBB
+      A389286E1BAF4D9B400B3FD8D3C9E840B73C7A459647FA19C73BD2C5609793E4
+      84BDA881B1D9F1E6BB4A77472B57BBDBD0FCA3A8FE61A99E90EA5142DE013253
+      934D9DAC399C8E17F962972BEDCDF475B7A27887F14FF4491F43E8CA35D16592
+      A349F1D7D9409D45BEC695CBADF4F5B41156C6F17B5C047D0372EF470F8F9278
+      609F607DA6FED3EDAF497F7A44A3B9F9226D2DF5F826AF9AF215AF4BECD04BD0
+      ED22EDE42142C109B3B53E4DBA659188C86EA120E7042567BFA2A6348392BC93
+      5414A65125A538FB147AC837D5FEFACBAB84EC11197EE1B1FD446CAD5EF7ACFB
+      4CD90145998137B0BA263EA8D973AB89862179979B1E310D6CB60AEA8A1101E6
+      0CDC80B79A5AED2253E64495BBA25AFDAB52694856A4814F53BF9FC0D5C3A8A2
+      A04FBA1B0B5B2560C8D675D31FACF950AEF379CDD22FF21D3E245513F2B94FB1
+      CA984C41C09C9088E5D711DD2A36C818AB3A35FC08E3019D82BA2EE2322EB1ED
+      443507F39A18D2EC7E04E6D30DFB58DD85C21114B9876DBCA1BB57BE27645553
+      20619BDE0B1B536A49691CC5D11D20C739424ED31895977D0C4C6826D6C4DBD2
+      3D8ACE98E077A796715AC2F6A084DECE3A2FBBEADD6C2D1B624BD1005BF387F9
+      24DFC599AA2E739C21D344D6FC07E4F9AAB8C74769951C11D99B1A607313BC59
+      A3F0464598F555B0FE1C6CC89964FFD74EC635CB4FAD354CC626FD8D8AFC0F8E
+      97B2D7096B4A349EC9F7B224639CA8742F8F1D77F358928F954746D891DACCB0
+      312761BF8134F113BEA0A9FFDB5FE6B1B134CC8AAC20CB72C23C72DACFA2E301
+      7E7FD0CBBD711EFE1CD74F744A1BA39AE16711DBA7ADE75199DB77128AD8540E
+      CB4EAB3CFA5590078E06587828C8A2031A0BF7F959BCE38AD8A68D6B8AED05BA
+      D78A23358457744A48BFC0AB894D44EDBDC093F14E16C7D6F387983AEEDF5AC3
+      1F37D5B3627B3587B2BB70DB78DD966F46B2D485E475583EF4CA7C0CD8CFFD52
+      5CA2EF5509BD1119B222F5E6B662ED32B6FEDF8567408225FC6D0CA9B29EC81A
+      6FEE4326C80E30D5D05D959BD55257D5A9F8758BCF7B22F6CA64FAFFB73EAA88
+      9E7EF1B990D85EB763F1E6F543BBC63A1B19BA5CC998ABD1DCFB7BBBDA191C68
+      63A0A78181760942AECD89EFB99049D7C57454773B8A67441CC5477E4E221D97
+      4ED3DF94447BCD8139F157CE1FA6B9FC10EE815A730FF7BB47494BD94B696E2C
+      3DB51FD15AB26B4E7C73513CF57971F4B5E6D32EFCC7D5DB49765A026599B1F4
+      9F8FA1397FF39CF88BD97BC93EF83ED9276239F8C5A77C161FCF5749FBC94ADE
+      4A4DCA3A8A1357CF892F3C120D83350CB694D25857CD85C64BC279F2645E1C12
+      98B9541F7B774E7CFEB11D12B88D78BA1A68FDA68992F2F3545554D05A5B44C0
+      9941C6C72FCF893F95F02EDEF652BA6B1C94153BC8C8C9252B2F879AB24C4257
+      F238B973D59CF8E4B8758CB73BE86F2CA4BA2C8FD2925C727353A82D4FC75597
+      4AFC7BCFCC89BFE438C6D9333B29CC8AA1ECEBFD149F89233FF5130A4FEFA732
+      3D91F233493783ECFF7485ED2557B5D9A147F6C741BC0CC9E23E2CC52BDCD0D8
+      FB4D3E65ACBF5A78067F32AA4C2E236B75595F2D27FACF71B8AF90B4D66246A4
+      36AC6953F850641AFF55C3F66662C87613EBF89C579CFB78AAF24356676C6680
+      71F92C98B08EA2055167EC00C2ED44EE3063748BD6EBAA62F9D7503C8B9B36F2
+      F8E935B4480F234CCAA814691730EF37A2150ABB4BD952F929AB1B767277F62A
+      1EEBDDC6FD4DEF716BD23256957CC05BF931249C3FC184C8F14FC3BBA5CFA3ED
+      D9BC5411CDF2CB5B78A477337736BCCEDDB56B79A0F24D96556F6475D576DEC9
+      DD25DA7998D40237E08784C77DEECCE2C9ECB7B9B76C35BFAA799E7BEAFFCD1D
+      252F714FF12BFC2EF305A2325EE5B913EB7199D222D3E4C389E6732CF9F2357E
+      7B6405B7EC5FC0A2FAD7995FB0925B3EBE8FBBBF5CCE43FB9E665BDE7ED3163E
+      FD46FB29C2A9FDBA26B3E717FDAEF152FA5AA22EBECDBCCCBFF29B3D0FD14AAF
+      D48FE297FCC1D8E5F569F24DA26CF84F286472A38FD36358E97897075357F2C4
+      9EE5821C96CF21CBFE41C5202E37CA37E8BA94A06630033F67AB33D9726C0BEB
+      9337107332D6D4493118B8AACF967E9AFE1B34B8BAF89FE1BF21939488CF89B5
+      02720F187697BE4D1A6C39E0B4FCCFA62D1193CA98F3AB9979885BB499B4FC2D
+      6CD13EDDCC966E32901FD4FA65D05871ABA018CF23C110101F9194D2E4B5AA70
+      57D56B1D3918EC5267E6D943EF00E4140E7132C3CFC9EC08C772FD24664D907C
+      26C0A92C484D0D7156F202836BCF66FB6F3A2029C5C3EECF24FFD90D6B778759
+      BB47E3C50D41D6BC13E2F575936CDBD16FF2E8E02CFA5F90DC63C396419E7931
+      C0C37F53B9EB2FE3FCEC4FFDFCE27E373F9F3FC8BC5FB71215552F399495934D
+      BF8ACAFD2C7D3A93BBEE7370C7C246E62DBEC48FEFADE627F31BF9E9EDF5DC76
+      7B194F2DADC2356CC5DA8CF10FA9E43A5C64E6299CFA5AE7784ED09C83C3E96E
+      790F927ACA436181C79CD79B9E7FF3BA61E1FC369D36F7F690BCFAED44CFB84F
+      4A1997E232328499277E466E68E0FD363110ACCFDB454DF1513A1B32B8E848A6
+      AF218DB1960CF9D43133EE238A455CECE39190E2A3A3A59C7F3E713BC9BB9EC5
+      99BF879EAA2F70D54AEEE06D9A45FFA0753612B01E7BBADC743435B17AC96D74
+      E57F485FC90EFA2A76D36EE40E9EEA1968550F9A7B467F1F5C6E83B8FFB690F8
+      79092B16CDA32DFB7D3A73DFE2B294C6CCF5E8C38E597897ECB92277DB274DBC
+      F846074FBF3CC99AFF34B3FCD1A59C3BBC0E67CA0BB4A53C4BC1BEA5328D6533
+      F0068FF2CAD8D76E2CE681C7F3B8EF21274F2C296455D4DF6938F516851F2DA0
+      2A6E0167772D96F4AB68E6F08D7D5B7E7D629EE676D8F261331B5E3BC6730B6E
+      C5B16321357BE751B9E79764C72C90DCA27016BC653763DD35B6F59ECBD0905F
+      CFB377FE88EC4DF3A988BD8DDCEDB792B2FD41947EC7ECF275CDE41301E1804A
+      50A5DB59CFA1E87F9012FD3099318B28FA6239A5A9D18427BB66C2EDBD58334F
+      E514FB1CD54D784C72CE6F52C4AEE7A54EFC46BD36CB99ABE16D41830D59E719
+      11FBA8CD6C663884B1698C4E9DD58423DF7FF4FC0F997E48E7
+    }
+  end
+  object main: TONImg
+    Left = 230
+    Top = 152
+  end
+end
