@@ -4,4 +4,4 @@ Lazarus components.
 Uses BGRABitmap. Please check BGRABitmap licenses.
 see. https://github.com/bgrabitmap/bgrabitmap
 
-<img src="https://github.com/Onur2x/onurcomp/blob/master/griskins.png">
+<img src="https://github.com/Onur2x/onurcomp/blob/master/3450.png">
