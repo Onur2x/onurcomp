@@ -75,6 +75,8 @@ type
     procedure ReadskinsComp(Com: TComponent);
     procedure Readskinsfile(filename: string);
     procedure Saveskinsfile(filename: string);
+    procedure ReadskinsStream(STrm: TStream);
+    procedure SaveskinsStream(Strm: TStream);
 
     //   property    Images  : TBGRABitmap read Fimage write Fimage;
   published
@@ -7317,16 +7319,29 @@ end;
 
 procedure TONImg.Readskinsfile(filename: string);
 begin
- List.Clear;
- list.LoadFromFile(filename);
- Readskins;//(self.fparent);
+ self.List.Clear;
+ self.list.LoadFromFile(filename);
+ self.Readskins;//(self.fparent);
 end;
 
 procedure TONImg.Saveskinsfile(filename: string);
 begin
- if List.Count>-1 then
- list.SaveToFile(filename);
+ if self.List.Count>-1 then
+ self.list.SaveToFile(filename);
  //Readskins(self.fparent);
+end;
+
+procedure TONImg.ReadskinsStream(STrm: TStream);
+begin
+  self.List.Clear;
+  self.List.LoadFromStream(STrm);
+  self.Readskins;
+end;
+
+procedure TONImg.SaveskinsStream(Strm: TStream);
+begin
+  if self.List.Count>-1 then
+  self.List.SaveToStream(STrm);
 end;
 
  {
@@ -7813,7 +7828,7 @@ begin
   Readskins(fparent);
 end;
 
-procedure TONImg.Readskins(formm: TForm);
+procedure TONImg.Readskins(formm: TForm); // new load ini files
 var
   fil: TIniFile;
   memm: TMemoryStream;
@@ -7843,7 +7858,7 @@ begin
       for i := 0 to formm.ComponentCount - 1 do
       begin
 
-        if (formm.Components[i] is TONPANEL) then
+        if (formm.Components[i] is TONPANEL) and (TONPANEL(formm.Components[i]).Skindata=self) then
           with (TONPANEL(formm.Components[i])) do
           begin
             case TAG of
@@ -7870,7 +7885,7 @@ begin
             cropRead(ONBOTTOMRIGHT, fil, Skinname);
           end;
 
-        if (formm.Components[i] is TONGraphicPanel) then
+        if (formm.Components[i] is TONGraphicPanel) and (TONGraphicPanel(formm.Components[i]).Skindata=self) then
           with (TONGraphicPanel(formm.Components[i])) do
           begin
             case TAG of
@@ -7899,7 +7914,7 @@ begin
 
 
 
-        if (formm.Components[i] is TONCropButton) then
+        if (formm.Components[i] is TONCropButton) and (TONCropButton(formm.Components[i]).Skindata=self) then
           with (TONCropButton(formm.Components[i])) do
           begin
             isim := 'BUTTON';
@@ -7916,7 +7931,7 @@ begin
             cropRead(ONDISABLE, fil, Skinname);
           end;
 
-        if (formm.Components[i] is TONGraphicsButton) then
+        if (formm.Components[i] is TONGraphicsButton) and (TONGraphicsButton(formm.Components[i]).Skindata=self) then
           with (TONGraphicsButton(formm.Components[i])) do
           begin
             isim := 'BUTTON';
@@ -7935,7 +7950,7 @@ begin
           end;
 
 
-        if (formm.Components[i] is TONEDIT) then
+        if (formm.Components[i] is TONEDIT) and (TonEdit(formm.Components[i]).Skindata=self) then
           with (TONEDIT(formm.Components[i])) do
           begin
             isim := 'EDIT';
@@ -7956,7 +7971,7 @@ begin
             cropRead(ONBOTTOMRIGHT, fil, Skinname);
           end;
 
-        if (formm.Components[i] is TOnSpinEdit) then
+        if (formm.Components[i] is TOnSpinEdit) and (TOnSpinEdit(formm.Components[i]).Skindata=self)then
           with (TOnSpinEdit(formm.Components[i])) do
           begin
             isim := 'SPINEDIT';
@@ -7987,7 +8002,7 @@ begin
 
           end;
 
-         if (formm.Components[i] is TONMEMO) then
+         if (formm.Components[i] is TONMEMO) and (TONMemo(formm.Components[i]).Skindata=self)then
             with TONMEMO(formm.Components[i]) do
             begin
               isim := 'MEMO';
@@ -8010,7 +8025,7 @@ begin
             end;
 
 
-         if (formm.Components[i] is TONCOMBOBOX) then
+         if (formm.Components[i] is TONCOMBOBOX) and (TONcombobox(formm.Components[i]).Skindata=self) then
             with (TONCOMBOBOX(formm.Components[i])) do
             begin
               isim := 'COMBOBOX';
@@ -8037,7 +8052,7 @@ begin
 
 
 
-          if (formm.Components[i] is TOnlistBox) then
+          if (formm.Components[i] is TOnlistBox) and (ToNListBox(formm.Components[i]).Skindata=self)then
             with (TOnlistBox(formm.Components[i])) do
             begin
               isim := 'LISTBOX';
@@ -8063,7 +8078,7 @@ begin
 
 
 
-           if (formm.Components[i] is TOnSwich) then
+           if (formm.Components[i] is TOnSwich) and (TOnSwich(formm.Components[i]).Skindata=self) then
             with (TOnSwich(formm.Components[i])) do
             begin
               isim := 'SWICH';
@@ -8081,7 +8096,7 @@ begin
               cropRead(ONDISABLE,fil,Skinname);
             end;
 
-          if (formm.Components[i] is TOnCheckBox) then
+          if (formm.Components[i] is TOnCheckBox) and (TOnCheckbox(formm.Components[i]).Skindata=self) then
             with (TOnCheckBox(formm.Components[i])) do
             begin
               isim := 'CHECKBOX';
@@ -8100,7 +8115,7 @@ begin
               cropRead(ONDISABLE,fil,Skinname);
             end;
 
-          if (formm.Components[i] is TOnRadioButton) then
+          if (formm.Components[i] is TOnRadioButton) and (TOnRadioButton(formm.Components[i]).Skindata=self) then
             with (TOnRadioButton(formm.Components[i])) do
             begin
               isim := 'RADIOBUTTON';
@@ -8123,7 +8138,7 @@ begin
 
 
 
-           if (formm.Components[i] is TONScrollBar) then
+           if (formm.Components[i] is TONScrollBar) and (ToNScrollBar(formm.Components[i]).Skindata=self)then
             with (TONScrollBar(formm.Components[i])) do
              begin
                if Skindata=nil then
@@ -8157,7 +8172,7 @@ begin
 
 
 
-           if (formm.Components[i] is TONProgressBar) then
+           if (formm.Components[i] is TONProgressBar) and (TONProgressBar(formm.Components[i]).Skindata=self) then
             with (TONProgressBar(formm.Components[i])) do
              begin
 
@@ -8175,7 +8190,7 @@ begin
             end;
 
 
-           if (formm.Components[i] is TONTrackBar) then
+           if (formm.Components[i] is TONTrackBar) and (TONTrackBar(formm.Components[i]).Skindata=self)then
             with (TONTrackBar(formm.Components[i])) do
              begin
                if Skindata=nil then
@@ -8194,7 +8209,7 @@ begin
                cropRead(ONBUTONDISABLE,fil,Skinname);
             end;
 
-           if (formm.Components[i] is TONCollapExpandPanel) then
+           if (formm.Components[i] is TONCollapExpandPanel) and (TONCollapExpandPanel(formm.Components[i]).Skindata=self) then
             with (TONCollapExpandPanel(formm.Components[i])) do
              begin
                if Skindata=nil then
