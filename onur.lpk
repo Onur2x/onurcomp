@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
-  <Package Version="4">
+  <Package Version="5">
     <PathDelim Value="\"/>
     <Name Value="onur"/>
     <Type Value="RunAndDesignTime"/>
@@ -30,17 +30,14 @@
         <UnitName Value="onurbutton"/>
       </Item2>
     </Files>
-    <RequiredPkgs Count="3">
+    <CompatibilityMode Value="True"/>
+    <RequiredPkgs Count="2">
       <Item1>
         <PackageName Value="BGRABitmapPack"/>
       </Item1>
       <Item2>
         <PackageName Value="LCL"/>
       </Item2>
-      <Item3>
-        <PackageName Value="FCL"/>
-        <MinVersion Major="1" Valid="True"/>
-      </Item3>
     </RequiredPkgs>
     <UsageOptions>
       <UnitPath Value="$(PkgOutDir)"/>

@@ -1,0 +1,2 @@
+panel         RCDATA "panel.png"
+skins         RCDATA "skins.ini"
