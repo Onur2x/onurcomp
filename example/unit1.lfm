@@ -1,0 +1,1200 @@
+object Form1: TForm1
+  Left = 332
+  Height = 488
+  Top = 250
+  Width = 727
+  Caption = 'Form1'
+  ClientHeight = 488
+  ClientWidth = 727
+  object ONGraphicsButton1: TONGraphicsButton
+    Left = 141
+    Height = 30
+    Top = 13
+    Width = 154
+    Skindata = ONImg1
+    Skinname = 'button'
+    Caption = 'ONGraphicsButton1'
+    Color = clNone
+    Font.Color = clBlack
+    ParentColor = False
+    ParentFont = False
+    OnClick = ONGraphicsButton1Click
+    ONNORMAL.Left = 0
+    ONNORMAL.Top = 0
+    ONNORMAL.Right = 0
+    ONNORMAL.Bottom = 0
+    ONPRESSED.Left = 0
+    ONPRESSED.Top = 0
+    ONPRESSED.Right = 0
+    ONPRESSED.Bottom = 0
+    ONHOVER.Left = 0
+    ONHOVER.Top = 0
+    ONHOVER.Right = 0
+    ONHOVER.Bottom = 0
+    ONDISABLE.Left = 0
+    ONDISABLE.Top = 0
+    ONDISABLE.Right = 0
+    ONDISABLE.Bottom = 0
+  end
+  object onEdit1: TonEdit
+    Cursor = crIBeam
+    Left = 96
+    Height = 30
+    Top = 90
+    Width = 80
+    Skindata = ONImg1
+    Skinname = 'edit'
+    Caption = 'onEdit1'
+    DoubleBuffered = True
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    TabOrder = 0
+    TabStop = True
+    UseDockManager = False
+    NumberOnly = False
+    Selstart = 0
+    CharCase = ecNormal
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+  end
+  object ONPanel1: TONPanel
+    Left = 307
+    Height = 190
+    Top = 13
+    Width = 190
+    Skindata = ONImg1
+    Skinname = 'panel'
+    Caption = '12589+ wewqeq'
+    DoubleBuffered = True
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    TabOrder = 1
+    UseDockManager = False
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+  end
+  object ColorBox1: TColorBox
+    Left = 8
+    Height = 22
+    Top = 32
+    Width = 100
+    ItemHeight = 16
+    OnChange = ColorBox1Change
+    TabOrder = 2
+  end
+  object ComboBox1: TComboBox
+    Left = 48
+    Height = 23
+    Top = 51
+    Width = 20
+    ItemHeight = 15
+    ItemIndex = 0
+    Items.Strings = (
+      'LinearBlend'
+      'Transparent'
+      'Lighten'
+      'Screen'
+      'Additive'
+      'LinearAdd'
+      'ColorDodge'
+      'Divide'
+      'NiceGlow'
+      'SoftLight'
+      'HardLight'
+      'Glow'
+      'Reflect'
+      'Overlay'
+      'DarkOverlay'
+      'Darken'
+      'Multiply'
+      'ColorBurn'
+      'Difference'
+      'LinearDifference'
+      'Exclusion'
+      'LinearExclusion'
+      'Subtract'
+      'LinearSubtract'
+      'SubtractInverse'
+      'LinearSubtractInverse'
+      'Negation'
+      'LinearNegation'
+      'Xor'
+      'SvgSoftLight'
+      'Mask'
+      'LinearMultiplySaturation'
+      'LinearHue'
+      'LinearColor'
+      'LinearLightness'
+      'LinearSaturation'
+      'CorrectedHue'
+      'CorrectedColor'
+      'CorrectedLightness'
+      'CorrectedSaturation'
+    )
+    OnChange = ComboBox1Change
+    TabOrder = 3
+    Text = 'LinearBlend'
+    Visible = False
+  end
+  object ONHeaderPanel1: TONHeaderPanel
+    Left = 506
+    Height = 50
+    Top = 13
+    Width = 190
+    Skindata = ONImg1
+    Skinname = 'headerpanel'
+    Caption = 'ONHeaderPanel1'
+    DoubleBuffered = True
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    TabOrder = 4
+    UseDockManager = False
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+  end
+  object ONGraphicPanel1: TONGraphicPanel
+    Left = 506
+    Height = 190
+    Top = 77
+    Width = 190
+    Skindata = ONImg1
+    Skinname = 'panel'
+    Caption = 'ONGraphicPanel1'
+    Color = clNone
+    ParentColor = False
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+  end
+  object ONCropButton1: TONCropButton
+    Left = 192
+    Height = 30
+    Top = 48
+    Width = 100
+    Skindata = ONImg1
+    Skinname = 'button'
+    Caption = 'gfgdfgfdg'
+    Crop = True
+    DoubleBuffered = True
+    Font.Color = clBlack
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    ParentFont = False
+    TabOrder = 5
+    UseDockManager = False
+    OnClick = ONCropButton1Click
+    ONNORMAL.Left = 0
+    ONNORMAL.Top = 0
+    ONNORMAL.Right = 0
+    ONNORMAL.Bottom = 0
+    ONPRESSED.Left = 0
+    ONPRESSED.Top = 0
+    ONPRESSED.Right = 0
+    ONPRESSED.Bottom = 0
+    ONHOVER.Left = 0
+    ONHOVER.Top = 0
+    ONHOVER.Right = 0
+    ONHOVER.Bottom = 0
+    ONDISABLE.Left = 0
+    ONDISABLE.Top = 0
+    ONDISABLE.Right = 0
+    ONDISABLE.Bottom = 0
+  end
+  object OnSpinEdit1: TOnSpinEdit
+    Cursor = crIBeam
+    Left = 18
+    Height = 25
+    Top = 90
+    Width = 68
+    Skindata = ONImg1
+    Skinname = 'spinedit'
+    Caption = 'OnSpinEdit1'
+    DoubleBuffered = True
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    TabOrder = 6
+    TabStop = True
+    UseDockManager = False
+    NumberOnly = True
+    Selstart = 0
+    CharCase = ecNormal
+    Value = 0
+    MaxValue = 0
+    MinValue = 0
+    Buttonwidth = 0
+    Buttonheight = 0
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+    ONUPBUTONNORMAL.Left = 0
+    ONUPBUTONNORMAL.Top = 0
+    ONUPBUTONNORMAL.Right = 0
+    ONUPBUTONNORMAL.Bottom = 0
+    ONUPBUTONPRESS.Left = 0
+    ONUPBUTONPRESS.Top = 0
+    ONUPBUTONPRESS.Right = 0
+    ONUPBUTONPRESS.Bottom = 0
+    ONUPBUTONHOVER.Left = 0
+    ONUPBUTONHOVER.Top = 0
+    ONUPBUTONHOVER.Right = 0
+    ONUPBUTONHOVER.Bottom = 0
+    ONUPBUTONDISABLE.Left = 0
+    ONUPBUTONDISABLE.Top = 0
+    ONUPBUTONDISABLE.Right = 0
+    ONUPBUTONDISABLE.Bottom = 0
+    ONDOWNBUTONNORMAL.Left = 0
+    ONDOWNBUTONNORMAL.Top = 0
+    ONDOWNBUTONNORMAL.Right = 0
+    ONDOWNBUTONNORMAL.Bottom = 0
+    ONDOWNBUTONPRESS.Left = 0
+    ONDOWNBUTONPRESS.Top = 0
+    ONDOWNBUTONPRESS.Right = 0
+    ONDOWNBUTONPRESS.Bottom = 0
+    ONDOWNBUTONHOVER.Left = 0
+    ONDOWNBUTONHOVER.Top = 0
+    ONDOWNBUTONHOVER.Right = 0
+    ONDOWNBUTONHOVER.Bottom = 0
+    ONDOWNBUTONDISABLE.Left = 0
+    ONDOWNBUTONDISABLE.Top = 0
+    ONDOWNBUTONDISABLE.Right = 0
+    ONDOWNBUTONDISABLE.Bottom = 0
+  end
+  object ONMemo1: TONMemo
+    Cursor = crIBeam
+    Left = 306
+    Height = 150
+    Top = 226
+    Width = 150
+    Skindata = ONImg1
+    Skinname = 'memo'
+    Caption = 'ONMemo1'
+    DoubleBuffered = True
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    TabOrder = 7
+    TabStop = True
+    UseDockManager = False
+    NumberOnly = False
+    Selstart = 0
+    CharCase = ecNormal
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+    Lines.Strings = (
+      'ONMemo1'
+    )
+  end
+  object ONcombobox1: TONcombobox
+    Cursor = crIBeam
+    Left = 18
+    Height = 30
+    Top = 128
+    Width = 150
+    Skindata = ONImg1
+    Skinname = 'combobox'
+    Caption = 'ONcombobox1'
+    DoubleBuffered = True
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    TabOrder = 8
+    TabStop = True
+    UseDockManager = False
+    NumberOnly = False
+    Selstart = 0
+    CharCase = ecNormal
+    Items.Strings = (
+      'LinearBlend'
+      'Transparent'
+      'Lighten'
+      'Screen'
+      'Additive'
+      'LinearAdd'
+      'ColorDodge'
+      'Divide'
+      'NiceGlow'
+      'SoftLight'
+      'HardLight'
+      'Glow'
+      'Reflect'
+      'Overlay'
+      'DarkOverlay'
+      'Darken'
+      'Multiply'
+      'ColorBurn'
+      'Difference'
+      'LinearDifference'
+      'Exclusion'
+      'LinearExclusion'
+      'Subtract'
+      'LinearSubtract'
+      'SubtractInverse'
+      'LinearSubtractInverse'
+      'Negation'
+      'LinearNegation'
+      'Xor'
+      'SvgSoftLight'
+      'Mask'
+      'LinearMultiplySaturation'
+      'LinearHue'
+      'LinearColor'
+      'LinearLightness'
+      'LinearSaturation'
+      'CorrectedHue'
+      'CorrectedColor'
+      'CorrectedLightness'
+      'CorrectedSaturation'
+    )
+    Itemindex = -1
+    Selectedcolor = clBlue
+    ItemHeight = 0
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+    ONBUTONNORMAL.Left = 0
+    ONBUTONNORMAL.Top = 0
+    ONBUTONNORMAL.Right = 0
+    ONBUTONNORMAL.Bottom = 0
+    ONBUTONPRESS.Left = 0
+    ONBUTONPRESS.Top = 0
+    ONBUTONPRESS.Right = 0
+    ONBUTONPRESS.Bottom = 0
+    ONBUTONHOVER.Left = 0
+    ONBUTONHOVER.Top = 0
+    ONBUTONHOVER.Right = 0
+    ONBUTONHOVER.Bottom = 0
+    ONBUTONDISABLE.Left = 0
+    ONBUTONDISABLE.Top = 0
+    ONBUTONDISABLE.Right = 0
+    ONBUTONDISABLE.Bottom = 0
+  end
+  object oNScrollBar1: ToNScrollBar
+    Left = 19
+    Height = 18
+    Top = 218
+    Width = 200
+    Skindata = ONImg1
+    Skinname = 'scrollbarh'
+    Caption = 'oNScrollBar1'
+    Color = clNone
+    ParentBidiMode = False
+    ParentColor = False
+    ParentFont = False
+    ParentShowHint = False
+    Min = 0
+    Max = 100
+    Position = 10
+    OnChange = oNScrollBar1Change
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONNORMAL.Left = 0
+    ONNORMAL.Top = 0
+    ONNORMAL.Right = 0
+    ONNORMAL.Bottom = 0
+    ONBAR.Left = 0
+    ONBAR.Top = 0
+    ONBAR.Right = 0
+    ONBAR.Bottom = 0
+    ONLEFTBUTNORMAL.Left = 0
+    ONLEFTBUTNORMAL.Top = 0
+    ONLEFTBUTNORMAL.Right = 0
+    ONLEFTBUTNORMAL.Bottom = 0
+    ONLEFTBUTONHOVER.Left = 0
+    ONLEFTBUTONHOVER.Top = 0
+    ONLEFTBUTONHOVER.Right = 0
+    ONLEFTBUTONHOVER.Bottom = 0
+    ONLEFTBUTPRESS.Left = 0
+    ONLEFTBUTPRESS.Top = 0
+    ONLEFTBUTPRESS.Right = 0
+    ONLEFTBUTPRESS.Bottom = 0
+    ONLEFTBUTDISABLE.Left = 0
+    ONLEFTBUTDISABLE.Top = 0
+    ONLEFTBUTDISABLE.Right = 0
+    ONLEFTBUTDISABLE.Bottom = 0
+    ONRIGHTBUTNORMAL.Left = 0
+    ONRIGHTBUTNORMAL.Top = 0
+    ONRIGHTBUTNORMAL.Right = 0
+    ONRIGHTBUTNORMAL.Bottom = 0
+    ONRIGHTBUTONHOVER.Left = 0
+    ONRIGHTBUTONHOVER.Top = 0
+    ONRIGHTBUTONHOVER.Right = 0
+    ONRIGHTBUTONHOVER.Bottom = 0
+    ONRIGHTBUTPRESS.Left = 0
+    ONRIGHTBUTPRESS.Top = 0
+    ONRIGHTBUTPRESS.Right = 0
+    ONRIGHTBUTPRESS.Bottom = 0
+    ONRIGHTBUTDISABLE.Left = 0
+    ONRIGHTBUTDISABLE.Top = 0
+    ONRIGHTBUTDISABLE.Right = 0
+    ONRIGHTBUTDISABLE.Bottom = 0
+    ONCENTERBUTNORMAL.Left = 0
+    ONCENTERBUTNORMAL.Top = 0
+    ONCENTERBUTNORMAL.Right = 0
+    ONCENTERBUTNORMAL.Bottom = 0
+    ONCENTERBUTONHOVER.Left = 0
+    ONCENTERBUTONHOVER.Top = 0
+    ONCENTERBUTONHOVER.Right = 0
+    ONCENTERBUTONHOVER.Bottom = 0
+    ONCENTERBUTPRESS.Left = 0
+    ONCENTERBUTPRESS.Top = 0
+    ONCENTERBUTPRESS.Right = 0
+    ONCENTERBUTPRESS.Bottom = 0
+    ONCENTERBUTDISABLE.Left = 0
+    ONCENTERBUTDISABLE.Top = 0
+    ONCENTERBUTDISABLE.Right = 0
+    ONCENTERBUTDISABLE.Bottom = 0
+  end
+  object oNListBox1: ToNListBox
+    Left = 518
+    Height = 200
+    Top = 275
+    Width = 180
+    Skindata = ONImg1
+    Skinname = 'listbox'
+    Caption = 'oNListBox1'
+    ClientHeight = 200
+    ClientWidth = 180
+    DoubleBuffered = True
+    Font.Height = -14
+    Font.Name = 'Calibri'
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    ParentFont = False
+    TabOrder = 9
+    UseDockManager = False
+    Items.Strings = (
+      'LinearBlend'
+      'Transparent'
+      'Lighten'
+      'Screen'
+      'Additive'
+      'LinearAdd'
+      'ColorDodge'
+      'Divide'
+      'NiceGlow'
+      'SoftLight'
+      'HardLight'
+      'Glow'
+      'Reflect'
+      'Overlay'
+      'DarkOverlay'
+      'Darken'
+      'Multiply'
+      'ColorBurn'
+      'Difference'
+      'LinearDifference'
+      'Exclusion'
+      'LinearExclusion'
+      'Subtract'
+      'LinearSubtract'
+      'SubtractInverse'
+      'LinearSubtractInverse'
+      'Negation'
+      'LinearNegation'
+      'Xor'
+      'SvgSoftLight'
+      'Mask'
+      'LinearMultiplySaturation'
+      'LinearHue'
+      'LinearColor'
+      'LinearLightness'
+      'LinearSaturation'
+      'CorrectedHue'
+      'CorrectedColor'
+      'CorrectedLightness'
+      'CorrectedSaturation'
+    )
+    ItemIndex = -1
+    ItemHeight = 20
+    Selectedcolor = clBlue
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+    ONACTIVEITEM.Left = 0
+    ONACTIVEITEM.Top = 0
+    ONACTIVEITEM.Right = 0
+    ONACTIVEITEM.Bottom = 0
+  end
+  object OnSwich1: TOnSwich
+    Left = 211
+    Height = 23
+    Top = 84
+    Width = 68
+    Transparent = False
+    Skindata = ONImg1
+    Skinname = 'swich'
+    Caption = 'OnSwich1'
+    ONOPEN.Left = 0
+    ONOPEN.Top = 0
+    ONOPEN.Right = 0
+    ONOPEN.Bottom = 0
+    ONCLOSE.Left = 0
+    ONCLOSE.Top = 0
+    ONCLOSE.Right = 0
+    ONCLOSE.Bottom = 0
+    ONOPENHOVER.Left = 0
+    ONOPENHOVER.Top = 0
+    ONOPENHOVER.Right = 0
+    ONOPENHOVER.Bottom = 0
+    ONCLOSEHOVER.Left = 0
+    ONCLOSEHOVER.Top = 0
+    ONCLOSEHOVER.Right = 0
+    ONCLOSEHOVER.Bottom = 0
+    ONDISABLE.Left = 0
+    ONDISABLE.Top = 0
+    ONDISABLE.Right = 0
+    ONDISABLE.Bottom = 0
+  end
+  object OnCheckbox1: TOnCheckbox
+    Left = 14
+    Height = 30
+    Top = 173
+    Width = 100
+    Transparent = False
+    Skindata = ONImg1
+    Skinname = 'checkbox'
+    Caption = 'OnCheckbox1'
+    Font.Color = clBlack
+    ParentFont = False
+    CheckWidth = 12
+    CaptionDirection = ocright
+    ONNORMAL.Left = 0
+    ONNORMAL.Top = 0
+    ONNORMAL.Right = 0
+    ONNORMAL.Bottom = 0
+    ONNORMALHOVER.Left = 0
+    ONNORMALHOVER.Top = 0
+    ONNORMALHOVER.Right = 0
+    ONNORMALHOVER.Bottom = 0
+    ONNORMALDOWN.Left = 0
+    ONNORMALDOWN.Top = 0
+    ONNORMALDOWN.Right = 0
+    ONNORMALDOWN.Bottom = 0
+    ONCHECKED.Left = 0
+    ONCHECKED.Top = 0
+    ONCHECKED.Right = 0
+    ONCHECKED.Bottom = 0
+    ONCHECKEDHOVER.Left = 0
+    ONCHECKEDHOVER.Top = 0
+    ONCHECKEDHOVER.Right = 0
+    ONCHECKEDHOVER.Bottom = 0
+    ONDISABLE.Left = 0
+    ONDISABLE.Top = 0
+    ONDISABLE.Right = 0
+    ONDISABLE.Bottom = 0
+  end
+  object OnRadioButton1: TOnRadioButton
+    Left = 186
+    Height = 30
+    Top = 128
+    Width = 100
+    Transparent = False
+    Skindata = ONImg1
+    Skinname = 'radiobox'
+    Caption = 'OnRadioButton1'
+    Font.Color = clBlack
+    ParentFont = False
+    CheckWidth = 12
+    CaptionDirection = ocright
+    ONNORMAL.Left = 0
+    ONNORMAL.Top = 0
+    ONNORMAL.Right = 0
+    ONNORMAL.Bottom = 0
+    ONNORMALHOVER.Left = 0
+    ONNORMALHOVER.Top = 0
+    ONNORMALHOVER.Right = 0
+    ONNORMALHOVER.Bottom = 0
+    ONNORMALDOWN.Left = 0
+    ONNORMALDOWN.Top = 0
+    ONNORMALDOWN.Right = 0
+    ONNORMALDOWN.Bottom = 0
+    ONCHECKED.Left = 0
+    ONCHECKED.Top = 0
+    ONCHECKED.Right = 0
+    ONCHECKED.Bottom = 0
+    ONCHECKEDHOVER.Left = 0
+    ONCHECKEDHOVER.Top = 0
+    ONCHECKEDHOVER.Right = 0
+    ONCHECKEDHOVER.Bottom = 0
+    ONDISABLE.Left = 0
+    ONDISABLE.Top = 0
+    ONDISABLE.Right = 0
+    ONDISABLE.Bottom = 0
+  end
+  object ONProgressBar1: TONProgressBar
+    Left = 14
+    Height = 18
+    Top = 285
+    Width = 150
+    Transparent = False
+    Skindata = ONImg1
+    Skinname = 'progressbarh'
+    Anchors = [akLeft]
+    Caption = '10'
+    Textvisible = True
+    ONLEFT_TOP.Left = 0
+    ONLEFT_TOP.Top = 0
+    ONLEFT_TOP.Right = 0
+    ONLEFT_TOP.Bottom = 0
+    ONRIGHT_BOTTOM.Left = 0
+    ONRIGHT_BOTTOM.Top = 0
+    ONRIGHT_BOTTOM.Right = 0
+    ONRIGHT_BOTTOM.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBAR.Left = 0
+    ONBAR.Top = 0
+    ONBAR.Right = 0
+    ONBAR.Bottom = 0
+    Min = 0
+    Max = 100
+    Position = 10
+  end
+  object ONTrackBar1: TONTrackBar
+    Left = 13
+    Height = 16
+    Top = 253
+    Width = 180
+    Skindata = ONImg1
+    Skinname = 'trackbarh'
+    Caption = 'ONTrackBar1'
+    Color = clNone
+    ParentColor = False
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBUTONNORMAL.Left = 0
+    ONBUTONNORMAL.Top = 0
+    ONBUTONNORMAL.Right = 0
+    ONBUTONNORMAL.Bottom = 0
+    ONBUTONPRESS.Left = 0
+    ONBUTONPRESS.Top = 0
+    ONBUTONPRESS.Right = 0
+    ONBUTONPRESS.Bottom = 0
+    ONBUTONHOVER.Left = 0
+    ONBUTONHOVER.Top = 0
+    ONBUTONHOVER.Right = 0
+    ONBUTONHOVER.Bottom = 0
+    ONBUTONDISABLE.Left = 0
+    ONBUTONDISABLE.Top = 0
+    ONBUTONDISABLE.Right = 0
+    ONBUTONDISABLE.Bottom = 0
+    Position = 0
+    Percentage = 0
+    Max = 100
+    Min = 0
+  end
+  object ONCollapExpandPanel1: TONCollapExpandPanel
+    Left = 18
+    Height = 150
+    Top = 320
+    Width = 250
+    Skindata = ONImg1
+    Skinname = 'expandpanel'
+    Caption = 'ONCollapExpandPanel1'
+    DoubleBuffered = True
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    TabOrder = 10
+    UseDockManager = False
+    AutoCollapse = False
+    Status = oExpanded
+    Minheight = 30
+    Normalheight = 150
+    HeaderState = ocup
+    ButtonPosition = obright
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBOTTOM.Left = 0
+    ONBOTTOM.Top = 0
+    ONBOTTOM.Right = 0
+    ONBOTTOM.Bottom = 0
+    ONBOTTOMLEFT.Left = 0
+    ONBOTTOMLEFT.Top = 0
+    ONBOTTOMLEFT.Right = 0
+    ONBOTTOMLEFT.Bottom = 0
+    ONBOTTOMRIGHT.Left = 0
+    ONBOTTOMRIGHT.Top = 0
+    ONBOTTOMRIGHT.Right = 0
+    ONBOTTOMRIGHT.Bottom = 0
+    ONTOP.Left = 0
+    ONTOP.Top = 0
+    ONTOP.Right = 0
+    ONTOP.Bottom = 0
+    ONTOPLEFT.Left = 0
+    ONTOPLEFT.Top = 0
+    ONTOPLEFT.Right = 0
+    ONTOPLEFT.Bottom = 0
+    ONTOPRIGHT.Left = 0
+    ONTOPRIGHT.Top = 0
+    ONTOPRIGHT.Right = 0
+    ONTOPRIGHT.Bottom = 0
+    ONNORMAL.Left = 0
+    ONNORMAL.Top = 0
+    ONNORMAL.Right = 0
+    ONNORMAL.Bottom = 0
+    ONPRESSED.Left = 0
+    ONPRESSED.Top = 0
+    ONPRESSED.Right = 0
+    ONPRESSED.Bottom = 0
+    ONHOVER.Left = 0
+    ONHOVER.Top = 0
+    ONHOVER.Right = 0
+    ONHOVER.Bottom = 0
+    ONDISABLE.Left = 0
+    ONDISABLE.Top = 0
+    ONDISABLE.Right = 0
+    ONDISABLE.Bottom = 0
+  end
+  object ONProgressBar2: TONProgressBar
+    Left = 282
+    Height = 150
+    Top = 294
+    Width = 10
+    Transparent = False
+    Skindata = ONImg1
+    Skinname = 'progressbarv'
+    Caption = '10'
+    Textvisible = True
+    ONLEFT_TOP.Left = 0
+    ONLEFT_TOP.Top = 0
+    ONLEFT_TOP.Right = 0
+    ONLEFT_TOP.Bottom = 0
+    ONRIGHT_BOTTOM.Left = 0
+    ONRIGHT_BOTTOM.Top = 0
+    ONRIGHT_BOTTOM.Right = 0
+    ONRIGHT_BOTTOM.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBAR.Left = 0
+    ONBAR.Top = 0
+    ONBAR.Right = 0
+    ONBAR.Bottom = 0
+    Min = 0
+    Max = 100
+    Position = 10
+    Kind = oVertical
+  end
+  object ONTrackBar2: TONTrackBar
+    Left = 467
+    Height = 180
+    Top = 288
+    Width = 16
+    Transparent = False
+    Skindata = ONImg1
+    Skinname = 'trackbarv'
+    Caption = 'ONTrackBar2'
+    ONLEFT.Left = 0
+    ONLEFT.Top = 0
+    ONLEFT.Right = 0
+    ONLEFT.Bottom = 0
+    ONRIGHT.Left = 0
+    ONRIGHT.Top = 0
+    ONRIGHT.Right = 0
+    ONRIGHT.Bottom = 0
+    ONCENTER.Left = 0
+    ONCENTER.Top = 0
+    ONCENTER.Right = 0
+    ONCENTER.Bottom = 0
+    ONBUTONNORMAL.Left = 0
+    ONBUTONNORMAL.Top = 0
+    ONBUTONNORMAL.Right = 0
+    ONBUTONNORMAL.Bottom = 0
+    ONBUTONPRESS.Left = 0
+    ONBUTONPRESS.Top = 0
+    ONBUTONPRESS.Right = 0
+    ONBUTONPRESS.Bottom = 0
+    ONBUTONHOVER.Left = 0
+    ONBUTONHOVER.Top = 0
+    ONBUTONHOVER.Right = 0
+    ONBUTONHOVER.Bottom = 0
+    ONBUTONDISABLE.Left = 0
+    ONBUTONDISABLE.Top = 0
+    ONBUTONDISABLE.Right = 0
+    ONBUTONDISABLE.Bottom = 0
+    Position = 0
+    Percentage = 100
+    Kind = oVertical
+    Max = 100
+    Min = 0
+  end
+  object Label1: TLabel
+    Left = 8
+    Height = 15
+    Top = 10
+    Width = 63
+    Caption = 'Select Color'
+  end
+  object ONCropButton2: TONCropButton
+    Left = 112
+    Height = 30
+    Top = 48
+    Width = 55
+    Skindata = ONImg1
+    Skinname = 'button'
+    Caption = 'Close'
+    Crop = True
+    DoubleBuffered = True
+    Font.Color = clBlack
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    ParentFont = False
+    TabOrder = 11
+    UseDockManager = False
+    OnClick = ONCropButton2Click
+    ONNORMAL.Left = 0
+    ONNORMAL.Top = 0
+    ONNORMAL.Right = 0
+    ONNORMAL.Bottom = 0
+    ONPRESSED.Left = 0
+    ONPRESSED.Top = 0
+    ONPRESSED.Right = 0
+    ONPRESSED.Bottom = 0
+    ONHOVER.Left = 0
+    ONHOVER.Top = 0
+    ONHOVER.Right = 0
+    ONHOVER.Bottom = 0
+    ONDISABLE.Left = 0
+    ONDISABLE.Top = 0
+    ONDISABLE.Right = 0
+    ONDISABLE.Bottom = 0
+  end
+  object ONCropButton3: TONCropButton
+    Left = 312
+    Height = 30
+    Top = 395
+    Width = 100
+    Skindata = ONImg1
+    Skinname = 'button'
+    Caption = 'Skin Info'
+    Crop = True
+    DoubleBuffered = True
+    Font.Color = clBlack
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    ParentFont = False
+    TabOrder = 12
+    UseDockManager = False
+    OnClick = ONCropButton3Click
+    ONNORMAL.Left = 0
+    ONNORMAL.Top = 0
+    ONNORMAL.Right = 0
+    ONNORMAL.Bottom = 0
+    ONPRESSED.Left = 0
+    ONPRESSED.Top = 0
+    ONPRESSED.Right = 0
+    ONPRESSED.Bottom = 0
+    ONHOVER.Left = 0
+    ONHOVER.Top = 0
+    ONHOVER.Right = 0
+    ONHOVER.Bottom = 0
+    ONDISABLE.Left = 0
+    ONDISABLE.Top = 0
+    ONDISABLE.Right = 0
+    ONDISABLE.Bottom = 0
+  end
+  object ONImg1: TONImg
+    MColor = 'default'
+    Left = 112
+    Top = 8
+  end
+  object OpenDialog1: TOpenDialog
+    Left = 320
+    Top = 23
+  end
+end
