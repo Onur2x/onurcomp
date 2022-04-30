@@ -12,7 +12,7 @@ interface
 uses
   Windows, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes, //StdCtrls, Calendar, LazMethodList,
   Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes,
-   Dialogs, types, LazUTF8,Zipper,libxmlparser,dom,XmlRead, XmlWrite,xmlutils;
+   Dialogs, types, LazUTF8,Zipper{,libxmlparser,dom,XmlRead, XmlWrite,xmlutils};
 
 type
   TONButtonState = (obshover, obspressed, obsnormal);
@@ -67,7 +67,6 @@ type
     FTop, FBottom, FCenter: TONCUSTOMCROP;
     Frmain: TBGRABitmap;
     clrr:string;
-
     procedure CropToimg(Buffer: TBGRABitmap);
     procedure ImageSet(Sender: TObject);
     procedure mousedwn(Sender: TObject; Button: TMouseButton; Shift: TShiftState;
@@ -2562,18 +2561,21 @@ var
   a:integer;
 begin
   inherited setkind(avalue);
-  a:=self.Width;
-  if Kind = oHorizontal then
+  if (csDesigning in ComponentState) then
   begin
-   fskinname      := 'trackbarh';
- //  self.Width:=self.Height;
-//   self.Height:=a;
-  end
-  else
-  begin
-   fskinname      := 'trackbarv';
- //  self.Width:=self.Height;
- //  self.Height:=a;
+    a:=self.Width;
+    if Kind = oHorizontal then
+    begin
+     fskinname      := 'trackbarh';
+     self.Width:=self.Height;
+     self.Height:=a;
+    end
+    else
+    begin
+     fskinname      := 'trackbarv';
+     self.Width:=self.Height;
+     self.Height:=a;
+    end;
   end;
   Skindata:=self.Skindata;
   Invalidate;
@@ -3242,19 +3244,23 @@ var
   a:integer;
 begin
   inherited setkind(avalue);
-  a:=self.Width;
-  if Kind = oHorizontal then
+   if (csDesigning in ComponentState) then
   begin
-   fskinname      := 'progressbarh';
-//   self.Width:=self.Height;
-//   self.Height:=a;
-  end
-  else
-  begin
-   fskinname      := 'progressbarv';
-//   self.Width:=self.Height;
-//   self.Height:=a;
+    a:=self.Width;
+    if Kind = oHorizontal then
+    begin
+     fskinname      := 'progressbarh';
+     self.Width:=self.Height;
+     self.Height:=a;
+    end
+    else
+    begin
+     fskinname      := 'progressbarv';
+     self.Width:=self.Height;
+     self.Height:=a;
+    end;
   end;
+
   Skindata:=self.Skindata;
   Invalidate;
 end;
@@ -3843,25 +3849,30 @@ begin
   FItemsShown  := 0;
 
   Fitemoffset  := 0;
-  Font.size    := 11;
-  Font.name    := 'Calibri';
+ // Font.size    := 11;
+ // Font.name    := 'Calibri';
 //  Font.Style   := [fsbold];
   FitemHeight  := self.canvas.TextExtent('Çİ').cy;
-//  FFocusedItem := -1;
+
+
+
+  //FFocusedItem := -1;
+
   fvert := TonScrollBar.Create(self);
   with fvert do
   begin
-    Parent := self;
-    Kind := oVertical;
-    Skinname:='scrollbarv';
-    Width := 25;
-    left := Self.Width - (25);// + Background.Border);
-    Top := 0;//Background.Border;
-    Height := Self.Height;// - (Background.Border * 2);
-    Max := 100;//Flist.Count;
-    Min := 0;
+    Parent   := self;
+
+    Skinname := 'scrollbarv';
+    Width    := 25;
+    left     := Self.Width - (25);// + Background.Border);
+    Top      := 0;//Background.Border;
+    Height   := Self.Height;// - (Background.Border * 2);
+    Max      := 100;//Flist.Count;
+    Min      := 0;
     OnChange := @Scrollchange;
     Position := 0;
+    Kind     := oVertical;
     Visible  := false;
   end;
 
@@ -3896,7 +3907,6 @@ begin
   if Assigned(fhorz) then
     FreeAndNil(fhorz);
     FreeAndNil(Flist);
-
     FreeAndNil(FTop);
     FreeAndNil(FBottom);
     FreeAndNil(FCenter);
@@ -3919,14 +3929,16 @@ procedure tonlistbox.paint;
 begin
   if csDesigning in ComponentState then
     Exit;
-  if not Visible then Exit;
-  Fresim.SetSize(0,0);
 
+  if not Visible then Exit;
+
+  Fresim.SetSize(0,0);
   Fresim.SetSize(self.Width, self.Height);
+
   if (FSkindata <> nil) then
   begin
 
-  //UST TOP
+     //UST TOP
       Desc := Rect(FTop.FSLeft, FTop.FSTop, FTop.FSRight, FTop.FSBottom);
       Target := Rect((FTopleft.FSRight - FTopleft.FSLeft), 0, self.Width -
         (FTopRight.FSRight - FTopRight.FSLeft), (FTop.FSBottom - FTop.FSTop));
@@ -3984,12 +3996,14 @@ begin
       DrawPartnormal(Desc, self, Target, False);
 
       itempaintHeight:=Target;
+
       if Crop then
         CropToimg(Fresim);
   end
   else
   begin
      Fresim.Fill(BGRA(207, 220, 207), dmSet);
+     itempaintHeight.Height:=self.Height;
   end;
 
     //   FitemHeight:=self.canvas.TextHeight('ŹÇ');
@@ -4003,23 +4017,37 @@ begin
         begin
            with fvert do
            begin
-             Width := 25;
-             left := Self.Width - (Width);
-             Top := 1;
-             Height := Self.Height;
+             if Skindata=nil then
+              Width := 20
+             else
+              Width := ONNORMAL.Right-ONNORMAL.Left;// 25;
+
+             left := Self.Width - Width;
+
+             if Skindata=nil then
+              Top := 1
+             else
+             Top := self.ONTOP.Bottom-self.ONTOP.Top;// 1;
+
+             Height := Self.Height-((self.ONBOTTOM.Bottom-self.ONBOTTOM.Top)+(self.ONTOP.Bottom-self.ONTOP.Top));
              Max:=Flist.Count-FItemsShown;
+
              if Skindata=nil then
              Skindata:=Self.Skindata;
+
+             //Invalidate;
            end;
         end;
         //else
         //fvert.Max:=0;
-
+        //  ShowMessage(IntToStr(Left)+'  '+IntToStr(fvert.Left)+'  '+IntToStr(fvert.Width));
+        //   ShowMessage(inttostr(Flist.Count * FItemHeight)+'  '+inttostr(itempaintHeight.Height));
 
         if Flist.Count * FItemHeight > itempaintHeight.Height then//self.Height then
           fvert.Visible := True
         else
           fvert.Visible := False;
+
 
           a := Fleft.FSright-Fleft.FSLeft;
           b := FTop.FSBottom-FTop.FSTop;
@@ -4031,12 +4059,12 @@ begin
               begin
                  if i = findex then
                   begin
-                   if Assigned(fvert) then
+                   if Assigned(fvert) and (fvert.Visible) then
 //                   Target:=Rect(a, b-(FitemHeight div 2), self.Width-(fvert.Width+a)),b +(FitemHeight div 2))
-                    Target:=Rect(a, b, self.Width-fvert.Width,b +FitemHeight)
+                    Target:=Rect(a, b, self.Width-(fvert.Width+a),b +FitemHeight)
                    else
                //    Target:=Rect(a, b-(FitemHeight div 2), self.Width - a,b + (FitemHeight div 2));
-                   Target:=Rect(a, b, self.Width ,b + FitemHeight);
+                   Target:=Rect(a, b, self.Width-a ,b + FitemHeight);
 
                    Desc := Rect(Factiveitems.FSLeft, Factiveitems.FSTop, Factiveitems.FSRight, Factiveitems.FSBottom);
                    DrawPartnormal(Desc, self, Target, False);
@@ -4044,19 +4072,21 @@ begin
                  end else
                    colr:=self.Font.Color;//FTextColor;
 
-               //  fresim.CanvasBGRA.Brush.Style := bsClear;
+
              //   Fresim.FontName:=self.Font.Name;
              //   Fresim.FontStyle:=self.Font.Style;
              //   Fresim.FontAntialias:=true;
               //  Fresim.FontHeight:=self.Font.size;//Height;
               //  Fresim.TextOut(a,b,Flist[i],colr);
+
                 Fresim.CanvasBGRA.Font.Name:=self.Font.Name;
                 Fresim.CanvasBGRA.Font.Style:=self.Font.Style;
                 Fresim.CanvasBGRA.Font.Height:=self.Font.Height;
-                 fresim.CanvasBGRA.Brush.Style:=bsClear;
-                 fresim.CanvasBGRA.TextOut(a, b, Flist[i]);
-              //   end;
-                // colr:=FTextCurrentColor;
+                Fresim.CanvasBGRA.Font.Color:=colr;
+
+                fresim.CanvasBGRA.Brush.Style:=bsClear;
+                fresim.CanvasBGRA.TextOut(a, b, Flist[i]);
+
 
              end;
              b := b + FitemHeight;
@@ -4507,18 +4537,21 @@ var
   a:integer;
 begin
   inherited setkind(avalue);
-  a:=self.Width;
-  if Kind = oHorizontal then
+  if (csDesigning in ComponentState) then
   begin
-   fskinname      := 'scrollbarh';
-//   self.Width:=self.Height;
-//   self.Height:=a;
-  end
-  else
-  begin
-   fskinname      := 'scrollbarv';
-//   self.Width:=self.Height;
-//   self.Height:=a;
+    a:=self.Width;
+    if Kind = oHorizontal then
+    begin
+     fskinname      := 'scrollbarh';
+     self.Width:=self.Height;
+      self.Height:=a;
+    end
+    else
+    begin
+     fskinname      := 'scrollbarv';
+      self.Width:=self.Height;
+      self.Height:=a;
+    end;
   end;
   Skindata:=self.Skindata;
   Invalidate;
@@ -7682,12 +7715,10 @@ begin
    try
     with skn do
     begin
-        if (Com is TONPANEL) then
+        if (Com is TONPANEL) and (TONPANEL(com).Skindata=Self) then
         Begin
           with (TONPANEL(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONTOPLEFT,ReadString(Skinname{'panel'},'ONTOPLEFT','0,0,0,0,clblack'));
             cropparse(ONTOPRIGHT,ReadString(Skinname{'panel'},'ONTOPRIGHT','0,0,0,0,clblack'));
             cropparse(ONTOP,ReadString(Skinname{'panel'},'ONTOP','0,0,0,0,clblack'));
@@ -7698,38 +7729,32 @@ begin
             cropparse(ONRIGHT,ReadString(Skinname{'panel'},'ONRIGHT','0,0,0,0,clblack'));
             cropparse(ONCENTER,ReadString(Skinname{'panel'},'ONCENTER','0,0,0,0,clblack'));
           end;
-        end else
+        end;// else
 
-        if (Com is TONCropButton) then
+        if (Com is TONCropButton) and (TONCropButton(com).Skindata=Self) then
         begin
           with (TONCropButton(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONDISABLE,ReadString(Skinname{'button'},'ONDISABLE','0,0,0,0,clblack'));
             cropparse(ONNORMAL,ReadString(Skinname{'button'},'ONNORMAL','0,0,0,0,clblack'));
             cropparse(ONHOVER,ReadString(Skinname{'button'},'ONHOVER','0,0,0,0,clblack'));
             cropparse(ONPRESSED,ReadString(Skinname{'button'},'ONPRESSED','0,0,0,0,clblack'));
           end;
-        end else
-        if (Com is TONGraphicsButton) then
+        end;// else
+        if (Com is TONGraphicsButton) and (TONGraphicsButton(com).Skindata=Self) then
         begin
           with (TONGraphicsButton(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONDISABLE,ReadString(Skinname{'button'},'ONDISABLE','0,0,0,0,clblack'));
             cropparse(ONNORMAL,ReadString(Skinname{'button'},'ONNORMAL','0,0,0,0,clblack'));
             cropparse(ONHOVER,ReadString(Skinname{'button'},'ONHOVER','0,0,0,0,clblack'));
             cropparse(ONPRESSED,ReadString(Skinname{'button'},'ONPRESSED','0,0,0,0,clblack'));
           end;
-        end else
-        if (Com is TONcombobox) then
+        end;// else
+        if (Com is TONcombobox) and (TONcombobox(com).Skindata=Self) then
         begin
           with (TONcombobox(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONTOPLEFT,ReadString(Skinname{'combobox'},'ONTOPLEFT','0,0,0,0,clblack'));
             cropparse(ONTOPRIGHT,ReadString(Skinname{'combobox'},'ONTOPRIGHT','0,0,0,0,clblack'));
             cropparse(ONTOP,ReadString(Skinname{'combobox'},'ONTOP','0,0,0,0,clblack'));
@@ -7744,13 +7769,11 @@ begin
             cropparse(ONBUTONHOVER,ReadString(Skinname{'combobox'},'ONBUTONHOVER','0,0,0,0,clblack'));
             cropparse(ONBUTONDISABLE,ReadString(Skinname{'combobox'},'ONBUTONDISABLE','0,0,0,0,clblack'));
           end;
-        end else
-        if (Com is TONCollapExpandPanel) then
+        end;// else
+        if (Com is TONCollapExpandPanel) and (TONCollapExpandPanel(com).Skindata=Self) then
         begin
           with (TONCollapExpandPanel(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONTOPLEFT,ReadString(Skinname{'expandpanel'},'ONTOPLEFT','0,0,0,0,clblack'));
             cropparse(ONTOPRIGHT,ReadString(Skinname{'expandpanel'},'ONTOPRIGHT','0,0,0,0,clblack'));
             cropparse(ONTOP,ReadString(Skinname{'expandpanel'},'ONTOP','0,0,0,0,clblack'));
@@ -7765,13 +7788,11 @@ begin
             cropparse(ONPRESSED,ReadString(Skinname{'expandpanel'},'ONBUTTONPRESS','0,0,0,0,clblack'));
             cropparse(ONDISABLE,ReadString(Skinname{'expandpanel'},'ONBUTTONDISABLE','0,0,0,0,clblack'));
           end;
-        end else
-        if (Com is ToNListBox) then
+        end;// else
+        if (Com is ToNListBox) and (ToNListBox(com).Skindata=Self) then
         begin
           with (ToNListBox(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONTOPLEFT,ReadString(Skinname{'listbox'},'ONTOPLEFT','0,0,0,0,clblack'));
             cropparse(ONTOPRIGHT,ReadString(Skinname{'listbox'},'ONTOPRIGHT','0,0,0,0,clblack'));
             cropparse(ONTOP,ReadString(Skinname{'listbox'},'ONTOP','0,0,0,0,clblack'));
@@ -7783,13 +7804,11 @@ begin
             cropparse(ONCENTER,ReadString(Skinname{'listbox'},'ONCENTER','0,0,0,0,clblack'));
             cropparse(ONACTIVEITEM,ReadString(Skinname{'listbox'},'ONACTIVEITEM','0,0,0,0,clblack'));
           end;
-        end else
-        if (Com is TONHeaderPanel) then
+        end;// else
+        if (Com is TONHeaderPanel) and (TONHeaderPanel(com).Skindata=Self) then
         begin
           with (TONHeaderPanel(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONTOPLEFT,ReadString(Skinname{'headerpanel'},'ONTOPLEFT','0,0,0,0,clblack'));
             cropparse(ONTOPRIGHT,ReadString(Skinname{'headerpanel'},'ONTOPRIGHT','0,0,0,0,clblack'));
             cropparse(ONTOP,ReadString(Skinname{'headerpanel'},'ONTOP','0,0,0,0,clblack'));
@@ -7800,13 +7819,11 @@ begin
             cropparse(ONRIGHT,ReadString(Skinname{'headerpanel'},'ONRIGHT','0,0,0,0,clblack'));
             cropparse(ONCENTER,ReadString(Skinname{'headerpanel'},'ONCENTER','0,0,0,0,clblack'));
           end;
-        end else
-        if (Com is TonEdit) then
+        end;// else
+        if (Com is TonEdit) and (TonEdit(com).Skindata=Self) then
         begin
           with (TonEdit(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONTOPLEFT,ReadString(Skinname{'edit'},'ONTOPLEFT','0,0,0,0,clblack'));
             cropparse(ONTOPRIGHT,ReadString(Skinname{'edit'},'ONTOPRIGHT','0,0,0,0,clblack'));
             cropparse(ONTOP,ReadString(Skinname{'edit'},'ONTOP','0,0,0,0,clblack'));
@@ -7817,13 +7834,11 @@ begin
             cropparse(ONRIGHT,ReadString(Skinname{'edit'},'ONRIGHT','0,0,0,0,clblack'));
             cropparse(ONCENTER,ReadString(Skinname{'edit'},'ONCENTER','0,0,0,0,clblack'));
           end;
-        end else
-        if Com is TOnSpinEdit  then  // if component SpinEdit
+        end;// else
+        if (Com is TOnSpinEdit) and (TOnSpinEdit(com).Skindata=Self) then  // if component SpinEdit
         begin
           with (TOnSpinEdit(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
             cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
             cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -7842,13 +7857,11 @@ begin
             cropparse(ONDOWNBUTONHOVER,ReadString(Skinname,'ONDOWNBUTONHOVER','0,0,0,0,clblack'));
             cropparse(ONDOWNBUTONDISABLE,ReadString(Skinname,'ONDOWNBUTONDISABLE','0,0,0,0,clblack'));
           end;
-        end else
-        if Com is TONMemo  then  // if component Memo
+        end;// else
+        if (Com is TONMemo) and (TONMemo(com).Skindata=Self) then  // if component Memo
         begin
           with (TONMemo(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
             cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
             cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -7860,26 +7873,22 @@ begin
             cropparse(ONCENTER,ReadString(Skinname,'ONCENTER','0,0,0,0,clblack'));
           end;
 
-        end else
-        if Com is TOnSwich  then
+        end;// else
+        if (Com is TOnSwich) and (TOnSwich(com).Skindata=Self) then
         begin
           with (TOnSwich(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONOPEN,ReadString(Skinname,'ONOPEN','0,0,0,0,clblack'));
             cropparse(ONOPENHOVER,ReadString(Skinname,'ONOPENHOVER','0,0,0,0,clblack'));
             cropparse(ONCLOSE,ReadString(Skinname,'ONCLOSE','0,0,0,0,clblack'));
             cropparse(ONCLOSEHOVER,ReadString(Skinname,'ONCLOSEHOVER','0,0,0,0,clblack'));
             cropparse(ONDISABLE,ReadString(Skinname,'ONDISABLE','0,0,0,0,clblack'));
           end;
-        end else
-        if Com is TOnCheckbox  then
+        end;// else
+        if (Com is TOnCheckbox) and (TOnCheckbox(com).Skindata=Self) then
         begin
           with (TOnCheckbox(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONNORMAL,ReadString(Skinname,'ONNORMAL','0,0,0,0,clblack'));
             cropparse(ONNORMALDOWN,ReadString(Skinname,'ONNORMALDOWN','0,0,0,0,clblack'));
             cropparse(ONNORMALHOVER,ReadString(Skinname,'ONNORMALHOVER','0,0,0,0,clblack'));
@@ -7887,13 +7896,11 @@ begin
             cropparse(ONCHECKEDHOVER,ReadString(Skinname,'ONCHECKEDHOVER','0,0,0,0,clblack'));
             cropparse(ONDISABLE,ReadString(Skinname,'ONDISABLE','0,0,0,0,clblack'));
           end;
-        end else
-        if Com is TOnRadioButton  then
+        end;// else
+        if (Com is TOnRadioButton) and (TOnRadioButton(com).Skindata=Self) then
         begin
           with (TOnRadioButton(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONNORMAL,ReadString(Skinname,'ONNORMAL','0,0,0,0,clblack'));
             cropparse(ONNORMALDOWN,ReadString(Skinname,'ONNORMALDOWN','0,0,0,0,clblack'));
             cropparse(ONNORMALHOVER,ReadString(Skinname,'ONNORMALHOVER','0,0,0,0,clblack'));
@@ -7901,13 +7908,11 @@ begin
             cropparse(ONCHECKEDHOVER,ReadString(Skinname,'ONCHECKEDHOVER','0,0,0,0,clblack'));
             cropparse(ONDISABLE,ReadString(Skinname,'ONDISABLE','0,0,0,0,clblack'));
           end;
-        end else
-        if Com is TONProgressBar  then
+        end;// else
+        if (Com is TONProgressBar) and (TONProgressBar(com).Skindata=Self)  then
         begin
           with (TONProgressBar(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             if Kind=oHorizontal then
             begin
               cropparse(ONLEFT_TOP,ReadString(Skinname,'ONLEFT','0,0,0,0,clblack'));
@@ -7920,13 +7925,11 @@ begin
             cropparse(ONCENTER,ReadString(Skinname,'ONCENTER','0,0,0,0,clblack'));
             cropparse(ONBAR,ReadString(Skinname,'ONBAR','0,0,0,0,clblack'));
           end;
-        end else
-        if Com is TONTrackBar  then
+        end;// else
+        if (Com is TONTrackBar) and (TONTrackBar(com).Skindata=Self) then
         begin
           with (TONTrackBar(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
             cropparse(ONLEFT,ReadString(Skinname,'ONLEFT','0,0,0,0,clblack'));
             cropparse(ONRIGHT,ReadString(Skinname,'ONRIGHT','0,0,0,0,clblack'));
             cropparse(ONCENTER,ReadString(Skinname,'ONCENTER','0,0,0,0,clblack'));
@@ -7935,22 +7938,19 @@ begin
             cropparse(ONBUTONPRESS,ReadString(Skinname,'ONBUTONPRESS','0,0,0,0,clblack'));
             cropparse(ONBUTONDISABLE,ReadString(Skinname,'ONBUTONDISABLE','0,0,0,0,clblack'));
           end;
-        end else
-        if Com is ToNScrollBar then
+        end;// else
+        if (Com is ToNScrollBar) and (ToNScrollBar(com).Skindata=Self) then
         begin
           with (ToNScrollBar(Com)) do
           begin
-            if Skindata = nil then
-              FSkindata := Self;
-
             if Kind=oVertical then
             begin
-              cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
-              cropparse(ONBOTTOM,ReadString(Skinname,'ONBOTTOM','0,0,0,0,clblack'));
+              cropparse(ONTOP,ReadString(Skinname,'ONTOP','256,291,299,271,clblack'));
+              cropparse(ONBOTTOM,ReadString(Skinname,'ONBOTTOM','256,299,306,272,clblack'));
             end else
             begin
-              cropparse(ONTOP,ReadString(Skinname,'ONLEFT','0,0,0,0,clblack'));
-              cropparse(ONBOTTOM,ReadString(Skinname,'ONRIGHT','0,0,0,0,clblack'));
+              cropparse(ONTOP,ReadString(Skinname,'ONLEFT','256,291,299,271,clblack'));
+              cropparse(ONBOTTOM,ReadString(Skinname,'ONRIGHT','256,299,306,272,clblack'));
             end;
               cropparse(ONNORMAL,ReadString(Skinname,'ONNORMAL','0,0,0,0,clblack'));
               cropparse(ONBAR,ReadString(Skinname,'ONBAR','0,0,0,0,clblack'));
@@ -8101,11 +8101,9 @@ begin
             begin
 
 
-              if fparent.Components[i] is TONGraphicsButton  then   // if component GraphicButton
+              if (fparent.Components[i] is TONGraphicsButton) and (TONGraphicsButton(fparent.Components[i]).Skindata=Self)  then   // if component GraphicButton
               with (TONGraphicsButton(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONNORMAL,ReadString(Skinname,'ONNORMAL','0,0,0,0,clblack'));
                 cropparse(ONHOVER,ReadString(Skinname,'ONHOVER','0,0,0,0,clblack'));
                 cropparse(ONPRESSED,ReadString(Skinname,'ONPRESSED','0,0,0,0,clblack'));
@@ -8114,22 +8112,18 @@ begin
 
 
 
-              if fparent.Components[i] is TONCropButton then   // if component CropButton
+              if (fparent.Components[i] is TONCropButton) and (TONCropButton(fparent.Components[i]).Skindata=Self) then   // if component CropButton
               with (TONCropButton(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONNORMAL,ReadString(Skinname,'ONNORMAL','0,0,0,0,clblack'));
                 cropparse(ONHOVER,ReadString(Skinname,'ONHOVER','0,0,0,0,clblack'));
                 cropparse(ONPRESSED,ReadString(Skinname,'ONPRESSED','0,0,0,0,clblack'));
                 cropparse(ONDISABLE,ReadString(Skinname,'ONDISABLE','0,0,0,0,clblack'));
               end;
 
-              if fparent.Components[i] is TONPanel  then    // if component Panel
+              if (fparent.Components[i] is TONPanel) and (TONPanel(fparent.Components[i]).Skindata=Self) then    // if component Panel
               with (TONPanel(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
                 cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
                 cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8141,11 +8135,9 @@ begin
                 cropparse(ONCENTER,ReadString(Skinname,'ONCENTER','0,0,0,0,clblack'));
               end;
 
-              if fparent.Components[i] is TONCollapExpandPanel  then   // if component CollapsedExpandedPanel
+              if (fparent.Components[i] is TONCollapExpandPanel) and (TONCollapExpandPanel(fparent.Components[i]).Skindata=Self)  then   // if component CollapsedExpandedPanel
               with (TONCollapExpandPanel(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
                 cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
                 cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8161,11 +8153,9 @@ begin
                 cropparse(ONDISABLE,ReadString(Skinname,'ONBUTTONDISABLE','0,0,0,0,clblack'));
               end;
 
-              if fparent.Components[i] is TonEdit  then    // if component Edit
+              if (fparent.Components[i] is TonEdit) and (TonEdit(fparent.Components[i]).Skindata=Self) then    // if component Edit
               with (TonEdit(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
                 cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
                 cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8177,11 +8167,9 @@ begin
                 cropparse(ONCENTER,ReadString(Skinname,'ONCENTER','0,0,0,0,clblack'));
               end;
 
-              if fparent.Components[i] is TOnSpinEdit  then  // if component SpinEdit
+              if (fparent.Components[i] is TOnSpinEdit) and (TOnSpinEdit(fparent.Components[i]).Skindata=Self) then  // if component SpinEdit
               with (TOnSpinEdit(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
                 cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
                 cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8201,11 +8189,9 @@ begin
                 cropparse(ONDOWNBUTONDISABLE,ReadString(Skinname,'ONDOWNBUTONDISABLE','0,0,0,0,clblack'));
               end;
 
-              if fparent.Components[i] is TONMemo  then  // if component Memo
+              if (fparent.Components[i] is TONMemo) and (TONMemo(fparent.Components[i]).Skindata=Self) then  // if component Memo
               with (TONMemo(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
                 cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
                 cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8217,11 +8203,9 @@ begin
                 cropparse(ONCENTER,ReadString(Skinname,'ONCENTER','0,0,0,0,clblack'));
               end;
 
-              if fparent.Components[i] is TONcombobox  then  // if component Combobox
+              if (fparent.Components[i] is TONcombobox) and (TONcombobox(fparent.Components[i]).Skindata=Self) then  // if component Combobox
               with (TONcombobox(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
                 cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
                 cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8238,11 +8222,9 @@ begin
               end;
 
 
-              if fparent.Components[i] is TOnSwich  then
+              if (fparent.Components[i] is TOnSwich) and (TOnSwich(fparent.Components[i]).Skindata=Self) then
               with (TOnSwich(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONOPEN,ReadString(Skinname,'ONOPEN','0,0,0,0,clblack'));
                 cropparse(ONOPENHOVER,ReadString(Skinname,'ONOPENHOVER','0,0,0,0,clblack'));
                 cropparse(ONCLOSE,ReadString(Skinname,'ONCLOSE','0,0,0,0,clblack'));
@@ -8251,11 +8233,9 @@ begin
               end;
 
 
-              if fparent.Components[i] is TOnCheckbox  then
+              if (fparent.Components[i] is TOnCheckbox) and (TOnCheckbox(fparent.Components[i]).Skindata=Self) then
               with (TOnCheckbox(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONNORMAL,ReadString(Skinname,'ONNORMAL','0,0,0,0,clblack'));
                 cropparse(ONNORMALDOWN,ReadString(Skinname,'ONNORMALDOWN','0,0,0,0,clblack'));
                 cropparse(ONNORMALHOVER,ReadString(Skinname,'ONNORMALHOVER','0,0,0,0,clblack'));
@@ -8265,11 +8245,9 @@ begin
               end;
 
 
-              if fparent.Components[i] is TOnRadioButton  then
+              if (fparent.Components[i] is TOnRadioButton) and (TOnRadioButton(fparent.Components[i]).Skindata=Self) then
               with (TOnRadioButton(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONNORMAL,ReadString(Skinname,'ONNORMAL','0,0,0,0,clblack'));
                 cropparse(ONNORMALDOWN,ReadString(Skinname,'ONNORMALDOWN','0,0,0,0,clblack'));
                 cropparse(ONNORMALHOVER,ReadString(Skinname,'ONNORMALHOVER','0,0,0,0,clblack'));
@@ -8280,12 +8258,9 @@ begin
 
 
 
-              if fparent.Components[i] is TONProgressBar  then
+              if (fparent.Components[i] is TONProgressBar) and (TONProgressBar(fparent.Components[i]).Skindata=Self) then
               with (TONProgressBar(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                    FSkindata := Self;
-
                 if Kind=oHorizontal then
                 begin
                   cropparse(ONLEFT_TOP,ReadString(Skinname,'ONLEFT','0,0,0,0,clblack'));
@@ -8300,12 +8275,9 @@ begin
               end;
 
 
-              if fparent.Components[i] is TONTrackBar  then
+              if (fparent.Components[i] is TONTrackBar) and (TONTrackBar(fparent.Components[i]).Skindata=Self) then
               with (TONTrackBar(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                    FSkindata := Self;
-
                 cropparse(ONLEFT,ReadString(Skinname,'ONLEFT','0,0,0,0,clblack'));
                 cropparse(ONRIGHT,ReadString(Skinname,'ONRIGHT','0,0,0,0,clblack'));
                 cropparse(ONCENTER,ReadString(Skinname,'ONCENTER','0,0,0,0,clblack'));
@@ -8318,12 +8290,9 @@ begin
 
 
 
-              if fparent.Components[i] is ToNScrollBar then
+              if (fparent.Components[i] is ToNScrollBar) and (ToNScrollBar(fparent.Components[i]).Skindata=Self) then
               with (ToNScrollBar(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                    FSkindata := Self;
-
                 if Kind=oVertical then
                 begin
                   cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8336,18 +8305,14 @@ begin
 
                   cropparse(ONNORMAL,ReadString(Skinname,'ONNORMAL','0,0,0,0,clblack'));
                   cropparse(ONBAR,ReadString(Skinname,'ONBAR','0,0,0,0,clblack'));
-
                   cropparse(ONCENTERBUTNORMAL,ReadString(Skinname,'ONCENTERBUTTONNORMAL','0,0,0,0,clblack'));
                   cropparse(ONCENTERBUTONHOVER,ReadString(Skinname,'ONCENTERBUTTONHOVER','0,0,0,0,clblack'));
                   cropparse(ONCENTERBUTPRESS,ReadString(Skinname,'ONCENTERBUTTONPRESSED','0,0,0,0,clblack'));
                   cropparse(ONCENTERBUTDISABLE,ReadString(Skinname,'ONCENTERBUTTONDISABLE','0,0,0,0,clblack'));
-
                   cropparse(ONLEFTBUTNORMAL,ReadString(Skinname,'ONLEFTBUTTONNORMAL','0,0,0,0,clblack'));
                   cropparse(ONLEFTBUTONHOVER,ReadString(Skinname,'ONLEFTBUTTONHOVER','0,0,0,0,clblack'));
                   cropparse(ONLEFTBUTPRESS,ReadString(Skinname,'ONLEFTBUTTONPRESSED','0,0,0,0,clblack'));
                   cropparse(ONLEFTBUTDISABLE,ReadString(Skinname,'ONLEFTBUTTONDISABLE','0,0,0,0,clblack'));
-
-
                   cropparse(ONRIGHTBUTNORMAL,ReadString(Skinname,'ONRIGHTBUTTONNORMAL','0,0,0,0,clblack'));
                   cropparse(ONRIGHTBUTONHOVER,ReadString(Skinname,'ONRIGHTBUTTONHOVER','0,0,0,0,clblack'));
                   cropparse(ONRIGHTBUTPRESS,ReadString(Skinname,'ONRIGHTBUTTONPRESSED','0,0,0,0,clblack'));
@@ -8355,11 +8320,9 @@ begin
               end;
 
 
-              if fparent.Components[i] is ToNListBox  then
+              if (fparent.Components[i] is ToNListBox) and (ToNListBox(fparent.Components[i]).Skindata=Self)  then
               with (ToNListBox(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
                 cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
                 cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8373,11 +8336,9 @@ begin
 
               end;
 
-              if fparent.Components[i] is TONHeaderPanel  then
+              if (fparent.Components[i] is TONHeaderPanel) and (TONHeaderPanel(fparent.Components[i]).Skindata=Self)  then
               with (TONHeaderPanel(fparent.Components[i])) do
               begin
-                if Skindata = nil then
-                  FSkindata := Self;
                 cropparse(ONTOPLEFT,ReadString(Skinname,'ONTOPLEFT','0,0,0,0,clblack'));
                 cropparse(ONTOPRIGHT,ReadString(Skinname,'ONTOPRIGHT','0,0,0,0,clblack'));
                 cropparse(ONTOP,ReadString(Skinname,'ONTOP','0,0,0,0,clblack'));
@@ -8396,7 +8357,7 @@ begin
       FreeAndNil(skn);
      end;
 
-     skinread:=false;
+
      {
    XML := TXMLParser.Create;
   try
@@ -9275,7 +9236,7 @@ begin
             // Tform component reading
             for i:=0 to fparent.ComponentCount-1 do
             begin
-              if fparent.Components[i] is TONGraphicsButton  then   // if component GraphicButton
+              if fparent.Components[i] is TONGraphicsButton then   // if component GraphicButton
               with (TONGraphicsButton(fparent.Components[i])) do
               begin
                 writeString(Skinname,'ONNORMAL',croptostring(ONNORMAL));
@@ -9293,7 +9254,7 @@ begin
                 writeString(Skinname,'ONDISABLE',croptostring(ONDISABLE));
               end;
 
-              if fparent.Components[i] is TONPanel  then    // if component Panel
+              if fparent.Components[i] is TONPanel then    // if component Panel
               with (TONPanel(fparent.Components[i])) do
               begin
                  writeString(Skinname,'ONTOPLEFT',croptostring(ONTOPLEFT));
@@ -9307,7 +9268,7 @@ begin
                  writeString(Skinname,'ONCENTER',croptostring(ONCENTER));
               end;
 
-              if fparent.Components[i] is TONCollapExpandPanel  then   // if component CollapsedExpandedPanel
+              if fparent.Components[i] is TONCollapExpandPanel then   // if component CollapsedExpandedPanel
               with (TONCollapExpandPanel(fparent.Components[i])) do
               begin
                  writeString(Skinname,'ONTOPLEFT',croptostring(ONTOPLEFT));
@@ -9325,7 +9286,7 @@ begin
                  writeString(Skinname,'ONBUTTONDISABLE',croptostring(ONDISABLE));
               end;
 
-              if fparent.Components[i] is TonEdit  then    // if component Edit
+              if fparent.Components[i] is TonEdit then    // if component Edit
               with (TonEdit(fparent.Components[i])) do
               begin
                  writeString(Skinname,'ONTOPLEFT',croptostring(ONTOPLEFT));
@@ -9339,7 +9300,7 @@ begin
                  writeString(Skinname,'ONCENTER',croptostring(ONCENTER));
               end;
 
-              if fparent.Components[i] is TOnSpinEdit  then  // if component SpinEdit
+              if fparent.Components[i] is TOnSpinEdit then  // if component SpinEdit
               with (TOnSpinEdit(fparent.Components[i])) do
               begin
                  writeString(Skinname,'ONTOPLEFT',croptostring(ONTOPLEFT));
@@ -9361,7 +9322,7 @@ begin
                  writeString(Skinname,'ONDOWNBUTONDISABLE',croptostring(ONDOWNBUTONDISABLE));
               end;
 
-              if fparent.Components[i] is TONMemo  then  // if component Memo
+              if fparent.Components[i] is TONMemo then  // if component Memo
               with (TONMemo(fparent.Components[i])) do
               begin
                  writeString(Skinname,'ONTOPLEFT',croptostring(ONTOPLEFT));
@@ -9375,7 +9336,7 @@ begin
                  writeString(Skinname,'ONCENTER',croptostring(ONCENTER));
               end;
 
-              if fparent.Components[i] is TONcombobox  then  // if component Combobox
+              if fparent.Components[i] is TONcombobox then  // if component Combobox
               with (TONcombobox(fparent.Components[i])) do
               begin
                  writeString(Skinname,'ONTOPLEFT',croptostring(ONTOPLEFT));
@@ -9394,7 +9355,7 @@ begin
               end;
 
 
-              if fparent.Components[i] is TOnSwich  then
+              if fparent.Components[i] is TOnSwich then
               with (TOnSwich(fparent.Components[i])) do
               begin
                 writeString(Skinname,'ONOPEN',croptostring(ONOPEN));
@@ -9405,7 +9366,7 @@ begin
               end;
 
 
-              if fparent.Components[i] is TOnCheckbox  then
+              if fparent.Components[i] is TOnCheckbox then
               with (TOnCheckbox(fparent.Components[i])) do
               begin
                 writeString(Skinname,'ONNORMAL',croptostring(ONNORMAL));
@@ -9417,7 +9378,7 @@ begin
               end;
 
 
-              if fparent.Components[i] is TOnRadioButton  then
+              if fparent.Components[i] is TOnRadioButton then
               with (TOnRadioButton(fparent.Components[i])) do
               begin
                 writeString(Skinname,'ONNORMAL',croptostring(ONNORMAL));
@@ -9430,7 +9391,7 @@ begin
 
 
 
-              if fparent.Components[i] is TONProgressBar  then
+              if fparent.Components[i] is TONProgressBar then
               with (TONProgressBar(fparent.Components[i])) do
               begin
                 if Kind=oHorizontal then
@@ -9447,7 +9408,7 @@ begin
               end;
 
 
-              if fparent.Components[i] is TONTrackBar  then
+              if fparent.Components[i] is TONTrackBar then
               with (TONTrackBar(fparent.Components[i])) do
               begin
                  writeString(Skinname,'ONLEFT',croptostring(ONLEFT));
@@ -9476,8 +9437,6 @@ begin
 
                   writeString(Skinname,'ONNORMAL',croptostring(ONNORMAL));
                   writeString(Skinname,'ONBAR',croptostring(ONBAR));
-
-
                   writeString(Skinname,'ONCENTERBUTTONNORMAL',croptostring(ONCENTERBUTNORMAL));
                   writeString(Skinname,'ONCENTERBUTTONHOVER',croptostring(ONCENTERBUTONHOVER));
                   writeString(Skinname,'ONCENTERBUTTONPRESSED',croptostring(ONCENTERBUTPRESS));
@@ -9528,16 +9487,15 @@ begin
           end;
     //   end;
 
-    Zipper := TZipper.Create;
-      try
-
-        Zipper.FileName   := filename;
-        zipper.Entries.AddFileEntry(GetTempDir+'tmp/skins.ini','skins.ini');
-        zipper.Entries.AddFileEntry(GetTempDir+'tmp/skins.png','skins.png');
-        Zipper.ZipAllFiles;
-      finally
-        Zipper.Free;
-      end;
+        Zipper := TZipper.Create;
+        try
+          Zipper.FileName   := filename;
+          zipper.Entries.AddFileEntry(GetTempDir+'tmp/skins.ini','skins.ini');
+          zipper.Entries.AddFileEntry(GetTempDir+'tmp/skins.png','skins.png');
+          Zipper.ZipAllFiles;
+        finally
+          Zipper.Free;
+        end;
      finally
       FreeAndNil(skn);
      end;
@@ -10559,11 +10517,11 @@ end;
 
 procedure TONGraphicControl.SetSkindata(Aimg: TONImg);
 begin
-  if (Aimg <> nil)   then
+  if (Aimg <> nil) then
   begin
     fSkindata := Aimg;
     Skindata.ReadskinsComp(self);
-    Paint;
+    Invalidate; //Paint;
   end
   else
   begin
@@ -10708,7 +10666,7 @@ begin
   begin
     FSkindata := Aimg;
     Skindata.ReadskinsComp(self);
-    Paint;
+    Invalidate; //Paint;
   end
   else
   begin
