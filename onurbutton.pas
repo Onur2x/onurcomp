@@ -6814,7 +6814,7 @@ begin
         DoManageVisibleTextStart();
         Invalidate;
       end;
-    end;                              yapıalcak if FCarets.CaretPos.Y < FLines.Count - 1 then
+    end;                              //yapıalcak if FCarets.CaretPos.Y < FLines.Count - 1 then
     // DEL
     VK_DELETE:
     begin
