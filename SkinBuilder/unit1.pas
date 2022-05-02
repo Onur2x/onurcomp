@@ -134,17 +134,41 @@ implementation
 
 { TForm1 }
 
+
+procedure cropparse(Crp: TONCustomCrop; val: string);
+var
+  myst: TStringList;
+begin
+  if val.Length>0 then
+  begin
+    myst := TStringlist.Create;
+    try
+      myst.Delimiter:=',';
+      myst.DelimitedText:=val;
+      Crp.fsLEFT    := StrToIntDef(myst.Strings[0],2);
+      Crp.fsTOP     := StrToInt(myst.Strings[1]);
+      Crp.fsBOTTOM  := StrToInt(myst.Strings[2]);
+      Crp.fsRIGHT   := StrToInt(myst.Strings[3]);
+      Crp.Fontcolor := StringToColorDef(myst.Strings[4],clNone);
+    finally
+      myst.free;
+    end;
+  end;
+end;
+
 procedure TForm1.readdata(Ab: TONCustomCrop);
 begin
 
-  skn := Tinifile.Create(Extractfilepath(application.ExeName) + 'temp.ini');
+  skn := Tinifile.Create(GetTempDir+'skins.ini');//Extractfilepath(application.ExeName) + 'temp.ini');
   try
-    ab.fsLEFT := StrToInt(trim(skn.ReadString(edit5.Text, ab.cropname + '.LEFT', '0')));
+    cropparse(ab,skn.ReadString(Edit5.text,ab.cropname,'0,0,0,0,clblack'));
+
+  {  ab.fsLEFT := StrToInt(trim(skn.ReadString(edit5.Text, ab.cropname + '.LEFT', '0')));
     ab.fsTOP := StrToInt(trim(skn.ReadString(edit5.Text, ab.cropname + '.TOP', '0')));
     ab.fsBOTTOM := StrToInt(trim(skn.ReadString(edit5.Text, ab.cropname + '.BOTTOM', '0')));
     ab.fsRIGHT := StrToInt(trim(skn.ReadString(edit5.Text, ab.cropname + '.RIGHT', '0')));
     ab.Fontcolor := StringToColor(skn.ReadString(edit5.Text,
-    ab.cropname + '.FONTCOLOR', 'clBlack'));
+    ab.cropname + '.FONTCOLOR', 'clBlack')); }
   finally
     FreeAndNil(skn);
   end;
@@ -193,6 +217,13 @@ begin
 end;
 
 
+function croptostring(Crp: TONCustomCrop):string;
+begin
+   Result:='';
+  if Crp<>nil then
+    Result:=inttostr(Crp.fsLEFT)+','+inttostr(Crp.fsTOP)+','+inttostr(Crp.fsBOTTOM)+','+inttostr(Crp.fsRIGHT)+','+ColorToString(Crp.Fontcolor);
+end;
+
 procedure TForm1.writedata(Ab: TONCustomCrop);
 begin
   if Edit1.Text <> '' then ab.fsLeft := StrToInt(edit1.Text)
@@ -209,13 +240,13 @@ begin
     ab.fsBottom := 0;
   ab.Fontcolor := ColorBox2.Selected;
 
-  skn := Tinifile.Create(Extractfilepath(application.ExeName) + 'temp.ini');
+  skn := Tinifile.Create(GetTempDir+'skins.ini'); //Extractfilepath(application.ExeName) + 'temp.ini');
   try
-    skn.WriteString(edit5.Text, ab.cropname + '.LEFT', IntToStr(ab.fsLeft));
-    skn.WriteString(edit5.Text, ab.cropname + '.RIGHT', IntToStr(ab.fsRight));
+    skn.WriteString(edit5.Text,ab.cropname,croptostring(Ab));//  ab.cropname + '.LEFT', IntToStr(ab.fsLeft));
+   { skn.WriteString(edit5.Text, ab.cropname + '.RIGHT', IntToStr(ab.fsRight));
     skn.WriteString(edit5.Text, ab.cropname + '.TOP', IntToStr(ab.fsTop));
     skn.WriteString(edit5.Text, ab.cropname + '.BOTTOM', IntToStr(ab.fsBottom));
-    skn.WriteString(edit5.Text, ab.cropname + '.FONTCOLOR', ColortoString(ab.Fontcolor));
+    skn.WriteString(edit5.Text, ab.cropname + '.FONTCOLOR', ColortoString(ab.Fontcolor));}
   finally
     FreeAndNil(skn);
   end;
@@ -580,7 +611,7 @@ var
   i, k, l: integer;
 begin
   a := TStringList.Create;
-  skn := Tinifile.Create(Extractfilepath(application.ExeName) + 'temp.ini');
+  skn := Tinifile.Create(GetTempDir+'skins.ini');//Extractfilepath(application.ExeName) + 'temp.ini');
   try
     skn.ReadSection('Compnames', a);
 
@@ -648,6 +679,7 @@ begin
   begin
     //image1.Picture.LoadFromFile(opd.FileName);
     mainimg.LoadFromFile(opd.FileName);
+    ONImg1.Picture.LoadFromFile(opd.FileName);
     mainpicture.RedrawBitmap;
   end;
 end;
@@ -657,7 +689,9 @@ begin
 
   if odf.Execute then
   begin
-    ONImg1.Readskinsfile(odf.FileName);
+    ONImg1.Loadskin(odf.FileName,'',false);
+    mainimg.Assign(ONImg1.Fimage);
+    mainpicture.RedrawBitmap;
   end;
 end;
 
@@ -665,8 +699,8 @@ procedure TForm1.ToolButton5Click(Sender: TObject);
 begin
   if sdf.Execute then
   begin
-    ONImg1.Readskinsfile(Extractfilepath(application.ExeName) + 'temp.ini');
-    ONImg1.saveskinsfile(sdf.FileName);
+  //  ONImg1.Readskinsfile(Extractfilepath(application.ExeName) + 'temp.ini');
+    ONImg1.saveskin(sdf.FileName,'');
   end;
 end;
 
@@ -818,8 +852,8 @@ begin
   if AWorkbook = ToNScrollBar(oNScrollBar1) then
   begin
     case RadioGroup1.ItemIndex of
-      0: oncrop := oNScrollBar1.ONLEFT;
-      1: oncrop := oNScrollBar1.ONRIGHT;
+      0: oncrop := oNScrollBar1.ONTOP;
+      1: oncrop := oNScrollBar1.ONBOTTOM;
       2: oncrop := oNScrollBar1.ONNORMAL;
       3: oncrop := oNScrollBar1.ONBAR;
       4: oncrop := oNScrollBar1.ONLEFTBUTNORMAL;

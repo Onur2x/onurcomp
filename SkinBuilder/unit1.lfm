@@ -1,13 +1,14 @@
 object Form1: TForm1
   Left = 352
-  Height = 670
+  Height = 838
   Top = 250
-  Width = 1312
-  ClientHeight = 670
-  ClientWidth = 1312
+  Width = 1640
+  ClientHeight = 838
+  ClientWidth = 1640
   Color = clNone
+  DesignTimePPI = 120
   Font.Color = clBlack
-  Font.Height = -12
+  Font.Height = -15
   Font.Name = 'Calibri'
   Font.Style = [fsBold]
   OnClose = FormClose
@@ -15,20 +16,20 @@ object Form1: TForm1
   Position = poDesktopCenter
   object Panel1: TPanel
     Left = 0
-    Height = 644
-    Top = 26
-    Width = 154
+    Height = 806
+    Top = 32
+    Width = 192
     Align = alLeft
-    ClientHeight = 644
-    ClientWidth = 154
+    ClientHeight = 806
+    ClientWidth = 192
     TabOrder = 0
     object ComboBox1: TComboBox
       Left = 1
-      Height = 22
+      Height = 26
       Top = 1
-      Width = 152
+      Width = 190
       Align = alTop
-      ItemHeight = 14
+      ItemHeight = 18
       ItemIndex = 0
       Items.Strings = (
         'BUTTON'
@@ -59,8 +60,8 @@ object Form1: TForm1
     object RadioGroup1: TRadioGroup
       Left = 1
       Height = 4
-      Top = 65
-      Width = 152
+      Top = 79
+      Width = 190
       Align = alTop
       AutoFill = False
       AutoSize = True
@@ -74,26 +75,27 @@ object Form1: TForm1
     end
     object Panel7: TPanel
       Left = 1
-      Height = 94
-      Top = 69
-      Width = 152
+      Height = 118
+      Top = 83
+      Width = 190
       Align = alTop
-      ClientHeight = 94
-      ClientWidth = 152
+      ClientHeight = 118
+      ClientWidth = 190
       TabOrder = 2
       Visible = False
       object Label17: TLabel
-        Left = 7
-        Height = 14
-        Top = 6
-        Width = 19
+        Left = 9
+        Height = 18
+        Top = 8
+        Width = 24
         Caption = 'Left'
+        ParentColor = False
       end
       object Edit1: TEdit
-        Left = 34
-        Height = 14
-        Top = 6
-        Width = 27
+        Left = 42
+        Height = 18
+        Top = 8
+        Width = 34
         Alignment = taRightJustify
         BorderStyle = bsNone
         OnKeyPress = Edit3KeyPress
@@ -101,17 +103,18 @@ object Form1: TForm1
         Text = '0'
       end
       object Label18: TLabel
-        Left = 7
-        Height = 14
-        Top = 26
-        Width = 26
+        Left = 9
+        Height = 18
+        Top = 32
+        Width = 32
         Caption = 'Right'
+        ParentColor = False
       end
       object Edit2: TEdit
-        Left = 34
-        Height = 14
-        Top = 26
-        Width = 27
+        Left = 42
+        Height = 18
+        Top = 32
+        Width = 34
         Alignment = taRightJustify
         BorderStyle = bsNone
         OnKeyPress = Edit3KeyPress
@@ -119,24 +122,26 @@ object Form1: TForm1
         Text = '0'
       end
       object Label19: TLabel
-        Left = 66
-        Height = 14
-        Top = 6
-        Width = 17
+        Left = 82
+        Height = 18
+        Top = 8
+        Width = 22
         Caption = 'Top'
+        ParentColor = False
       end
       object Label20: TLabel
-        Left = 66
-        Height = 14
-        Top = 26
-        Width = 37
+        Left = 82
+        Height = 18
+        Top = 32
+        Width = 46
         Caption = 'Bottom'
+        ParentColor = False
       end
       object Edit4: TEdit
-        Left = 104
-        Height = 14
-        Top = 26
-        Width = 30
+        Left = 130
+        Height = 18
+        Top = 32
+        Width = 38
         Alignment = taRightJustify
         BorderStyle = bsNone
         OnKeyPress = Edit3KeyPress
@@ -144,10 +149,10 @@ object Form1: TForm1
         Text = '0'
       end
       object Edit3: TEdit
-        Left = 104
-        Height = 14
-        Top = 6
-        Width = 30
+        Left = 130
+        Height = 18
+        Top = 8
+        Width = 38
         Alignment = taRightJustify
         BorderStyle = bsNone
         OnKeyPress = Edit3KeyPress
@@ -155,25 +160,26 @@ object Form1: TForm1
         Text = '0'
       end
       object Label21: TLabel
-        Left = 7
-        Height = 14
-        Top = 47
-        Width = 46
+        Left = 9
+        Height = 18
+        Top = 59
+        Width = 59
         Caption = 'Fontcolor'
+        ParentColor = False
       end
       object ColorBox2: TColorBox
-        Left = 64
-        Height = 22
-        Top = 43
-        Width = 75
-        ItemHeight = 16
+        Left = 80
+        Height = 26
+        Top = 54
+        Width = 94
+        ItemHeight = 20
         TabOrder = 4
       end
       object Button1: TButton
-        Left = 32
-        Height = 25
-        Top = 66
-        Width = 75
+        Left = 40
+        Height = 31
+        Top = 82
+        Width = 94
         Caption = 'APPLY'
         OnClick = Button1Click
         TabOrder = 5
@@ -181,57 +187,59 @@ object Form1: TForm1
     end
     object Panel6: TPanel
       Left = 1
-      Height = 42
-      Top = 23
-      Width = 152
+      Height = 52
+      Top = 27
+      Width = 190
       Align = alTop
       BevelOuter = bvNone
-      ClientHeight = 42
-      ClientWidth = 152
+      ClientHeight = 52
+      ClientWidth = 190
       TabOrder = 3
       object Label22: TLabel
-        Left = 6
-        Height = 14
-        Top = 22
-        Width = 61
+        Left = 8
+        Height = 18
+        Top = 28
+        Width = 75
         Caption = 'SKINSNAME'
+        ParentColor = False
       end
       object Label23: TLabel
         Left = 0
-        Height = 18
+        Height = 22
         Top = 0
-        Width = 152
+        Width = 190
         Align = alTop
         Alignment = taCenter
         AutoSize = False
         Caption = 'panel1'
         Layout = tlCenter
+        ParentColor = False
       end
       object Edit5: TEdit
-        Left = 70
-        Height = 22
-        Top = 21
-        Width = 80
+        Left = 88
+        Height = 26
+        Top = 26
+        Width = 100
         OnChange = Edit5Change
         TabOrder = 0
       end
     end
   end
   object Panel2: TPanel
-    Left = 154
-    Height = 644
-    Top = 26
-    Width = 940
+    Left = 192
+    Height = 806
+    Top = 32
+    Width = 1176
     Align = alClient
-    ClientHeight = 644
-    ClientWidth = 940
+    ClientHeight = 806
+    ClientWidth = 1176
     TabOrder = 1
     object mainpicture: TBGRAVirtualScreen
       Cursor = crCross
       Left = 1
-      Height = 642
+      Height = 804
       Top = 1
-      Width = 938
+      Width = 1174
       OnRedraw = mainpictureRedraw
       Align = alClient
       Alignment = taLeftJustify
@@ -245,9 +253,8 @@ object Form1: TForm1
   end
   object ToolBar1: TToolBar
     Left = 0
-    Height = 26
     Top = 0
-    Width = 1312
+    Width = 1640
     Images = ImageList1
     TabOrder = 2
     object ToolButton1: TToolButton
@@ -259,93 +266,95 @@ object Form1: TForm1
     end
     object ToolButton2: TToolButton
       Left = 1
-      Height = 22
+      Height = 28
       Top = 2
       Caption = 'ToolButton2'
       Style = tbsSeparator
     end
     object ToolButton3: TToolButton
-      Left = 32
-      Height = 22
+      Left = 38
+      Height = 28
       Top = 2
       Caption = 'ToolButton3'
       Style = tbsDivider
     end
     object ToolButton4: TToolButton
-      Left = 37
+      Left = 43
       Top = 2
       Caption = 'ToolButton4'
       ImageIndex = 1
       OnClick = ToolButton4Click
     end
     object ToolButton5: TToolButton
-      Left = 65
+      Left = 77
       Top = 2
       Caption = 'ToolButton5'
       ImageIndex = 2
       OnClick = ToolButton5Click
     end
     object ToolButton6: TToolButton
-      Left = 60
-      Height = 22
+      Left = 72
+      Height = 28
       Top = 2
       Caption = 'ToolButton6'
       Style = tbsDivider
     end
     object ToolButton7: TToolButton
-      Left = 88
-      Height = 22
+      Left = 106
+      Height = 28
       Top = 2
       Caption = 'ToolButton7'
       Style = tbsDivider
     end
     object Label6: TLabel
-      Left = 93
-      Height = 22
+      Left = 111
+      Height = 28
       Top = 2
-      Width = 125
+      Width = 156
       Alignment = taCenter
       AutoSize = False
       Layout = tlCenter
+      ParentColor = False
     end
   end
   object Panel3: TPanel
-    Left = 1094
-    Height = 644
-    Top = 26
-    Width = 218
+    Left = 1368
+    Height = 806
+    Top = 32
+    Width = 272
     Align = alRight
     BevelOuter = bvNone
     ChildSizing.LeftRightSpacing = 4
     ChildSizing.TopBottomSpacing = 4
     ChildSizing.HorizontalSpacing = 2
     ChildSizing.VerticalSpacing = 2
-    ClientHeight = 644
-    ClientWidth = 218
+    ClientHeight = 806
+    ClientWidth = 272
     TabOrder = 3
     object Panel4: TPanel
       Left = 4
-      Height = 60
-      Top = 309
-      Width = 210
+      Height = 75
+      Top = 389
+      Width = 264
       Align = alBottom
       BevelOuter = bvNone
-      ClientHeight = 60
-      ClientWidth = 210
+      ClientHeight = 75
+      ClientWidth = 264
       TabOrder = 0
       object Label1: TLabel
         Left = 1
-        Height = 14
-        Top = 38
-        Width = 28
+        Height = 18
+        Top = 48
+        Width = 35
         Caption = 'Zoom'
         Layout = tlCenter
+        ParentColor = False
       end
       object TrackBar1: TTrackBar
-        Left = 33
-        Height = 31
-        Top = 7
-        Width = 182
+        Left = 41
+        Height = 39
+        Top = 9
+        Width = 228
         Frequency = 20
         LineSize = 20
         Max = 80
@@ -357,39 +366,43 @@ object Form1: TForm1
         TabOrder = 0
       end
       object Label2: TLabel
-        Left = 42
-        Height = 14
-        Top = 38
-        Width = 12
+        Left = 52
+        Height = 18
+        Top = 48
+        Width = 14
         Caption = '2x'
+        ParentColor = False
       end
       object Label3: TLabel
-        Left = 92
-        Height = 14
-        Top = 38
-        Width = 12
+        Left = 115
+        Height = 18
+        Top = 48
+        Width = 14
         Caption = '4x'
+        ParentColor = False
       end
       object Label4: TLabel
-        Left = 144
-        Height = 14
-        Top = 38
-        Width = 12
+        Left = 180
+        Height = 18
+        Top = 48
+        Width = 14
         Caption = '6x'
+        ParentColor = False
       end
       object Label5: TLabel
-        Left = 196
-        Height = 14
-        Top = 38
-        Width = 12
+        Left = 245
+        Height = 18
+        Top = 48
+        Width = 14
         Caption = '8x'
+        ParentColor = False
       end
     end
     object zoomx: TBGRAVirtualScreen
       Left = 4
-      Height = 238
-      Top = 402
-      Width = 210
+      Height = 298
+      Top = 504
+      Width = 264
       OnRedraw = zoomxRedraw
       Align = alBottom
       Alignment = taLeftJustify
@@ -401,16 +414,16 @@ object Form1: TForm1
     end
     object ONPanel1: TONPanel
       Left = 4
-      Height = 303
+      Height = 383
       Top = 4
-      Width = 210
+      Width = 264
       Align = alClient
       Skindata = ONImg1
       Skinname = 'panel'
       Crop = True
       DoubleBuffered = True
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentBackground = True
@@ -419,7 +432,7 @@ object Form1: TForm1
       TabOrder = 2
       UseDockManager = False
       Visible = False
-      ONLEFT.Left = 148
+      ONLEFT.Left = 145
       ONLEFT.Top = 10
       ONLEFT.Right = 158
       ONLEFT.Bottom = 112
@@ -427,15 +440,15 @@ object Form1: TForm1
       ONRIGHT.Top = 10
       ONRIGHT.Right = 294
       ONRIGHT.Bottom = 112
-      ONCENTER.Left = 155
+      ONCENTER.Left = 158
       ONCENTER.Top = 10
       ONCENTER.Right = 283
       ONCENTER.Bottom = 112
       ONBOTTOM.Left = 158
       ONBOTTOM.Top = 112
-      ONBOTTOM.Right = 280
+      ONBOTTOM.Right = 283
       ONBOTTOM.Bottom = 122
-      ONBOTTOMLEFT.Left = 148
+      ONBOTTOMLEFT.Left = 145
       ONBOTTOMLEFT.Top = 112
       ONBOTTOMLEFT.Right = 158
       ONBOTTOMLEFT.Bottom = 122
@@ -447,7 +460,7 @@ object Form1: TForm1
       ONTOP.Top = 1
       ONTOP.Right = 283
       ONTOP.Bottom = 10
-      ONTOPLEFT.Left = 148
+      ONTOPLEFT.Left = 145
       ONTOPLEFT.Top = 1
       ONTOPLEFT.Right = 158
       ONTOPLEFT.Bottom = 10
@@ -458,14 +471,14 @@ object Form1: TForm1
     end
     object ONGraphicPanel1: TONGraphicPanel
       Left = 4
-      Height = 303
+      Height = 383
       Top = 4
-      Width = 210
+      Width = 264
       Align = alClient
       Skindata = ONImg1
       Skinname = 'graphicpanel'
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentFont = False
@@ -509,16 +522,16 @@ object Form1: TForm1
     end
     object onEdit1: TonEdit
       Cursor = crIBeam
-      Left = 64
-      Height = 30
-      Top = 32
-      Width = 80
+      Left = 80
+      Height = 38
+      Top = 40
+      Width = 100
       Skindata = ONImg1
       Skinname = 'edit'
       Crop = True
       DoubleBuffered = True
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentBackground = True
@@ -566,21 +579,21 @@ object Form1: TForm1
       ONTOPRIGHT.Left = 317
       ONTOPRIGHT.Top = 182
       ONTOPRIGHT.Right = 326
-      ONTOPRIGHT.Bottom = 195
+      ONTOPRIGHT.Bottom = 190
     end
     object ONMemo1: TONMemo
       Cursor = crIBeam
       Left = 4
-      Height = 303
+      Height = 383
       Top = 4
-      Width = 210
+      Width = 264
       Align = alClient
       Skindata = ONImg1
       Skinname = 'memo'
       Crop = True
       DoubleBuffered = True
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'calibri'
       Font.Style = [fsBold]
       ParentBackground = True
@@ -593,54 +606,54 @@ object Form1: TForm1
       NumberOnly = False
       Selstart = 0
       CharCase = ecNormal
-      ONLEFT.Left = 266
+      ONLEFT.Left = 268
       ONLEFT.Top = 190
       ONLEFT.Right = 278
-      ONLEFT.Bottom = 209
-      ONRIGHT.Left = 316
+      ONLEFT.Bottom = 206
+      ONRIGHT.Left = 317
       ONRIGHT.Top = 190
       ONRIGHT.Right = 326
-      ONRIGHT.Bottom = 209
-      ONCENTER.Left = 274
-      ONCENTER.Top = 189
-      ONCENTER.Right = 316
-      ONCENTER.Bottom = 210
-      ONBOTTOM.Left = 276
-      ONBOTTOM.Top = 209
-      ONBOTTOM.Right = 316
+      ONRIGHT.Bottom = 206
+      ONCENTER.Left = 278
+      ONCENTER.Top = 190
+      ONCENTER.Right = 317
+      ONCENTER.Bottom = 206
+      ONBOTTOM.Left = 278
+      ONBOTTOM.Top = 206
+      ONBOTTOM.Right = 317
       ONBOTTOM.Bottom = 216
       ONBOTTOMLEFT.Left = 268
-      ONBOTTOMLEFT.Top = 209
+      ONBOTTOMLEFT.Top = 206
       ONBOTTOMLEFT.Right = 278
       ONBOTTOMLEFT.Bottom = 216
-      ONBOTTOMRIGHT.Left = 316
-      ONBOTTOMRIGHT.Top = 209
-      ONBOTTOMRIGHT.Right = 325
+      ONBOTTOMRIGHT.Left = 317
+      ONBOTTOMRIGHT.Top = 206
+      ONBOTTOMRIGHT.Right = 326
       ONBOTTOMRIGHT.Bottom = 216
-      ONTOP.Left = 277
+      ONTOP.Left = 278
       ONTOP.Top = 182
       ONTOP.Right = 316
       ONTOP.Bottom = 190
-      ONTOPLEFT.Left = 266
+      ONTOPLEFT.Left = 268
       ONTOPLEFT.Top = 182
       ONTOPLEFT.Right = 278
       ONTOPLEFT.Bottom = 190
-      ONTOPRIGHT.Left = 316
+      ONTOPRIGHT.Left = 317
       ONTOPRIGHT.Top = 182
-      ONTOPRIGHT.Right = 325
+      ONTOPRIGHT.Right = 326
       ONTOPRIGHT.Bottom = 190
     end
     object ONcombobox1: TONcombobox
       Cursor = crIBeam
-      Left = 48
-      Height = 30
-      Top = 37
-      Width = 150
+      Left = 60
+      Height = 38
+      Top = 46
+      Width = 188
       Skindata = ONImg1
       Skinname = 'combobox'
       DoubleBuffered = True
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentBackground = True
@@ -682,13 +695,13 @@ object Form1: TForm1
       ONLEFT.Top = 130
       ONLEFT.Right = 8
       ONLEFT.Bottom = 149
-      ONRIGHT.Left = 65
+      ONRIGHT.Left = 71
       ONRIGHT.Top = 130
       ONRIGHT.Right = 81
       ONRIGHT.Bottom = 148
       ONCENTER.Left = 8
       ONCENTER.Top = 129
-      ONCENTER.Right = 71
+      ONCENTER.Right = 68
       ONCENTER.Bottom = 148
       ONBOTTOM.Left = 10
       ONBOTTOM.Top = 149
@@ -732,14 +745,14 @@ object Form1: TForm1
       ONBUTONDISABLE.Bottom = 155
     end
     object oNScrollBar1: ToNScrollBar
-      Left = 5
-      Height = 22
-      Top = 36
-      Width = 200
+      Left = 6
+      Height = 28
+      Top = 45
+      Width = 250
       Skindata = ONImg1
       Skinname = 'scrollbarh'
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentFont = False
@@ -747,22 +760,14 @@ object Form1: TForm1
       Min = 0
       Max = 100
       Position = 0
-      ONLEFT.Left = 60
-      ONLEFT.Top = 275
-      ONLEFT.Right = 75
-      ONLEFT.Bottom = 291
-      ONRIGHT.Left = 220
-      ONRIGHT.Top = 275
-      ONRIGHT.Right = 230
-      ONRIGHT.Bottom = 291
-      ONTOP.Left = 0
-      ONTOP.Top = 0
-      ONTOP.Right = 0
-      ONTOP.Bottom = 0
-      ONBOTTOM.Left = 0
-      ONBOTTOM.Top = 0
-      ONBOTTOM.Right = 0
-      ONBOTTOM.Bottom = 0
+      ONTOP.Left = 81
+      ONTOP.Top = 295
+      ONTOP.Right = 89
+      ONTOP.Bottom = 311
+      ONBOTTOM.Left = 97
+      ONBOTTOM.Top = 295
+      ONBOTTOM.Right = 106
+      ONBOTTOM.Bottom = 311
       ONNORMAL.Left = 73
       ONNORMAL.Top = 274
       ONNORMAL.Right = 220
@@ -822,18 +827,18 @@ object Form1: TForm1
     end
     object oNListBox1: ToNListBox
       Left = 4
-      Height = 303
+      Height = 383
       Top = 4
-      Width = 210
+      Width = 264
       Align = alClient
       Skindata = ONImg1
       Skinname = 'listbox'
-      ClientHeight = 303
-      ClientWidth = 210
+      ClientHeight = 383
+      ClientWidth = 264
       Crop = True
       DoubleBuffered = True
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentBackground = True
@@ -909,17 +914,17 @@ object Form1: TForm1
       ONACTIVEITEM.Bottom = 378
     end
     object ONCropButton1: TONCropButton
-      Left = 64
-      Height = 30
-      Top = 32
-      Width = 100
+      Left = 80
+      Height = 38
+      Top = 40
+      Width = 125
       Skindata = ONImg1
       Skinname = 'cropbutton'
       Caption = 'TEST'
       Crop = True
       DoubleBuffered = True
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentBackground = True
@@ -928,33 +933,33 @@ object Form1: TForm1
       TabOrder = 7
       UseDockManager = False
       Visible = False
-      ONNORMAL.Left = 681
-      ONNORMAL.Top = 4
-      ONNORMAL.Right = 782
-      ONNORMAL.Bottom = 29
-      ONPRESSED.Left = 681
-      ONPRESSED.Top = 56
-      ONPRESSED.Right = 782
-      ONPRESSED.Bottom = 81
-      ONHOVER.Left = 681
-      ONHOVER.Top = 30
-      ONHOVER.Right = 782
-      ONHOVER.Bottom = 55
-      ONDISABLE.Left = 681
-      ONDISABLE.Top = 82
-      ONDISABLE.Right = 782
-      ONDISABLE.Bottom = 107
+      ONNORMAL.Left = 0
+      ONNORMAL.Top = 0
+      ONNORMAL.Right = 0
+      ONNORMAL.Bottom = 0
+      ONPRESSED.Left = 0
+      ONPRESSED.Top = 0
+      ONPRESSED.Right = 0
+      ONPRESSED.Bottom = 0
+      ONHOVER.Left = 0
+      ONHOVER.Top = 0
+      ONHOVER.Right = 0
+      ONHOVER.Bottom = 0
+      ONDISABLE.Left = 0
+      ONDISABLE.Top = 0
+      ONDISABLE.Right = 0
+      ONDISABLE.Bottom = 0
     end
     object ONHeaderPanel1: TONHeaderPanel
-      Left = 6
-      Height = 20
-      Top = 37
-      Width = 207
+      Left = 8
+      Height = 25
+      Top = 46
+      Width = 259
       Skindata = ONImg1
       Skinname = 'headerpanel'
       DoubleBuffered = True
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentBackground = True
@@ -1001,16 +1006,16 @@ object Form1: TForm1
       ONTOPRIGHT.Bottom = 189
     end
     object ONGraphicsButton1: TONGraphicsButton
-      Left = 65
-      Height = 30
-      Top = 31
-      Width = 100
+      Left = 81
+      Height = 38
+      Top = 39
+      Width = 125
       Skindata = ONImg1
       Skinname = 'button'
       Caption = 'TEST'
       Color = clNone
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentColor = False
@@ -1018,61 +1023,62 @@ object Form1: TForm1
       Visible = False
       ONNORMAL.Left = 681
       ONNORMAL.Top = 4
-      ONNORMAL.Right = 782
+      ONNORMAL.Right = 781
       ONNORMAL.Bottom = 29
       ONPRESSED.Left = 681
       ONPRESSED.Top = 56
-      ONPRESSED.Right = 782
+      ONPRESSED.Right = 781
       ONPRESSED.Bottom = 81
       ONHOVER.Left = 681
       ONHOVER.Top = 30
-      ONHOVER.Right = 782
+      ONHOVER.Right = 781
       ONHOVER.Bottom = 55
       ONDISABLE.Left = 681
       ONDISABLE.Top = 82
-      ONDISABLE.Right = 782
+      ONDISABLE.Right = 781
       ONDISABLE.Bottom = 107
     end
     object Panel5: TPanel
       Left = 4
-      Height = 29
-      Top = 371
-      Width = 210
+      Height = 36
+      Top = 466
+      Width = 264
       Align = alBottom
       BevelOuter = bvNone
-      ClientHeight = 29
-      ClientWidth = 210
+      ClientHeight = 36
+      ClientWidth = 264
       TabOrder = 8
       object ColorBox1: TColorBox
-        Left = 106
-        Height = 22
-        Top = 4
-        Width = 100
+        Left = 132
+        Height = 26
+        Top = 5
+        Width = 125
         NoneColorColor = clYellow
         Selected = clSilver
-        ItemHeight = 16
+        ItemHeight = 20
         TabOrder = 0
       end
       object Label16: TLabel
-        Left = 45
-        Height = 14
-        Top = 10
-        Width = 57
+        Left = 56
+        Height = 18
+        Top = 12
+        Width = 72
         Caption = 'Arrow color'
+        ParentColor = False
       end
     end
     object OnSpinEdit1: TOnSpinEdit
       Cursor = crIBeam
-      Left = 26
-      Height = 25
-      Top = 42
-      Width = 45
+      Left = 32
+      Height = 31
+      Top = 52
+      Width = 56
       Skindata = ONImg1
       Skinname = 'spinedit'
       Caption = '0'
       DoubleBuffered = True
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'calibri'
       Font.Style = [fsBold]
       ParentBackground = True
@@ -1090,42 +1096,42 @@ object Form1: TForm1
       MinValue = 0
       Buttonwidth = 0
       Buttonheight = 0
-      ONLEFT.Left = 328
-      ONLEFT.Top = 238
-      ONLEFT.Right = 338
-      ONLEFT.Bottom = 258
-      ONRIGHT.Left = 374
-      ONRIGHT.Top = 238
-      ONRIGHT.Right = 380
-      ONRIGHT.Bottom = 258
-      ONCENTER.Left = 336
-      ONCENTER.Top = 238
-      ONCENTER.Right = 376
-      ONCENTER.Bottom = 257
-      ONBOTTOM.Left = 338
-      ONBOTTOM.Top = 258
-      ONBOTTOM.Right = 374
-      ONBOTTOM.Bottom = 265
-      ONBOTTOMLEFT.Left = 328
-      ONBOTTOMLEFT.Top = 258
-      ONBOTTOMLEFT.Right = 338
-      ONBOTTOMLEFT.Bottom = 265
-      ONBOTTOMRIGHT.Left = 374
-      ONBOTTOMRIGHT.Top = 258
-      ONBOTTOMRIGHT.Right = 380
-      ONBOTTOMRIGHT.Bottom = 265
-      ONTOP.Left = 338
-      ONTOP.Top = 231
-      ONTOP.Right = 374
-      ONTOP.Bottom = 238
-      ONTOPLEFT.Left = 328
-      ONTOPLEFT.Top = 231
-      ONTOPLEFT.Right = 338
-      ONTOPLEFT.Bottom = 238
-      ONTOPRIGHT.Left = 374
-      ONTOPRIGHT.Top = 231
-      ONTOPRIGHT.Right = 380
-      ONTOPRIGHT.Bottom = 238
+      ONLEFT.Left = 268
+      ONLEFT.Top = 190
+      ONLEFT.Right = 278
+      ONLEFT.Bottom = 206
+      ONRIGHT.Left = 317
+      ONRIGHT.Top = 190
+      ONRIGHT.Right = 326
+      ONRIGHT.Bottom = 206
+      ONCENTER.Left = 278
+      ONCENTER.Top = 190
+      ONCENTER.Right = 317
+      ONCENTER.Bottom = 206
+      ONBOTTOM.Left = 278
+      ONBOTTOM.Top = 206
+      ONBOTTOM.Right = 317
+      ONBOTTOM.Bottom = 216
+      ONBOTTOMLEFT.Left = 268
+      ONBOTTOMLEFT.Top = 206
+      ONBOTTOMLEFT.Right = 278
+      ONBOTTOMLEFT.Bottom = 216
+      ONBOTTOMRIGHT.Left = 317
+      ONBOTTOMRIGHT.Top = 206
+      ONBOTTOMRIGHT.Right = 326
+      ONBOTTOMRIGHT.Bottom = 216
+      ONTOP.Left = 278
+      ONTOP.Top = 182
+      ONTOP.Right = 316
+      ONTOP.Bottom = 190
+      ONTOPLEFT.Left = 268
+      ONTOPLEFT.Top = 182
+      ONTOPLEFT.Right = 278
+      ONTOPLEFT.Bottom = 190
+      ONTOPRIGHT.Left = 317
+      ONTOPRIGHT.Top = 182
+      ONTOPRIGHT.Right = 326
+      ONTOPRIGHT.Bottom = 190
       ONUPBUTONNORMAL.Left = 379
       ONUPBUTONNORMAL.Top = 231
       ONUPBUTONNORMAL.Right = 400
@@ -1160,15 +1166,15 @@ object Form1: TForm1
       ONDOWNBUTONDISABLE.Bottom = 156
     end
     object oNScrollBar2: ToNScrollBar
-      Left = 96
-      Height = 173
-      Top = 31
-      Width = 24
+      Left = 120
+      Height = 30
+      Top = 39
+      Width = 216
       Skindata = ONImg1
       Skinname = 'scrollbarv'
       Color = clNone
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentBidiMode = False
@@ -1179,30 +1185,22 @@ object Form1: TForm1
       Min = 0
       Max = 100
       Position = 0
-      ONLEFT.Left = 0
-      ONLEFT.Top = 0
-      ONLEFT.Right = 0
-      ONLEFT.Bottom = 0
-      ONRIGHT.Left = 0
-      ONRIGHT.Top = 0
-      ONRIGHT.Right = 0
-      ONRIGHT.Bottom = 0
-      ONTOP.Left = 226
-      ONTOP.Top = 269
-      ONTOP.Right = 241
-      ONTOP.Bottom = 270
-      ONBOTTOM.Left = 225
-      ONBOTTOM.Top = 266
-      ONBOTTOM.Right = 241
-      ONBOTTOM.Bottom = 268
+      ONTOP.Left = 256
+      ONTOP.Top = 291
+      ONTOP.Right = 271
+      ONTOP.Bottom = 299
+      ONBOTTOM.Left = 256
+      ONBOTTOM.Top = 299
+      ONBOTTOM.Right = 272
+      ONBOTTOM.Bottom = 306
       ONNORMAL.Left = 226
-      ONNORMAL.Top = 271
-      ONNORMAL.Right = 241
-      ONNORMAL.Bottom = 421
-      ONBAR.Left = 796
-      ONBAR.Top = 126
-      ONBAR.Right = 807
-      ONBAR.Bottom = 271
+      ONNORMAL.Top = 274
+      ONNORMAL.Right = 240
+      ONNORMAL.Bottom = 420
+      ONBAR.Left = 230
+      ONBAR.Top = 274
+      ONBAR.Right = 237
+      ONBAR.Bottom = 420
       ONLEFTBUTNORMAL.Left = 255
       ONLEFTBUTNORMAL.Top = 277
       ONLEFTBUTNORMAL.Right = 271
@@ -1235,7 +1233,7 @@ object Form1: TForm1
       ONRIGHTBUTDISABLE.Top = 300
       ONRIGHTBUTDISABLE.Right = 330
       ONRIGHTBUTDISABLE.Bottom = 322
-      ONCENTERBUTNORMAL.Left = 27
+      ONCENTERBUTNORMAL.Left = 28
       ONCENTERBUTNORMAL.Top = 274
       ONCENTERBUTNORMAL.Right = 45
       ONCENTERBUTNORMAL.Bottom = 291
@@ -1254,15 +1252,15 @@ object Form1: TForm1
       Kind = oVertical
     end
     object OnSwich1: TOnSwich
-      Left = 64
-      Height = 30
-      Top = 81
-      Width = 100
+      Left = 80
+      Height = 38
+      Top = 101
+      Width = 125
       Skindata = ONImg1
       Skinname = 'swich'
       Caption = 'OnSwich1'
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentFont = False
@@ -1289,15 +1287,15 @@ object Form1: TForm1
       ONDISABLE.Bottom = 172
     end
     object OnCheckbox1: TOnCheckbox
-      Left = 33
-      Height = 30
-      Top = 70
-      Width = 100
+      Left = 41
+      Height = 38
+      Top = 88
+      Width = 125
       Skindata = ONImg1
       Skinname = 'checkbox'
       Caption = 'OnCheckbox1'
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentFont = False
@@ -1324,21 +1322,21 @@ object Form1: TForm1
       ONCHECKEDHOVER.Top = 49
       ONCHECKEDHOVER.Right = 332
       ONCHECKEDHOVER.Bottom = 64
-      ONDISABLE.Left = 322
+      ONDISABLE.Left = 317
       ONDISABLE.Top = 88
-      ONDISABLE.Right = 334
+      ONDISABLE.Right = 332
       ONDISABLE.Bottom = 105
     end
     object OnRadioButton1: TOnRadioButton
-      Left = 34
-      Height = 30
-      Top = 114
-      Width = 100
+      Left = 42
+      Height = 38
+      Top = 142
+      Width = 125
       Skindata = ONImg1
       Skinname = 'radiobox'
       Caption = 'OnRadioButton1'
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentFont = False
@@ -1352,9 +1350,9 @@ object Form1: TForm1
       ONNORMALHOVER.Left = 299
       ONNORMALHOVER.Top = 17
       ONNORMALHOVER.Right = 315
-      ONNORMALHOVER.Bottom = 31
+      ONNORMALHOVER.Bottom = 32
       ONNORMALDOWN.Left = 299
-      ONNORMALDOWN.Top = 32
+      ONNORMALDOWN.Top = 33
       ONNORMALDOWN.Right = 315
       ONNORMALDOWN.Bottom = 48
       ONCHECKED.Left = 299
@@ -1365,21 +1363,21 @@ object Form1: TForm1
       ONCHECKEDHOVER.Top = 49
       ONCHECKEDHOVER.Right = 315
       ONCHECKEDHOVER.Bottom = 64
-      ONDISABLE.Left = 301
-      ONDISABLE.Top = 81
+      ONDISABLE.Left = 299
+      ONDISABLE.Top = 88
       ONDISABLE.Right = 315
-      ONDISABLE.Bottom = 93
+      ONDISABLE.Bottom = 105
     end
     object ONProgressBar1: TONProgressBar
-      Left = 37
-      Height = 20
-      Top = 130
-      Width = 150
+      Left = 46
+      Height = 25
+      Top = 162
+      Width = 188
       Skindata = ONImg1
       Skinname = 'progressbarh'
       Caption = '50'
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentFont = False
@@ -1406,15 +1404,15 @@ object Form1: TForm1
       Position = 50
     end
     object ONProgressBar2: TONProgressBar
-      Left = 88
-      Height = 150
-      Top = 85
-      Width = 15
+      Left = 110
+      Height = 19
+      Top = 106
+      Width = 188
       Skindata = ONImg1
       Skinname = 'progressbarv'
       Caption = '30'
       Font.Color = clBlack
-      Font.Height = -13
+      Font.Height = -16
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ParentFont = False
@@ -1432,93 +1430,103 @@ object Form1: TForm1
       ONCENTER.Top = 143
       ONCENTER.Right = 827
       ONCENTER.Bottom = 195
-      ONBAR.Left = 796
-      ONBAR.Top = 126
-      ONBAR.Right = 808
-      ONBAR.Bottom = 269
+      ONBAR.Left = 869
+      ONBAR.Top = 125
+      ONBAR.Right = 887
+      ONBAR.Bottom = 297
       Min = 0
       Max = 100
       Position = 30
       Kind = oVertical
     end
     object ONTrackBar1: TONTrackBar
-      Left = 25
-      Height = 25
-      Top = 103
-      Width = 174
+      Left = 31
+      Height = 31
+      Top = 129
+      Width = 218
       Skindata = ONImg1
       Skinname = 'trackbarh'
+      Font.Color = clBlack
+      Font.Height = -16
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
       Visible = False
-      ONLEFT.Left = 0
-      ONLEFT.Top = 0
-      ONLEFT.Right = 0
-      ONLEFT.Bottom = 0
-      ONRIGHT.Left = 0
-      ONRIGHT.Top = 0
-      ONRIGHT.Right = 0
-      ONRIGHT.Bottom = 0
-      ONCENTER.Left = 0
-      ONCENTER.Top = 0
-      ONCENTER.Right = 0
-      ONCENTER.Bottom = 0
-      ONBUTONNORMAL.Left = 0
-      ONBUTONNORMAL.Top = 0
-      ONBUTONNORMAL.Right = 0
-      ONBUTONNORMAL.Bottom = 0
-      ONBUTONPRESS.Left = 0
-      ONBUTONPRESS.Top = 0
-      ONBUTONPRESS.Right = 0
-      ONBUTONPRESS.Bottom = 0
-      ONBUTONHOVER.Left = 0
-      ONBUTONHOVER.Top = 0
-      ONBUTONHOVER.Right = 0
-      ONBUTONHOVER.Bottom = 0
-      ONBUTONDISABLE.Left = 0
-      ONBUTONDISABLE.Top = 0
-      ONBUTONDISABLE.Right = 0
-      ONBUTONDISABLE.Bottom = 0
+      ONLEFT.Left = 419
+      ONLEFT.Top = 347
+      ONLEFT.Right = 428
+      ONLEFT.Bottom = 358
+      ONRIGHT.Left = 757
+      ONRIGHT.Top = 347
+      ONRIGHT.Right = 769
+      ONRIGHT.Bottom = 358
+      ONCENTER.Left = 444
+      ONCENTER.Top = 348
+      ONCENTER.Right = 458
+      ONCENTER.Bottom = 358
+      ONBUTONNORMAL.Left = 42
+      ONBUTONNORMAL.Top = 156
+      ONBUTONNORMAL.Right = 59
+      ONBUTONNORMAL.Bottom = 173
+      ONBUTONPRESS.Left = 7
+      ONBUTONPRESS.Top = 274
+      ONBUTONPRESS.Right = 24
+      ONBUTONPRESS.Bottom = 291
+      ONBUTONHOVER.Left = 26
+      ONBUTONHOVER.Top = 274
+      ONBUTONHOVER.Right = 45
+      ONBUTONHOVER.Bottom = 291
+      ONBUTONDISABLE.Left = 27
+      ONBUTONDISABLE.Top = 294
+      ONBUTONDISABLE.Right = 45
+      ONBUTONDISABLE.Bottom = 310
       Position = 0
       Percentage = 0
       Max = 100
       Min = 0
     end
     object ONTrackBar2: TONTrackBar
-      Left = 96
-      Height = 205
-      Top = 16
-      Width = 26
+      Left = 120
+      Height = 32
+      Top = 20
+      Width = 256
       Skindata = ONImg1
       Skinname = 'trackbarv'
       Caption = 'ONTrackBar2'
+      Font.Color = clBlack
+      Font.Height = -16
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
+      ParentFont = False
       Visible = False
-      ONLEFT.Left = 0
-      ONLEFT.Top = 0
-      ONLEFT.Right = 0
-      ONLEFT.Bottom = 0
-      ONRIGHT.Left = 0
-      ONRIGHT.Top = 0
-      ONRIGHT.Right = 0
-      ONRIGHT.Bottom = 0
-      ONCENTER.Left = 0
-      ONCENTER.Top = 0
-      ONCENTER.Right = 0
-      ONCENTER.Bottom = 0
-      ONBUTONNORMAL.Left = 0
-      ONBUTONNORMAL.Top = 0
-      ONBUTONNORMAL.Right = 0
-      ONBUTONNORMAL.Bottom = 0
-      ONBUTONPRESS.Left = 0
-      ONBUTONPRESS.Top = 0
-      ONBUTONPRESS.Right = 0
-      ONBUTONPRESS.Bottom = 0
-      ONBUTONHOVER.Left = 0
-      ONBUTONHOVER.Top = 0
-      ONBUTONHOVER.Right = 0
-      ONBUTONHOVER.Bottom = 0
-      ONBUTONDISABLE.Left = 0
-      ONBUTONDISABLE.Top = 0
-      ONBUTONDISABLE.Right = 0
-      ONBUTONDISABLE.Bottom = 0
+      ONLEFT.Left = 816
+      ONLEFT.Top = 126
+      ONLEFT.Right = 827
+      ONLEFT.Bottom = 136
+      ONRIGHT.Left = 816
+      ONRIGHT.Top = 464
+      ONRIGHT.Right = 827
+      ONRIGHT.Bottom = 476
+      ONCENTER.Left = 816
+      ONCENTER.Top = 269
+      ONCENTER.Right = 827
+      ONCENTER.Bottom = 351
+      ONBUTONNORMAL.Left = 42
+      ONBUTONNORMAL.Top = 156
+      ONBUTONNORMAL.Right = 59
+      ONBUTONNORMAL.Bottom = 173
+      ONBUTONPRESS.Left = 7
+      ONBUTONPRESS.Top = 274
+      ONBUTONPRESS.Right = 24
+      ONBUTONPRESS.Bottom = 291
+      ONBUTONHOVER.Left = 26
+      ONBUTONHOVER.Top = 274
+      ONBUTONHOVER.Right = 45
+      ONBUTONHOVER.Bottom = 291
+      ONBUTONDISABLE.Left = 27
+      ONBUTONDISABLE.Top = 294
+      ONBUTONDISABLE.Right = 45
+      ONBUTONDISABLE.Bottom = 310
       Position = 0
       Percentage = 100
       Kind = oVertical
@@ -1527,16 +1535,21 @@ object Form1: TForm1
     end
     object ONCollapExpandPanel1: TONCollapExpandPanel
       Left = 0
-      Height = 262
+      Height = 328
       Top = 2
-      Width = 213
+      Width = 266
       Skindata = ONImg1
       Skinname = 'expandpanel'
       Caption = 'ONCollapExpandPanel1'
       Crop = True
       DoubleBuffered = True
+      Font.Color = clBlack
+      Font.Height = -16
+      Font.Name = 'Calibri'
+      Font.Style = [fsBold]
       ParentBackground = True
       ParentDoubleBuffered = False
+      ParentFont = False
       TabOrder = 11
       UseDockManager = False
       Visible = False
@@ -1544,84 +1557,89 @@ object Form1: TForm1
       Status = oExpanded
       Minheight = 30
       Normalheight = 150
+      HeaderState = ocup
       ButtonPosition = obright
-      ONLEFT.Left = 0
-      ONLEFT.Top = 0
-      ONLEFT.Right = 0
-      ONLEFT.Bottom = 0
-      ONRIGHT.Left = 0
-      ONRIGHT.Top = 0
-      ONRIGHT.Right = 0
-      ONRIGHT.Bottom = 0
-      ONCENTER.Left = 0
-      ONCENTER.Top = 0
-      ONCENTER.Right = 0
-      ONCENTER.Bottom = 0
-      ONBOTTOM.Left = 0
-      ONBOTTOM.Top = 0
-      ONBOTTOM.Right = 0
-      ONBOTTOM.Bottom = 0
-      ONBOTTOMLEFT.Left = 0
-      ONBOTTOMLEFT.Top = 0
-      ONBOTTOMLEFT.Right = 0
-      ONBOTTOMLEFT.Bottom = 0
-      ONBOTTOMRIGHT.Left = 0
-      ONBOTTOMRIGHT.Top = 0
-      ONBOTTOMRIGHT.Right = 0
-      ONBOTTOMRIGHT.Bottom = 0
-      ONTOP.Left = 0
-      ONTOP.Top = 0
-      ONTOP.Right = 0
-      ONTOP.Bottom = 0
-      ONTOPLEFT.Left = 0
-      ONTOPLEFT.Top = 0
-      ONTOPLEFT.Right = 0
-      ONTOPLEFT.Bottom = 0
-      ONTOPRIGHT.Left = 0
-      ONTOPRIGHT.Top = 0
-      ONTOPRIGHT.Right = 0
-      ONTOPRIGHT.Bottom = 0
-      ONNORMAL.Left = 0
-      ONNORMAL.Top = 0
-      ONNORMAL.Right = 0
-      ONNORMAL.Bottom = 0
-      ONPRESSED.Left = 0
-      ONPRESSED.Top = 0
-      ONPRESSED.Right = 0
-      ONPRESSED.Bottom = 0
-      ONHOVER.Left = 0
-      ONHOVER.Top = 0
-      ONHOVER.Right = 0
-      ONHOVER.Bottom = 0
-      ONDISABLE.Left = 0
-      ONDISABLE.Top = 0
-      ONDISABLE.Right = 0
-      ONDISABLE.Bottom = 0
+      ONLEFT.Left = 148
+      ONLEFT.Top = 9
+      ONLEFT.Right = 156
+      ONLEFT.Bottom = 114
+      ONRIGHT.Left = 283
+      ONRIGHT.Top = 16
+      ONRIGHT.Right = 293
+      ONRIGHT.Bottom = 113
+      ONCENTER.Left = 156
+      ONCENTER.Top = 20
+      ONCENTER.Right = 281
+      ONCENTER.Bottom = 110
+      ONBOTTOM.Left = 160
+      ONBOTTOM.Top = 113
+      ONBOTTOM.Right = 280
+      ONBOTTOM.Bottom = 122
+      ONBOTTOMLEFT.Left = 148
+      ONBOTTOMLEFT.Top = 113
+      ONBOTTOMLEFT.Right = 160
+      ONBOTTOMLEFT.Bottom = 122
+      ONBOTTOMRIGHT.Left = 281
+      ONBOTTOMRIGHT.Top = 113
+      ONBOTTOMRIGHT.Right = 293
+      ONBOTTOMRIGHT.Bottom = 122
+      ONTOP.Left = 481
+      ONTOP.Top = 14
+      ONTOP.Right = 517
+      ONTOP.Bottom = 39
+      ONTOPLEFT.Left = 468
+      ONTOPLEFT.Top = 14
+      ONTOPLEFT.Right = 487
+      ONTOPLEFT.Bottom = 39
+      ONTOPRIGHT.Left = 605
+      ONTOPRIGHT.Top = 14
+      ONTOPRIGHT.Right = 628
+      ONTOPRIGHT.Bottom = 39
+      ONNORMAL.Left = 645
+      ONNORMAL.Top = 14
+      ONNORMAL.Right = 668
+      ONNORMAL.Bottom = 39
+      ONPRESSED.Left = 140
+      ONPRESSED.Top = 124
+      ONPRESSED.Right = 167
+      ONPRESSED.Bottom = 155
+      ONHOVER.Left = 80
+      ONHOVER.Top = 124
+      ONHOVER.Right = 107
+      ONHOVER.Bottom = 155
+      ONDISABLE.Left = 110
+      ONDISABLE.Top = 124
+      ONDISABLE.Right = 137
+      ONDISABLE.Bottom = 155
     end
   end
   object ONImg1: TONImg
-    Left = 534
-    Top = 106
+    MColor = 'default'
+    Picture.Data = {
+      07544269746D617000000000
+    }
+    Left = 668
+    Top = 133
   end
   object opd: TOpenPictureDialog
-    Left = 248
-    Top = 32
+    Left = 310
+    Top = 40
   end
   object odf: TOpenDialog
-    DefaultExt = '.ini'
-    Filter = 'Ini Files|.ini'
-    Left = 218
-    Top = 77
+    DefaultExt = '.zip'
+    Filter = 'Skin File|.zip'
+    Left = 273
+    Top = 96
   end
   object sdf: TSaveDialog
-    DefaultExt = '.ini'
-    Filter = 'Ini Files|.ini'
-    Left = 103
-    Top = 79
+    DefaultExt = '.zip'
+    Filter = 'Skin File|.zip'
+    Left = 129
+    Top = 99
   end
   object ImageList1: TImageList
-    Left = 57
-    Top = 212
+    Left = 71
+    Top = 265
     Bitmap = {
       4C7A060000001000000010000000C30900000000000078DAED98697056D519C7
       3FF6931F3B9DCE74A6B6CAB49551C7DA22626B711B6B700AD252AD2DB832A2AD
@@ -1705,7 +1723,8 @@ object Form1: TForm1
     }
   end
   object main: TONImg
-    Left = 230
-    Top = 152
+    MColor = 'default'
+    Left = 288
+    Top = 190
   end
 end
