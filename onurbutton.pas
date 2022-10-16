@@ -5048,7 +5048,7 @@ begin
    FClosed := true;
   Application.RemoveOnDeactivateHandler(@FormDeactivate);
   CloseAction:=caFree;
-  FreeAndNil(oblist);
+ // FreeAndNil(oblist);
   inherited DoClose(CloseAction);
 end;
 
