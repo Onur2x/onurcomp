@@ -4162,16 +4162,18 @@ begin
     Fskinname := avalue;
 end;
 
-// -----------------------------------------------------------------------------
+// --------------------:=---------------------------------------------------------
 
 procedure Toncustomcontrol.Croptoimg(Buffer: Tbgrabitmap);
 var
   x, y: integer;
-  hdc, SpanRgn: integer;
+  hdc1, SpanRgn: hdc;//integer;
+
+   TrgtRect: Trect;
+   p: PBGRAPixel;
 begin
-  hdc := GetDC(self.Handle);
-  WindowRgn := CreateRectRgn(0, 0, buffer.Width, buffer.Height);
-  Premultiply(buffer);
+
+{  Premultiply(buffer);
   for x := 1 to buffer.Bitmap.Width do
   begin
     for y := 1 to buffer.Bitmap.Height do
@@ -4181,14 +4183,47 @@ begin
         SpanRgn := CreateRectRgn(x - 1, y - 1, x, y);
         CombineRgn(WindowRgn, WindowRgn, SpanRgn, RGN_DIFF);
         DeleteObject(SpanRgn);
+
       end;
     end;
   end;
+}
+    WindowRgn := CreateRectRgn(0, 0, buffer.Width, buffer.Height);
+
+  for Y := 0 to buffer.Height-1 do
+  begin
+    p := buffer.Scanline[Y];
+    for X := buffer.Width-1 downto 0 do
+    begin
+     //  if x<10 then
+     //  WriteLn(Y,'  ',X,'  ',P^.alpha);
+
+      if p^.Alpha =0 then//<255 then
+      begin
+        p^:= BGRAPixelTransparent;
+        SpanRgn := CreateRectRgn(x , y, x+1, y+1);
+        CombineRgn(WindowRgn, WindowRgn, SpanRgn, RGN_DIFF);
+        DeleteObject(SpanRgn);
+      end
+      else
+      begin
+        p^.Red := p^.Red * (p^.Alpha + 1) shr 8;
+        p^.Green := p^.Green * (p^.Alpha + 1) shr 8;
+        p^.Blue := p^.Blue * (p^.Alpha + 1) shr 8;
+      end;
+      Inc(p);
+    end;
+  end;
+
+
   buffer.InvalidateBitmap;
+
+  hdc1 := GetDC(self.Handle);
+
   SetWindowRgn(self.Handle, WindowRgn, True);
-  ReleaseDC(self.Handle, hdc);
+  ReleaseDC(self.Handle, hdc1);
   DeleteObject(WindowRgn);
-  DeleteObject(hdc);
+  DeleteObject(hdc1);
 end;
 // -----------------------------------------------------------------------------
 procedure Toncustomcontrol.Paint;
