@@ -1,4 +1,0 @@
-panel         RCDATA "panel.png"
-skins         RCDATA "skins.ini"
-//skins         XML "skins.xml"
-skn           RCDATA "skins.zip"
