@@ -8,7 +8,7 @@ unit onur;
 interface
 
 uses
-  onurctrl, onurpanel, onuredit, onurpage, onurlist, onurbutton, 
+  onurctrl, onurpanel, onuredit, onurpage, onurlist, onurbutton, onurbar, 
   LazarusPackageIntf;
 
 implementation
@@ -21,6 +21,7 @@ begin
   RegisterUnit('onurpage', @onurpage.Register);
   RegisterUnit('onurlist', @onurlist.Register);
   RegisterUnit('onurbutton', @onurbutton.Register);
+  RegisterUnit('onurbar', @onurbar.Register);
 end;
 
 initialization
