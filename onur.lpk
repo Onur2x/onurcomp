@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Package Version="5">
+    <PathDelim Value="\"/>
+    <Name Value="onur"/>
+    <Type Value="RunAndDesignTime"/>
+    <Author Value="ONUR ERÇELEN"/>
+    <CompilerOptions>
+      <Version Value="11"/>
+      <PathDelim Value="\"/>
+      <SearchPaths>
+        <OtherUnitFiles Value="$(LazarusDir)fpc\$(FPCVer)\source\packages\sdl\src"/>
+        <UnitOutputDirectory Value="export\lib\$(TargetCPU)-$(TargetOS)"/>
+      </SearchPaths>
+      <Parsing>
+        <SyntaxOptions>
+          <IncludeAssertionCode Value="True"/>
+          <UseAnsiStrings Value="False"/>
+        </SyntaxOptions>
+      </Parsing>
+      <CodeGeneration>
+        <Checks>
+          <IOChecks Value="True"/>
+          <RangeChecks Value="True"/>
+          <OverflowChecks Value="True"/>
+          <StackChecks Value="True"/>
+        </Checks>
+        <VerifyObjMethodCallValidity Value="True"/>
+        <SmallerCode Value="True"/>
+      </CodeGeneration>
+      <Other>
+        <CustomOptions Value="$(IDEBuildOptions)"/>
+      </Other>
+    </CompilerOptions>
+    <Description Value="Button,Panel,Edit,progressbar,Checkbox"/>
+    <License Value="LGPL with static linking exception. This is the same license as is used in the LCL (Lazarus Component Library)."/>
+    <Version Build="1"/>
+    <Files Count="7">
+      <Item2>
+        <Filename Value="onurctrl.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="onurctrl"/>
+      </Item2>
+      <Item3>
+        <Filename Value="onurpanel.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="onurpanel"/>
+      </Item3>
+      <Item4>
+        <Filename Value="onuredit.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="onuredit"/>
+      </Item4>
+      <Item5>
+        <Filename Value="onurpage.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="onurpage"/>
+      </Item5>
+      <Item6>
+        <Filename Value="onurlist.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="onurlist"/>
+      </Item6>
+      <Item7>
+        <Filename Value="onurbutton.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="onurbutton"/>
+      </Item7>
+    </Files>
+    <CompatibilityMode Value="True"/>
+    <RequiredPkgs Count="3">
+      <Item1>
+        <PackageName Value="IDEIntf"/>
+      </Item1>
+      <Item2>
+        <PackageName Value="BGRABitmapPack"/>
+      </Item2>
+      <Item3>
+        <PackageName Value="LCL"/>
+      </Item3>
+    </RequiredPkgs>
+    <UsageOptions>
+      <UnitPath Value="$(PkgOutDir)"/>
+    </UsageOptions>
+    <PublishOptions>
+      <Version Value="2"/>
+    </PublishOptions>
+    <CustomOptions Items="ExternHelp" Version="2">
+      <_ExternHelp Items="Count"/>
+    </CustomOptions>
+  </Package>
+</CONFIG>
