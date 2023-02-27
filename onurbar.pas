@@ -1244,6 +1244,7 @@ begin
       self.Height := a;
     end;
   end;
+  if skindata<>nil then
   Skindata := self.Skindata;
   Invalidate;
 end;
@@ -1560,20 +1561,23 @@ begin
     end;
   end;
 
+  if skindata<>nil then
   Skindata := self.Skindata;
+
   Invalidate;
 end;
 
 constructor TONProgressBar.Create(Aowner: TComponent);
 begin
   inherited Create(Aowner);
+
   skinname := 'progressbarh';
-  kind := oHorizontal;
   self.Width := 150;
   self.Height := 10;
   fmin := 0;
   fmax := 100;
   fposition := 10;
+  kind := oHorizontal;
 
   Fleft   := TONCustomCrop.Create;
   Fleft.cropname   := 'LEFT';
@@ -1633,6 +1637,7 @@ begin
    if csDesigning in ComponentState then
      Exit;
   if not Visible then Exit;
+
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
   if (Skindata <> nil) then
@@ -1655,6 +1660,7 @@ begin
   begin
     resim.Fill(BGRA(207, 220, 207), dmSet);
   end;
+
   Captionvisible := FCaptonvisible;
   inherited paint;
 end;
