@@ -1801,9 +1801,9 @@ begin
         begin
 
           cropparse(ONTOP, ReadString(Skinname, ONTOP.cropname,
-            '256,291,299,271,clblack'));
+            '0,0,0,0,clblack'));
           cropparse(ONBOTTOM, ReadString(Skinname, ONBOTTOM.cropname,
-            '256,299,306,272,clblack'));
+            '0,0,0,0,clblack'));
 
           cropparse(ONNORMAL, ReadString(Skinname, ONNORMAL.cropname,
             '0,0,0,0,clblack'));

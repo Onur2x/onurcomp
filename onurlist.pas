@@ -1017,6 +1017,11 @@ end;
 procedure TOncolumlist.SetSkindata(Aimg: TONImg);
 Begin
   Inherited Setskindata(Aimg);
+  if (Aimg <> nil) then
+  begin
+   vScrollBar.Skindata:=Aimg;
+   hScrollBar.Skindata:=Aimg;
+  end;
   resizee;
  End;
 
@@ -1303,9 +1308,9 @@ var
 begin
   FFocusedItem := -1;
   Clickeditem := -1;
-  if (FListItems.Count > 0) then// and (FListItems[0].Count > 0) then
+  if (FListItems.Count > 0) then
   begin
-    //if Items.Items.Count>0 then
+
     if button = mbLeft then
     begin
 
@@ -1313,7 +1318,7 @@ begin
 
       if (ClickedItem > -1) and (fcolumindex > -1) then
       begin
-        if (Clickeditem <=FListItems.Count-1) then //FListItems[fcolumindex].Count - 1) then
+        if (Clickeditem <=FListItems.Count-1) then
           FFocusedItem := ClickedItem;
 
         if Assigned(FOnCellclick) then  FOnCellclick(self, FListItems[Clickeditem]);
@@ -1343,14 +1348,8 @@ begin
 end;
 
 procedure TOncolumlist.Clear;
-//var
-//  i: integer;
 begin
   FListItems.Clear;
- { for i := 0 to FListItems.Count - 1 do
-  begin
-    FListItems[i].Clear;
-  end;  }
 end;
 
 procedure TOncolumlist.MoveUp;
@@ -1388,8 +1387,7 @@ begin
     end
     else if (FFocusedItem >= 0) and (FFocusedItem < FListItems.Count - 1) then
     begin
-      Inc(FFocusedItem);
-      // eğer scrollbar kaydırılması gerekiyorssa
+      Inc(FFocusedItem);       // eğer scrollbar kaydırılması gerekiyorssa
       if (FFocusedItem - FItemvOffset) > FItemsShown - 1 then
       begin
         Inc(FItemvOffset);
@@ -1496,7 +1494,6 @@ begin
   else
    SetColCount(a);
 
-//  ShowMessage(inttostr(x)+'  '+inttostr(Length(FCells))+' OK '+AValue);
   FCells[x]:=AValue;
 end;
 
@@ -1632,12 +1629,8 @@ var
   i:integer;
 begin
 
-//  BeginUpdate;
   for i:=self.Count-1 downto 0 do
-  begin
     Delete(i);
-  end;
-//  EndUpdate;
 
   with TOncolumlist(GetOwner) do
   begin
@@ -1651,13 +1644,10 @@ procedure TONlistItems.Delete(Indexi: integer);
 Var
   Item : TCollectionItem;
 begin
-//  BeginUpdate;
   Item:=TCollectionItem(Items[Indexi]);
   FPONotifyObservers(self,ooDeleteItem,Pointer(Item));
   Finalize(Items[Indexi].FCells);
   Item.Free;
-//  EndUpdate;
-//  TOncolumlist(GetOwner).Scrollscreen;
   Changed;
 end;
 
@@ -1669,11 +1659,9 @@ begin
  Result:=Add;
  Result.Index:=Indexi;
 
-
  for i:=0 to Length(col)-1 do
   if avalue[i]<>'' then
-  Result.Insert(i,avalue[i]);// :=Items[Indexi].Insert(i,avalue[i]);
-
+  Result.Insert(i,avalue[i]);
 
  Changed;
 end;
@@ -1706,7 +1694,6 @@ begin
   TabStop         := True;
   Fselectedcolor  := clblue;
   skinname       := 'listbox';
-//  ControlStyle := ControlStyle - [csAcceptsControls] +[csParentBackground, csClickEvents, csCaptureMouse, csDoubleClicks];
   findex          := -1;
   Flist           := TStringList.Create;
   TStringList(Flist).OnChange := @LinesChanged;
@@ -1742,13 +1729,13 @@ begin
     Parent     := self;
     Visible    := False;
     Skinname   := 'scrollbarh';
-    Skindata   := nil;//Self.Skindata;
+    Skindata   := nil;
     Kind      := oHorizontal;
-    Height     := 25;//self.ClientHeight;
-    left       := 0;//Self.Width - (25);// + Background.Border);
-    Top        := self.ClientHeight-25;//Background.Border;
-    Width      := self.ClientWidth;// - (Background.Border * 2);
-    Max        := 1;//Flist.Count;
+    Height     := 25;
+    left       := 0;
+    Top        := self.ClientHeight-25;
+    Width      := self.ClientWidth;
+    Max        := 1;
     Min        := 0;
     OnChange   := @HScrollchange;
     Position   := 0;
@@ -1778,7 +1765,6 @@ begin
   fitems.cropname := 'ITEM';
   Captionvisible := False;
   fchangelist := true;
-  //  Backgroundbitmaped:=false;
 end;
 
 destructor ToNListBox.Destroy;
@@ -1853,10 +1839,10 @@ begin
       begin
         if (Skindata = nil) then
           Skindata := Self.Skindata;
-        Width   := ONNORMAL.Width;// ONNORMAL.Right - ONNORMAL.Left;// 25;
+        Width   := ONNORMAL.Width;
         left    := Self.ClientWidth - ClientWidth;
         Top     := self.ftop.Height;
-        Height  := Self.ClientHeight - (self.ONTOP.Height+self.ONBOTTOM.Height); //((self.ONBOTTOM.Bottom - self.ONBOTTOM.Top) + (self.ONTOP.Bottom - self.ONTOP.Top));
+        Height  := Self.ClientHeight - (self.ONTOP.Height+self.ONBOTTOM.Height);
         Max     := Flist.Count - FItemsShown;
         Alpha   := self.Alpha;
         if Kind = oHorizontal then  Kind := oVertical;
@@ -1922,6 +1908,12 @@ end;
 procedure ToNListBox.SetSkindata(Aimg: TONImg);
 begin
   inherited SetSkindata(Aimg);
+  if (Aimg <> nil) then
+  begin
+   vScrollBar.Skindata:=Aimg;
+   hScrollBar.Skindata:=Aimg;
+  end;
+
   FTopleft.Targetrect     := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect    := Rect(self.ClientWidth - (FTopRight.Width), 0, self.ClientWidth, (FTopRight.Height));
   FTop.Targetrect         := Rect((FTopleft.Width), 0, self.ClientWidth - (FTopRight.Width),(FTop.Height));
@@ -1933,6 +1925,7 @@ begin
   FCenter.Targetrect      := Rect(Fleft.Width,FTop.Height, self.ClientWidth - FRight.Width, self.ClientHeight - FBottom.Height);
   if Flist.Count>0 then
   Scrollscreen;
+
 end;
 
 procedure ToNListBox.paint;

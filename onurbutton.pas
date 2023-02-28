@@ -1805,6 +1805,10 @@ end;
 constructor TONCropButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+
+  self.Width := 100;
+  self.Height := 30;
+
   skinname := 'cropbutton';
 
   FNormal := TONCUSTOMCROP.Create;
@@ -1854,14 +1858,10 @@ begin
   Fdisabletop.cropname := 'DISABLETOP';
   Fdisablebottom  := TONCustomCrop.Create;
   Fdisablebottom.cropname := 'DISABLEBOTTOM';
-
-
   Fstate := obsNormal;
-  Width := 100;
-  Height := 30;
-  crop := True;
   FAutoWidth := True;
-  resim.SetSize(Width, Height);
+  resim.SetSize(self.Width, self.Height);
+  crop := True;
 end;
 
 // -----------------------------------------------------------------------------
