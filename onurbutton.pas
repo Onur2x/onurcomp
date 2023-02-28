@@ -1329,22 +1329,23 @@ End;
 
 constructor TONLed.Create(AOwner: TComponent);
 Begin
-   inherited Create(AOwner);
-  skinname      := 'led';
-  Skindata       := nil;
-  Fonclientp := TONCUSTOMCROP.Create;
-  Fonclientp.cropname := 'LEDONNORMAL';
-  Fonclientph := TONCUSTOMCROP.Create;
-  Fonclientph.cropname := 'LEDONHOVER';
-  Foffclientp := TONCUSTOMCROP.Create;
-  Foffclientp.cropname := 'LEDOFFNORMAL';
-  Foffclientph := TONCUSTOMCROP.Create;
+  inherited Create(AOwner);
+  Self.Height           := 30;
+  Self.Width            := 30;
+  Fonclientp            := TONCUSTOMCROP.Create;
+  Fonclientp.cropname   := 'LEDONNORMAL';
+  Fonclientph           := TONCUSTOMCROP.Create;
+  Fonclientph.cropname  := 'LEDONHOVER';
+  Foffclientp           := TONCUSTOMCROP.Create;
+  Foffclientp.cropname  := 'LEDOFFNORMAL';
+  Foffclientph          := TONCUSTOMCROP.Create;
   Foffclientph.cropname := 'LEDOFFHOVER';
-  Fdisabled := TONCUSTOMCROP.Create;
-  Fdisabled.cropname := 'LEDDISABLE';
-  Self.Height := 30;
-  Self.Width  := 30;
-  fcheck      := False;
+  Fdisabled             := TONCUSTOMCROP.Create;
+  Fdisabled.cropname    := 'LEDDISABLE';
+  skinname              := 'led';
+  Skindata              := nil;
+  fcheck                := true;
+  Captionvisible        := False;
   resim.SetSize(self.clientWidth, self.clientHeight);
 end;
 
@@ -1381,17 +1382,15 @@ begin
       if fcheck then
       begin
         if fmouseon=false then
-         SrcRect :=Fonclientp.Croprect//; Rect(Fonclientp.FSLeft, Fonclientp.FSTop, Fonclientp.FSRight, Fonclientp.FSBottom)
+         SrcRect :=Fonclientp.Croprect
         else
-         SrcRect := Fonclientph.Croprect; //Rect(Fonclientph.FSLeft, Fonclientph.FSTop, Fonclientph.FSRight, Fonclientph.FSBottom);
-
+         SrcRect := Fonclientph.Croprect;
       end else
       begin
         if fmouseon=false then
-         SrcRect := Foffclientp.Croprect//;Rect(Foffclientp.FSLeft, Foffclientp.FSTop, Foffclientp.FSRight,Foffclientp.FSBottom)
+         SrcRect := Foffclientp.Croprect
         else
-         SrcRect := Foffclientph.Croprect//;Rect(Foffclientph.FSLeft, Foffclientph.FSTop, Foffclientph.FSRight,Foffclientph.FSBottom);
-
+         SrcRect := Foffclientph.Croprect
       End;
       TrgtRect := Rect(0, 0, self.ClientWidth,self.ClientHeight);
       DrawPartnormal(SrcRect, self, TrgtRect, Alpha);

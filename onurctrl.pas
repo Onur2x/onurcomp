@@ -2575,6 +2575,8 @@ var
   UnZipper: TUnZipper;
   i: integer;
   skn: Tinifile;
+  onlistb:ToNListBox;
+  onlistcol:TOncolumlist;
 begin
 
   if (Resource=false) and (ExtractFileExt(filename)<>'.osf') then exit;
@@ -3230,14 +3232,15 @@ begin
 
 
 
-        if (fparent.Components[i] is ToNScrollBar) and
-          (ToNScrollBar(fparent.Components[i]).Skindata = Self) then
+        if ((fparent.Components[i] is ToNScrollBar) and
+          (ToNScrollBar(fparent.Components[i]).Skindata = Self))  then
+       // or ( fparent.Components[i] is ToNListBox) or (fparent.Components[i] is TOncolumlist) then
           with (ToNScrollBar(fparent.Components[i])) do
           begin
             cropparse(ONTOP, ReadString(Skinname, ONTOP.cropname,
-              '256,291,299,271,clblack'));
+              '0,0,0,0,clblack'));
             cropparse(ONBOTTOM, ReadString(
-              Skinname, ONBOTTOM.cropname, '256,299,306,272,clblack'));
+              Skinname, ONBOTTOM.cropname, '0,0,0,0,clblack'));
 
             cropparse(ONNORMAL, ReadString(
               Skinname, ONNORMAL.cropname, '0,0,0,0,clblack'));
@@ -3296,6 +3299,8 @@ begin
               ONHEADER.cropname, '0,0,0,0,clblack'));
             cropparse(ONITEM, ReadString(Skinname{'listbox'},
               ONITEM.cropname, '0,0,0,0,clblack'));
+            ReadSkinsComp(HorizontalScroll);
+            ReadSkinsComp(VertialScroll);
 
           end;
 
@@ -3326,6 +3331,9 @@ begin
               Skinname{'listbox'}, ONACTIVEITEM.cropname, '0,0,0,0,clblack'));
             cropparse(ONITEM, ReadString(Skinname{'listbox'},
               ONITEM.cropname, '0,0,0,0,clblack'));
+
+            ReadSkinsComp(HorizontalScroll);
+            ReadSkinsComp(VertialScroll);
           end;
 
         if (fparent.Components[i] is TONHeaderPanel) and

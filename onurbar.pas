@@ -910,40 +910,29 @@ var
 begin
   if csDesigning in ComponentState then
    Exit;
+
   if not Visible then Exit;
+
   resim.SetSize(0, 0);
-  centerbuttonareaset;
   resim.SetSize(self.ClientWidth, self.ClientHeight);
+  centerbuttonareaset;
+
   if (Skindata <> nil) then
   begin
 
+    // DRAW TO BACKGROUND
     if self.Kind = oHorizontal then
     begin
-
-  //    DR := Rect(FTop.FSLeft, FTop.FSTop, FTop.FSRight, FTop.FSBottom);  // LEFT TOP
-      DrawPartstrechRegion(FTop.Croprect, self,FTop.Croprect.Width {FTop.FSRight - FTop.FSLeft}, self.ClientHeight, flbuttonrect, alpha);
-
-      //   rect(0, 0, Fleft.FSRight - Fleft.FSLeft, Height), False);
- //     DR := Rect(FBottom.FSLeft, FBottom.FSTop, FBottom.FSRight, FBottom.FSBottom);
-      DrawPartstrechRegion(FBottom.Croprect, self,FBottom.Croprect.Width {(FBottom.FSRight - FBottom.FSLeft)}, self.ClientHeight, frbuttonrect, alpha);
-
-      //Rect(self.Width -(FRight.FSRight - FRight.FSLeft), 0, self.Width, self.Height),false);
-  //    DR := Rect(FNormali.FSLeft, FNormali.FSTop, FNormali.FSRight, FNormali.FSBottom);
-      DrawPartstrechRegion(FNormali.Croprect, self, self.ClientWidth -(FTop.Croprect.Width+FBottom.Croprect.Width{(FTop.FSRight - FTop.FSLeft) + (FBottom.FSRight - FBottom.FSLeft)}),
-        self.ClientHeight, Ftrackarea, alpha);
-      //    self.Width-((Fleft.FSRight - Fleft.FSLeft)+(FRight.FSRight - FRight.FSLeft)),self.Height,Rect((Fleft.FSRight - Fleft.FSLeft), 0, (Width - (FRight.FSRight - FRight.FSLeft)), Height),false);
+     DrawPartstrechRegion(FTop.Croprect, self,FTop.Croprect.Width, self.ClientHeight, flbuttonrect, alpha);
+     DrawPartstrechRegion(FBottom.Croprect, self,FBottom.Croprect.Width, self.ClientHeight, frbuttonrect, alpha);
+     DrawPartstrechRegion(FNormali.Croprect, self, self.ClientWidth -(FTop.Croprect.Width+FBottom.Croprect.Width),self.ClientHeight, Ftrackarea, alpha);
     end
     else
     begin
-     // DR := Rect(FTop.FSLeft, FTop.FSTop, FTop.FSRight, FTop.FSBottom);
-      DrawPartstrechRegion(FTop.Croprect, self, self.ClientWidth,FTop.Croprect.Height {FTop.FSBottom - FTop.FSTop}, flbuttonrect, alpha);
-   //   DR := Rect(FBottom.FSLeft, FBottom.FSTop, FBottom.FSRight, FBottom.FSBottom);
-      DrawPartstrechRegion(FBottom.Croprect, self, self.ClientWidth, FTop.Croprect.Height{(FBottom.FSBottom - FBottom.FSTop)}, frbuttonrect, alpha);
-    //  DR := Rect(FNormali.FSLeft, FNormali.FSTop, FNormali.FSRight, FNormali.FSBottom);
-      DrawPartstrechRegion(FNormali.Croprect, self, self.ClientWidth, self.ClientHeight -
-        (ftop.Croprect.Height+FBottom.Croprect.Height{(FTop.FSBottom - FTop.FSTop) + (FBottom.FSBottom - FBottom.FSTop)}), Ftrackarea, alpha);
+     DrawPartstrechRegion(FTop.Croprect, self, self.ClientWidth,FTop.Croprect.Height, flbuttonrect, alpha);
+     DrawPartstrechRegion(FBottom.Croprect, self, self.ClientWidth, FTop.Croprect.Height, frbuttonrect, alpha);
+     DrawPartstrechRegion(FNormali.Croprect, self, self.ClientWidth, self.ClientHeight -(ftop.Croprect.Height+FBottom.Croprect.Height), Ftrackarea, alpha);
     end;
-
 
 
     /////////// DRAW TO BUTTON ///////////
@@ -954,45 +943,42 @@ begin
     begin
       case flbutons of
         obsnormal: DR  := FbuttonNL.Croprect;
-          //  Rect(FbuttonNL.FSLeft, FbuttonNL.FSTop, FbuttonNL.FSRight, FbuttonNL.FSBottom);
         obshover: DR   := FbuttonUL.Croprect;
-        //    Rect(FbuttonUL.FSLeft, FbuttonUL.FSTop, FbuttonUL.FSRight, FbuttonUL.FSBottom);
         obspressed: DR := FbuttonBL.Croprect;
-         //   Rect(FbuttonBL.FSLeft, FbuttonBL.FSTop, FbuttonBL.FSRight, FbuttonBL.FSBottom);
       end;
     end
     else
     begin
-      DR := FbuttonDL.Croprect;//Rect(FbuttonDL.FSLeft, FbuttonDL.FSTop, FbuttonDL.FSRight,FbuttonDL.FSBottom);
+      DR := FbuttonDL.Croprect;
     end;
     DrawPartnormal(DR, self, flbuttonrect, alpha);  {left} {top}
 
     if Enabled = True then   // RIGHT OR BOTTOM BUTTON
     begin
       case frbutons of
-        obsnormal  : DR := FbuttonNR.Croprect;// Rect(FbuttonNR.FSLeft, FbuttonNR.FSTop, FbuttonNR.FSRight, FbuttonNR.FSBottom);
-        obshover   : DR := FbuttonUR.Croprect;// Rect(FbuttonUR.FSLeft, FbuttonUR.FSTop, FbuttonUR.FSRight, FbuttonUR.FSBottom);
-        obspressed : DR := FbuttonBR.Croprect;// Rect(FbuttonBR.FSLeft, FbuttonBR.FSTop, FbuttonBR.FSRight, FbuttonBR.FSBottom);
+        obsnormal  : DR := FbuttonNR.Croprect;
+        obshover   : DR := FbuttonUR.Croprect;
+        obspressed : DR := FbuttonBR.Croprect;
       end;
     end
     else
     begin
-      DR := FbuttonDR.Croprect;//Rect(FbuttonDR.FSLeft, FbuttonDR.FSTop, FbuttonDR.FSRight, FbuttonDR.FSBottom);
+      DR := FbuttonDR.Croprect;
     end;
-    DrawPartnormal(DR, self, frbuttonrect, alpha);  {right}  {bottom}
+    DrawPartnormal(DR, self, frbuttonrect, alpha);
 
 
     if Enabled = True then   // CENTER BUTTON
     begin
       case fcbutons of
-        obsnormal  : DR := FbuttonCN.Croprect;//Rect(FbuttonCN.FSLeft, FbuttonCN.FSTop, FbuttonCN.FSRight, FbuttonCN.FSBottom);
-        obshover   : DR := FbuttonCU.Croprect;//Rect(FbuttonCU.FSLeft, FbuttonCU.FSTop, FbuttonCU.FSRight, FbuttonCU.FSBottom);
-        obspressed : DR := FbuttonCB.Croprect;//Rect(FbuttonCB.FSLeft, FbuttonCB.FSTop, FbuttonCB.FSRight, FbuttonCB.FSBottom);
+        obsnormal  : DR := FbuttonCN.Croprect;
+        obshover   : DR := FbuttonCU.Croprect;
+        obspressed : DR := FbuttonCB.Croprect;
       end;
     end
     else
     begin
-      DR := FbuttonCD.Croprect;//Rect(FbuttonCD.FSLeft, FbuttonCD.FSTop, FbuttonCD.FSRight, FbuttonCD.FSBottom);
+      DR := FbuttonCD.Croprect;
     end;
 
     DrawPartnormal(DR, self, fcenterbuttonarea, alpha);  {center}

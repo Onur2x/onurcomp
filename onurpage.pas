@@ -303,16 +303,28 @@ type
     procedure GetValues(Proc: TGetStrProc); override;
   end;
 
-  { TonimgPropertyEditor }
 
-  TonimgPropertyEditor = class(TStringPropertyEditor)
+  { TOnStringProperty }
+
+  TOnStringProperty = class(TStringProperty)
   public
-    procedure Edit; override;
-    function GetAttributes: TPropertyAttributes; override;
+    function  GetAttributes: TPropertyAttributes; override;
+    procedure GetValueList(List: TStrings); virtual; abstract;
+    procedure GetValues(Proc: TGetStrProc); override;
+    function GetOnComponent: TPersistent; virtual;
   end;
 
 
-  { TonimgEditor }
+  { TonimgPropertyEditor }
+
+  TonimgPropertyEditor = class(TOnStringProperty)
+  public
+    procedure Edit; override;
+    function GetAttributes: TPropertyAttributes; override;
+    function GetValue: string; override;
+    procedure SetValue(const Value: string); override;
+  end;
+
 
 
 procedure Register;
@@ -338,7 +350,34 @@ begin
   RegisterComponentEditor(TOnPage, TOnpagecontrolEditor);
   RegisterComponentEditor(TONPageControl, TOnpagecontrolEditor);
 
-  RegisterPropertyEditor(TypeInfo(AnsiString),TONImg,'Loadskins', TonimgPropertyEditor);
+  RegisterPropertyEditor(TypeInfo(String),TONImg,'Loadskins', TonimgPropertyEditor);
+end;
+
+{ TOnStringProperty }
+
+function TOnStringProperty.GetAttributes: TPropertyAttributes;
+begin
+  Result := [paValueList, paSortList, paReadOnly];
+end;
+
+procedure TOnStringProperty.GetValues(Proc: TGetStrProc);
+var
+    i: Integer;
+    Values: TStringList;
+  begin
+    Values := TStringList.Create;
+    try
+      GetValueList(Values);
+      for i := 0 to Pred(Values.Count) do
+        Proc(Values[i]);
+    finally
+      Values.Free;
+    end;
+end;
+
+function TOnStringProperty.GetOnComponent: TPersistent;
+begin
+  Result:=GetComponent(0);
 end;
 
 { TonimgPropertyEditor }
@@ -348,23 +387,38 @@ procedure TonimgPropertyEditor.Edit;
 var
   dlg: TOpenDialog;
 begin
-  dlg:=TOpenDialog.Create(nil);
-  try
-  //  dlg.FileName:=Tonimg(GetComponent(0)).skinFileName;
-    if dlg.Execute and (dlg.FileName <> '') and FileExists(dlg.FileName) then
-    begin
-      SetStrValue(dlg.FileName);
-      Tonimg(GetComponent(0)).Loadskin(dlg.FileName);
+  if (GetOnComponent is TONImg) then
+  begin
+    dlg:=TOpenDialog.Create(nil);
+    try
+      if dlg.Execute then
+      begin
+        //(GetOnComponent as TONImg).LoadSkins:=dlg.FileName;
+        (GetOnComponent as TONImg).Loadskin(dlg.FileName);
+
+        SetStrValue(dlg.FileName);
+      end;
+    finally
+      dlg.Free;
     end;
-  finally
-    dlg.Free;
-  end;
+ end else
+ inherited;
 end;
 
 function TonimgPropertyEditor.GetAttributes: TPropertyAttributes;
 begin
-  // Exit([paDialog, paRevertable, paReadOnly]);
-  Result := [paDialog, paRevertable,paReadOnly];
+  Result := [paDialog, paReadOnly];
+end;
+
+function TonimgPropertyEditor.GetValue: string;
+begin
+  Result:=inherited GetStrValue;
+end;
+
+procedure TonimgPropertyEditor.SetValue(const Value: string);
+begin
+  //inherited
+  SetValue(Value);
 end;
 
 
