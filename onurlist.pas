@@ -2399,7 +2399,7 @@ var
   b: integer;
 begin
   b := ACaller.Height;
-  b := b + (ACaller.Height * ACaller.Items.Count);
+  b := b + (ACaller.Height *5);// ACaller.Items.Count);
   PopupForm := Tpopupformcombobox.Create(Application);//Create(Application);
   PopupForm.SetBounds(APosition.x, APosition.y, ACaller.Width, b);
   PopupForm.BorderStyle := bsNone;
