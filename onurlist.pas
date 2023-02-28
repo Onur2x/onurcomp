@@ -1040,13 +1040,9 @@ end;
 
 
 procedure TOncolumlist.Paint;
-
 var
   a, b, k, z, i: integer;
   x1, x2, x3, x4: smallint;
-//  Target: Trect;
-//  s: string;
-//   initialtime, elapsedtime: DWord;
 begin
    if csDesigning in ComponentState then
      Exit;
@@ -1055,10 +1051,6 @@ begin
    if (not Visible) then Exit;
 
 
-
-
-
-//   initialtime := GetTickCount;
    resim.SetSize(0, 0);
    resim.SetSize(self.ClientWidth, self.ClientHeight);
 
@@ -1102,26 +1094,14 @@ begin
 
             if x3>self.ClientWidth then break;
 
-          //  Target:=Rect(x1+FItemhOffset, x2, x3+FItemhOffset, x4);
-
-            //Target:=RectWithSize(x1+FItemhOffset,x2,x3+FItemhOffset,x4);
-
             if (fheadervisible = True)  then
             begin
               if Fcolumns[z].Caption<>'' then
               begin
-              resim.FontName   := Fheaderfont.Name;
-              resim.FontHeight := Fheaderfont.Height;
-              resim.FontStyle  := Fheaderfont.Style;
-              DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha,Fcolumns[z].Caption,Fcolumns[z].Textalign,ColorToBGRA(Fheaderfont.Color, alpha));
-
-             // if Fcolumns[z].Caption<>'' then
-             // begin
-              {  fresim.FontName := Fheaderfont.Name;
-                fresim.FontHeight := Fheaderfont.Height;
-                fresim.FontStyle := Fheaderfont.Style;
-                DrawPartnormaltext(fheader.Croprect, self, Target, falpha,Fcolumns[z].Caption,Fcolumns[z].Textalign,ColorToBGRA(Fheaderfont.Color, falpha));
-              }
+                resim.FontName   := Fheaderfont.Name;
+                resim.FontHeight := Fheaderfont.Height;
+                resim.FontStyle  := Fheaderfont.Style;
+                DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha,Fcolumns[z].Caption,Fcolumns[z].Textalign,ColorToBGRA(Fheaderfont.Color, alpha));
               end else
               begin
                 DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha);
@@ -1130,14 +1110,12 @@ begin
           end;
         end;
 
-    //  elapsedtime := GetTickCount - initialtime;
-    //  WriteLn('baslik suresi ',elapsedtime);
 
-       b:=HeaderHeight;
 
-    //  initialtime := GetTickCount;
+       b:=HeaderHeight+FTop.Height;
+
        if FListItems.Count>0 then
-         for i := FItemvOffset to  (FItemvOffset + (self.ClientHeight{FCenter.Targetrect.Height}-(FheaderHeight+HScrollBar.Height)) div FItemHeight) - 1 do
+         for i := FItemvOffset to  (FItemvOffset + (self.ClientHeight-(FheaderHeight+HScrollBar.Height)) div FItemHeight) - 1 do
          begin
            if i>FListItems.Count-1 then break;
 
@@ -1164,52 +1142,28 @@ begin
                     x3:= x3+FItemhOffset - vScrollBar.Width;
                   end;
 
-                   if FListItems[i].colCount>=z then
-                   begin
-                     //if Target.IntersectsWith(self.ClientRect) then
-
-                    if FListItems[i].Cells[z]<>'' then
-                    begin
+                if FListItems[i].colCount>=z then
+                begin
+                  if FListItems[i].Cells[z]<>'' then
+                  begin
                      if i = FFocusedItem then
-
-                      DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FListItems[i].Cells[z],Fcolumns[z].Textalign{FListItems[i].Textalign},ColorToBGRA(Fselectcolor, alpha))
+                      DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FListItems[i].Cells[z],Fcolumns[z].Textalign,ColorToBGRA(Fselectcolor, alpha))
                      else
-
-                     DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FListItems[i].Cells[z],Fcolumns[z].Textalign{FListItems[i].Textalign},ColorToBGRA(FListItems[i].Font.Color, alpha));
-                     end else
-                     begin
+                      DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FListItems[i].Cells[z],Fcolumns[z].Textalign,ColorToBGRA(FListItems[i].Font.Color, alpha));
+                  end else
+                  begin
                       DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
-                     // ,FListItems[i].SubItems[z],FListItems[i].Textalign,ColorToBGRA(FListItems[i].Font.Color, falpha));
-
-                     end;
-                  {   if FListItems[i].SubItems[z]<>'' then
-                     begin
-                        if Target.IntersectsWith(self.ClientRect) then
-                        if i = FFocusedItem then
-                          DrawPartnormaltext(factiveitems.Croprect, self, Target, falpha,FListItems[i].SubItems[z],FListItems[i].Textalign,ColorToBGRA(Fselectcolor, falpha))
-                        else
-                          DrawPartnormaltext(fitems.Croprect, self, Target, falpha,FListItems[i].SubItems[z],FListItems[i].Textalign,ColorToBGRA(FListItems[i].Font.Color, falpha));
-                     end else
-                     begin
-                       DrawPartnormal(fitems.Croprect, self, Target, falpha);
-                     end;
-                     }
-                   end;
+                  end;
+                end;
              end;
            end;
           b +=FItemHeight;
-//          WriteLn(i,'   ',b,'  ',self.ClientHeight,'   ',FheaderHeight,'  ',HScrollBar.Height,'  >>  ',self.ClientHeight-(FheaderHeight+HScrollBar.Height),' ==',FCenter.Targetrect.Height);
           if (b >= FCenter.Targetrect.Height-(HScrollBar.Height)) then Break;
          End;
 
 
 
-       end;
-
-   //  elapsedtime := GetTickCount - initialtime;
-   //  WriteLn('items suresi ',elapsedtime);
-
-   //  initialtime := GetTickCount;
+     end;
 
       if (Skindata <> nil) then
       begin
@@ -1231,13 +1185,11 @@ begin
         // SAĞ ORTA CENTERRIGHT
         DrawPartnormal(FRight.Croprect, self,FRight.Targetrect, alpha);
 
-        //
-
         if Crop then
           CropToimg(resim);
       end;
 
-     //if fark> self.ClientWidth then
+
      if hScrollBar.Max>0 then
       hScrollBar.Visible := True
      else
@@ -1248,11 +1200,6 @@ begin
      else
        vScrollBar.Visible := False;
 
-
-
-    //  elapsedtime := GetTickCount - initialtime;
-   //   WriteLn('paint süresi ');
-    //  writetext;
   end
   else
   begin
@@ -1321,21 +1268,15 @@ var
 begin
   Result := -1;
 
-  //  Dec(Pos.Y, 2); // TOP MARGIN!
-
   if fheadervisible = True then
     w := FheaderHeight
   else
     w := 0;
 
-  if Pos.Y >= w then// FheaderHeight then
-  begin
-    Result := FItemvOffset + ((Pos.Y - w) div FItemHeight);
-    //  ShowMessage(pos.y.ToString+'  '+w.ToString+' '+FItemHeight.ToString+' '+((Pos.Y-w) div FItemHeight).ToString+'  '+(Pos.Y div FItemHeight).ToString);
-    //   if fheadervisible = True then
-    //  Result := Result -1;
-  end;
+  w:=w+FTop.Height;
 
+  if Pos.Y >= w then
+    Result := FItemvOffset + ((Pos.Y - w) div FItemHeight);
 
   m := 0;
   fcolumindex := -1;
@@ -1343,20 +1284,14 @@ begin
   if (pos.X >= 0) then
     for i := 0 to Columns.Count - 1 do
     begin
-  {  if i=Columns.Count-1 then
-     w:=width
-    else }
       w := w + Fcolumns[i].Width;
-
       if (m <= Pos.x) and (w >= pos.x) then
       begin
         fcolumindex := i;
         break;
       end;
-
       m := w;
     end;
-
 end;
 
 
@@ -2036,10 +1971,10 @@ begin
     resim.FontHeight := self.Font.Height;
     resim.FontStyle  := self.Font.Style;
 
-     if hScrollBar.Visible then
+   if hScrollBar.Visible then
     for i := FItemvOffset to  (FItemvOffset + (FCenter.Targetrect.Height-HScrollBar.Height) div FItemHeight) - 1 do
    else
-   for i := FItemvOffset to  (FItemvOffset + (FCenter.Targetrect.Height) div FItemHeight) - 1 do
+    for i := FItemvOffset to  (FItemvOffset + (FCenter.Targetrect.Height) div FItemHeight) - 1 do
 
     begin
       if i>FList.Count then break;
@@ -2049,7 +1984,7 @@ begin
        Target := Rect(a, b, self.ClientWidth - a, b + FitemHeight);
 
         if (vScrollBar.Visible) then
-          Target.Right := self.ClientWidth - (vScrollBar.ClientWidth + a);
+          Target.Right := self.ClientWidth - (vScrollBar.ClientWidth);// + FRight.Width);
 
         if i = findex then
           DrawPartnormaltext(factiveitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(Fselectedcolor, alpha))
@@ -2099,6 +2034,7 @@ var
 begin
   r := Rect(0, 0, 0, 0);
   r.Top :=Ftop.Height;
+
   if (Item >= FItemvOffset - 1) and ((Item - FItemvOffset) * FItemHeight <
     FCenter.Targetrect.Height) then
   begin
@@ -2123,12 +2059,17 @@ end;
 
 
 function ToNListBox.GetItemAt(Pos: TPoint): integer;
+var
+  w: Integer;
 begin
   Result := -1;
+
+  w := FTop.Height;
+
   //if (Pos.Y >= 0) and (PtInRect(itempaintHeight,pos)) then
   if Pos.Y >= 0 then
   begin
-    Result := FItemvOffset + (pos.Y div FItemHeight);
+    Result := FItemvOffset + ((Pos.Y - w) div FItemHeight);
     if (Result > Items.Count - 1) or (Result > (FItemvOffset + FItemsShown) - 1) then
       Result := -1;
   end;
@@ -2264,7 +2205,7 @@ begin
     ClickedItem := GetItemAt(Point(X, Y));
     if ClickedItem > -1 then findex := ClickedItem;
   end;
-  // Invalidate;
+
   SetFocus;
   Invalidate;
   inherited MouseDown(Button, Shift, X, Y);

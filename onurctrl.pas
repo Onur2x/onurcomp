@@ -53,15 +53,16 @@ type
 
   TONImg = class(TComponent)
   private
-    Fopacity : Byte;
-    FRes     : TPicture;
-    List     : TStringList;
-    fparent  : TForm;
-    skinread : boolean;
+    Fopacity    : Byte;
+    FRes        : TPicture;
+    List        : TStringList;
+    fparent     : TForm;
+
+    skinread    : boolean;
     Frmain,
     tempbitmap  : TBGRABitmap;
-    clrr     : string;
-
+    clrr        : string;
+    ffilename   : TFileName;
     Procedure Colorbgrabitmap;
     procedure CropToimg(Buffer: TBGRABitmap);
     procedure ImageSet(Sender: TObject);
@@ -69,8 +70,10 @@ type
     procedure mousedwn(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
     procedure pant(Sender: TObject);
+    procedure Setloadskin(AValue: String);
     Procedure Setopacity(Avalue: Byte);
     procedure Setcolor(colr: string);
+
   public
     Fimage     : TBGRABitmap;
     Blend,
@@ -91,6 +94,7 @@ type
     FTop,
     FBottom,
     FCenter    : TONCUSTOMCROP;
+
     const
     ColorTheme : string = 'ClNone';
     constructor Create(AOwner: TComponent); override;
@@ -99,10 +103,14 @@ type
     procedure Loadskin(FileName: string; const Resource: boolean = False);
     procedure GetSkinInfo(const FileName: string; const Resource: boolean = False);
     procedure Saveskin(filename: string);
+
+
   published
-    property MColor  : string   read clrr     write Setcolor;
-    property Picture : TPicture read FRes     write Fres;
-    property Opacity : byte     read fopacity write SetOpacity;
+
+    property MColor    : string   read clrr        write Setcolor;
+    property Picture   : TPicture read FRes        write Fres;
+    property Opacity   : byte     read fopacity    write SetOpacity;
+    property LoadSkins : String   read ffilename   write Setloadskin;//Loadskin;
   end;
 
 
@@ -866,7 +874,7 @@ end;
 { Tonimg }
 
 // -----------------------------------------------------------------------------
-Constructor Tonimg.Create(Aowner: Tcomponent);
+constructor TONImg.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   fparent := TForm(AOwner);
@@ -901,13 +909,23 @@ begin
 
 
   List := TStringList.Create;
+
   if not (csDesigning in ComponentState) then
   //  exit;
-  Loadskin('', True);
+
+
+
+    if ffilename<>'' then
+     Loadskin(ffilename,false)
+    else
+     Loadskin('', True);
+
+//  if ffilename<>'' then
+//  ShowMessage(ffilename);
  end;
 
 
-Destructor Tonimg.Destroy;
+destructor TONImg.Destroy;
 begin
   FreeAndNil(FTop);
   FreeAndNil(FTopleft);
@@ -926,7 +944,7 @@ begin
   inherited;
 end;
 
-Procedure Tonimg.Imageset(Sender: Tobject);
+procedure TONImg.ImageSet(Sender: TObject);
 begin
   FreeAndNil(FImage);
   Fimage := TBGRABitmap.Create(Fres.Width, Fres.Height);
@@ -935,7 +953,7 @@ begin
 end;
 
 
-Procedure Tonimg.Setcolor(Colr: String);
+procedure TONImg.Setcolor(colr: string);
 
 begin
   if csDesigning in ComponentState then
@@ -948,7 +966,9 @@ begin
     Loadskin2;
   end;
 end;
-procedure Tonimg.colorbgrabitmap;
+
+
+procedure TONImg.Colorbgrabitmap;
 var
   a: TBGRABitmap;
 begin
@@ -963,7 +983,7 @@ begin
     end;
 End;
 
-Procedure Tonimg.Setopacity(Avalue: Byte);
+procedure TONImg.Setopacity(Avalue: Byte);
 var
   a:TBGRABitmap;
 Begin
@@ -982,7 +1002,7 @@ Begin
   end;
 End;
 
-Procedure Tonimg.Croptoimg(Buffer: Tbgrabitmap);
+procedure TONImg.CropToimg(Buffer: TBGRABitmap);
 var
   x, y: integer;
   hdc1, SpanRgn: hdc;//integer;
@@ -1127,13 +1147,21 @@ begin
 
 end;
 
-Procedure Tonimg.Pant(Sender: Tobject);
+
+procedure TONImg.pant(Sender: TObject);
 begin
   frmain.Draw(self.fparent.Canvas, 0, 0, False);
 end;
 
-Procedure Tonimg.Mousedwn(Sender: Tobject; Button: Tmousebutton;
-  Shift: Tshiftstate; X, Y: Integer);
+procedure TONImg.Setloadskin(AValue: String);
+begin
+  if ffilename=AValue then Exit;
+  ffilename:=AValue;
+  Loadskin(ffilename,false);
+end;
+
+procedure TONImg.mousedwn(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: integer);
 begin
   ReleaseCapture;
   SendMessage(self.fparent.Handle, WM_SYSCOMMAND, $F012, 0);
@@ -1170,7 +1198,7 @@ end;
 
 
 
-Procedure Tonimg.Readskinscomp(Com: Tcomponent);
+procedure TONImg.ReadSkinsComp(Com: TComponent);
 var
   skn: TIniFile;
 begin
@@ -1815,7 +1843,7 @@ end;
 
 
 
-Procedure Tonimg.Loadskin2;//(Filename: String; Const Resource: Boolean);
+procedure TONImg.Loadskin2;//(Filename: String; Const Resource: Boolean);
 var
   Dir: string;
   i: integer;
@@ -2539,7 +2567,7 @@ end;
 
 
 
-Procedure Tonimg.Loadskin(Filename: String; Const Resource: Boolean);
+procedure TONImg.Loadskin(FileName: string; const Resource: boolean);
 var
   Res: TResourceStream;
 //  VerOk: boolean;  // skin version control
@@ -2548,6 +2576,8 @@ var
   i: integer;
   skn: Tinifile;
 begin
+
+  if (Resource=false) and (ExtractFileExt(filename)<>'.osf') then exit;
 
   if csDesigning in ComponentState then
     exit;
@@ -3333,7 +3363,7 @@ begin
 end;
 
 
-Procedure Tonimg.Getskininfo(Const Filename: String; Const Resource: Boolean);
+procedure TONImg.GetSkinInfo(const FileName: string; const Resource: boolean);
 var
   Unzipper: TUnZipper;
   Dir: string;
@@ -3388,7 +3418,7 @@ begin
 end;
 
 
-Procedure Tonimg.Saveskin(Filename: String);
+procedure TONImg.Saveskin(filename: string);
 var
   Zipper: TZipper;
   i: integer;
