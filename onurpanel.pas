@@ -674,12 +674,13 @@ var
 SrcRect,captionrect: TRect;
 
 begin
-   if csDesigning in ComponentState then
-    exit;
+//   if csDesigning in ComponentState then
+//    exit;
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
 
@@ -778,7 +779,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 
@@ -843,11 +844,12 @@ end;
 procedure TONPanel.Paint;
 begin
   if not Visible then exit;
-  if csDesigning in ComponentState then
-    exit;
+//  if csDesigning in ComponentState then
+//    exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
        //TOPLEFT   //SOLÜST
@@ -877,7 +879,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 end;
@@ -961,12 +963,13 @@ end;
 
 procedure TONGraphicPanel.Paint;
 begin
-  if csDesigning in ComponentState then
-    exit;
+//  if csDesigning in ComponentState then
+//    exit;
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.Width, self.Height);
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
      //TOPLEFT   //SOLÜST
@@ -993,7 +996,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 end;

@@ -2673,7 +2673,7 @@ begin
       if FileExists(dir + ReadString('FORM', 'IMAGE', '')) then
         Fimage.LoadFromFile(dir + ReadString('FORM', 'IMAGE', ''))
       else
-        Fimage.Fill(BGRA(207, 220, 207), dmSet);
+        Fimage.Fill(BGRA(190, 208, 190,Opacity), dmSet);
       // Skin image ok
 
 
@@ -4080,7 +4080,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     resim.Draw(self.canvas, 0, 0, False);
   end;
 
@@ -4292,7 +4292,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     resim.Draw(self.canvas, 0, 0, False);
   end;
 

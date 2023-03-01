@@ -656,14 +656,13 @@ procedure TONPageControl.Paint;
 begin
 
   if not Visible then exit;
-  if csDesigning in ComponentState then
-    exit;
+
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
 
 
-  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
     //CENTER //ORTA
@@ -691,7 +690,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
 
   inherited Paint;
@@ -881,6 +880,8 @@ begin
           AOldPage := FActivePage;
           FActivePage := Page;
           AOldPage.Visible := False;
+          AOldPage.Fbutton.Enabled:=True;
+          FActivePage.Fbutton.Enabled:=false;
           FActivePage.Visible := True;
           if csDesigning in ComponentState then
           begin
@@ -897,6 +898,7 @@ begin
       begin
         FActivePage := Page;
         FActivePage.Visible := True;
+        FActivePage.Fbutton.Enabled:=false;
         APageChanged := True;
       end;
     end;
@@ -1214,18 +1216,14 @@ end;
 
 procedure TONPage.Paint;
 begin
-
   if FPageControl = nil then exit;
-
-  if csDesigning in ComponentState then
-    exit;
   if not Visible then exit;
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
 
-  if (FPageControl.Skindata <> nil) then
+  if (FPageControl.Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
     if Fbutton.Skindata = nil then
@@ -1234,44 +1232,27 @@ begin
 
     //TOPLEFT   //SOLÜST
     DrawPartnormal(FTopleft.Croprect, self, fTopleft.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.fpageTopleft.Croprect, Fresim,FPageControl.Skindata, FPageControl.FpageTopleft.Targetrect, FPageControl.alpha);
-
     //TOPRIGHT //SAĞÜST
     DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.FpageTopRight.Croprect, Fresim,FPageControl.Skindata,  FPageControl.FpageTopRight.Targetrect, FPageControl.alpha);
     //TOP  //ÜST
     DrawPartnormal(FTop.Croprect, self, FTop.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.fpagetop.Croprect, Fresim,FPageControl.Skindata, FPageControl.FpageTop.Targetrect, FPageControl.alpha);
     //BOTTOMLEFT // SOLALT
     DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.FpageBottomleft.Croprect, Fresim,FPageControl.Skindata, FPageControl.FpageBottomleft.Targetrect,FPageControl.alpha);
-
     //BOTTOMRIGHT  //SAĞALT
     DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.FpageBottomRight.Croprect, Fresim,FPageControl.Skindata, FPageControl.FpageBottomRight.Targetrect, FPageControl.alpha);
-
     //BOTTOM  //ALT
     DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.FpageBottom.Croprect, Fresim,FPageControl.Skindata, FPageControl.FpageBottom.Targetrect, FPageControl.alpha);
-
     //LEFT CENTERLEFT // SOLORTA
     DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.Fpageleft.Croprect, Fresim,FPageControl.Skindata, FPageControl.Fpageleft.Targetrect, FPageControl.alpha);
     //CENTERRIGHT // SAĞORTA
     DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.FpageRight.Croprect, Fresim,FPageControl.Skindata, FPageControl.FpageRight.Targetrect, FPageControl.alpha);
     //CENTER //ORTA
     DrawPartnormal(FCenter.Croprect, self, FCenter.Targetrect, Alpha);
-    //      DrawPartnormalBGRABitmap(FPageControl.Fpagecenter.Croprect, Fresim,FPageControl.Skindata, FPageControl.FpageCenter.Targetrect, FPageControl.alpha);
-
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(140, 170, 140,alpha), dmSet);
   end;
-
-  //Fresim.Draw(self.canvas,0,0,false);
-
   inherited Paint;
 end;
 
@@ -1379,20 +1360,16 @@ procedure TONPageButton.Paint;
 var
   DR: TRect;
 begin
-  //   writeln('button paint ok');
 
-  if csDesigning in ComponentState then
-    exit;
   if not Visible then exit;
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
 
-  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
-      //  if Assigned(fPgCntrl) and (fPgCntrl.Fbuttonnormal.Croprect.Width>0) then
-      //  begin
+
 
       if Enabled = True then
       begin
@@ -1420,18 +1397,15 @@ begin
         Self.Font.Color := Fdisable.Fontcolor;
       end;
       DrawPartnormal(DR, self, Rect(0, 0, self.Width, self.Height), Alpha);
-      //        DrawPartnormalBGRABitmap(DR, Fresim,fPgCntrl.skindata,Rect(0,0,self.Width,self.Height),255);
-      // end;
     finally
 
     end;
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(100, 150, 100,alpha), dmSet);
   end;
-  //  resim.TextRect(ClientRect,Caption,taCenter,tlCenter,ColorToBGRA(self.font.color));
-  //Fresim.Draw(self.canvas,0,0,false);
+
   inherited Paint;
 end;
 
@@ -1460,24 +1434,16 @@ end;
 
 procedure TonbuttonareaCntrl.Paint;
 begin
-  //  writeln('cntrl paint ok');
-  if csDesigning in ComponentState then
-    exit;
   if not Visible then exit;
-
-
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
-  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
     DrawPartnormal(Fbttnarea.Croprect, self, rect(0, 0, self.clientWidth,
       self.clientHeight), Alpha)
-  //     DrawPartnormalBGRABitmap(FPgCntrl.Fbuttonarea.Croprect, Fresim,FPgCntrl.Skindata, rect(0,0,self.clientWidth,self.clientHeight), FPgCntrl.alpha)
   else
-    resim.Fill(BGRA(207, 220, 207), dmSet);
-
-  // Fresim.Draw(self.canvas,0,0,false);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
 
   inherited Paint;
 end;

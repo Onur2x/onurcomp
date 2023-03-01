@@ -1816,13 +1816,14 @@ procedure TonEdit.paint;
 //var
 //  TrgtRect, SrcRect: TRect;
 begin
-  if csDesigning in ComponentState then
-    Exit;
+//  if csDesigning in ComponentState then
+//    Exit;
   if not Visible then Exit;
   resim.SetSize(0, 0);
 
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
       //TOPLEFT   //SOLÜST
       DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
@@ -1845,7 +1846,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited paint;
 end;
@@ -1918,12 +1919,13 @@ procedure TONMemo.paint;
 //var
 //  TrgtRect, SrcRect: TRect;
 begin
-  if csDesigning in ComponentState then
-   Exit;
+//  if csDesigning in ComponentState then
+//   Exit;
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
       DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
       //TOPRIGHT //SAĞÜST
@@ -1948,7 +1950,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited paint;
 end;
@@ -2264,8 +2266,8 @@ procedure TOnSpinEdit.Paint;
 var
   TrgtRect, SrcRect: TRect;
 begin
-  if csDesigning in ComponentState then
-   Exit;
+ // if csDesigning in ComponentState then
+ //  Exit;
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
@@ -2276,7 +2278,9 @@ begin
     Caption := '0';
   end;
 
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+
   begin
     //TOPLEFT   //SOLÜST
     DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
@@ -2322,7 +2326,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
 
   inherited paint;

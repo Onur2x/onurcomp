@@ -908,8 +908,8 @@ procedure ToNScrollBar.paint;
 var
   DR: TRect;
 begin
-  if csDesigning in ComponentState then
-   Exit;
+//  if csDesigning in ComponentState then
+//   Exit;
 
   if not Visible then Exit;
 
@@ -917,7 +917,8 @@ begin
   resim.SetSize(self.ClientWidth, self.ClientHeight);
   centerbuttonareaset;
 
-  if (Skindata <> nil) then
+//  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
     // DRAW TO BACKGROUND
@@ -982,7 +983,10 @@ begin
     end;
 
     DrawPartnormal(DR, self, fcenterbuttonarea, alpha);  {center}
-
+  end
+  else
+  begin
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 
@@ -1357,12 +1361,13 @@ procedure TONTrackBar.Paint;
 var
   TrgtRect, SrcRect: TRect;
 begin
-   if csDesigning in ComponentState then
-    exit;
+//   if csDesigning in ComponentState then
+//    exit;
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
     if Kind = oHorizontal then
@@ -1417,7 +1422,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 end;
@@ -1620,13 +1625,14 @@ var
   DR, DBAR: TRect;
   img: TBGRACustomBitmap;
 begin
-   if csDesigning in ComponentState then
-     Exit;
+//   if csDesigning in ComponentState then
+//     Exit;
   if not Visible then Exit;
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-  if (Skindata <> nil) then
+//  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
     if self.Kind = oHorizontal then
@@ -1644,7 +1650,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
 
   Captionvisible := FCaptonvisible;
@@ -1811,12 +1817,13 @@ var
   Temp : TBGRABitmap;
   tWidth,tHeight:integer;
 begin
-  if csDesigning in ComponentState then
-    Exit;
+  //if csDesigning in ComponentState then
+  //  Exit;
   if not Visible then Exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-  if (Skindata <> nil) then    // or (FSkindata.Fimage <> nil) or (csDesigning in ComponentState) then
+//  if (Skindata <> nil) then    // or (FSkindata.Fimage <> nil) or (csDesigning in ComponentState) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
       DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
@@ -1879,7 +1886,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
 
   inherited Paint;

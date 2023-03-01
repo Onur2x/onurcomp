@@ -468,6 +468,7 @@ type
     procedure SetString(AValue: TStrings); virtual;
     procedure listchange(Sender: TObject);
     Procedure SetSkindata(Aimg: TONImg); override;
+
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -582,6 +583,7 @@ type
     procedure DrawFontText;
     procedure FreeTimer;
     procedure Blinktimerevent(sender:TObject);
+    procedure Loaded; override;
   protected
     { Protected declarations }
     procedure Paint; override;
@@ -603,6 +605,13 @@ type
 
     property Font;
     //property Yazibuyuk : boolean read fyazibuyuk write SetYazibuyuk;
+     property ParentColor;
+    property Visible;
+    property OnClick;
+    property OnDblClick;
+    property OnMouseDown;
+    property OnMouseMove;
+    property OnMouseUp;
   end;
 
 
@@ -893,14 +902,12 @@ end;
 procedure TOnRadioButton.Paint;
 var
   DR: TRect;
-
 begin
-  if csDesigning in ComponentState then
-     Exit;
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-  if (Skindata <> nil) then
+
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
     if Enabled = True then
@@ -955,7 +962,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited paint;
 
@@ -1259,6 +1266,12 @@ begin
   Invalidate;
 end;
 
+procedure TONNormalLabel.Loaded;
+begin
+  inherited Loaded;
+    DrawFontText;
+end;
+
 procedure TONNormalLabel.Paint;
 begin
   if fbilink then
@@ -1296,6 +1309,7 @@ begin
   fblinktimer.Enabled   := False;
   fblinktimer.Interval  := fblinkinterval;
   fblinktimer.OnTimer   := @Blinktimerevent;
+
 end;
 
 destructor TONNormalLabel.Destroy;
@@ -1370,12 +1384,13 @@ procedure TONLed.Paint;
 var
   TrgtRect, SrcRect: TRect;
 begin
-  if csDesigning in ComponentState then
-    exit;
+//  if csDesigning in ComponentState then
+//    exit;
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
 
@@ -1402,7 +1417,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 End;
@@ -1491,8 +1506,6 @@ begin
 
   FCurPos := 0;
   FScrollBy := ABS(FScrollBy);
-  // FillBitMap;
- // Getbmp;
   Invalidate;
 end;
 
@@ -1518,7 +1531,7 @@ begin
       end;
     end;
 
-    if (Length(Caption) * CharWidth{(FBitMap.Width)} - (FCurPos)) <=
+    if (Length(Caption) * CharWidth - (FCurPos)) <=
       (Self.Width / FScale) then
     begin
       FScrollBy := Abs(FScrollBy) * -1;
@@ -1531,6 +1544,7 @@ begin
   end
   else
     FCurPos := 0;
+
 end;
 
 procedure TONlabel.DoOnTimer(Sender: TObject);
@@ -1569,6 +1583,7 @@ begin
   flist.BeginUpdate;
   Flist.Assign(AValue);
   flist.EndUpdate;
+  Getbmp;
 end;
 
 procedure TONlabel.listchange(Sender: TObject);
@@ -1638,7 +1653,7 @@ begin
 end;
 
 
-procedure TONlabel.Getbmp;//:Trect;
+procedure TONlabel.Getbmp;
 var
   i, w, h, a, n: integer;
   tmpText:
@@ -1651,7 +1666,6 @@ var
   ucIter: TUnicodeCharacterEnumerator;
  partial: TBGRACustomBitmap;
 begin
-  // FBitmap.Clear;
   FBitmap.SetSize(0,0);
   if self.Caption = '' then exit;
   if (Skindata = nil) then  exit;
@@ -1665,11 +1679,6 @@ begin
     w := Self.Width;
 
   FBitmap.SetSize(w, CharHeight);
-
-
-  //  IF FBitMap.Width < Self.Width then
-  //    FBitmap.Width:=Self.Width;
-
 
   tmpText := self.Caption;
   s := AnsiUpperCase(tmpText);
@@ -1696,7 +1705,7 @@ begin
       a := 0;
     end;
 
-    partial:=tempbitmap.GetPart( Rect(w, h, w + CharWidth, h + CharHeight));//Rect((i * CharWidth), 0, (i * CharWidth)+ CharWidth, CharHeight));
+    partial:=tempbitmap.GetPart( Rect(w, h, w + CharWidth, h + CharHeight));
     if partial <> nil then
      FBitmap.StretchPutImage(Rect((i * CharWidth), 0, (i * CharWidth)+ CharWidth, CharHeight), partial, dmDrawWithTransparency, Alpha);
 
@@ -1717,59 +1726,38 @@ var
    img: TBGRACustomBitmap;
 begin
 
-  if csDesigning in ComponentState then
-     exit;
+//  if csDesigning in ComponentState then
+//     exit;
    if not Visible then exit;
 
   resim.SetSize(0,0);
 
   resim.Setsize((Length(self.Caption) * CharWidth),self.ClientHeight);
   tempbitmap.SetSize(0,0);
+
   tempbitmap.SetSize(fclientp.Croprect.Width, fclientp.Croprect.Height);
   FBitmap.SetSize(0,0);
 
-  if (Skindata <> nil) then
+//  if (Skindata <> nil) then
+ if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-  //  srcRect := Rect(fclientp.FSLeft, fclientp.FSTop, fclientp.FSRight, fclientp.FSBottom);
     TrgtRect := Rect(0, 0, tempbitmap.Width, tempbitmap.Height);
-    //DrawPartnormal(SrcRect, self, TrgtRect, Alpha);
     DrawPartnormalbmp(fclientp.Croprect, self, tempbitmap, TrgtRect, Alpha);
-     Getbmp;
-
+    Getbmp;
   end;
 
 
   if not FStretch then
   begin
     if FActive then
-     // FBitmap.Draw(Canvas, -FCurPos, 0, False)
       resim:=FBitmap.GetPart(rect(FCurPos, 0,FBitmap.Width,FBitmap.Height))
-    //    canvas.Draw(-FCurPos,0,FBitmap)
-    //  BitBlt(Canvas.Handle,0,0,Width,CharHeight,FBitmap.Canvas.Handle,FCurPos,0,SrcCopy)
     else
-    begin
-      //  BitBlt(Canvas.Handle,0,0,Width,CharHeight,FBitmap.Canvas.Handle,0,0,SRCPAINT);
-      // canvas.Draw(0,0,FBitmap);
-    //  FBitmap.Draw(fresim.Canvas, 0, 0, False);
       resim.PutImage(0,0,FBitmap,dmDrawWithTransparency);
-    end;
   end
   else
   begin
-  //  Fresim.SetSize(,Fresim.Height);
     FScale :=  resim.Height / CharHeight;
-
-    //Caption:=floatToStr(FScale)+' '+ IntToStr(Round(Width/FScale));
-
     if FActive then
-   //   canvas.CopyRect(rect(0, 0, Width, Height), fbitmap.canvas, Rect(
-   //     FCurPos, 0, FCurPos + Width, CharHeight))
-
-    //  Fresim:=FBitmap.GetPart(rect(FCurPos, 0,Round(Width/FScale),CharHeight))
-    //  Fresim.StretchPutImage(rect(0,0,Width,Height),FBitmap.GetPart(Rect(FCurPos,0,Round(Width/FScale), CharHeight)),dmDrawWithTransparency, Alpha)
-     // fresim.PutImage(0,0,FBitmap.GetPart(Rect(FCurPos,0,Round(Width/FScale),CharHeight)),dmDrawWithTransparency, Alpha)
-      //     StretchBlt(Fresim.Canvas.Handle,0,0,Width,Height,FBitmap.Canvas.Handle,FCurPos,0,Round(Width/FScale),CharHeight,SrcCopy)
-   // Fresim:=FBitmap.Resample
     begin
          img := FBitmap.GetPart(rect(FCurPos,0,FBitmap.Width, CharHeight));
       if img <> nil then
@@ -1779,18 +1767,8 @@ begin
       end;
       FreeAndNil(img);
     end else
-
-      resim.StretchPutImage(rect(0,0,self.ClientWidth,self.ClientHeight),FBitmap.GetPart(Rect(0,0,FBitmap.Width{Round(Width/FScale)}, CharHeight)),dmDrawWithTransparency, Alpha);
-
-  //  Fresim.StretchPutImage(Rect(0,0,Round(Width/FScale), Fresim.Height), FBitmap, dmDrawWithTransparency, Alpha);
-
- //    Fresim:=FBitmap.GetPart(rect(0, 0,Fresim.Width, Fresim.Height));
-      //  canvas.StretchDraw(rect(0,0,Width,Height){Rect(0,0,Round(Width/FScale),CharHeight)},fbitmap);//
-     // canvas.CopyRect(Rect(0, 0, self.Width, self.Height), FBitmap.Canvas,
-    //    Rect(0, 0, FBitmap.Width, FBitmap.Height));//Round(Width/FScale),CharHeight))
-    // StretchBlt(Canvas.Handle,0,0,Width,Height,FBitmap.Canvas.Handle,0,0,Round(Width/FScale),CharHeight,SrcCopy);
+      resim.StretchPutImage(rect(0,0,self.ClientWidth,self.ClientHeight),FBitmap.GetPart(Rect(0,0,FBitmap.Width, CharHeight)),dmDrawWithTransparency, Alpha);
   end;
-
   inherited paint;
 end;
 
@@ -1931,12 +1909,13 @@ procedure TONCropButton.Paint;
 var
   DR,DRL,DRR,DRT,DRB: TRect;
 begin
-  if csDesigning in ComponentState then
-    exit;
+//  if csDesigning in ComponentState then
+//    exit;
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.Width, Self.Height);
-  if (Skindata <> nil) then
+//  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
       if Enabled = True then
@@ -1994,7 +1973,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 end;
@@ -2251,13 +2230,14 @@ procedure TONGraphicsButton.Paint;
 var
   DR,DRL,DRR,DRT,DRB: TRect;
 begin
-  if csDesigning in ComponentState then
-    exit;
+//  if csDesigning in ComponentState then
+//    exit;
   if not Visible then exit;
 
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-  if (Skindata <> nil) then
+  //if (Skindata <> nil) then
+ if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
       if Enabled = True then
@@ -2313,7 +2293,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 end;
@@ -2431,13 +2411,14 @@ var
   //  HEDEF,
   DR: TRect;
 begin
-  if csDesigning in ComponentState then
-    Exit;
+//  if csDesigning in ComponentState then
+//    Exit;
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-  if (Skindata <> nil) then
+ // if (Skindata <> nil) then
     // or (FSkindata.Fimage <> nil) or (csDesigning in ComponentState) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
       if Enabled = True then
@@ -2499,7 +2480,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
 end;
@@ -2711,12 +2692,13 @@ var
   DR: TRect;
 
 begin
-  if csDesigning in ComponentState then
-     Exit;
+//  if csDesigning in ComponentState then
+//     Exit;
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-  if (Skindata <> nil) then
+//  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
     if Enabled = True then
@@ -2776,7 +2758,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+   resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
 
 

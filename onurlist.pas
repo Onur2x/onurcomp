@@ -1049,10 +1049,10 @@ var
   a, b, k, z, i: integer;
   x1, x2, x3, x4: smallint;
 begin
-   if csDesigning in ComponentState then
-     Exit;
-   if csLoading in ComponentState then
-     Exit;
+//   if csDesigning in ComponentState then
+//     Exit;
+//   if csLoading in ComponentState then
+//     Exit;
    if (not Visible) then Exit;
 
 
@@ -1060,7 +1060,8 @@ begin
    resim.SetSize(self.ClientWidth, self.ClientHeight);
 
    resim.FontQuality :=fqSystemClearType;
-   if (Skindata <> nil) then
+//   if (Skindata <> nil) then
+   if (Skindata <> nil) and not (csDesigning in ComponentState) then
    begin
 
     //ORTA CENTER
@@ -1208,7 +1209,7 @@ begin
   end
   else
   begin
-    Resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     FCenter.Targetrect.Height := self.Height;
   end;
   inherited Paint;
@@ -1933,8 +1934,8 @@ var
   a, b, k, i: integer;
    Target: Trect;
 begin
-  if csDesigning in ComponentState then
-    Exit;
+//  if csDesigning in ComponentState then
+//    Exit;
   if not Visible then Exit;
 
   if fchangelist=true then   // if items add or delete then calc to scrollbar
@@ -1946,7 +1947,8 @@ begin
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
-  if (Skindata <> nil) then
+//  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
    //ORTA CENTER
    DrawPartnormal(FCenter.Croprect, self, fcenter.Targetrect, alpha);
 
@@ -1991,7 +1993,8 @@ begin
     end;
 
   end;
-  if (Skindata <> nil) then
+//  if (Skindata <> nil) then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     //SOL ÜST TOPLEFT
     DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
@@ -2015,7 +2018,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     FCenter.Targetrect.Height := self.ClientHeight;
   end;
   inherited paint;
@@ -2809,13 +2812,14 @@ procedure TONcombobox.Paint;
 var
   TrgtRect, SrcRect: TRect;
 begin
-   if csDesigning in ComponentState then
-    exit;
+//   if csDesigning in ComponentState then
+//    exit;
   if not Visible then exit;
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     //TOPLEFT   //SOLÜST
     DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
@@ -2855,8 +2859,9 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(207, 220, 207), dmSet);
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
+
   inherited paint;
 end;
 
