@@ -76,6 +76,7 @@ type
       property ONCENTERBUTPRESS: TONCUSTOMCROP read FbuttonCB write FbuttonCB;
       property ONCENTERBUTDISABLE: TONCUSTOMCROP read FbuttonCD write FbuttonCD;
     published
+      procedure calcsize;
       property Alpha;
       property Step      : integer      read Fstep       write Fstep;
       property Min       : int64        read Getmin      write setmin;
@@ -125,6 +126,7 @@ type
     FOnChange: TNotifyEvent;
     fposition, fmax, fmin: int64;
     FCaptonvisible: boolean;
+
     procedure setposition(const Val: int64);
     procedure setmax(const Val: int64);
     procedure setmin(const Val: int64);
@@ -146,6 +148,7 @@ type
     destructor Destroy; override;
     procedure paint; override;
   published
+    procedure calcsize;
     property Alpha;
     property Textvisible: boolean read FCaptonvisible write FCaptonvisible;
     property Skindata;
@@ -202,6 +205,7 @@ type
     FMin, FMax: integer;
     FIsPressed: boolean;
     FOnChange: TNotifyEvent;
+
     procedure centerbuttonareaset;
     function CheckRange(const Value: integer): integer;
     function MaxMin: integer;
@@ -242,6 +246,7 @@ type
     //    property Positioning : Boolean read FIsPressed;
   published
     { Published declarations }
+    procedure calcsize;
     property Alpha;
     property Position: integer read GetPosition write SetPosition;
     property Percentage: integer read GetPercentage write SetPercentage;
@@ -335,6 +340,7 @@ type
     property ONBUTTONDOWN      : TONCUSTOMCROP read Fbuttondown       write Fbuttondown;
     property ONBUTTONDSBL      : TONCUSTOMCROP read Fbuttondisable    write Fbuttondisable;
   published
+    procedure calcsize;
     property Alpha;
     property Skindata;
     property MaxValue     : Integer read FMaxValue write SetMaxValue;
@@ -518,6 +524,8 @@ begin
 
   Result := Abs(Round(Z - (Pos / Maxi) * 100));
 end;
+
+
 
 procedure ToNScrollBar.SetPercentage(Value: int64);
 begin
@@ -902,6 +910,11 @@ end;
 procedure ToNScrollBar.SetSkindata(Aimg: TONImg);
 begin
   inherited SetSkindata(Aimg);
+end;
+
+procedure ToNScrollBar.calcsize;
+begin
+
 end;
 
 procedure ToNScrollBar.paint;
@@ -1343,6 +1356,12 @@ end;
 procedure TONTrackBar.SetSkindata(Aimg: TONImg);
 begin
   inherited SetSkindata(Aimg);
+  calcsize;
+end;
+
+
+procedure TONTrackBar.calcsize;
+begin
   if Kind = oHorizontal then
   begin
      FLeft.Targetrect   := Rect(0, 0, FLeft.FSRight - Fleft.FSLeft, self.ClientHeight);
@@ -1359,7 +1378,8 @@ begin
 end;
 procedure TONTrackBar.Paint;
 var
-  TrgtRect, SrcRect: TRect;
+  //TrgtRect,
+  SrcRect: TRect;
 begin
 //   if csDesigning in ComponentState then
 //    exit;
@@ -1601,7 +1621,12 @@ end;
 procedure TONProgressBar.SetSkindata(Aimg: TONImg);
 begin
   inherited SetSkindata(Aimg);
-  if self.Kind = oHorizontal then   //yatay
+   calcsize;
+end;
+
+procedure TONProgressBar.calcsize;
+begin
+   if self.Kind = oHorizontal then   //yatay
   begin
    Fleft.Targetrect   := Rect(0, 0, Fleft.Width,self.ClientHeight);
    FRight.Targetrect  := Rect(self.ClientWidth - FRight.Width, 0, self.ClientWidth, self.ClientHeight);
@@ -1610,20 +1635,20 @@ begin
    FCenter.Targetrect := Rect(Fleft.Width, ftop.Height, self.ClientWidth - FRight.Width, self.ClientHeight-fbottom.Height);
   end else
   begin                              //dikey
-   Fleft.Targetrect   := Rect(0, 0, self.ClientWidth, Fleft.Height);
-   FRight.Targetrect  := Rect(0, self.ClientHeight - FRight.Height,self.ClientWidth, self.ClientHeight);
-   ftop.Targetrect    := Rect(0,Fleft.Height,Ftop.Width,self.ClientHeight- FRight.Height);
-   fbottom.Targetrect := Rect(self.ClientWidth- fbottom.Width,Fleft.Height,self.ClientWidth,self.ClientHeight- FRight.Height);
-   FCenter.Targetrect := Rect(ftop.Width, Fleft.Height, self.ClientWidth-fbottom.Width, self.ClientHeight - FRight.Height);
+   Ftop.Targetrect    := Rect(0,0,self.ClientWidth, Ftop.Height);
+   fbottom.Targetrect := Rect(0,self.ClientHeight-fbottom.Height,self.ClientWidth,self.ClientHeight);
+   Fleft.Targetrect   := Rect(0, Ftop.Height, Fleft.Width, self.ClientHeight-fbottom.Height);
+   FRight.Targetrect  := Rect(self.ClientWidth-FRight.Width,Ftop.Height,self.ClientWidth,self.ClientHeight-fbottom.Height);//     0, self.ClientHeight - FRight.Height,self.ClientWidth, self.ClientHeight);
+   FCenter.Targetrect := Rect(Fleft.Width,ftop.Height,self.ClientWidth-FRight.Width,self.ClientHeight-fbottom.Height);
+  // Fleft.Height, self.ClientWidth-fbottom.Width, self.ClientHeight - FRight.Height);
   end;
-
-
 end;
 
 procedure TONProgressBar.paint;
 var
-  DR, DBAR: TRect;
-  img: TBGRACustomBitmap;
+  //DR,
+  DBAR: TRect;
+ // img: TBGRACustomBitmap;
 begin
 //   if csDesigning in ComponentState then
 //     Exit;
@@ -1640,8 +1665,12 @@ begin
     else
      DBAR := Rect(0, 0 ,self.ClientWidth, (fposition * self.ClientHeight) div fmax);
 
+     // DRAW CENTER
+    // if self.Kind = oHorizontal then
+    // DrawPartstrechRegion(FCenter.Croprect, Self, self.ClientWidth-(Fleft.Width+FRight.Width), self.ClientHeight -(Ftop.Height + Fbottom.Height), FCenter.Targetrect, alpha)
+    // else
+     DrawPartstrechRegion(FCenter.Croprect, Self,FCenter.Targetrect.Width,FCenter.Targetrect.Height {self.ClientWidth-(FRight.Height + Fleft.Height), self.ClientHeight-(ftop.Height+fbottom.Height)} , FCenter.Targetrect, alpha);
 
-      DrawPartstrechRegion(FCenter.Croprect, Self, self.ClientWidth, self.ClientHeight -(FRight.Height + Fleft.Height), FCenter.Targetrect, alpha);
       DrawPartnormal(Fbar.Croprect, self, DBAR, alpha); //bar
       DrawPartnormal(Ftop.Croprect,self,ftop.Targetrect,alpha);
       DrawPartnormal(fbottom.Croprect,self,fbottom.Targetrect,alpha);
@@ -1763,16 +1792,17 @@ begin
   Fstate:=obsnormal;
 
 
-  AutoSize:= False;
+ // AutoSize:= False;
   Width:= 100;
   Height:= 100;
-  Caption:= IntToStr (FValue);
+  FValue :=0;
   FMaxValue:= +100;
   FMinValue:= -100;
   FStep:= 2;
   FInit := 0;
   FScroolStep:= 5;
   Captionvisible:=false;
+  Caption:= IntToStr (FValue);
 end;
 
 destructor TONKnob.Destroy;
@@ -1797,7 +1827,12 @@ end;
 procedure TONKnob.SetSkindata(Aimg: TONImg);
 begin
   inherited SetSkindata(Aimg);
-  FTopleft.Targetrect     := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  calcsize;
+end;
+
+procedure TONKnob.calcsize;
+begin
+ { FTopleft.Targetrect     := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect    := Rect(self.ClientWidth - (FTopRight.Width), 0, self.ClientWidth, (FTopRight.Height));
   FTop.Targetrect         := Rect(FTopleft.Width, 0, self.ClientWidth - (FTopRight.Width{+FTopleft.Width}),FTop.Height);
   FBottomleft.Targetrect  := Rect(0, self.ClientHeight - (FBottomleft.Height), (FBottomleft.Width), self.ClientHeight);
@@ -1806,6 +1841,9 @@ begin
   Fleft.Targetrect        := Rect(0, FTopleft.Height,(Fleft.Width), self.ClientHeight - (FBottomleft.Height));
   FRight.Targetrect       := Rect(self.ClientWidth - (FRight.Width),(FTopRight.Height), self.ClientWidth, self.ClientHeight - (FBottomRight.Height));
   FCenter.Targetrect      := Rect(Fleft.Croprect.Width,FTop.Croprect.Height , self.ClientWidth - FRight.Croprect.Width, self.ClientHeight - FBottom.Croprect.Height);
+}
+  FCenter.Targetrect      := Rect(0,0, self.ClientWidth, self.ClientHeight);
+
 end;
 
 procedure TONKnob.Paint;
@@ -1817,8 +1855,7 @@ var
   Temp : TBGRABitmap;
   tWidth,tHeight:integer;
 begin
-  //if csDesigning in ComponentState then
-  //  Exit;
+
   if not Visible then Exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
@@ -1826,7 +1863,7 @@ begin
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
-      DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
+    {  DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
       //TOPRIGHT //SAĞÜST
       DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
       //TOP  //ÜST
@@ -1841,6 +1878,7 @@ begin
       DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
       // RIGHT // SAĞ
       DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
+      }
       //CENTER //ORTA
       DrawPartnormal(FCenter.Croprect, self, FCenter.Targetrect, alpha);
 
@@ -1859,29 +1897,36 @@ begin
 
     end;
 
+
+
+
    zValue  := Round (360 / (fMaxValue - fMinValue) * (FValue - fMinValue));// + 45;
 
-   tWidth  := self.ClientWidth-(Fleft.Width+FRight.Width);
-   tHeight := self.ClientHeight-(FTop.Height+FBottom.Height);
+   tHeight := FCenter.Targetrect.Height div 2;
+   tWidth  := FCenter.Targetrect.Width div 2;
+
+
+
+//   tWidth  := self.ClientWidth-(Fleft.Width+FRight.Width);
+//   tHeight := self.ClientHeight-(FTop.Height+FBottom.Height);
    temp    := Skindata.Fimage.GetPart(dr);
+
    affine  := TBGRAAffineBitmapTransform.Create(Temp.Resample(tWidth,tHeight) as TBGRABitmap);
    Affine.Translate(-tWidth div 2, -tHeight div 2);
+
    affine.RotateDeg(zValue);
    Affine.Translate(tWidth div 2, tHeight div 2);
-
-
 
    temp.SetSize(0,0);
    temp.SetSize(tWidth, tHeight);
 
    Temp.Fill(affine,dmDrawWithTransparency);
 
-   resim.BlendImage(Fleft.Width ,Ftop.Height,temp,boLinearBlend);// Fill(affine);
+   resim.BlendImage(self.Width div 2-(tWidth div 2) ,self.Height div 2- tHeight div 2,temp,boLinearBlend);// Fill(affine);
 
    affine.free;
    temp.Free;
 
- //  Caption:={inttostr(zvalue)+'  '+}inttostr(CurrentValue);
 
   end
   else
@@ -1891,6 +1936,8 @@ begin
 
   inherited Paint;
 end;
+
+
 
 
 end.

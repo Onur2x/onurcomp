@@ -602,7 +602,7 @@ type
     //property Style         : TTextStylee  read FStyle         write FStyle;
     property Text            : string       read FText          write SetText;
     property Scroll          : integer      read GetScroll      write SetScrollBy;
-
+    property Align;
     property Font;
     //property Yazibuyuk : boolean read fyazibuyuk write SetYazibuyuk;
      property ParentColor;
@@ -2575,13 +2575,9 @@ begin
   inherited mousedown(button, shift, x, y);
   if Button = mbLeft then
   begin
-  //  fchecked := not fchecked;
-  //  SetChecked(FChecked);
-
+    fchecked := not fchecked;
     fState := obspressed;
     if Assigned(FOnChange) then FOnChange(Self);
-    deaktifdigerleri;
-  //  SetChecked(FChecked);
     Invalidate;
   end;
 end;

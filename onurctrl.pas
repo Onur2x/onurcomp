@@ -1085,6 +1085,11 @@ begin
     fparent.ClientHeight - FBottom.Height);
   DrawPart(FCenter.Croprect, TrgtRect);
 
+
+  self.fparent.ChildSizing.LeftRightSpacing:=Fleft.Width;
+  self.fparent.ChildSizing.TopBottomSpacing:=FTop.Height;
+
+
  if ThemeStyle='modern' then
  begin
   WindowRgn := CreateRectRgn(0, 0, frmain.Width, frmain.Height);
@@ -2090,7 +2095,7 @@ begin
           cropparse(ONCENTER, ReadString(Skinname{'panel'}, ONCENTER.cropname,
             '0,0,0,0,clblack'));
 
-
+          calcsize;
           end;
 
 
@@ -2406,6 +2411,9 @@ begin
             cropparse(ONBOTTOM, ReadString(Skinname, ONBOTTOM.cropname, '0,0,0,0,clblack'));
 
             cropparse(ONBAR, ReadString(Skinname, ONBAR.cropname, '0,0,0,0,clblack'));
+
+
+            calcsize;
             //  end;
           end;
 
@@ -2427,6 +2435,8 @@ begin
               Skinname, ONBUTONPRESS.cropname, '0,0,0,0,clblack'));
             cropparse(ONBUTONDISABLE, ReadString(
               Skinname, ONBUTONDISABLE.cropname, '0,0,0,0,clblack'));
+
+            calcsize;
           end;
 
 

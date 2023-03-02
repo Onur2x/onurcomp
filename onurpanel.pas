@@ -667,6 +667,10 @@ begin
   FRight.Targetrect         := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.ClientWidth, self.ClientHeight - FBottomRight.Height);
   FCenter.Targetrect        := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
   Fcaptionarea.Targetrect   := Rect(FTopleft.Width, FTop.Height,self.ClientWidth - FRight.Width,fminheight);
+
+  self.ChildSizing.LeftRightSpacing:=Fleft.Width;
+  self.ChildSizing.TopBottomSpacing:=FTop.Height;
+
 end;
 
 procedure TONCollapExpandPanel.paint;
@@ -760,8 +764,7 @@ begin
      //   captionrect.Height:=fbutonarea.Height;
 
       //  captionrect:=rect((Fleft.FSright - Fleft.FSLeft),(FTop.FSBottom - FTop.FSTop),Self.Width-(FRight.FSright - FRight.FSLeft),fbutonarea.Height);
-        if fbutondirection=obleft then
-       // captionrect.Left:=captionrect.Left+fbutonarea.Width;
+        if fbutondirection=obleft then      // captionrect.Left:=captionrect.Left+fbutonarea.Width;
         Fcaptionarea.Targetrect.left +=fbutonarea.Width;
 
         resim.TextRect(captionrect,Caption,taCenter,tlCenter,ColorToBGRA(self.font.color,alpha));
@@ -897,6 +900,8 @@ Begin
 
   FRight.Targetrect := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.clientWidth, self.clientHeight - FBottomRight.Height);
   FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
+  self.ChildSizing.LeftRightSpacing:=Fleft.Width;
+  self.ChildSizing.TopBottomSpacing:=FTop.Height;
 End;
 
 //-----------------------------------------------------------------------------
@@ -916,6 +921,7 @@ begin
   Fleft.Targetrect := Rect(0, FTopleft.Height,Fleft.Width, self.clientHeight - FBottomleft.Height);
   FRight.Targetrect := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.clientWidth, self.clientHeight - FBottomRight.Height);
   FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
+
 
 end;
 

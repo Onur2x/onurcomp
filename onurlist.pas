@@ -437,6 +437,7 @@ type
 
     procedure Scrollscreen;
     procedure Setcells(Acol, Arow: integer; Avalue: string);
+    procedure SetHeadervisible(AValue: boolean);
     procedure SetItems(Value: TONlistItems);
     procedure Setcolums(Value: TONListColums);
 
@@ -491,7 +492,7 @@ type
     property ItemHeight        : integer       read FItemHeight        write FItemHeight;
     property HeaderHeight      : integer       read FheaderHeight      write FheaderHeight;
     property Selectedcolor     : Tcolor        read fselectcolor       write fselectcolor;
-    property Headervisible     : boolean       read fheadervisible     write fheadervisible;
+    property Headervisible     : boolean       read fheadervisible     write SetHeadervisible;
     property Headerfont        : TFont         read fheaderfont        write fheaderfont;
     property AutoHideScrollBar : boolean       read FAutoHideScrollBar write FAutoHideScrollBar;
     property OnItemDblClick    : TNotifyEvent  read FItemDblClick      write FItemDblClick;
@@ -656,6 +657,13 @@ begin
  // Scrollscreen;
  // Invalidate;
 
+end;
+
+procedure TOncolumlist.SetHeadervisible(AValue: boolean);
+begin
+  if fheadervisible=AValue then Exit;
+  fheadervisible:=AValue;
+  Invalidate;
 end;
 
 
@@ -1047,7 +1055,7 @@ end;
 procedure TOncolumlist.Paint;
 var
   a, b, k, z, i: integer;
-  x1, x2, x3, x4: smallint;
+  x1, x2, x3, x4,fheaderh: integer;
 begin
 //   if csDesigning in ComponentState then
 //     Exit;
@@ -1077,10 +1085,9 @@ begin
       x3 := 0;
       x4 := 0;
 
-
+        if (fheadervisible = True)  then
         for z := 0+abs(FItemhOffset) to (Fcolumns.Count - 1) do  // columns
         begin
-
           if Fcolumns[z].Visible = True then
           begin
 
@@ -1117,11 +1124,20 @@ begin
         end;
 
 
+      if fHeadervisible then
+      begin
+       b:=fHeaderHeight+FTop.Height;
+       fheaderh:=FheaderHeight;
+      end
+      else
+      begin
+       fheaderh:=0;
+       b:=FTop.Height;
+      end;
 
-       b:=HeaderHeight+FTop.Height;
 
        if FListItems.Count>0 then
-         for i := FItemvOffset to  (FItemvOffset + (self.ClientHeight-(FheaderHeight+HScrollBar.Height)) div FItemHeight) - 1 do
+         for i := FItemvOffset to  (FItemvOffset + (self.ClientHeight-(fheaderh+HScrollBar.Height)) div FItemHeight) - 1 do
          begin
            if i>FListItems.Count-1 then break;
 
