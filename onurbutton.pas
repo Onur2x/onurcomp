@@ -1223,6 +1223,7 @@ begin
   FBuffer.FontHeight := -self.font.Size;
   FBuffer.SetSize(FBuffer.TextSize(FText).cx, self.ClientHeight);
   FBuffer.TextRect(FBuffer.ClipRect,FText,taLeftJustify,tlcenter,BGRAToColor(self.font.color));
+
   //FBuffer.TextOut(0, 0, FText, BGRAToColor(self.font.color), False);
 
   if FBuffer.Width> self.Width then

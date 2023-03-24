@@ -6,9 +6,9 @@ unit onurpage;
 interface
 
 uses
-  Windows, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes, StdCtrls,
+  SysUtils,  Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, ExtCtrls, BGRABitmap, BGRABitmapTypes,
-  Dialogs, onurctrl, ComponentEditors, PropEdits, TypInfo, onurbutton;
+  Dialogs, onurctrl, ComponentEditors, PropEdits, TypInfo;
 
 type
   TONPageControl = class;
@@ -17,14 +17,13 @@ type
 
   TONPageButton = class(TOnGraphicControl)
   private
-    Fnormal: TONCUSTOMCROP;
-    FPress: TONCUSTOMCROP;
-    FEnter: TONCUSTOMCROP;
-    Fdisable: TONCUSTOMCROP;
-    Fstate: TONButtonState;
-    FAutoWidth: boolean;
+    Fnormal     : TONCUSTOMCROP;
+    FPress      : TONCUSTOMCROP;
+    FEnter      : TONCUSTOMCROP;
+    Fdisable    : TONCUSTOMCROP;
+    Fstate      : TONButtonState;
+    FAutoWidth  : boolean;
   protected
-
     procedure SetAutoWidth(const Value: boolean);
     procedure CheckAutoWidth;
   public
@@ -46,6 +45,7 @@ type
     //   property PageCntrl : TOnPageControl read fPgCntrl write setPgCntrl;
   protected
   published
+
     property Skindata;
     property AutoWidth: boolean read FAutoWidth write SetAutoWidth default True;
     property OnMouseDown;
@@ -83,13 +83,17 @@ type
 
   TONPage = class(TOnCustomControl)
   private
-    Fbutton: TONPageButton;
+
     Fcaption: TCaption;
     FPageControl: TONPageControl;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
     FTop, FBottom, FCenter: TONCUSTOMCROP;
+    function GetAutoWidth: boolean;
+    function getbutonw: integer;
     function GetPageOrderIndex: integer;
     procedure Getposition;
+    procedure SetAutoWidth(AValue: boolean);
+    procedure SetButtonwidth(AValue: integer);
     procedure SetCaption(AValue: TCaption);
     procedure SetPageControl(ANotebookControl: TONPageControl);
     procedure SetPageOrderIndex(Value: integer);
@@ -112,6 +116,9 @@ type
     property ONTOPLEFT: TONCUSTOMCROP read FTopleft write FTopleft;
     property ONTOPRIGHT: TONCUSTOMCROP read FTopRight write FTopRight;
   published
+    Fbutton: TONPageButton;
+    property AutoCaptionWidth: boolean read GetAutoWidth write SetAutoWidth default True;
+    property Buttonwidth :integer read getbutonw write SetButtonwidth;
     property Skindata;
     property Caption: TCaption read Fcaption write SetCaption;
     property Font;
@@ -168,7 +175,7 @@ type
 
   TONPageControl = class(TONCustomControl)
   private
-    btnarea: TonbuttonareaCntrl;
+
     FPages: TList;
     FActivePage: TOnPage;
     FPageChanged: TNotifyEvent;
@@ -183,6 +190,7 @@ type
     function GetActivePageIndex: integer;
     procedure SetButtonDirection(val: TONButtonDirection);
   protected
+
     procedure SetSkindata(Aimg: TONImg); override;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
     procedure SetChildOrder(Child: TComponent; Order: integer); override;
@@ -219,6 +227,7 @@ type
     property ONTOPRIGHT: TONCUSTOMCROP read FTopRight write FTopRight;
     property ONBUTTONAREA: TONCUSTOMCROP read Fbuttonarea write Fbuttonarea;
   published
+     btnarea: TonbuttonareaCntrl;
     property ActivePage: TOnPage read FActivePage write SetActivePage;
     property ButtonDirection: TONButtonDirection
       read fbuttondirection write SetButtonDirection;
@@ -407,7 +416,7 @@ end;
 
 function TonimgPropertyEditor.GetAttributes: TPropertyAttributes;
 begin
-  Result := [paDialog, paReadOnly];
+  Result := [paDialog];
 end;
 
 function TonimgPropertyEditor.GetValue: string;
@@ -626,6 +635,7 @@ begin
   btnarea.Height := 30;
   btnarea.Align := alTop;
   Captionvisible := False;
+ // ChildSizing.VerticalSpacing:=3;
 end;
 
 destructor TONPageControl.Destroy;
@@ -980,7 +990,10 @@ begin
   Self.Height := 190;
   Self.Width := 190;
   Visible := False;
-  Align := alClient;
+
+  //Align := alClient;
+
+
   skinname := 'pagecontrol';
   FTop := TONCUSTOMCROP.Create;
   FTop.cropname := 'PAGETOP';
@@ -1001,7 +1014,6 @@ begin
   FBottomleft := TONCUSTOMCROP.Create;
   FBottomleft.cropname := 'PAGEBOTTOMLEFT';
   resim.SetSize(190, 190);
-
 end;
 
 destructor TONPage.Destroy;
@@ -1029,6 +1041,32 @@ begin
 
 end;
 
+function TONPage.getbutonw: integer;
+begin
+  if Assigned(Fbutton) then
+  Result:=Fbutton.Width;
+end;
+
+function TONPage.GetAutoWidth: boolean;
+begin
+  if Assigned(Fbutton) then
+  result:=Fbutton.AutoWidth;
+end;
+
+procedure TONPage.SetAutoWidth(AValue: boolean);
+begin
+  if Assigned(Fbutton) then
+Fbutton.AutoWidth:=AValue;
+end;
+
+procedure TONPage.SetButtonwidth(AValue: integer);
+begin
+ if Assigned(Fbutton) then
+ begin
+   if Fbutton.Width=AValue then exit;
+   Fbutton.Width:=AValue;
+ end;
+end;
 
 
 procedure TONPage.Getposition;
@@ -1094,10 +1132,10 @@ begin
         (FPageControl.FTop.Height + FPageControl.FBottom.Height);
     end;
   end;
-
-  //   Fbutton.Alignment:=taCenter;
-
 end;
+
+
+
 
 procedure TONPage.SetCaption(AValue: TCaption);
 begin
@@ -1135,6 +1173,8 @@ begin
         tag := self.GetPageOrderIndex;
         OnClick := @self.FPageControl.buttonclicke;
         Caption := self.Caption;
+        AutoWidth:=self.AutoCaptionWidth;
+       // BorderSpacing.Bottom:=5;
       end;
       Skindata := FPageControl.Skindata;
       Getposition;
@@ -1339,14 +1379,24 @@ begin
 end;
 
 procedure TONPageButton.CheckAutoWidth;
+var
+  a:Tsize;
 begin
   if FAutoWidth and Assigned(resim) then
   begin
-    Width := resim.Width;
-    Height := resim.Height;
+//    resim.FontName:=self.parent.font.Name;
+//    resim.FontHeight:=self.parent.Font.Height;
+
+   a:= resim.TextSize(Caption);
+   resim.SetSize(a.cX,self.Height);
+   Width := a.cx;// resim.Width;
+  // Height :=a.cy;// resim.Height;
+{  end else
+  begin
+   Width :=  resim.Width;
+   Height := resim.Height;   }
   end;
 end;
-
 
 
 
@@ -1423,7 +1473,6 @@ begin
   Skinname := 'pagecontrol';
   Fbttnarea := TONCustomCrop.Create;
   Fbttnarea.cropname := 'BUTTONAREA';
-
 end;
 
 destructor TonbuttonareaCntrl.Destroy;

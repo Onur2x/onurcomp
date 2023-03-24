@@ -415,6 +415,7 @@ type
     FItemvOffset: integer;
     FItemHOffset: integer;
     FItemsShown: smallint;
+    FItemshShown: SmallInt;
     FFocusedItem: integer;
     FItemHeight: integer;
     FheaderHeight: integer;
@@ -681,8 +682,8 @@ Begin
   Fcolumns.BeginUpdate;
   Fcolumns.Assign(Value);
   Fcolumns.EndUpdate;
-//  Scrollscreen;
-//  Invalidate;
+  Scrollscreen;
+  Invalidate;
 End;
 
 
@@ -768,11 +769,10 @@ end;
 function TOncolumlist.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint
   ): boolean;
 begin
-  fmodusewhelll := True;
   inherited;
   if not VScrollBar.Visible then exit;
-  if FItemVOffset =VScrollBar.max then exit;
-
+  if FItemVOffset >= VScrollBar.max then exit;
+  fmodusewhelll := True;
   VScrollBar.Position := VScrollBar.Position + Mouse.WheelScrollLines;
   FItemVOffset := VScrollBar.Position;
   Result := True;
@@ -784,9 +784,9 @@ function TOncolumlist.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint
   ): boolean;
 begin
   inherited;
-  fmodusewhelll := True;
   if not VScrollBar.Visible then exit;
-  if FItemVOffset =0 then exit;
+  if FItemVOffset <= 0 then exit;
+  fmodusewhelll := True;
   VScrollBar.Position := VScrollBar.Position - Mouse.WheelScrollLines;
   FItemVOffset := VScrollBar.Position;
   Result := True;
@@ -924,7 +924,7 @@ end;
 
 procedure TOncolumlist.Scrollscreen;
 var
-  FItemshShown,  fark,z: Integer;
+    fark,z: Integer;
 begin
    hScrollBar.Height:=0;
    vScrollBar.Width:=0;
@@ -951,6 +951,7 @@ begin
            Max := (FListItems.Count - FItemsShown) ;//+ 1;
            Alpha := self.Alpha;
            if kind<>oVertical then Kind:=oVertical;
+
          End;
       end;
     end;
@@ -1003,13 +1004,10 @@ begin
 
          Alpha := self.Alpha;
         end;
-
-
       end;
     end;
 
    // WriteLn(fark,'  ',self.ClientWidth);
-
 
 
   end else
@@ -1055,12 +1053,9 @@ end;
 procedure TOncolumlist.Paint;
 var
   a, b, k, z, i: integer;
-  x1, x2, x3, x4,fheaderh: integer;
+  x1, x2, x3, x4,fheaderh, fark,fark2: integer;
 begin
-//   if csDesigning in ComponentState then
-//     Exit;
-//   if csLoading in ComponentState then
-//     Exit;
+
    if (not Visible) then Exit;
 
 
@@ -1068,7 +1063,7 @@ begin
    resim.SetSize(self.ClientWidth, self.ClientHeight);
 
    resim.FontQuality :=fqSystemClearType;
-//   if (Skindata <> nil) then
+
    if (Skindata <> nil) and not (csDesigning in ComponentState) then
    begin
 
@@ -1077,7 +1072,8 @@ begin
 
      if Fcolumns.Count > 0 then
      begin
-       FItemsShown := FCenter.Targetrect.Height div FitemHeight;
+
+
 
       a := Fleft.Width;
       x1 := 0;
@@ -1090,7 +1086,7 @@ begin
         begin
           if Fcolumns[z].Visible = True then
           begin
-
+           fark2+=Fcolumns[z].Width;
             if fheadervisible = True then
               b := a + FItemHeight
             else
@@ -1124,6 +1120,7 @@ begin
         end;
 
 
+
       if fHeadervisible then
       begin
        b:=fHeaderHeight+FTop.Height;
@@ -1134,6 +1131,8 @@ begin
        fheaderh:=0;
        b:=FTop.Height;
       end;
+
+      FItemsShown := FCenter.Targetrect.Height div FitemHeight;
 
 
        if FListItems.Count>0 then
@@ -1174,6 +1173,9 @@ begin
                       DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FListItems[i].Cells[z],Fcolumns[z].Textalign,ColorToBGRA(FListItems[i].Font.Color, alpha));
                   end else
                   begin
+                      if i = FFocusedItem then
+                      DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha)
+                     else
                       DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
                   end;
                 end;
@@ -1182,10 +1184,63 @@ begin
           b +=FItemHeight;
           if (b >= FCenter.Targetrect.Height-(HScrollBar.Height)) then Break;
          End;
-
-
-
      end;
+
+
+   {   with vScrollBar do
+      begin
+         if (Skindata = nil) then
+         Skindata := Self.Skindata;
+
+         if (Skindata <> nil) then
+         begin
+           Width :=(self.ONleft.Width)+ (ONNORMAL.Width);
+           left := Self.ClientWidth - ClientWidth;
+           Top := self.ONTOP.Height;
+
+           Height := Self.ClientHeight - ((self.ONBOTTOM.Height) + (self.ONTOP.Height));
+           Max := (FListItems.Count - FItemsShown) ;//+ 1;
+           Alpha := self.Alpha;
+           if kind<>oVertical then Kind:=oVertical;
+         End;
+      end;
+     }
+
+
+     for z := 0 to Fcolumns.Count - 1 do
+     begin
+       if Fcolumns[z].Visible=true then
+       begin
+         fark+=Fcolumns[z].Width; //:= fark+Fcolumns[z].Width;
+         if  fark>=self.ClientWidth then
+         begin
+           FItemshShown:=z;
+           break;
+         end;
+       end;
+     end;
+
+
+      //    Scrollscreen;
+   //  if hScrollBar.Max>0 then
+     if  fark2>=self.ClientWidth then
+     begin
+      hScrollBar.Visible := True;
+      hScrollBar.Max :=(FColumns.Count-FItemshShown);
+     end
+     else
+      hScrollBar.Visible := False;
+
+
+     if FListItems.Count * FItemHeight > (FCenter.Targetrect.Height-HScrollBar.Height) then
+      begin
+       vScrollBar.Visible := True;
+       vScrollBar.Max := (FListItems.Count - FItemsShown)+ 1;
+     end
+     else
+       vScrollBar.Visible := False;
+
+
 
       if (Skindata <> nil) then
       begin
@@ -1212,15 +1267,6 @@ begin
       end;
 
 
-     if hScrollBar.Max>0 then
-      hScrollBar.Visible := True
-     else
-      hScrollBar.Visible := False;
-
-     if FListItems.Count * FItemHeight > (FCenter.Targetrect.Height-HScrollBar.Height) then
-       vScrollBar.Visible := True
-     else
-       vScrollBar.Visible := False;
 
   end
   else
@@ -1537,6 +1583,8 @@ begin
   SetLength(FCells,a);
   FSize:=a;
   ffont:=Tfont.Create;
+  ffont.Assign(TONColumlist(TOwnedCollection(GetOwner).Owner).Font);
+
 end;
 
 

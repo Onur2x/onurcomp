@@ -1955,6 +1955,7 @@ begin
             '0,0,0,0,clblack'));
           cropparse(ONBUTTONAREA, ReadString(Skinname, ONBUTTONAREA.cropname,
             '0,0,0,0,clblack'));
+          ReadSkinsComp(btnarea);
          end;
 
 
@@ -1981,6 +1982,7 @@ begin
             '0,0,0,0,clblack'));
           cropparse(ONCENTER, ReadString(Skinname{'panel'}, ONCENTER.cropname,
             '0,0,0,0,clblack'));
+          ReadSkinsComp(Fbutton);
         end;
 
 
@@ -2763,6 +2765,7 @@ begin
           cropparse(ONBUTTONAREA, ReadString(Skinname, ONBUTTONAREA.cropname,
             '0,0,0,0,clblack'));
 
+           ReadSkinsComp(btnarea);
          end;
 
          if (fparent.Components[i] is TONPage) and
@@ -2787,6 +2790,7 @@ begin
             '0,0,0,0,clblack'));
           cropparse(ONCENTER, ReadString(Skinname{'panel'}, ONCENTER.cropname,
             '0,0,0,0,clblack'));
+           ReadSkinsComp(Fbutton);
         end;
 
 
@@ -3622,6 +3626,7 @@ begin
             writeString(Skinname, FLEFT.cropname, croptostring(FLEFT));
             writeString(Skinname, FRIGHT.cropname, croptostring(FRIGHT));
             writeString(Skinname, FCENTER.cropname, croptostring(FCENTER));
+
           end;
 
          if fparent.Components[i] is TONPageButton then    // if component Panel
@@ -3906,6 +3911,7 @@ begin
             writeString(Skinname, ONITEM.cropname, croptostring(ONITEM));
             writeString(Skinname, ONACTIVEITEM.cropname, croptostring(ONACTIVEITEM));
             writeString(Skinname, ONHEADER.cropname, croptostring(ONHEADER));
+
           end;
 
         if fparent.Components[i] is TONHeaderPanel then
