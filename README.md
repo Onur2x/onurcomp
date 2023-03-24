@@ -17,8 +17,16 @@ see. https://github.com/bgrabitmap/bgrabitmap
 <p><b>OnMemo </b> = A component derived from TCustomcontrol. Developed from Lazarus customdrawn controls. It has crop property.It can take shape according to the picture.
 <p><b>OnSpinedit </b> = A component derived from TCustomcontrol.It has crop property.It can take shape according to the picture.
 <p><b>OnCombobox </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture. 
-<p><b>OnListbox </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture. 
-<p><b>OnSwich </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture.
- 
- 
-<img src="https://github.com/Onur2x/onurcomp/blob/master/3450.png">
+<p><b>OnListbox </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture.
+<p><b>Oncolumlist </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture.Listing is done by creating columns. can be used like listview or stringrid for example. 
+<p><b>OnSwich </b> = A component derived from TGraphicControl. 
+<p><b>OnSrollbar </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture.
+<p><b>OnProgressbar </b> = A component derived from TGraphicControl.  
+<p><b>OnTrackbar </b> = A component derived from TGraphicControl.  
+<p><b>OnCheckbox </b> = A component derived from TGraphicControl.   
+<p><b>OnRadiobutton </b> = A component derived from TGraphicControl.   
+<p><b>OnLABEL </b> = A component derived from TGraphicControl.The label is created by taking the letters on the bitmap.Takes the fonts from the image.and animation can be created
+<p><b>OnNormalLABEL </b> = A component derived from TGraphicControl.is a component that has a label with the font on the component. animation can be created
+<p><b>OnLED </b> = A component derived from TGraphicControl. On off. 
+<p><b>OnKnob </b> = A component derived from TGraphicControl. Knob control. 
+<p><img src="https://github.com/Onur2x/onurcomp/blob/master/3450.png">
