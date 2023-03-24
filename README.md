@@ -13,9 +13,12 @@ see. https://github.com/bgrabitmap/bgrabitmap
 <p><b>Onheaderpanel </b> = It is a derived panel from Tcustomcontrol. Component can be put on it. And with the crop feature, you can create panels as you wish.
 <p><b>Oncollapsedpanel </b>= A panel derived from Tcustomcontrol. Component can be put on it. And with the crop feature, you can create panels as you wish. It also has the ability to reduce or enlarge with a button on it. You set the button position
 <p><b>Ongraphicspanel</b> = A panel derived from TGraphicscontrol. Components cannot be placed on it. It is a "tshape"-like component.
-<p><b>OnEdit </b> = is a panel derived from TCustomcontrol. Developed from Lazarus customdrawn controls. It has crop property.It can take shape according to the picture.
-<p><b>OnMemo </b> = is a panel derived from TCustomcontrol. Developed from Lazarus customdrawn controls. It has crop property.It can take shape according to the picture.
-<p><b>OnSpinedit </b> = is a panel derived from TCustomcontrol.It has crop property.It can take shape according to the picture.
+<p><b>OnEdit </b> = A component derived from TCustomcontrol. Developed from Lazarus customdrawn controls. It has crop property.It can take shape according to the picture.
+<p><b>OnMemo </b> = A component derived from TCustomcontrol. Developed from Lazarus customdrawn controls. It has crop property.It can take shape according to the picture.
+<p><b>OnSpinedit </b> = A component derived from TCustomcontrol.It has crop property.It can take shape according to the picture.
+<p><b>OnCombobox </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture. 
+<p><b>OnListbox </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture. 
+<p><b>OnSwich </b> = A component derived from TCustomcontrol. It has a crop feature. can take shape according to the picture.
  
  
 <img src="https://github.com/Onur2x/onurcomp/blob/master/3450.png">
