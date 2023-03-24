@@ -6,7 +6,7 @@ Uses BGRABitmap. Please check BGRABitmap licenses.
 see. https://github.com/bgrabitmap/bgrabitmap
 
 
-
+<p><b>Onpagecontrol</b> = A component derived from TCustomcontrol. Pages are a rendered component and accept components on it.
 <p><b>OnGraphicsbutton </b> = button control derived from TGraphicscontrol.
 <p><b>OnCropbutton</b> = Button control derived from TCustomcontrol. With this control you can add buttons with cropped corners. Square, triangle, round or polygon etc.It can take shape according to the picture.
 <p><b>Onpanel </b> = A panel derived from Tcustomcontrol. Component can be put on it. And with the crop feature, you can create panels as you wish.
@@ -29,4 +29,4 @@ see. https://github.com/bgrabitmap/bgrabitmap
 <p><b>OnNormalLABEL </b> = A component derived from TGraphicControl.is a component that has a label with the font on the component. animation can be created
 <p><b>OnLED </b> = A component derived from TGraphicControl. On off. 
 <p><b>OnKnob </b> = A component derived from TGraphicControl. Knob control. 
-<p><img src="https://github.com/Onur2x/onurcomp/blob/master/3450.png">
+<p><img src="https://github.com/Onur2x/onurcomp/blob/master/on1.png">
