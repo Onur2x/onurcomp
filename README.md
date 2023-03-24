@@ -5,4 +5,10 @@ Lazarus components.
 Uses BGRABitmap. Please check BGRABitmap licenses.
 see. https://github.com/bgrabitmap/bgrabitmap
 
+
+
+<b>OnGraphicsbutton </b> = button control derived from TGraphicscontrol.
+<b>OnCropbutton</b> = Button control derived from TCustomcontrol. With this control you can add buttons with cropped corners. Square, triangle, round or polygon etc.
+
+
 <img src="https://github.com/Onur2x/onurcomp/blob/master/3450.png">
