@@ -21,6 +21,7 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
+        <IsVisibleTab Value="True"/>
         <TopLine Value="122"/>
         <CursorPos X="20" Y="141"/>
         <UsageCount Value="62"/>
@@ -37,9 +38,11 @@
       </Unit>
       <Unit>
         <Filename Value="unit1.lfm"/>
+        <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="25"/>
-        <CursorPos X="10" Y="50"/>
+        <CursorPos X="41" Y="17"/>
         <UsageCount Value="10"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
@@ -78,10 +81,9 @@
       </Unit>
       <Unit>
         <Filename Value="D:\Onur_Yedek\mailler\lazarus\components\paketler\Onur\onurpage.pas"/>
-        <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <TopLine Value="1368"/>
-        <CursorPos X="34" Y="1391"/>
+        <CursorPos X="58" Y="1400"/>
         <UsageCount Value="17"/>
         <Loaded Value="True"/>
       </Unit>
