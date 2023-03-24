@@ -29,4 +29,7 @@ see. https://github.com/bgrabitmap/bgrabitmap
 <p><b>OnNormalLABEL </b> = A component derived from TGraphicControl.is a component that has a label with the font on the component. animation can be created
 <p><b>OnLED </b> = A component derived from TGraphicControl. On off. 
 <p><b>OnKnob </b> = A component derived from TGraphicControl. Knob control. 
+<p><img src="https://github.com/Onur2x/onurcomp/blob/master/3450.png"> 
 <p><img src="https://github.com/Onur2x/onurcomp/blob/master/on1.png">
+<p><img src="https://github.com/Onur2x/onurcomp/blob/master/on2.png">
+<p><img src="https://github.com/Onur2x/onurcomp/blob/master/on3.png">
