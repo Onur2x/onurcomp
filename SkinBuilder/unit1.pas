@@ -38,6 +38,7 @@ type
     label12: tlabel;
     label13: tlabel;
     label14: tlabel;
+    Label15: TLabel;
     Label16: TLabel;
     Label17: TLabel;
     Label18: TLabel;
@@ -54,7 +55,9 @@ type
     odf: TOpenDialog;
     oncheckbox1: toncheckbox;
     oncollapexpandpanel1: toncollapexpandpanel;
+    ONCollapExpandPanel2: TONCollapExpandPanel;
     Oncolumlist1: Toncolumlist;
+    ONKnob1: TONKnob;
     ONlabel1: TONlabel;
     ONLed1: TONLed;
     ONProgressBar1: TONProgressBar;
@@ -68,7 +71,7 @@ type
     Panel5: TPanel;
     Panel6: TPanel;
     Panel7: TPanel;
-    panel8: tpanel;
+    Panel9: TPanel;
     RadioGroup1: TRadioGroup;
     ScrollBox1: TScrollBox;
     sdf: TSaveDialog;
@@ -330,7 +333,7 @@ begin
   Oncolumlist1.Visible:=false;
   ONlabel1.Visible:=false;
   ONLed1.Visible:=false;
-
+  ONKnob1.Visible:=false;
   Panel7.Visible := False;
 
   RadioGroup1.Items.Clear;
@@ -710,7 +713,24 @@ begin
       RadioGroup1.items.add('LEDOFFHOVER');
       RadioGroup1.items.add('DISABLE');
     end;
-
+    23:
+    begin
+      gg := ONKnob1;
+      edit5.Text := ONKnob1.Skinname;
+      RadioGroup1.items.add('TOPLEFT');
+      RadioGroup1.items.add('TOPRIGHT');
+      RadioGroup1.items.add('TOP');
+      RadioGroup1.items.add('BOTTOMLEFT');
+      RadioGroup1.items.add('BOTTOMRIGHT');
+      RadioGroup1.items.add('BOTTOM');
+      RadioGroup1.items.add('LEFT');
+      RadioGroup1.items.add('RIGHT');
+      RadioGroup1.items.add('CENTER');
+      RadioGroup1.items.add('BUTONNORMAL');
+      RadioGroup1.items.add('BUTONHOVER');
+      RadioGroup1.items.add('BUTONPRESSED');
+      RadioGroup1.items.add('BUTONDISABLE');
+    end;
   end;
 
   if Assigned(gg) then
@@ -1178,10 +1198,10 @@ begin
     case RadioGroup1.ItemIndex of
       0: oncrop := ONProgressBar2.ONLEFT_TOP;
       1: oncrop := ONProgressBar2.ONRIGHT_BOTTOM;
-      2: oncrop := ONProgressBar1.ONTOP;
-      3: oncrop := ONProgressBar1.ONBOTTOM;
-      4: oncrop := ONProgressBar1.ONCENTER;
-      5: oncrop := ONProgressBar1.ONBAR;
+      2: oncrop := ONProgressBar2.ONTOP;
+      3: oncrop := ONProgressBar2.ONBOTTOM;
+      4: oncrop := ONProgressBar2.ONCENTER;
+      5: oncrop := ONProgressBar2.ONBAR;
     end;
   end;
 
@@ -1257,6 +1277,25 @@ begin
   end;
 
 
+   if AWorkbook is TONKnob then
+  begin
+    case RadioGroup1.ItemIndex of
+      0: oncrop := ONKnob1.ONTOPLEFT;
+      1: oncrop := ONKnob1.ONTOPRIGHT;
+      2: oncrop := ONKnob1.ONTOP;
+      3: oncrop := ONKnob1.ONBOTTOMLEFT;
+      4: oncrop := ONKnob1.ONBOTTOMRIGHT;
+      5: oncrop := ONKnob1.ONBOTTOM;
+      6: oncrop := ONKnob1.ONLEFT;
+      7: oncrop := ONKnob1.ONRIGHT;
+      8: oncrop := ONKnob1.ONCENTER;
+      9: oncrop := ONKnob1.ONBUTTONNRML;
+      10: oncrop := ONKnob1.ONBUTTONHOVR;
+      11: oncrop := ONKnob1.ONBUTTONDOWN;
+      12: oncrop := ONKnob1.ONBUTTONDSBL;
+    end;
+  end;
+
   readdata(oncrop);
  // ShowMessage(oncrop.cropname);
 end;
@@ -1287,7 +1326,7 @@ var
       zoomx.RedrawBitmap;
     end;
 
-end;
+end;      //434 443 t 6 228     c 422 426 12 215  b 420 422 9 215   t 426 429 15 217
 
 procedure Tskinsbuildier.trackbar1change(Sender: TObject);
 begin

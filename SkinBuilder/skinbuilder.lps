@@ -8,7 +8,6 @@
       <Unit>
         <Filename Value="skinbuilder.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="1"/>
         <CursorPos Y="23"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
@@ -21,9 +20,9 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
         <IsVisibleTab Value="True"/>
-        <EditorIndex Value="2"/>
-        <TopLine Value="309"/>
-        <CursorPos X="4" Y="326"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="1167"/>
+        <CursorPos X="41" Y="1203"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -334,10 +333,10 @@
       </Unit>
       <Unit>
         <Filename Value="unit1.lfm"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="35"/>
         <CursorPos X="18" Y="53"/>
         <UsageCount Value="10"/>
-        <Loaded Value="True"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
@@ -357,13 +356,21 @@
       <Unit>
         <Filename Value="..\onurbar.pas"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="167"/>
-        <CursorPos X="42" Y="394"/>
-        <UsageCount Value="10"/>
+        <TopLine Value="104"/>
+        <CursorPos X="3" Y="123"/>
+        <UsageCount Value="13"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\onurctrl.pas"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="102"/>
+        <CursorPos X="14" Y="156"/>
+        <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="9">
+    <JumpHistory HistoryIndex="19">
       <Position>
         <Filename Value="unit1.pas"/>
         <Caret Line="331" Column="71" TopLine="308"/>
@@ -380,18 +387,6 @@
         <Caret Line="123" Column="19" TopLine="90"/>
       </Position>
       <Position>
-        <Filename Value="unit1.lfm"/>
-        <Caret Line="1048" Column="2" TopLine="1039"/>
-      </Position>
-      <Position>
-        <Filename Value="unit1.lfm"/>
-        <Caret Line="53" Column="18" TopLine="35"/>
-      </Position>
-      <Position>
-        <Filename Value="unit1.lfm"/>
-        <Caret Line="54" Column="18" TopLine="35"/>
-      </Position>
-      <Position>
         <Filename Value="skinbuilder.lpr"/>
         <Caret Line="23"/>
       </Position>
@@ -402,6 +397,58 @@
       <Position>
         <Filename Value="unit1.pas"/>
         <Caret Line="325" Column="4" TopLine="308"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="327" Column="15" TopLine="309"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="1294" Column="17" TopLine="1261"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="1291" Column="85" TopLine="1262"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="1292" Column="85" TopLine="1263"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="1293" Column="85" TopLine="1264"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="720" Column="31" TopLine="695"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="59" Column="5" TopLine="41"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="137" Column="28" TopLine="110"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="147" Column="17" TopLine="131"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="1628" Column="24" TopLine="1611"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="1203" Column="41" TopLine="859"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="1204" Column="41" TopLine="1168"/>
+      </Position>
+      <Position>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="1203" Column="41" TopLine="1167"/>
       </Position>
     </JumpHistory>
     <RunParams>

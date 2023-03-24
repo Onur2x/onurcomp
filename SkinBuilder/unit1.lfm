@@ -29,7 +29,7 @@ object skinsbuildier: Tskinsbuildier
     object ComboBox1: TComboBox
       Left = 0
       Height = 22
-      Top = 218
+      Top = 206
       Width = 154
       Align = alTop
       ItemHeight = 14
@@ -58,6 +58,7 @@ object skinsbuildier: Tskinsbuildier
         'COLUMLIST'
         'LABEL'
         'LED'
+        'KNOB'
       )
       OnChange = ComboBox1Change
       Style = csDropDownList
@@ -67,7 +68,7 @@ object skinsbuildier: Tskinsbuildier
     object RadioGroup1: TRadioGroup
       Left = 0
       Height = 4
-      Top = 282
+      Top = 270
       Width = 154
       Align = alTop
       AutoFill = False
@@ -83,7 +84,7 @@ object skinsbuildier: Tskinsbuildier
     object Panel7: TPanel
       Left = 0
       Height = 94
-      Top = 286
+      Top = 274
       Width = 154
       Align = alTop
       BevelOuter = bvNone
@@ -201,7 +202,7 @@ object skinsbuildier: Tskinsbuildier
     object Panel6: TPanel
       Left = 0
       Height = 42
-      Top = 240
+      Top = 228
       Width = 154
       Align = alTop
       BevelOuter = bvNone
@@ -226,16 +227,28 @@ object skinsbuildier: Tskinsbuildier
         TabOrder = 0
       end
     end
-    object Panel8: TPanel
+    object ONCollapExpandPanel2: TONCollapExpandPanel
       Left = 0
-      Height = 218
+      Height = 206
       Top = 0
       Width = 154
       Align = alTop
-      BevelOuter = bvNone
-      ClientHeight = 218
+      Skindata = ONImg1
+      Skinname = 'expandpanel'
+      Caption = 'ONCollapExpandPanel2'
+      ClientHeight = 206
       ClientWidth = 154
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
       TabOrder = 4
+      UseDockManager = False
+      AutoCollapse = False
+      Status = oExpanded
+      Minheight = 30
+      Normalheight = 150
+      HeaderState = ocup
+      ButtonPosition = obright
       object Label7: TLabel
         Left = 0
         Height = 22
@@ -391,22 +404,22 @@ object skinsbuildier: Tskinsbuildier
     Left = 159
     Height = 836
     Top = 30
-    Width = 922
+    Width = 881
     Align = alClient
     BevelOuter = bvNone
     ClientHeight = 836
-    ClientWidth = 922
+    ClientWidth = 881
     TabOrder = 1
     object ScrollBox1: TScrollBox
       Left = 0
       Height = 836
       Top = 0
-      Width = 922
-      HorzScrollBar.Page = 901
+      Width = 881
+      HorzScrollBar.Page = 860
       VertScrollBar.Page = 815
       Align = alClient
       ClientHeight = 815
-      ClientWidth = 901
+      ClientWidth = 860
       TabOrder = 0
       object mainpicture: TBGRAVirtualScreen
         Cursor = crCross
@@ -511,10 +524,10 @@ object skinsbuildier: Tskinsbuildier
     end
   end
   object Panel3: TPanel
-    Left = 1081
+    Left = 1040
     Height = 836
     Top = 30
-    Width = 226
+    Width = 267
     Align = alRight
     BevelOuter = bvNone
     ChildSizing.LeftRightSpacing = 4
@@ -522,17 +535,17 @@ object skinsbuildier: Tskinsbuildier
     ChildSizing.HorizontalSpacing = 2
     ChildSizing.VerticalSpacing = 2
     ClientHeight = 836
-    ClientWidth = 226
+    ClientWidth = 267
     TabOrder = 3
     object Panel4: TPanel
       Left = 4
       Height = 76
       Top = 485
-      Width = 218
+      Width = 259
       Align = alBottom
       BevelOuter = bvNone
       ClientHeight = 76
-      ClientWidth = 218
+      ClientWidth = 259
       TabOrder = 0
       object Label1: TLabel
         Left = 1
@@ -547,10 +560,10 @@ object skinsbuildier: Tskinsbuildier
         Left = 33
         Height = 26
         Top = 3
-        Width = 182
+        Width = 223
         Frequency = 20
         LineSize = 20
-        Max = 80
+        Max = 100
         Min = 8
         OnChange = TrackBar1Change
         PageSize = 10
@@ -594,11 +607,19 @@ object skinsbuildier: Tskinsbuildier
         Left = 0
         Height = 22
         Top = 54
-        Width = 218
+        Width = 259
         Align = alBottom
         Alignment = taCenter
         AutoSize = False
         Layout = tlCenter
+        ParentColor = False
+      end
+      object Label15: TLabel
+        Left = 232
+        Height = 14
+        Top = 32
+        Width = 18
+        Caption = '10x'
         ParentColor = False
       end
     end
@@ -606,7 +627,7 @@ object skinsbuildier: Tskinsbuildier
       Left = 4
       Height = 238
       Top = 594
-      Width = 218
+      Width = 259
       OnRedraw = zoomxRedraw
       Align = alBottom
       Alignment = taLeftJustify
@@ -617,275 +638,16 @@ object skinsbuildier: Tskinsbuildier
       TabOrder = 1
       OnMouseDown = ToolBar1MouseDown
     end
-    object ONPanel1: TONPanel
-      Left = 4
-      Height = 479
-      Top = 4
-      Width = 218
-      Align = alClient
-      Skindata = ONImg1
-      Skinname = 'panel'
-      Crop = True
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 2
-      UseDockManager = False
-      Visible = False
-    end
-    object ONGraphicPanel1: TONGraphicPanel
-      Left = 4
-      Height = 479
-      Top = 4
-      Width = 218
-      Align = alClient
-      Skindata = ONImg1
-      Skinname = 'graphicpanel'
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-    end
-    object onEdit1: TonEdit
-      Cursor = crIBeam
-      Left = 64
-      Height = 30
-      Top = 32
-      Width = 80
-      Skindata = ONImg1
-      Skinname = 'edit'
-      Crop = True
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 3
-      TabStop = True
-      UseDockManager = False
-      Visible = False
-      NumberOnly = False
-      Selstart = 0
-      CharCase = ecNormal
-    end
-    object ONMemo1: TONMemo
-      Cursor = crIBeam
-      Left = 4
-      Height = 479
-      Top = 4
-      Width = 218
-      Align = alClient
-      Skindata = ONImg1
-      Skinname = 'memo'
-      Crop = True
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 4
-      TabStop = True
-      UseDockManager = False
-      Visible = False
-      NumberOnly = False
-      Selstart = 0
-      CharCase = ecNormal
-    end
-    object ONcombobox1: TONcombobox
-      Cursor = crIBeam
-      Left = 48
-      Height = 30
-      Top = 37
-      Width = 150
-      Skindata = ONImg1
-      Skinname = 'combobox'
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 5
-      TabStop = True
-      UseDockManager = False
-      Visible = False
-      NumberOnly = False
-      Selstart = 0
-      CharCase = ecNormal
-      Items.Strings = (
-        'TEST 1'
-        'TEST 2'
-        'TEST 3'
-        'TEST 4'
-        'TEST 5'
-        'TEST 6'
-        'TEST 7'
-        'TEST 8'
-        'TEST 9'
-        'TEST 10'
-        'TEST 11'
-        'TEST 12'
-        'TEST 13'
-        'TEST 14'
-        'TEST 15'
-        'TEST 16'
-        'TEST 17'
-        'TEST 18'
-        'TEST 19'
-        'TEST 20'
-      )
-      ItemIndex = -1
-      Selectedcolor = clBlue
-      ItemHeight = 0
-    end
-    object oNScrollBar1: ToNScrollBar
-      Left = 5
-      Height = 22
-      Top = 36
-      Width = 200
-      Skindata = ONImg1
-      Skinname = 'scrollbarh'
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      Step = 1
-      Min = 0
-      Max = 100
-      Position = 0
-    end
-    object oNListBox1: ToNListBox
-      Left = 4
-      Height = 479
-      Top = 4
-      Width = 218
-      Align = alClient
-      Skindata = ONImg1
-      Skinname = 'listbox'
-      Crop = True
-      ClientHeight = 479
-      ClientWidth = 218
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 6
-      UseDockManager = False
-      Visible = False
-      Items.Strings = (
-        'TEST 1'
-        'TEST 2'
-        'TEST 3'
-        'TEST 4'
-        'TEST 5'
-        'TEST 6'
-        'TEST 7'
-        'TEST 8'
-        'TEST 9'
-        'TEST 10'
-        'TEST 11'
-        'TEST 12'
-        'TEST 13'
-        'TEST 14'
-        'TEST 15'
-        'TEST 16'
-        'TEST 17'
-        'TEST 18'
-        'TEST 19'
-        'TEST 20'
-      )
-      ItemIndex = -1
-      ItemHeight = 20
-      Selectedcolor = clBlue
-    end
-    object ONCropButton1: TONCropButton
-      Left = 64
-      Height = 30
-      Top = 32
-      Width = 100
-      Skindata = ONImg1
-      Skinname = 'cropbutton'
-      Crop = True
-      Caption = 'TEST'
-      DoubleBuffered = True
-      Font.Color = clSilver
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 7
-      UseDockManager = False
-      Visible = False
-    end
-    object ONHeaderPanel1: TONHeaderPanel
-      Left = 6
-      Height = 20
-      Top = 37
-      Width = 207
-      Skindata = ONImg1
-      Skinname = 'headerpanel'
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 9
-      UseDockManager = False
-      Visible = False
-    end
-    object ONGraphicsButton1: TONGraphicsButton
-      Left = 65
-      Height = 30
-      Top = 31
-      Width = 100
-      Skindata = ONImg1
-      Skinname = 'button'
-      Caption = 'TEST'
-      Color = clNone
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentColor = False
-      ParentFont = False
-      Visible = False
-    end
     object Panel5: TPanel
       Left = 4
       Height = 29
       Top = 563
-      Width = 218
+      Width = 259
       Align = alBottom
       BevelOuter = bvNone
       ClientHeight = 29
-      ClientWidth = 218
-      TabOrder = 8
+      ClientWidth = 259
+      TabOrder = 2
       object ColorBox1: TColorBox
         Left = 106
         Height = 22
@@ -905,288 +667,577 @@ object skinsbuildier: Tskinsbuildier
         ParentColor = False
       end
     end
-    object OnSpinEdit1: TOnSpinEdit
-      Cursor = crIBeam
-      Left = 26
-      Height = 25
-      Top = 42
-      Width = 45
-      Skindata = ONImg1
-      Skinname = 'spinedit'
-      Caption = '0'
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 10
-      TabStop = True
-      UseDockManager = False
-      Visible = False
-      NumberOnly = True
-      Selstart = 0
-      CharCase = ecNormal
-      Value = 0
-      MaxValue = 0
-      MinValue = 0
-      Buttonwidth = 0
-      Buttonheight = 0
-    end
-    object oNScrollBar2: ToNScrollBar
-      Left = 96
-      Height = 24
-      Top = 31
-      Width = 175
-      Skindata = ONImg1
-      Skinname = 'scrollbarv'
-      Color = clNone
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentBidiMode = False
-      ParentColor = False
-      ParentFont = False
-      ParentShowHint = False
-      Visible = False
-      Step = 1
-      Min = 0
-      Max = 100
-      Position = 0
-      Kind = oVertical
-    end
-    object OnSwich1: TOnSwich
-      Left = 64
-      Height = 30
-      Top = 81
-      Width = 100
-      Skindata = ONImg1
-      Skinname = 'swich'
-      Caption = 'OnSwich1'
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-    end
-    object OnCheckbox1: TOnCheckbox
-      Left = 33
-      Height = 30
-      Top = 70
-      Width = 100
-      Skindata = ONImg1
-      Skinname = 'checkbox'
-      Caption = 'OnCheckbox1'
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      CheckWidth = 12
-      CaptionDirection = ocright
-    end
-    object OnRadioButton1: TOnRadioButton
-      Left = 34
-      Height = 30
-      Top = 114
-      Width = 100
-      Skindata = ONImg1
-      Skinname = 'radiobox'
-      Caption = 'OnRadioButton1'
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      CheckWidth = 12
-      CaptionDirection = ocright
-    end
-    object ONTrackBar1: TONTrackBar
-      Left = 25
-      Height = 25
-      Top = 103
-      Width = 174
-      Skindata = ONImg1
-      Skinname = 'trackbarh'
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      Position = 0
-      Percentage = 0
-      Max = 100
-      Min = 0
-    end
-    object ONTrackBar2: TONTrackBar
-      Left = 96
-      Height = 26
-      Top = 16
-      Width = 205
-      Skindata = ONImg1
-      Skinname = 'trackbarv'
-      Caption = 'ONTrackBar2'
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentFont = False
-      Visible = False
-      Position = 100
-      Percentage = 0
-      Kind = oVertical
-      Max = 100
-      Min = 0
-    end
-    object ONCollapExpandPanel1: TONCollapExpandPanel
-      Left = 0
-      Height = 262
-      Top = 2
-      Width = 213
-      Skindata = ONImg1
-      Skinname = 'expandpanel'
-      Crop = True
-      Caption = 'ONCollapExpandPanel1'
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -13
-      Font.Name = 'Calibri'
-      Font.Style = [fsBold]
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 11
-      UseDockManager = False
-      Visible = False
-      AutoCollapse = False
-      Status = oExpanded
-      Minheight = 30
-      Normalheight = 150
-      HeaderState = ocup
-      ButtonPosition = obright
-    end
-    object Oncolumlist1: TOncolumlist
-      Left = 0
-      Height = 339
-      Top = 0
-      Width = 219
-      Skindata = ONImg1
-      Skinname = 'columlist'
-      Caption = 'Oncolumlist1'
-      ClientHeight = 339
-      ClientWidth = 219
-      DoubleBuffered = True
-      Font.Color = clBlack
-      Font.Height = -12
-      Font.Name = 'Calibri'
-      ParentBackground = True
-      ParentDoubleBuffered = False
-      ParentFont = False
-      TabOrder = 12
-      TabStop = True
-      UseDockManager = False
-      Visible = False
-      Columns = <      
-        item
-          Caption = 'TEST 1'
-          Width = 80
-          Font.Height = -12
-          Font.Name = 'Calibri'
-          Textalign = taLeftJustify
-        end      
-        item
-          Caption = 'TEST 2'
-          Width = 80
-          Font.Height = -12
-          Font.Name = 'Calibri'
-          Textalign = taCenter
-        end      
-        item
-          Caption = 'TEST 3'
-          Width = 80
-          Font.Height = -12
-          Font.Name = 'Calibri'
-          Textalign = taRightJustify
-        end>
-      Items = <>
-      ItemIndex = -1
-      Columindex = 0
-      ItemHeight = 24
-      HeaderHeight = 24
-      Selectedcolor = clBlue
-      Headervisible = True
-      Headerfont.Height = -17
-      Headerfont.Name = 'Calibri'
-      AutoHideScrollBar = True
-    end
-    object ONlabel1: TONlabel
-      Left = 9
-      Height = 54
-      Top = 56
-      Width = 152
-      Skindata = ONImg1
-      Skinname = 'label'
-      Caption = 'ONUR SKINS'
-      Visible = False
-      OnClick = ONlabel1Click
-      Strings.Strings = (
-        'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZXW'
-        '0123456789:.,<> '
-      )
-      Active = False
-      Stretch = True
-      ScrollBy = 2
-      Interval = 100
-      CharHeight = 32
-      CharWidth = 20
-      WaitOnEnd = 1000
-    end
-    object ONLed1: TONLed
-      Left = 100
-      Height = 30
-      Top = 150
-      Width = 30
-      Skindata = ONImg1
-      Skinname = 'led'
-      Caption = 'ONLed1'
-      Visible = False
-      LedOn = False
-    end
-    object ONProgressBar1: TONProgressBar
-      Left = 80
-      Height = 150
-      Top = 56
-      Width = 10
-      Skindata = ONImg1
-      Skinname = 'progressbarh'
-      Caption = 'ONProgressBar1'
-      Visible = False
-      Textvisible = True
-      Min = 0
-      Max = 100
-      Position = 10
-    end
-    object ONProgressBar2: TONProgressBar
-      Left = 32
-      Height = 10
-      Top = 104
-      Width = 150
-      Skindata = ONImg1
-      Skinname = 'progressbarv'
-      Caption = 'ONProgressBar2'
-      Visible = False
-      Textvisible = True
-      Min = 0
-      Max = 100
-      Position = 10
-      Kind = oVertical
+    object Panel9: TPanel
+      Left = 4
+      Height = 479
+      Top = 4
+      Width = 259
+      Align = alClient
+      ChildSizing.LeftRightSpacing = 10
+      ChildSizing.TopBottomSpacing = 10
+      ClientHeight = 479
+      ClientWidth = 259
+      TabOrder = 3
+      object ONlabel1: TONlabel
+        Left = 9
+        Height = 54
+        Top = 56
+        Width = 152
+        Skindata = ONImg1
+        Skinname = 'label'
+        Caption = 'ONUR SKINS'
+        Visible = False
+        OnClick = ONlabel1Click
+        Strings.Strings = (
+          'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZXW'
+          '0123456789:.,<> '
+        )
+        Active = False
+        Stretch = True
+        ScrollBy = 2
+        Interval = 100
+        CharHeight = 32
+        CharWidth = 20
+        WaitOnEnd = 1000
+      end
+      object ONLed1: TONLed
+        Left = 100
+        Height = 30
+        Top = 150
+        Width = 30
+        Skindata = ONImg1
+        Skinname = 'led'
+        Caption = 'ONLed1'
+        Visible = False
+        LedOn = False
+      end
+      object ONProgressBar1: TONProgressBar
+        Left = 15
+        Height = 24
+        Top = 56
+        Width = 241
+        Skindata = ONImg1
+        Skinname = 'progressbarh'
+        Caption = '10'
+        Visible = False
+        Textvisible = True
+        Min = 0
+        Max = 100
+        Position = 10
+      end
+      object ONProgressBar2: TONProgressBar
+        Left = 110
+        Height = 18
+        Top = 33
+        Width = 391
+        Skindata = ONImg1
+        Skinname = 'progressbarv'
+        Caption = '10'
+        Visible = False
+        Textvisible = True
+        Min = 0
+        Max = 100
+        Position = 10
+        Kind = oVertical
+      end
+      object OnSpinEdit1: TOnSpinEdit
+        Cursor = crIBeam
+        Left = 26
+        Height = 25
+        Top = 42
+        Width = 45
+        Skindata = ONImg1
+        Skinname = 'spinedit'
+        Caption = '0'
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 0
+        TabStop = True
+        UseDockManager = False
+        Visible = False
+        NumberOnly = True
+        Selstart = 0
+        CharCase = ecNormal
+        Value = 0
+        MaxValue = 0
+        MinValue = 0
+        Buttonwidth = 0
+        Buttonheight = 0
+      end
+      object oNScrollBar2: ToNScrollBar
+        Left = 96
+        Height = 175
+        Top = 31
+        Width = 24
+        Skindata = ONImg1
+        Skinname = 'scrollbarv'
+        Color = clNone
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBidiMode = False
+        ParentColor = False
+        ParentFont = False
+        ParentShowHint = False
+        Visible = False
+        Step = 1
+        Min = 0
+        Max = 100
+        Position = 0
+        Kind = oVertical
+      end
+      object OnSwich1: TOnSwich
+        Left = 64
+        Height = 30
+        Top = 81
+        Width = 100
+        Skindata = ONImg1
+        Skinname = 'swich'
+        Caption = 'OnSwich1'
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Visible = False
+      end
+      object OnCheckbox1: TOnCheckbox
+        Left = 33
+        Height = 30
+        Top = 70
+        Width = 100
+        Skindata = ONImg1
+        Skinname = 'checkbox'
+        Caption = 'OnCheckbox1'
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Visible = False
+        CheckWidth = 12
+        CaptionDirection = ocright
+      end
+      object OnRadioButton1: TOnRadioButton
+        Left = 34
+        Height = 30
+        Top = 114
+        Width = 100
+        Skindata = ONImg1
+        Skinname = 'radiobox'
+        Caption = 'OnRadioButton1'
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Visible = False
+        CheckWidth = 12
+        CaptionDirection = ocright
+      end
+      object ONTrackBar1: TONTrackBar
+        Left = 25
+        Height = 25
+        Top = 103
+        Width = 174
+        Skindata = ONImg1
+        Skinname = 'trackbarh'
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Visible = False
+        Position = 0
+        Percentage = 0
+        Max = 100
+        Min = 0
+      end
+      object ONTrackBar2: TONTrackBar
+        Left = 96
+        Height = 205
+        Top = 16
+        Width = 26
+        Skindata = ONImg1
+        Skinname = 'trackbarv'
+        Caption = 'ONTrackBar2'
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Visible = False
+        Position = 0
+        Percentage = 100
+        Kind = oVertical
+        Max = 100
+        Min = 0
+      end
+      object ONCollapExpandPanel1: TONCollapExpandPanel
+        Left = 0
+        Height = 262
+        Top = 2
+        Width = 213
+        Skindata = ONImg1
+        Skinname = 'expandpanel'
+        Crop = True
+        Caption = 'ONCollapExpandPanel1'
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 1
+        UseDockManager = False
+        Visible = False
+        AutoCollapse = False
+        Status = oExpanded
+        Minheight = 30
+        Normalheight = 150
+        HeaderState = ocup
+        ButtonPosition = obright
+      end
+      object Oncolumlist1: TOncolumlist
+        Left = 11
+        Height = 457
+        Top = 11
+        Width = 237
+        Align = alClient
+        Skindata = ONImg1
+        Skinname = 'columlist'
+        Caption = 'Oncolumlist1'
+        ClientHeight = 457
+        ClientWidth = 237
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -12
+        Font.Name = 'Calibri'
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 2
+        TabStop = True
+        UseDockManager = False
+        Visible = False
+        Columns = <        
+          item
+            Caption = 'TEST 1'
+            Width = 80
+            Font.Height = -12
+            Font.Name = 'Calibri'
+            Textalign = taLeftJustify
+          end        
+          item
+            Caption = 'TEST 2'
+            Width = 80
+            Font.Height = -12
+            Font.Name = 'Calibri'
+            Textalign = taCenter
+          end        
+          item
+            Caption = 'TEST 3'
+            Width = 80
+            Font.Height = -12
+            Font.Name = 'Calibri'
+            Textalign = taRightJustify
+          end>
+        Items = <>
+        ItemIndex = -1
+        Columindex = 0
+        ItemHeight = 24
+        HeaderHeight = 24
+        Selectedcolor = clBlue
+        Headervisible = True
+        Headerfont.Height = -17
+        Headerfont.Name = 'Calibri'
+        AutoHideScrollBar = True
+      end
+      object ONPanel1: TONPanel
+        Left = 11
+        Height = 457
+        Top = 11
+        Width = 237
+        Align = alClient
+        Skindata = ONImg1
+        Skinname = 'panel'
+        Crop = True
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 3
+        UseDockManager = False
+        Visible = False
+      end
+      object ONGraphicPanel1: TONGraphicPanel
+        Left = 11
+        Height = 457
+        Top = 11
+        Width = 237
+        Align = alClient
+        Skindata = ONImg1
+        Skinname = 'graphicpanel'
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Visible = False
+      end
+      object onEdit1: TonEdit
+        Cursor = crIBeam
+        Left = 64
+        Height = 30
+        Top = 32
+        Width = 80
+        Skindata = ONImg1
+        Skinname = 'edit'
+        Crop = True
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 4
+        TabStop = True
+        UseDockManager = False
+        Visible = False
+        NumberOnly = False
+        Selstart = 0
+        CharCase = ecNormal
+      end
+      object ONMemo1: TONMemo
+        Cursor = crIBeam
+        Left = 11
+        Height = 457
+        Top = 11
+        Width = 237
+        Align = alClient
+        Skindata = ONImg1
+        Skinname = 'memo'
+        Crop = True
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 5
+        TabStop = True
+        UseDockManager = False
+        Visible = False
+        NumberOnly = False
+        Selstart = 0
+        CharCase = ecNormal
+      end
+      object ONcombobox1: TONcombobox
+        Cursor = crIBeam
+        Left = 48
+        Height = 30
+        Top = 37
+        Width = 150
+        Skindata = ONImg1
+        Skinname = 'combobox'
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 6
+        TabStop = True
+        UseDockManager = False
+        Visible = False
+        NumberOnly = False
+        Selstart = 0
+        CharCase = ecNormal
+        Items.Strings = (
+          'TEST 1'
+          'TEST 2'
+          'TEST 3'
+          'TEST 4'
+          'TEST 5'
+          'TEST 6'
+          'TEST 7'
+          'TEST 8'
+          'TEST 9'
+          'TEST 10'
+          'TEST 11'
+          'TEST 12'
+          'TEST 13'
+          'TEST 14'
+          'TEST 15'
+          'TEST 16'
+          'TEST 17'
+          'TEST 18'
+          'TEST 19'
+          'TEST 20'
+        )
+        ItemIndex = -1
+        Selectedcolor = clBlue
+        ItemHeight = 0
+      end
+      object oNScrollBar1: ToNScrollBar
+        Left = 5
+        Height = 22
+        Top = 36
+        Width = 200
+        Skindata = ONImg1
+        Skinname = 'scrollbarh'
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
+        Visible = False
+        Step = 1
+        Min = 0
+        Max = 100
+        Position = 0
+      end
+      object oNListBox1: ToNListBox
+        Left = 11
+        Height = 457
+        Top = 11
+        Width = 237
+        Align = alClient
+        Skindata = ONImg1
+        Skinname = 'listbox'
+        Crop = True
+        ClientHeight = 457
+        ClientWidth = 237
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 7
+        UseDockManager = False
+        Visible = False
+        Items.Strings = (
+          'TEST 1'
+          'TEST 2'
+          'TEST 3'
+          'TEST 4'
+          'TEST 5'
+          'TEST 6'
+          'TEST 7'
+          'TEST 8'
+          'TEST 9'
+          'TEST 10'
+          'TEST 11'
+          'TEST 12'
+          'TEST 13'
+          'TEST 14'
+          'TEST 15'
+          'TEST 16'
+          'TEST 17'
+          'TEST 18'
+          'TEST 19'
+          'TEST 20'
+        )
+        ItemIndex = -1
+        ItemHeight = 20
+        Selectedcolor = clBlue
+      end
+      object ONCropButton1: TONCropButton
+        Left = 64
+        Height = 30
+        Top = 32
+        Width = 100
+        Skindata = ONImg1
+        Skinname = 'cropbutton'
+        Crop = True
+        Caption = 'TEST'
+        DoubleBuffered = True
+        Font.Color = clSilver
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 8
+        UseDockManager = False
+        Visible = False
+      end
+      object ONHeaderPanel1: TONHeaderPanel
+        Left = 6
+        Height = 20
+        Top = 37
+        Width = 207
+        Skindata = ONImg1
+        Skinname = 'headerpanel'
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 9
+        UseDockManager = False
+        Visible = False
+      end
+      object ONGraphicsButton1: TONGraphicsButton
+        Left = 65
+        Height = 30
+        Top = 31
+        Width = 100
+        Skindata = ONImg1
+        Skinname = 'button'
+        Caption = 'TEST'
+        Color = clNone
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentColor = False
+        ParentFont = False
+        Visible = False
+      end
+      object ONKnob1: TONKnob
+        Left = 80
+        Height = 100
+        Top = 144
+        Width = 100
+        Skindata = ONImg1
+        Skinname = 'knob'
+        Caption = 'ONKnob1'
+        Color = clNone
+        ParentColor = False
+        Visible = False
+        MaxValue = 100
+        MinValue = -100
+        Step = 2
+        ScroolStep = 5
+        CurrentValue = 0
+      end
     end
   end
   object ONImg1: TONImg
