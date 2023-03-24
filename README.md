@@ -7,8 +7,10 @@ see. https://github.com/bgrabitmap/bgrabitmap
 
 
 
-<b>OnGraphicsbutton </b> = button control derived from TGraphicscontrol.
-<b>OnCropbutton</b> = Button control derived from TCustomcontrol. With this control you can add buttons with cropped corners. Square, triangle, round or polygon etc.
-
+<p><b>OnGraphicsbutton </b> = button control derived from TGraphicscontrol.
+<p><b>OnCropbutton</b> = Button control derived from TCustomcontrol. With this control you can add buttons with cropped corners. Square, triangle, round or polygon etc.
+<p><b>Onpanel </b> = A panel derived from Tcustomcontrol. Component can be put on it. And with the crop feature, you can create panels as you wish.
+<p><b>Onheaderpanel </b> = It is a derived panel from Tcustomcontrol. Component can be put on it. And with the crop feature, you can create panels as you wish.
+<p><b>Oncollapsedpanel <b>= A panel derived from Tcustomcontrol. Component can be put on it. And with the crop feature, you can create panels as you wish. It also has the ability to reduce or enlarge with a button on it. You set the button position
 
 <img src="https://github.com/Onur2x/onurcomp/blob/master/3450.png">
