@@ -774,40 +774,7 @@ var
  fbuttoncenter: integer;
 begin
   inherited SetSkindata(Aimg);
-  case fCaptionDirection of
-      ocup:
-      begin
 
-        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := obleave.Croprect.Top;//fborderWidth;
-        fbuttoncenter := ((self.clientHeight div 2) div 2) + (fcheckwidth div 2);
-        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
-          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
-      end;
-      ocdown:
-      begin
-        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := ((self.clientHeight div 2)) + obleave.Croprect.Top;// + fborderWidth;
-        fbuttoncenter := ((self.clientHeight div 2) div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
-          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
-      end;
-      ocleft:
-      begin
-        textx := self.ClientWidth - (fcheckwidth + self.canvas.TextWidth(Caption) + 5);
-        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
-        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect(self.ClientWidth - fcheckwidth, fbuttoncenter, self.ClientWidth,
-          fbuttoncenter + fcheckwidth);
-      end;
-      ocright:
-      begin
-        textx := fcheckwidth + 5;
-        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
-        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect(0, fbuttoncenter, fcheckwidth, fbuttoncenter + fcheckwidth);
-      end;
-    end;
 end;
 
 procedure TOnRadioButton.CMonmouseenter(var Messages: Tmessage);
@@ -881,6 +848,15 @@ begin
   obcheckenters.cropname := 'CHECKHOVER';
   obdisabled := TONCUSTOMCROP.Create;
   obdisabled.cropname := 'DISABLE';
+
+  Customcroplist.Add(obenter);
+  Customcroplist.Add(obleave);
+  Customcroplist.Add(obdown);
+  Customcroplist.Add(obcheckleaves);
+  Customcroplist.Add(obcheckenters);
+  Customcroplist.Add(obdisabled);
+
+
   Fstate := obsnormal;
   FChecked := False;
   Captionvisible := False;
@@ -889,19 +865,27 @@ begin
 end;
 
 destructor TOnRadioButton.Destroy;
+var
+ i:byte;
 begin
+ for i:=0 to Customcroplist.Count-1 do
+ TONCustomCrop(Customcroplist.Items[i]).free;
+
+ Customcroplist.Clear;
+{begin
   FreeAndNil(obenter);
   FreeAndNil(obleave);
   FreeAndNil(obdown);
   FreeAndNil(obcheckenters);
   FreeAndNil(obcheckleaves);
-  FreeAndNil(obdisabled);
+  FreeAndNil(obdisabled); }
   inherited Destroy;
 end;
 
 procedure TOnRadioButton.Paint;
 var
   DR: TRect;
+  fbuttoncenter: integer;
 begin
   if not Visible then Exit;
   resim.SetSize(0, 0);
@@ -909,6 +893,44 @@ begin
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
+
+
+
+     case fCaptionDirection of
+      ocup:
+      begin
+        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
+        Texty := obleave.Croprect.Top;//fborderWidth;
+        fbuttoncenter := ((self.clientHeight div 2) div 2) + (fcheckwidth div 2);
+        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
+          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
+      end;
+      ocdown:
+      begin
+        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
+        Texty := ((self.clientHeight div 2)) + obleave.Croprect.Top;// + fborderWidth;
+        fbuttoncenter := ((self.clientHeight div 2) div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
+          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
+      end;
+      ocleft:
+      begin
+        textx := self.ClientWidth - (fcheckwidth + self.canvas.TextWidth(Caption) + 5);
+        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
+        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect(self.ClientWidth - fcheckwidth, fbuttoncenter, self.ClientWidth,
+          fbuttoncenter + fcheckwidth);
+      end;
+      ocright:
+      begin
+        textx := fcheckwidth + 5;
+        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
+        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect(0, fbuttoncenter, fcheckwidth, fbuttoncenter + fcheckwidth);
+      end;
+    end;
+
+
 
     if Enabled = True then
     begin
@@ -1357,6 +1379,14 @@ Begin
   Foffclientph.cropname := 'LEDOFFHOVER';
   Fdisabled             := TONCUSTOMCROP.Create;
   Fdisabled.cropname    := 'LEDDISABLE';
+
+  Customcroplist.Add(Fonclientp);
+  Customcroplist.Add(Fonclientph);
+  Customcroplist.Add(Foffclientp);
+  Customcroplist.Add(Foffclientph);
+  Customcroplist.Add(Fdisabled);
+
+
   skinname              := 'led';
   Skindata              := nil;
   fcheck                := true;
@@ -1366,12 +1396,21 @@ end;
 
 // -----------------------------------------------------------------------------
 destructor TONLed.Destroy;
+var
+ i:byte;
 begin
+ for i:=0 to Customcroplist.Count-1 do
+ TONCustomCrop(Customcroplist.Items[i]).free;
+
+ Customcroplist.Clear;
+{begin
   FreeAndNil(Fonclientp);
   FreeAndNil(Fonclientph);
   FreeAndNil(Foffclientp);
   FreeAndNil(Foffclientph);
-  FreeAndNil(Fdisabled);
+  FreeAndNil(Fdisabled); }
+
+
   inherited Destroy;
 End;
 
@@ -1600,6 +1639,7 @@ begin
   skinname := 'label';
   fclientp := TONCustomCrop.Create;
   fclientp.cropname := 'ONCLIENT';
+  Customcroplist.Add(fclientp);
 
   FInterval := 100;
   FBitmap := TBGRABitmap.Create;
@@ -1648,8 +1688,9 @@ begin
   FBitmap.Free;
   tempbitmap.Free;
   FTimer.Free;
-
   Flist.Free;
+  fclientp.Free;
+  Customcroplist.Clear;
   inherited Destroy;
 end;
 
@@ -1840,13 +1881,44 @@ begin
   FAutoWidth := True;
   resim.SetSize(self.Width, self.Height);
   crop := True;
+
+  Customcroplist.Add(Fnormal);
+  Customcroplist.Add(FNormalleft);
+  Customcroplist.Add(FNormaltop);
+  Customcroplist.Add(FNormalright);
+  Customcroplist.Add(FNormalbottom);
+
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(FPressleft);
+  Customcroplist.Add(FPresstop);
+  Customcroplist.Add(FPressright);
+  Customcroplist.Add(FPressbottom);
+
+  Customcroplist.Add(FEnter);
+  Customcroplist.Add(FEnterleft);
+  Customcroplist.Add(FEntertop);
+  Customcroplist.Add(FEnterright);
+  Customcroplist.Add(FEnterbottom);
+
+  Customcroplist.Add(Fdisable);
+  Customcroplist.Add(Fdisableleft);
+  Customcroplist.Add(Fdisabletop);
+  Customcroplist.Add(Fdisableright);
+  Customcroplist.Add(Fdisablebottom);
 end;
 
 // -----------------------------------------------------------------------------
 
 destructor TONCropButton.Destroy;
+var
+  i:byte;
 begin
-  FreeAndNil(FNormal);
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+
+ { FreeAndNil(FNormal);
   FreeAndNil(FNormalleft);
   FreeAndNil(FNormalright);
   FreeAndNil(FNormaltop);
@@ -1868,7 +1940,7 @@ begin
   FreeAndNil(Fdisableleft);
   FreeAndNil(Fdisableright);
   FreeAndNil(Fdisabletop);
-  FreeAndNil(Fdisablebottom);
+  FreeAndNil(Fdisablebottom);  }
 
   inherited Destroy;
 end;
@@ -2156,6 +2228,30 @@ begin
   Fdisablebottom  := TONCustomCrop.Create;
   Fdisablebottom.cropname := 'DISABLEBOTTOM';
 
+  Customcroplist.Add(Fnormal);
+  Customcroplist.Add(FNormalleft);
+  Customcroplist.Add(FNormaltop);
+  Customcroplist.Add(FNormalright);
+  Customcroplist.Add(FNormalbottom);
+
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(FPressleft);
+  Customcroplist.Add(FPresstop);
+  Customcroplist.Add(FPressright);
+  Customcroplist.Add(FPressbottom);
+
+  Customcroplist.Add(FEnter);
+  Customcroplist.Add(FEnterleft);
+  Customcroplist.Add(FEntertop);
+  Customcroplist.Add(FEnterright);
+  Customcroplist.Add(FEnterbottom);
+
+  Customcroplist.Add(Fdisable);
+  Customcroplist.Add(Fdisableleft);
+  Customcroplist.Add(Fdisabletop);
+  Customcroplist.Add(Fdisableright);
+  Customcroplist.Add(Fdisablebottom);
+
   Fstate := obsNormal;
   Width := 100;
   Height := 30;
@@ -2169,8 +2265,14 @@ end;
 // -----------------------------------------------------------------------------
 
 destructor TONGraphicsButton.Destroy;
+var
+  i:byte;
 begin
-  FreeAndNil(FNormal);
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{  FreeAndNil(FNormal);
   FreeAndNil(FNormalleft);
   FreeAndNil(FNormalright);
   FreeAndNil(FNormaltop);
@@ -2192,7 +2294,7 @@ begin
   FreeAndNil(Fdisableleft);
   FreeAndNil(Fdisableright);
   FreeAndNil(Fdisabletop);
-  FreeAndNil(Fdisablebottom);
+  FreeAndNil(Fdisablebottom); }
   inherited Destroy;
 end;
 
@@ -2387,16 +2489,29 @@ begin
   Fstate := obsnormal;
   FChecked := False;
   Captionvisible := False;
+
+  Customcroplist.Add(FOpen);
+  Customcroplist.Add(Fclose);
+  Customcroplist.Add(Fopenhover);
+  Customcroplist.Add(Fclosehover);
+  Customcroplist.Add(Fdisable);
+
   //  FOnChange:=TNotifyEvent;
 end;
 
 destructor TOnSwich.Destroy;
+  var
+  i:byte;
 begin
-  FreeAndNil(FOpen);
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{  FreeAndNil(FOpen);
   FreeAndNil(Fclose);
   FreeAndNil(Fopenhover);
   FreeAndNil(Fclosehover);
-  FreeAndNil(Fdisable);
+  FreeAndNil(Fdisable);}
   inherited Destroy;
 end;
 
@@ -2624,6 +2739,15 @@ begin
   obcheckenters.cropname := 'CHECKHOVER';
   obdisabled := TONCUSTOMCROP.Create;
   obdisabled.cropname := 'DISABLE';
+
+
+  Customcroplist.Add(obenter);
+  Customcroplist.Add(obleave);
+  Customcroplist.Add(obdown);
+  Customcroplist.Add(obcheckleaves);
+  Customcroplist.Add(obcheckenters);
+  Customcroplist.Add(obdisabled);
+
   Fstate := obsnormal;
   FChecked := False;
   Captionvisible := False;
@@ -2632,13 +2756,22 @@ begin
 end;
 
 destructor TOnCheckbox.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{begin
   FreeAndNil(obenter);
   FreeAndNil(obleave);
   FreeAndNil(obdown);
   FreeAndNil(obcheckenters);
   FreeAndNil(obcheckleaves);
   FreeAndNil(obdisabled);
+
+  }
   inherited Destroy;
 end;
 
@@ -2648,46 +2781,12 @@ var
 
 begin
   inherited SetSkindata(Aimg);
-  case fCaptionDirection of
-      ocup:
-      begin
-
-        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := obleave.Croprect.Top;//fborderWidth;
-        fbuttoncenter := ((self.clientHeight div 2) div 2) + (fcheckwidth div 2);
-        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
-          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
-      end;
-      ocdown:
-      begin
-        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := ((self.clientHeight div 2)) + obleave.Croprect.Top;// + fborderWidth;
-        fbuttoncenter := ((self.clientHeight div 2) div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
-          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
-      end;
-      ocleft:
-      begin
-        textx := self.ClientWidth - (fcheckwidth + self.canvas.TextWidth(Caption) + 5);
-        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
-        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect(self.ClientWidth - fcheckwidth, fbuttoncenter, self.ClientWidth,
-          fbuttoncenter + fcheckwidth);
-      end;
-      ocright:
-      begin
-        textx := fcheckwidth + 5;
-        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
-        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect(0, fbuttoncenter, fcheckwidth, fbuttoncenter + fcheckwidth);
-      end;
-    end;
 end;
 
 procedure TOnCheckbox.Paint;
 var
-  DR: TRect;
-
+  DR: TRect; 
+   fbuttoncenter: integer;
 begin
 //  if csDesigning in ComponentState then
 //     Exit;
@@ -2750,7 +2849,7 @@ begin
 
 
     //  DrawPartstrech(DR, self, fcheckwidth,fcheckwidth);//Width, Height);
-    DrawPartnormal(DR, Self, Fclientrect, alpha);
+   // DrawPartnormal(DR, Self, Fclientrect, alpha);
 
   end
   else
@@ -2759,7 +2858,42 @@ begin
   end;
 
 
+  case fCaptionDirection of
+      ocup:
+      begin
+        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
+        Texty := obleave.Croprect.Top;//fborderWidth;
+        fbuttoncenter := ((self.clientHeight div 2) div 2) + (fcheckwidth div 2);
+        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
+          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
+      end;
+      ocdown:
+      begin
+        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
+        Texty := ((self.clientHeight div 2)) + obleave.Croprect.Top;// + fborderWidth;
+        fbuttoncenter := ((self.clientHeight div 2) div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
+          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
+      end;
+      ocleft:
+      begin
+        textx := self.ClientWidth - (fcheckwidth + self.canvas.TextWidth(Caption) + 5);
+        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
+        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect(self.ClientWidth - fcheckwidth, fbuttoncenter, self.ClientWidth,
+          fbuttoncenter + fcheckwidth);
+      end;
+      ocright:
+      begin
+        textx := fcheckwidth + 5;
+        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
+        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect(0, fbuttoncenter, fcheckwidth, fbuttoncenter + fcheckwidth);
+      end;
+    end;
 
+
+   DrawPartnormal(DR, Self, Fclientrect, alpha);
 
   inherited paint;
 

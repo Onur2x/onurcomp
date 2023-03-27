@@ -6,7 +6,7 @@ unit onurpage;
 interface
 
 uses
-  SysUtils,  Forms, LCLType, LCLIntf, Classes,
+  SysUtils, Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, ExtCtrls, BGRABitmap, BGRABitmapTypes,
   Dialogs, onurctrl, ComponentEditors, PropEdits, TypInfo;
 
@@ -17,12 +17,12 @@ type
 
   TONPageButton = class(TOnGraphicControl)
   private
-    Fnormal     : TONCUSTOMCROP;
-    FPress      : TONCUSTOMCROP;
-    FEnter      : TONCUSTOMCROP;
-    Fdisable    : TONCUSTOMCROP;
-    Fstate      : TONButtonState;
-    FAutoWidth  : boolean;
+    Fnormal: TONCUSTOMCROP;
+    FPress: TONCUSTOMCROP;
+    FEnter: TONCUSTOMCROP;
+    Fdisable: TONCUSTOMCROP;
+    Fstate: TONButtonState;
+    FAutoWidth: boolean;
   protected
     procedure SetAutoWidth(const Value: boolean);
     procedure CheckAutoWidth;
@@ -118,7 +118,7 @@ type
   published
     Fbutton: TONPageButton;
     property AutoCaptionWidth: boolean read GetAutoWidth write SetAutoWidth default True;
-    property Buttonwidth :integer read getbutonw write SetButtonwidth;
+    property Buttonwidth: integer read getbutonw write SetButtonwidth;
     property Skindata;
     property Caption: TCaption read Fcaption write SetCaption;
     property Font;
@@ -227,7 +227,7 @@ type
     property ONTOPRIGHT: TONCUSTOMCROP read FTopRight write FTopRight;
     property ONBUTTONAREA: TONCUSTOMCROP read Fbuttonarea write Fbuttonarea;
   published
-     btnarea: TonbuttonareaCntrl;
+    btnarea: TonbuttonareaCntrl;
     property ActivePage: TOnPage read FActivePage write SetActivePage;
     property ButtonDirection: TONButtonDirection
       read fbuttondirection write SetButtonDirection;
@@ -317,7 +317,7 @@ type
 
   TOnStringProperty = class(TStringProperty)
   public
-    function  GetAttributes: TPropertyAttributes; override;
+    function GetAttributes: TPropertyAttributes; override;
     procedure GetValueList(List: TStrings); virtual; abstract;
     procedure GetValues(Proc: TGetStrProc); override;
     function GetOnComponent: TPersistent; virtual;
@@ -342,7 +342,7 @@ procedure Register;
 
 implementation
 
-uses  BGRAPath,imgfrm;
+uses  BGRAPath, imgfrm;
 
 const
   StringAddPage = 'New Page';
@@ -359,7 +359,7 @@ begin
   RegisterComponentEditor(TOnPage, TOnpagecontrolEditor);
   RegisterComponentEditor(TONPageControl, TOnpagecontrolEditor);
 
-  RegisterPropertyEditor(TypeInfo(String),TONImg,'Loadskins', TonimgPropertyEditor);
+  RegisterPropertyEditor(TypeInfo(string), TONImg, 'Loadskins', TonimgPropertyEditor);
 end;
 
 { TOnStringProperty }
@@ -371,22 +371,22 @@ end;
 
 procedure TOnStringProperty.GetValues(Proc: TGetStrProc);
 var
-    i: Integer;
-    Values: TStringList;
-  begin
-    Values := TStringList.Create;
-    try
-      GetValueList(Values);
-      for i := 0 to Pred(Values.Count) do
-        Proc(Values[i]);
-    finally
-      Values.Free;
-    end;
+  i: integer;
+  Values: TStringList;
+begin
+  Values := TStringList.Create;
+  try
+    GetValueList(Values);
+    for i := 0 to Pred(Values.Count) do
+      Proc(Values[i]);
+  finally
+    Values.Free;
+  end;
 end;
 
 function TOnStringProperty.GetOnComponent: TPersistent;
 begin
-  Result:=GetComponent(0);
+  Result := GetComponent(0);
 end;
 
 { TonimgPropertyEditor }
@@ -398,7 +398,7 @@ var
 begin
   if (GetOnComponent is TONImg) then
   begin
-    dlg:=TOpenDialog.Create(nil);
+    dlg := TOpenDialog.Create(nil);
     try
       if dlg.Execute then
       begin
@@ -410,8 +410,9 @@ begin
     finally
       dlg.Free;
     end;
- end else
- inherited;
+  end
+  else
+    inherited;
 end;
 
 function TonimgPropertyEditor.GetAttributes: TPropertyAttributes;
@@ -421,7 +422,7 @@ end;
 
 function TonimgPropertyEditor.GetValue: string;
 begin
-  Result:=inherited GetStrValue;
+  Result := inherited GetStrValue;
 end;
 
 procedure TonimgPropertyEditor.SetValue(const Value: string);
@@ -429,9 +430,6 @@ begin
   //inherited
   SetValue(Value);
 end;
-
-
-
 
 
 
@@ -628,6 +626,16 @@ begin
   Fbuttonarea.cropname := 'BUTTONAREA';
 
 
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(Fbuttonarea);
 
   btnarea := TonbuttonareaCntrl.Create(self);
   btnarea.Parent := self;
@@ -635,7 +643,7 @@ begin
   btnarea.Height := 30;
   btnarea.Align := alTop;
   Captionvisible := False;
- // ChildSizing.VerticalSpacing:=3;
+  // ChildSizing.VerticalSpacing:=3;
 end;
 
 destructor TONPageControl.Destroy;
@@ -645,8 +653,13 @@ begin
   for A := FPages.Count - 1 downto 0 do
     Pages[A].Free;
 
+   for A:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[A]).free;
+
+  Customcroplist.Clear;
   FPages.Free;
-  FreeAndNil(FTop);
+
+ { FreeAndNil(FTop);
   FreeAndNil(FBottom);
   FreeAndNil(FCenter);
   FreeAndNil(FRight);
@@ -656,6 +669,7 @@ begin
   FreeAndNil(FTopleft);
   FreeAndNil(FBottomleft);
   FreeAndNil(Fbuttonarea);
+  }
   btnarea.Free;
 
   inherited Destroy;
@@ -700,7 +714,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
 
   inherited Paint;
@@ -827,9 +841,9 @@ begin
     end;
   end;
 
-  if FPages.Count>0 then
-  for c := 0 to FPages.Count - 1 do
-    Pages[c].Getposition;
+  if FPages.Count > 0 then
+    for c := 0 to FPages.Count - 1 do
+      Pages[c].Getposition;
 
   Invalidate;
 end;
@@ -846,7 +860,7 @@ end;
 
 procedure TONPageControl.GetChildren(Proc: TGetChildProc; Root: TComponent);
 begin
-   inherited GetChildren(Proc, Root);
+  inherited GetChildren(Proc, Root);
 end;
 
 procedure TONPageControl.SetChildOrder(Child: TComponent; Order: integer);
@@ -890,8 +904,8 @@ begin
           AOldPage := FActivePage;
           FActivePage := Page;
           AOldPage.Visible := False;
-          AOldPage.Fbutton.Enabled:=True;
-          FActivePage.Fbutton.Enabled:=false;
+          AOldPage.Fbutton.Enabled := True;
+          FActivePage.Fbutton.Enabled := False;
           FActivePage.Visible := True;
           if csDesigning in ComponentState then
           begin
@@ -908,7 +922,7 @@ begin
       begin
         FActivePage := Page;
         FActivePage.Visible := True;
-        FActivePage.Fbutton.Enabled:=false;
+        FActivePage.Fbutton.Enabled := False;
         APageChanged := True;
       end;
     end;
@@ -1013,11 +1027,28 @@ begin
   FTopleft.cropname := 'PAGETOPLEFT';
   FBottomleft := TONCUSTOMCROP.Create;
   FBottomleft.cropname := 'PAGEBOTTOMLEFT';
+
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
   resim.SetSize(190, 190);
 end;
 
 destructor TONPage.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{begin
   FreeAndNil(FTop);
   FreeAndNil(FBottom);
   FreeAndNil(FCenter);
@@ -1027,7 +1058,7 @@ begin
   FreeAndNil(Fleft);
   FreeAndNil(FTopleft);
   FreeAndNil(FBottomleft);
-  FreeAndNil(Fbutton);
+  FreeAndNil(Fbutton); }
   inherited Destroy;
 end;
 
@@ -1044,28 +1075,28 @@ end;
 function TONPage.getbutonw: integer;
 begin
   if Assigned(Fbutton) then
-  Result:=Fbutton.Width;
+    Result := Fbutton.Width;
 end;
 
 function TONPage.GetAutoWidth: boolean;
 begin
   if Assigned(Fbutton) then
-  result:=Fbutton.AutoWidth;
+    Result := Fbutton.AutoWidth;
 end;
 
 procedure TONPage.SetAutoWidth(AValue: boolean);
 begin
   if Assigned(Fbutton) then
-Fbutton.AutoWidth:=AValue;
+    Fbutton.AutoWidth := AValue;
 end;
 
 procedure TONPage.SetButtonwidth(AValue: integer);
 begin
- if Assigned(Fbutton) then
- begin
-   if Fbutton.Width=AValue then exit;
-   Fbutton.Width:=AValue;
- end;
+  if Assigned(Fbutton) then
+  begin
+    if Fbutton.Width = AValue then exit;
+    Fbutton.Width := AValue;
+  end;
 end;
 
 
@@ -1090,9 +1121,10 @@ begin
       Fbutton.Font.Orientation := 0;
       left := FPageControl.Fleft.Width;
       top := FPageControl.FTop.Height + FPageControl.btnarea.Height;
-      Width := FPageControl.Width - (FPageControl.Fleft.Width + FPageControl.FRight.Width);
-      Height := FPageControl.Height -
-        (FPageControl.FTop.Height + FPageControl.FBottom.Height + FPageControl.btnarea.Height);
+      Width := FPageControl.Width - (FPageControl.Fleft.Width +
+        FPageControl.FRight.Width);
+      Height := FPageControl.Height - (FPageControl.FTop.Height +
+        FPageControl.FBottom.Height + FPageControl.btnarea.Height);
     end;
     obdown:
     begin
@@ -1101,9 +1133,10 @@ begin
       Fbutton.Font.Orientation := 0;
       left := FPageControl.Fleft.Width;
       top := FPageControl.FTop.Height;
-      Width := FPageControl.Width - (FPageControl.Fleft.Width + FPageControl.FRight.Width);
-      Height := FPageControl.Height -
-        (FPageControl.FTop.Height + FPageControl.FBottom.Height + FPageControl.btnarea.Height);
+      Width := FPageControl.Width - (FPageControl.Fleft.Width +
+        FPageControl.FRight.Width);
+      Height := FPageControl.Height - (FPageControl.FTop.Height +
+        FPageControl.FBottom.Height + FPageControl.btnarea.Height);
     end;
     obleft:
     begin
@@ -1113,10 +1146,10 @@ begin
       Fbutton.Align := altop;
       left := FPageControl.Fleft.Width + FPageControl.btnarea.Width;
       top := FPageControl.FTop.Height;
-      Width := FPageControl.Width -
-        (FPageControl.Fleft.Width + FPageControl.FRight.Width + FPageControl.btnarea.Width);
-      Height := FPageControl.Height -
-        (FPageControl.FTop.Height + FPageControl.FBottom.Height);
+      Width := FPageControl.Width - (FPageControl.Fleft.Width +
+        FPageControl.FRight.Width + FPageControl.btnarea.Width);
+      Height := FPageControl.Height - (FPageControl.FTop.Height +
+        FPageControl.FBottom.Height);
     end;
     obright:
     begin
@@ -1126,10 +1159,10 @@ begin
       Fbutton.Align := altop;
       left := FPageControl.Fleft.Width;
       top := FPageControl.FTop.Height;
-      Width := FPageControl.Width -
-        (FPageControl.Fleft.Width + FPageControl.FRight.Width + FPageControl.btnarea.Width);
-      Height := FPageControl.Height -
-        (FPageControl.FTop.Height + FPageControl.FBottom.Height);
+      Width := FPageControl.Width - (FPageControl.Fleft.Width +
+        FPageControl.FRight.Width + FPageControl.btnarea.Width);
+      Height := FPageControl.Height - (FPageControl.FTop.Height +
+        FPageControl.FBottom.Height);
     end;
   end;
 end;
@@ -1173,8 +1206,8 @@ begin
         tag := self.GetPageOrderIndex;
         OnClick := @self.FPageControl.buttonclicke;
         Caption := self.Caption;
-        AutoWidth:=self.AutoCaptionWidth;
-       // BorderSpacing.Bottom:=5;
+        AutoWidth := self.AutoCaptionWidth;
+        // BorderSpacing.Bottom:=5;
       end;
       Skindata := FPageControl.Skindata;
       Getposition;
@@ -1214,8 +1247,9 @@ begin
     Rect(0, self.ClientHeight - FPageControl.FBottomleft.Height,
     FPageControl.FBottomleft.Width, self.ClientHeight);
   FBottomRight.Targetrect :=
-    Rect(self.clientWidth - (FPageControl.FBottomRight.Width), self.clientHeight -
-    FPageControl.FBottomRight.Height, self.clientWidth, self.clientHeight);
+    Rect(self.clientWidth - (FPageControl.FBottomRight.Width),
+    self.clientHeight - FPageControl.FBottomRight.Height, self.clientWidth,
+    self.clientHeight);
   FBottom.Targetrect :=
     Rect(FPageControl.FBottomleft.Width, self.clientHeight -
     FPageControl.FBottom.Height, self.clientWidth - FPageControl.FBottomRight.Width,
@@ -1228,8 +1262,9 @@ begin
     Rect(self.clientWidth - FPageControl.FRight.Width, FPageControl.FTopRight.Height,
     self.clientWidth, self.clientHeight - FPageControl.FBottomRight.Height);
   FCenter.Targetrect :=
-    Rect(FPageControl.Fleft.Width, FPageControl.FTop.Height, self.clientWidth -
-    FPageControl.FRight.Width, self.clientHeight - FPageControl.FBottom.Height);
+    Rect(FPageControl.Fleft.Width, FPageControl.FTop.Height,
+    self.clientWidth - FPageControl.FRight.Width, self.clientHeight -
+    FPageControl.FBottom.Height);
 
   Fbutton.Skindata := Aimg;
 end;
@@ -1291,7 +1326,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(140, 170, 140,alpha), dmSet);
+    resim.Fill(BGRA(140, 170, 140, alpha), dmSet);
   end;
   inherited Paint;
 end;
@@ -1365,32 +1400,46 @@ begin
   FEnter.cropname := 'BUTTONHOVER';
   Fdisable := TONCUSTOMCROP.Create;
   Fdisable.cropname := 'BUTTONDISABLE';
+
+
+  Customcroplist.Add(Fnormal);
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(FEnter);
+  Customcroplist.Add(Fdisable);
+
 end;
 
 // -----------------------------------------------------------------------------
 
 destructor TONPageButton.Destroy;
+var
+  i: byte;
 begin
+  for i := 0 to Customcroplist.Count - 1 do
+    TONCustomCrop(Customcroplist.Items[i]).Free;
+
+  Customcroplist.Clear;
+{begin
   FreeAndNil(FNormal);
   FreeAndNil(FPress);
   FreeAndNil(FEnter);
-  FreeAndNil(Fdisable);
+  FreeAndNil(Fdisable); }
   inherited Destroy;
 end;
 
 procedure TONPageButton.CheckAutoWidth;
 var
-  a:Tsize;
+  a: Tsize;
 begin
   if FAutoWidth and Assigned(resim) then
   begin
-//    resim.FontName:=self.parent.font.Name;
-//    resim.FontHeight:=self.parent.Font.Height;
+    //    resim.FontName:=self.parent.font.Name;
+    //    resim.FontHeight:=self.parent.Font.Height;
 
-   a:= resim.TextSize(Caption);
-   resim.SetSize(a.cX,self.Height);
-   Width := a.cx;// resim.Width;
-  // Height :=a.cy;// resim.Height;
+    a := resim.TextSize(Caption);
+    resim.SetSize(a.cX, self.Height);
+    Width := a.cx;// resim.Width;
+    // Height :=a.cy;// resim.Height;
 {  end else
   begin
    Width :=  resim.Width;
@@ -1453,7 +1502,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(100, 150, 100,alpha), dmSet);
+    resim.Fill(BGRA(100, 150, 100, alpha), dmSet);
   end;
 
   inherited Paint;
@@ -1472,12 +1521,19 @@ begin
   Height := 50;
   Skinname := 'pagecontrol';
   Fbttnarea := TONCustomCrop.Create;
+
   Fbttnarea.cropname := 'BUTTONAREA';
+
+  Customcroplist.Add(Fbttnarea);
 end;
 
 destructor TonbuttonareaCntrl.Destroy;
+var
+  i:byte;
 begin
-  FreeAndNil(Fbttnarea);
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+  Customcroplist.Clear;
   inherited Destroy;
 end;
 
@@ -1492,7 +1548,7 @@ begin
     DrawPartnormal(Fbttnarea.Croprect, self, rect(0, 0, self.clientWidth,
       self.clientHeight), Alpha)
   else
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
 
   inherited Paint;
 end;

@@ -854,6 +854,27 @@ begin
   factiveitems.cropname := 'ACTIVEITEM';
   fheader := TONCUSTOMCROP.Create;
   fheader.cropname := 'HEADER';
+
+
+
+
+
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
+
+  Customcroplist.Add(fitems);
+  Customcroplist.Add(factiveitems);
+  Customcroplist.Add(fheader);
+
+
+
   Captionvisible := False;
 
 
@@ -897,7 +918,14 @@ begin
 end;
 
 destructor TOncolumlist.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+
   if Assigned(VScrollBar) then
     FreeAndNil(VScrollBar);
   if Assigned(HScrollBar) then
@@ -906,7 +934,7 @@ begin
   FreeAndNil(FListItems);
   FreeAndNil(Fcolumns);
 
-  FreeAndNil(fheader);
+{  FreeAndNil(fheader);
   FreeAndNil(FTop);
   FreeAndNil(FBottom);
   FreeAndNil(FCenter);
@@ -917,7 +945,7 @@ begin
   FreeAndNil(FTopleft);
   FreeAndNil(FBottomleft);
   FreeAndNil(factiveitems);
-  FreeAndNil(fitems);
+  FreeAndNil(fitems); }
 
   inherited Destroy;
 end;
@@ -1828,18 +1856,40 @@ begin
   factiveitems.cropname := 'ACTIVEITEM';
   fitems := TONCUSTOMCROP.Create;
   fitems.cropname := 'ITEM';
+
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(factiveitems);
+  Customcroplist.Add(fitems);
+
+
   Captionvisible := False;
   fchangelist := true;
 end;
 
 destructor ToNListBox.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+
+
   if Assigned(vScrollBar) then
     FreeAndNil(vScrollBar);
   if Assigned(hScrollBar) then
     FreeAndNil(hScrollBar);
   FreeAndNil(Flist);
-  FreeAndNil(FTop);
+{  FreeAndNil(FTop);
   FreeAndNil(FBottom);
   FreeAndNil(FCenter);
   FreeAndNil(FRight);
@@ -1849,7 +1899,7 @@ begin
   FreeAndNil(FTopleft);
   FreeAndNil(FBottomleft);
   FreeAndNil(factiveitems);
-  FreeAndNil(fitems);
+  FreeAndNil(fitems);}
 
   inherited Destroy;
 end;
@@ -2830,15 +2880,40 @@ begin
   FEnter.cropname := 'HOVER';
   Fdisable := TONCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
+
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FNormal);
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(FEnter);
+  Customcroplist.Add(Fdisable);
+
+
+
+
   Fstate := obsnormal;
   fbutonarea := Rect(Self.Width - self.Height, 0, self.Width, self.Height);
 
 end;
 
 destructor TONcombobox.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+
   if Assigned(Fliste) then FreeAndNil(Fliste);
-  FreeAndNil(FNormal);
+{  FreeAndNil(FNormal);
   FreeAndNil(FPress);
   FreeAndNil(FEnter);
   FreeAndNil(Fdisable);
@@ -2851,7 +2926,7 @@ begin
   FreeAndNil(FBottomleft);
   FreeAndNil(FBottomRight);
   FreeAndNil(FTopleft);
-  FreeAndNil(FTopRight);
+  FreeAndNil(FTopRight);}
   inherited Destroy;
 
 end;

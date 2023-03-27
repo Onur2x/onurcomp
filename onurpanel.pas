@@ -629,6 +629,22 @@ begin
   Fcaptionarea:= TONCUSTOMCROP.Create;
   Fcaptionarea.cropname := 'CAPTION';
 
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FNormal);
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(FEnter);
+  Customcroplist.Add(Fdisable);
+  Customcroplist.Add(Fcaptionarea);
+
+
   Fstate := obsnormal;
   fbutonarea := Rect(Self.Width - self.Height, 0, self.Width, self.Height);
   Resim.SetSize(Width, Height);
@@ -637,7 +653,14 @@ begin
 end;
 
 destructor TONCollapExpandPanel.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{begin
   FreeAndNil(Fleft);
   FreeAndNil(FTop);
   FreeAndNil(FRight);
@@ -650,7 +673,7 @@ begin
   FreeAndNil(FPress);
   FreeAndNil(FEnter);
   FreeAndNil(Fdisable);
-  FreeAndNil(Fcaptionarea);
+  FreeAndNil(Fcaptionarea);  }
   inherited Destroy;
 end;
 
@@ -823,6 +846,17 @@ begin
   FTopleft.cropname := 'TOPLEFT';
   FBottomleft := TONCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
+
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
+
   Self.Height := 190;
   Self.Width := 190;
   resim.SetSize(Width, Height);
@@ -830,7 +864,14 @@ end;
 
 // -----------------------------------------------------------------------------
 destructor TONPanel.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{begin
   FreeAndNil(FBottom);
   FreeAndNil(FTop);
   FreeAndNil(FCenter);
@@ -839,7 +880,7 @@ begin
   FreeAndNil(FTopRight);
   FreeAndNil(Fleft);
   FreeAndNil(FBottomleft);
-  FreeAndNil(FTopleft);
+  FreeAndNil(FTopleft);}
   inherited Destroy;
 end;
 // -----------------------------------------------------------------------------
@@ -947,6 +988,17 @@ begin
   FTopleft.cropname := 'TOPLEFT';
   FBottomleft := TONCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
+
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
+
   Self.Height := 190;
   Self.Width := 190;
   resim.SetSize(Width, Height);
@@ -954,7 +1006,14 @@ end;
 
 // -----------------------------------------------------------------------------
 destructor TONGraphicPanel.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{begin
   FreeAndNil(FBottom);
   FreeAndNil(FTop);
   FreeAndNil(FCenter);
@@ -963,7 +1022,7 @@ begin
   FreeAndNil(FTopRight);
   FreeAndNil(Fleft);
   FreeAndNil(FBottomleft);
-  FreeAndNil(FTopleft);
+  FreeAndNil(FTopleft); }
   inherited Destroy;
 end;
 

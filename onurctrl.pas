@@ -125,6 +125,7 @@ type
     Fkind       : Tonkindstate;
     Fskinname   : string;
     falpha      : byte;
+
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     procedure CreateParams(var Params: TCreateParams);
     procedure SetAlignment(const Value: TAlignment);
@@ -139,6 +140,7 @@ type
     { Public declarations }
     Captionvisible     : boolean;
     resim: TBGRABitmap;
+    Customcroplist:TList;
     Backgroundbitmaped : boolean;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -218,6 +220,7 @@ type
     WindowRgn  : HRGN;
     Captionvisible     : boolean;
     Backgroundbitmaped : boolean;
+    Customcroplist:TList;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
@@ -901,8 +904,6 @@ begin
   Fres.OnChange := @ImageSet;
   clrr := 'clnone';
   Fopacity:=255;
-
-
 
   frmain := TBGRABitmap.Create(self.fparent.clientWidth, self.fparent.clientHeight);
   tempbitmap:=TBGRABitmap.Create(self.fparent.clientWidth, self.fparent.clientHeight);
@@ -3970,11 +3971,13 @@ begin
   resim := TBGRABitmap.Create;
   Captionvisible := True;
   falpha := 255;
+  Customcroplist:=TList.Create;
 end;
 
 destructor Tongraphiccontrol.Destroy;
 begin
   if Assigned(resim) then  FreeAndNil(resim);
+  Customcroplist.free;
   inherited Destroy;
 end;
 
@@ -4131,12 +4134,14 @@ begin
   WindowRgn := CreateRectRgn(0, 0, self.Width, self.Height);
   Captionvisible := True;
   falpha := 255;
+  Customcroplist:=TList.Create;
 end;
 
 destructor Toncustomcontrol.Destroy;
 begin
   if Assigned(resim) then  FreeAndNil(resim);
   DeleteObject(WindowRgn);
+  Customcroplist.free;
   inherited Destroy;
 end;
 

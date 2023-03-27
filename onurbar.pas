@@ -879,15 +879,40 @@ begin
   FbuttonCD := TONCUSTOMCROP.Create;
   FbuttonCD.cropname := 'CENTERBUTTONDISABLE';
 
+
+  Customcroplist.Add(FNormali);
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(Fbar);
+  Customcroplist.Add(FbuttonNL);
+  Customcroplist.Add(FbuttonUL);
+  Customcroplist.Add(FbuttonBL);
+  Customcroplist.Add(FbuttonDL);
+  Customcroplist.Add(FbuttonNR);
+  Customcroplist.Add(FbuttonUR);
+  Customcroplist.Add(FbuttonBR);
+  Customcroplist.Add(FbuttonDR);
+  Customcroplist.Add(FbuttonCN);
+  Customcroplist.Add(FbuttonCU);
+  Customcroplist.Add(FbuttonCB);
+  Customcroplist.Add(FbuttonCD);
+
   //  Backgroundbitmaped:=false;
   Captionvisible := False;
 end;
 
 destructor ToNScrollBar.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+
 
   Skindata := nil;
-  FreeAndNil(FbuttonNL);
+{  FreeAndNil(FbuttonNL);
   FreeAndNil(FbuttonUL);
   FreeAndNil(FbuttonBL);
   FreeAndNil(FbuttonDL);
@@ -903,7 +928,7 @@ begin
   FreeAndNil(FNormali);
   FreeAndNil(Fbar);
   FreeAndNil(FBottom);
-  FreeAndNil(FTop);
+  FreeAndNil(FTop);   }
   inherited Destroy;
 end;
 
@@ -1256,8 +1281,7 @@ constructor TONTrackBar.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
 
-  FState := obsnormal;
-  skinname := 'trackbarh';
+
   FCenter := TONCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
   FRight := TONCUSTOMCROP.Create;
@@ -1274,6 +1298,16 @@ begin
   Fdisable := TONCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
 
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FNormal);
+  Customcroplist.Add(FEnter);
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(Fdisable);
+
+  FState := obsnormal;
+  skinname := 'trackbarh';
   fcenterbuttonarea := Rect(1, 1, 19, 19);
   FIsPressed := False;
   FW := 0;
@@ -1292,14 +1326,21 @@ begin
 end;
 
 destructor TONTrackBar.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{begin
   FreeAndNil(Fleft);
   FreeAndNil(FRight);
   FreeAndNil(FCenter);
   FreeAndNil(FNormal);
   FreeAndNil(FPress);
   FreeAndNil(FEnter);
-  FreeAndNil(Fdisable);
+  FreeAndNil(Fdisable);}
   inherited Destroy;
 end;
 
@@ -1603,18 +1644,33 @@ begin
 
   fbar := TONCustomCrop.Create;
   fbar.cropname := 'BAR';
+
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(Ftop);
+  Customcroplist.Add(fbottom);
+  Customcroplist.Add(fbar);
+
+
   FCaptonvisible := True;
 end;
 
 destructor TONProgressBar.Destroy;
+var
+  i:byte;
 begin
-  FreeAndNil(Fleft);
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+ { FreeAndNil(Fleft);
   FreeAndNil(FRight);
   FreeAndNil(FCenter);
   FreeAndNil(Ftop);
   FreeAndNil(fbottom);
   FreeAndNil(Fbar);
-
+ }
   inherited Destroy;
 end;
 
@@ -1789,6 +1845,22 @@ begin
   Fbuttonhover.cropname := 'HOVER';
   Fbuttondisable:=TONCUSTOMCROP.Create;
   Fbuttondisable.cropname := 'DISABLE';
+
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(Fbuttonnormal);
+  Customcroplist.Add(Fbuttondown);
+  Customcroplist.Add(Fbuttonhover);
+  Customcroplist.Add(Fbuttondisable);
+
+
   Fstate:=obsnormal;
 
 
@@ -1806,7 +1878,14 @@ begin
 end;
 
 destructor TONKnob.Destroy;
+var
+  i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONCustomCrop(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+{begin
   FreeAndNil(FBottom);
   FreeAndNil(FTop);
   FreeAndNil(FCenter);
@@ -1819,7 +1898,7 @@ begin
   FreeAndNil(Fbuttonhover);
   FreeAndNil(Fbuttonnormal);
   FreeAndNil(Fbuttondown);
-  FreeAndNil(Fbuttondisable);
+  FreeAndNil(Fbuttondisable); }
   inherited Destroy;
 end;
 
