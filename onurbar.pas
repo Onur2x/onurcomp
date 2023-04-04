@@ -11,17 +11,17 @@ uses
   Dialogs, types, LazUTF8, Zipper,onurctrl;
 
 type
-  { ToNScrollBar }
+  { TONURScrollBar }
 
-    ToNScrollBar = class(ToNGraphicControl)
+    TONURScrollBar = class(TONURGraphicControl)
     private
-      //   Fleft, FRight           : TONCustomCrop;
-      FTop, FBottom: TONCustomCrop;
-      FNormali, Fbar: TONCustomCrop;
+      //   Fleft, FRight           : TONURCUSTOMCROP;
+      FTop, FBottom: TONURCUSTOMCROP;
+      FNormali, Fbar: TONURCUSTOMCROP;
       FbuttonNL, FbuttonUL, FbuttonBL, FbuttonDL, FbuttonNR, FbuttonUR,
-      FbuttonBR, FbuttonDR, FbuttonCN, FbuttonCU, FbuttonCB, FbuttonCD: TONCustomCrop;
+      FbuttonBR, FbuttonDR, FbuttonCN, FbuttonCU, FbuttonCB, FbuttonCD: TONURCUSTOMCROP;
       fstep:integer;
-      fcbutons, flbutons, frbutons: TONButtonState;
+      fcbutons, flbutons, frbutons: TONURButtonState;
 
       flbuttonrect, frbuttonrect, Ftrackarea, fcenterbuttonarea: TRect;
 
@@ -42,9 +42,9 @@ type
       function SliderFromPosition(const Value: integer): int64;
       function PositionFromSlider(const Value: integer): int64;
       procedure SetPercentage(Value: int64);
-      procedure SetSkindata(Aimg: TONImg); override;
+      procedure SetSkindata(Aimg: TONURImg); override;
     protected
-      procedure setkind(avalue: tonkindstate); override;
+      procedure setkind(avalue: TONURKindState); override;
       procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
         X: integer; Y: integer); override;
       procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
@@ -59,22 +59,22 @@ type
       procedure paint; override;
       function GetPercentage: int64;
 
-      property ONTOP: TONCUSTOMCROP read FTop write FTop;
-      property ONBOTTOM: TONCUSTOMCROP read FBottom write FBottom;
-      property ONNORMAL: TONCUSTOMCROP read FNormali write FNormali;
-      property ONBAR: TONCUSTOMCROP read Fbar write Fbar;
-      property ONLEFTBUTNORMAL: TONCUSTOMCROP read FbuttonNL write FbuttonNL;
-      property ONLEFTBUTONHOVER: TONCUSTOMCROP read FbuttonUL write FbuttonUL;
-      property ONLEFTBUTPRESS: TONCUSTOMCROP read FbuttonBL write FbuttonBL;
-      property ONLEFTBUTDISABLE: TONCUSTOMCROP read FbuttonDL write FbuttonDL;
-      property ONRIGHTBUTNORMAL: TONCUSTOMCROP read FbuttonNR write FbuttonNR;
-      property ONRIGHTBUTONHOVER: TONCUSTOMCROP read FbuttonUR write FbuttonUR;
-      property ONRIGHTBUTPRESS: TONCUSTOMCROP read FbuttonBR write FbuttonBR;
-      property ONRIGHTBUTDISABLE: TONCUSTOMCROP read FbuttonDR write FbuttonDR;
-      property ONCENTERBUTNORMAL: TONCUSTOMCROP read FbuttonCN write FbuttonCN;
-      property ONCENTERBUTONHOVER: TONCUSTOMCROP read FbuttonCU write FbuttonCU;
-      property ONCENTERBUTPRESS: TONCUSTOMCROP read FbuttonCB write FbuttonCB;
-      property ONCENTERBUTDISABLE: TONCUSTOMCROP read FbuttonCD write FbuttonCD;
+      property OTOP              : TONURCUSTOMCROP read FTop      write FTop;
+      property OBOTTOM           : TONURCUSTOMCROP read FBottom   write FBottom;
+      property ONORMAL           : TONURCUSTOMCROP read FNormali  write FNormali;
+      property OBAR              : TONURCUSTOMCROP read Fbar      write Fbar;
+      property OLEFTBUTNORMAL    : TONURCUSTOMCROP read FbuttonNL write FbuttonNL;
+      property OLEFTBUTONHOVER   : TONURCUSTOMCROP read FbuttonUL write FbuttonUL;
+      property OLEFTBUTPRESS     : TONURCUSTOMCROP read FbuttonBL write FbuttonBL;
+      property OLEFTBUTDISABLE   : TONURCUSTOMCROP read FbuttonDL write FbuttonDL;
+      property ORIGHTBUTNORMAL   : TONURCUSTOMCROP read FbuttonNR write FbuttonNR;
+      property ORIGHTBUTONHOVER  : TONURCUSTOMCROP read FbuttonUR write FbuttonUR;
+      property ORIGHTBUTPRESS    : TONURCUSTOMCROP read FbuttonBR write FbuttonBR;
+      property ORIGHTBUTDISABLE  : TONURCUSTOMCROP read FbuttonDR write FbuttonDR;
+      property OCENTERBUTNORMAL  : TONURCUSTOMCROP read FbuttonCN write FbuttonCN;
+      property OCENTERBUTONHOVER : TONURCUSTOMCROP read FbuttonCU write FbuttonCU;
+      property OCENTERBUTPRESS   : TONURCUSTOMCROP read FbuttonCB write FbuttonCB;
+      property OCENTERBUTDISABLE : TONURCUSTOMCROP read FbuttonCD write FbuttonCD;
     published
       procedure calcsize;
       property Alpha;
@@ -118,11 +118,11 @@ type
       property Transparent;
     end;
 
-     { TONProgressBar }
+     { TONURProgressBar }
 
-  TONProgressBar = class(TONGraphicControl)
+  TONURProgressBar = class(TONURGraphicControl)
   private
-    Fleft, FCenter, FRight,Ftop,fbottom, Fbar: TONCUSTOMCROP;
+    Fleft, FCenter, FRight,Ftop,fbottom, Fbar: TONURCUSTOMCROP;
     FOnChange: TNotifyEvent;
     fposition, fmax, fmin: int64;
     FCaptonvisible: boolean;
@@ -133,16 +133,16 @@ type
     function Getposition: int64;
     function Getmin: int64;
     function Getmax: int64;
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   protected
-    procedure setkind(avalue: tonkindstate); override;
+    procedure setkind(avalue: TONURKindState); override;
   public
-    property ONLEFT_TOP     : TONCUSTOMCROP read Fleft   write Fleft;
-    property ONRIGHT_BOTTOM : TONCUSTOMCROP read FRight  write FRight;
-    property ONCENTER       : TONCUSTOMCROP read FCenter write FCenter;
-    property ONTOP          : TONCUSTOMCROP read Ftop    write Ftop;
-    property ONBOTTOM       : TONCUSTOMCROP read fbottom write fbottom;
-    property ONBAR          : TONCUSTOMCROP read Fbar    write Fbar;
+    property OLEFT_TOP     : TONURCUSTOMCROP read Fleft   write Fleft;
+    property ORIGHT_BOTTOM : TONURCUSTOMCROP read FRight  write FRight;
+    property OCENTER       : TONURCUSTOMCROP read FCenter write FCenter;
+    property OTOP          : TONURCUSTOMCROP read Ftop    write Ftop;
+    property OBOTTOM       : TONURCUSTOMCROP read fbottom write fbottom;
+    property OBAR          : TONURCUSTOMCROP read Fbar    write Fbar;
   public
     constructor Create(Aowner: TComponent); override;
     destructor Destroy; override;
@@ -150,12 +150,12 @@ type
   published
     procedure calcsize;
     property Alpha;
-    property Textvisible: boolean read FCaptonvisible write FCaptonvisible;
+    property Textvisible : boolean read FCaptonvisible write FCaptonvisible;
     property Skindata;
-    property Min: int64 read Getmin write setmin;
-    property Max: int64 read Getmax write setmax;
-    property Position: int64 read Getposition write setposition;
-    property Onchange: TNotifyEvent read FOnChange write FOnChange;
+    property Min         : int64 read Getmin write setmin;
+    property Max         : int64 read Getmax write setmax;
+    property Position    : int64 read Getposition write setposition;
+    property Onchange    : TNotifyEvent read FOnChange write FOnChange;
     property Kind;
     property Transparent;
     property Action;
@@ -193,12 +193,12 @@ type
 
 
 
-  { TONTrackBar }
+  { TONURTrackBar }
 
-  TONTrackBar = class(ToNGraphicControl)
+  TONURTrackBar = class(TONURGraphicControl)
   private
-    Fleft, FRight, FCenter, FNormal, FPress, FEnter, Fdisable: TONCustomCrop;
-    FState: TONButtonState;
+    Fleft, FRight, FCenter, FNormal, FPress, FEnter, Fdisable: TONURCUSTOMCROP;
+    FState: TONURButtonState;
     fcenterbuttonarea: TRect;
     FW, FH: integer;
     FPosition, FXY, FPosValue: integer;
@@ -220,18 +220,18 @@ type
     procedure SetPosition(Value: integer); virtual;
     procedure SetPercentage(Value: integer);
     procedure Changed;
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   protected
-    procedure setkind(avalue: tonkindstate); override;
+    procedure setkind(avalue: TONURKindState); override;
     public
     { Public declarations }
-    property ONLEFT: TONCUSTOMCROP read Fleft write Fleft;
-    property ONRIGHT: TONCUSTOMCROP read FRight write FRight;
-    property ONCENTER: TONCUSTOMCROP read FCenter write FCenter;
-    property ONBUTONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-    property ONBUTONPRESS: TONCUSTOMCROP read FPress write FPress;
-    property ONBUTONHOVER: TONCUSTOMCROP read FEnter write FEnter;
-    property ONBUTONDISABLE: TONCUSTOMCROP read Fdisable write Fdisable;
+    property OLEFT         : TONURCUSTOMCROP read Fleft    write Fleft;
+    property ORIGHT        : TONURCUSTOMCROP read FRight   write FRight;
+    property OCENTER       : TONURCUSTOMCROP read FCenter  write FCenter;
+    property OBUTONNORMAL  : TONURCUSTOMCROP read FNormal  write FNormal;
+    property OBUTONPRESS   : TONURCUSTOMCROP read FPress   write FPress;
+    property OBUTONHOVER   : TONURCUSTOMCROP read FEnter   write FEnter;
+    property OBUTONDISABLE : TONURCUSTOMCROP read Fdisable write Fdisable;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -289,9 +289,9 @@ type
     property Transparent;
   end;
 
-  { TONKnob }
+  { TONURKnob }
 
-  TONKnob = class(TOnGraphicControl)
+  TONURKnob = class(TONURGraphicControl)
   private
     FClick: Boolean;
     FPos: Integer;
@@ -301,15 +301,15 @@ type
     FMinValue: Integer;
     FStep: Integer;
     FScroolStep: Integer;
-    fstate: TONButtonState;
+    fstate: TONURButtonState;
     FOnChange: TNotifyEvent;
 
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-    FTop, FBottom, FCenter,Fbuttonnormal,Fbuttonhover,Fbuttondown,Fbuttondisable: TONCUSTOMCROP;
+    FTop, FBottom, FCenter,Fbuttonnormal,Fbuttonhover,Fbuttondown,Fbuttondisable: TONURCUSTOMCROP;
 
     procedure SetMaxValue(const aValue: Integer);
     procedure SetMinValue(const aValue: Integer);
-    procedure SetSkindata(Aimg: TONImg);override;
+    procedure SetSkindata(Aimg: TONURImg);override;
     procedure SetValue(const aValue: Integer);
   protected
     procedure cmonmouseleave(var messages: tmessage);
@@ -325,20 +325,19 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy;override;
     procedure Paint;override;
-    property ONLEFT            : TONCUSTOMCROP read Fleft             write Fleft;
-    property ONRIGHT           : TONCUSTOMCROP read FRight            write FRight;
-    property ONCENTER          : TONCUSTOMCROP read FCenter           write FCenter;
-    property ONBOTTOM          : TONCUSTOMCROP read FBottom           write FBottom;
-    property ONBOTTOMLEFT      : TONCUSTOMCROP read FBottomleft       write FBottomleft;
-    property ONBOTTOMRIGHT     : TONCUSTOMCROP read FBottomRight      write FBottomRight;
-    property ONTOP             : TONCUSTOMCROP read FTop              write FTop;
-    property ONTOPLEFT         : TONCUSTOMCROP read FTopleft          write FTopleft;
-    property ONTOPRIGHT        : TONCUSTOMCROP read FTopRight         write FTopRight;
-
-    property ONBUTTONNRML      : TONCUSTOMCROP read Fbuttonnormal     write Fbuttonnormal;
-    property ONBUTTONHOVR      : TONCUSTOMCROP read Fbuttonhover      write Fbuttonhover;
-    property ONBUTTONDOWN      : TONCUSTOMCROP read Fbuttondown       write Fbuttondown;
-    property ONBUTTONDSBL      : TONCUSTOMCROP read Fbuttondisable    write Fbuttondisable;
+    property OLEFT            : TONURCUSTOMCROP read Fleft             write Fleft;
+    property ORIGHT           : TONURCUSTOMCROP read FRight            write FRight;
+    property OCENTER          : TONURCUSTOMCROP read FCenter           write FCenter;
+    property OBOTTOM          : TONURCUSTOMCROP read FBottom           write FBottom;
+    property OBOTTOMLEFT      : TONURCUSTOMCROP read FBottomleft       write FBottomleft;
+    property OBOTTOMRIGHT     : TONURCUSTOMCROP read FBottomRight      write FBottomRight;
+    property OTOP             : TONURCUSTOMCROP read FTop              write FTop;
+    property OTOPLEFT         : TONURCUSTOMCROP read FTopleft          write FTopleft;
+    property OTOPRIGHT        : TONURCUSTOMCROP read FTopRight         write FTopRight;
+    property OBUTTONNRML      : TONURCUSTOMCROP read Fbuttonnormal     write Fbuttonnormal;
+    property OBUTTONHOVR      : TONURCUSTOMCROP read Fbuttonhover      write Fbuttonhover;
+    property OBUTTONDOWN      : TONURCUSTOMCROP read Fbuttondown       write Fbuttondown;
+    property OBUTTONDSBL      : TONURCUSTOMCROP read Fbuttondisable    write Fbuttondisable;
   published
     procedure calcsize;
     property Alpha;
@@ -395,24 +394,24 @@ uses BGRAPath, inifiles, clipbrd, strutils, LazUnicode,BGRAFreeType, LazFreeType
 
 procedure Register;
 begin
-  RegisterComponents('ONUR', [TONKnob]);
-  RegisterComponents('ONUR', [TONTrackBar]);
-  RegisterComponents('ONUR', [TONProgressBar]);
-  RegisterComponents('ONUR', [TONScrollBar]);
+  RegisterComponents('ONUR', [TONURKnob]);
+  RegisterComponents('ONUR', [TONURTrackBar]);
+  RegisterComponents('ONUR', [TONURProgressBar]);
+  RegisterComponents('ONUR', [TONURScrollBar]);
 end;
 
 
 
 
-{ ToNScrollBar }
+{ TONURScrollBar }
 
 
-function ToNScrollBar.Getposition: int64;
+function TONURScrollBar.Getposition: int64;
 begin
   Result := FPosValue; //CalculatePosition(SliderFromPosition(FPosition));
 end;
 
-procedure ToNScrollBar.SetPosition(Value: int64);
+procedure TONURScrollBar.SetPosition(Value: int64);
 begin
   if FPosition=PositionFromSlider(Value) then exit;
   if FIsPressed then Exit;
@@ -435,34 +434,34 @@ end;
 
 
 
-function ToNScrollBar.Getmin: int64;
+function TONURScrollBar.Getmin: int64;
 begin
   Result := FMin;
 end;
 
-procedure ToNScrollBar.Setmin(Val: int64);
+procedure TONURScrollBar.Setmin(Val: int64);
 begin
   if Val <> FMin then FMin := Val;
 end;
 
 
-function ToNScrollBar.Getmax: int64;
+function TONURScrollBar.Getmax: int64;
 begin
   Result := FMax;
 end;
 
-procedure ToNScrollBar.SetMax(Val: int64);
+procedure TONURScrollBar.SetMax(Val: int64);
 begin
   if Val <> FMax then FMax := Val;
 end;
 
-function ToNScrollBar.MaxMin: int64;
+function TONURScrollBar.MaxMin: int64;
 begin
   Result := FMax - FMin;
 end;
 
 
-function ToNScrollBar.CheckRange(const Value: int64): int64;
+function TONURScrollBar.CheckRange(const Value: int64): int64;
 begin
   if Kind = oVertical then
     Result := PositionFromSlider(SliderFromPosition(
@@ -476,7 +475,7 @@ end;
 
 
 
-function ToNScrollBar.CalculatePosition(const Value: integer): int64;
+function TONURScrollBar.CalculatePosition(const Value: integer): int64;
 begin
   if Kind = oHorizontal then
     Result := Value - Abs(FMin)
@@ -484,7 +483,7 @@ begin
     Result := Value;//FMax-Value; //for revers
 end;
 
-function ToNScrollBar.SliderFromPosition(const Value: integer): int64;
+function TONURScrollBar.SliderFromPosition(const Value: integer): int64;
 var
   iHW: integer;
 begin
@@ -498,7 +497,7 @@ end;
 
 
 
-function ToNScrollBar.PositionFromSlider(const Value: integer): int64;
+function TONURScrollBar.PositionFromSlider(const Value: integer): int64;
 var
   iHW: integer;
 begin
@@ -510,7 +509,7 @@ begin
   Result := Round((iHW / MaxMin) * Value);
 end;
 
-function ToNScrollBar.GetPercentage: int64;
+function TONURScrollBar.GetPercentage: int64;
 var
   Maxi, Pos, Z: integer;
 begin
@@ -527,7 +526,7 @@ end;
 
 
 
-procedure ToNScrollBar.SetPercentage(Value: int64);
+procedure TONURScrollBar.SetPercentage(Value: int64);
 begin
   Value := ValueRange(Value, 0, 100);
 
@@ -541,12 +540,12 @@ end;
 
 
 
-procedure ToNScrollBar.setkind(avalue: tonkindstate);
+procedure TONURScrollBar.setkind(avalue: tonURkindstate);
 var
   a: integer;
 begin
   inherited setkind(avalue);
-  if (csDesigning in ComponentState) then
+  if (csDesigning in ComponentState) and not ( csLoading in ComponentState) and not (csReading in ComponentState) then
   begin
     a := self.Width;
     if Kind = oHorizontal then
@@ -566,7 +565,7 @@ begin
 //  Invalidate;
 end;
 
-procedure ToNScrollBar.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURScrollBar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 var
   a: int64;
@@ -647,7 +646,7 @@ begin
   // paint;
 end;
 
-procedure ToNScrollBar.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURScrollBar.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -661,7 +660,7 @@ begin
   Invalidate;
 end;
 
-procedure ToNScrollBar.MouseMove(Shift: TShiftState; X, Y: integer);
+procedure TONURScrollBar.MouseMove(Shift: TShiftState; X, Y: integer);
 begin
   inherited MouseMove(Shift, X, Y);
   if csDesigning in ComponentState then
@@ -749,7 +748,7 @@ begin
 
 end;
 
-procedure ToNScrollBar.CMonmouseenter(var Messages: Tmessage);
+procedure TONURScrollBar.CMonmouseenter(var Messages: Tmessage);
 var
   Cursorpos: TPoint;
 begin
@@ -806,7 +805,7 @@ begin
 
 end;
 
-procedure ToNScrollBar.CMonmouseleave(var Messages: Tmessage);
+procedure TONURScrollBar.CMonmouseleave(var Messages: Tmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -823,7 +822,7 @@ begin
 end;
 
 
-constructor ToNScrollBar.Create(Aowner: TComponent);
+constructor TONURScrollBar.Create(Aowner: TComponent);
 begin
   inherited Create(aowner);
   //  Parent := AOwner as TWinControl;
@@ -842,41 +841,41 @@ begin
   fcbutons := obsNormal;
 
   Fstep := 1;
-  FNormali := TONCUSTOMCROP.Create;
+  FNormali := TONURCUSTOMCROP.Create;
   FNormali.cropname := 'NORMAL';
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  Fbar := TONCUSTOMCROP.Create;
+  Fbar := TONURCUSTOMCROP.Create;
   Fbar.cropname := 'BAR';
 
-  FbuttonNL := TONCUSTOMCROP.Create;
+  FbuttonNL := TONURCUSTOMCROP.Create;
   FbuttonNL.cropname := 'LEFTBUTTONNORMAL';
-  FbuttonUL := TONCUSTOMCROP.Create;
+  FbuttonUL := TONURCUSTOMCROP.Create;
   FbuttonUL.cropname := 'LEFTBUTTONHOVER';
-  FbuttonBL := TONCUSTOMCROP.Create;
+  FbuttonBL := TONURCUSTOMCROP.Create;
   FbuttonBL.cropname := 'LEFTBUTTONPRESSED';
-  FbuttonDL := TONCUSTOMCROP.Create;
+  FbuttonDL := TONURCUSTOMCROP.Create;
   FbuttonDL.cropname := 'LEFTBUTTONDISABLE';
 
-  FbuttonNR := TONCUSTOMCROP.Create;
+  FbuttonNR := TONURCUSTOMCROP.Create;
   FbuttonNR.cropname := 'RIGHTBUTTONNORMAL';
-  FbuttonUR := TONCUSTOMCROP.Create;
+  FbuttonUR := TONURCUSTOMCROP.Create;
   FbuttonUR.cropname := 'RIGHTBUTTONHOVER';
-  FbuttonBR := TONCUSTOMCROP.Create;
+  FbuttonBR := TONURCUSTOMCROP.Create;
   FbuttonBR.cropname := 'RIGHTBUTTONPRESSED';
-  FbuttonDR := TONCUSTOMCROP.Create;
+  FbuttonDR := TONURCUSTOMCROP.Create;
   FbuttonDR.cropname := 'RIGHTBUTTONDISABLE';
 
 
-  FbuttonCN := TONCUSTOMCROP.Create;
+  FbuttonCN := TONURCUSTOMCROP.Create;
   FbuttonCN.cropname := 'CENTERBUTTONNORMAL';
-  FbuttonCU := TONCUSTOMCROP.Create;
+  FbuttonCU := TONURCUSTOMCROP.Create;
   FbuttonCU.cropname := 'CENTERBUTTONHOVER';
-  FbuttonCB := TONCUSTOMCROP.Create;
+  FbuttonCB := TONURCUSTOMCROP.Create;
   FbuttonCB.cropname := 'CENTERBUTTONPRESSED';
-  FbuttonCD := TONCUSTOMCROP.Create;
+  FbuttonCD := TONURCUSTOMCROP.Create;
   FbuttonCD.cropname := 'CENTERBUTTONDISABLE';
 
 
@@ -901,12 +900,12 @@ begin
   Captionvisible := False;
 end;
 
-destructor ToNScrollBar.Destroy;
+destructor TONURScrollBar.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 
@@ -932,17 +931,17 @@ begin
   inherited Destroy;
 end;
 
-procedure ToNScrollBar.SetSkindata(Aimg: TONImg);
+procedure TONURScrollBar.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
 end;
 
-procedure ToNScrollBar.calcsize;
+procedure TONURScrollBar.calcsize;
 begin
 
 end;
 
-procedure ToNScrollBar.paint;
+procedure TONURScrollBar.paint;
 var
   DR: TRect;
 begin
@@ -1032,7 +1031,7 @@ end;
 
 
 
-procedure ToNScrollBar.centerbuttonareaset;
+procedure TONURScrollBar.centerbuttonareaset;
 var
   buttonh, borderwh: integer;
   dr:Trect;
@@ -1111,10 +1110,10 @@ begin
 end;
 
 
-{ TONTrackBar }
+{ TONURTrackBar }
 
 
-function TONTrackBar.CheckRange(const Value: integer): integer;
+function TONURTrackBar.CheckRange(const Value: integer): integer;
 begin
   if Kind = oVertical then
     Result := PositionFromSlider(SliderFromPosition(
@@ -1128,12 +1127,12 @@ end;
 
 
 
-function TONTrackBar.MaxMin: integer;
+function TONURTrackBar.MaxMin: integer;
 begin
   Result := FMax - FMin;
 end;
 
-function TONTrackBar.CalculatePosition(const Value: integer): integer;
+function TONURTrackBar.CalculatePosition(const Value: integer): integer;
 begin
   if Kind = oHorizontal then
     Result := Value - Abs(FMin)
@@ -1141,12 +1140,12 @@ begin
     Result := Value;// FMax-Value; //for revers
 end;
 
-function TONTrackBar.GetPosition: integer;
+function TONURTrackBar.GetPosition: integer;
 begin
   Result := CalculatePosition(SliderFromPosition(FPosition));
 end;
 
-procedure TONTrackBar.CMonmouseenter(var Messages: Tmessage);
+procedure TONURTrackBar.CMonmouseenter(var Messages: Tmessage);
 begin
   if (not FIsPressed) and (Enabled) and (FState<>obshover) then
   begin
@@ -1155,7 +1154,7 @@ begin
   end;
 end;
 
-procedure TONTrackBar.CMonmouseleave(var Messages: Tmessage);
+procedure TONURTrackBar.CMonmouseleave(var Messages: Tmessage);
 begin
   if Enabled then
   begin
@@ -1168,17 +1167,17 @@ begin
   end;
 end;
 
-procedure TONTrackBar.SetMax(const Value: integer);
+procedure TONURTrackBar.SetMax(const Value: integer);
 begin
   if Value <> FMax then FMax := Value;
 end;
 
-procedure TONTrackBar.SetMin(const Value: integer);
+procedure TONURTrackBar.SetMin(const Value: integer);
 begin
   if Value <> FMin then FMin := Value;
 end;
 
-function TONTrackBar.SliderFromPosition(const Value: integer): integer;
+function TONURTrackBar.SliderFromPosition(const Value: integer): integer;
 begin
   if Kind = oVertical then
     Result := Round(Value / (self.Height - fcenterbuttonarea.Height) * MaxMin)
@@ -1187,7 +1186,7 @@ begin
 
 end;
 
-function TONTrackBar.PositionFromSlider(const Value: integer): integer;
+function TONURTrackBar.PositionFromSlider(const Value: integer): integer;
 begin
   if Kind = oHorizontal then
     Result := Round(((self.Width - fcenterbuttonarea.Width) / MaxMin) * Value)
@@ -1195,7 +1194,7 @@ begin
     Result := Round(((self.Height - fcenterbuttonarea.Height) / MaxMin) * Value);
 end;
 
-procedure TONTrackBar.SetPosition(Value: integer);
+procedure TONURTrackBar.SetPosition(Value: integer);
 begin
   if FIsPressed then Exit;
   Value := ValueRange(Value, FMin, FMax);
@@ -1217,7 +1216,7 @@ begin
   Invalidate;
 end;
 
-procedure TONTrackBar.SetPercentage(Value: integer);
+procedure TONURTrackBar.SetPercentage(Value: integer);
 begin
   Value := ValueRange(Value, 0, 100);
 
@@ -1230,7 +1229,7 @@ begin
   Changed;
 end;
 
-function TONTrackBar.GetPercentage: integer;
+function TONURTrackBar.GetPercentage: integer;
 var
   Maxi, Pos, Z: integer;
 begin
@@ -1245,18 +1244,18 @@ begin
   Result := Abs(Round(Z - (Pos / Maxi) * 100));
 end;
 
-procedure TONTrackBar.Changed;
+procedure TONURTrackBar.Changed;
 begin
   if Assigned(FOnChange) then FOnChange(Self);
 end;
 
 
-procedure TONTrackBar.setkind(avalue: tonkindstate);
+procedure TONURTrackBar.setkind(avalue: TONURKindState);
 var
   a: integer;
 begin
   inherited setkind(avalue);
-  if (csDesigning in ComponentState) then
+  if (csDesigning in ComponentState) and not ( csLoading in ComponentState) and not (csReading in ComponentState) then
   begin
     a := self.Width;
     if Kind = oHorizontal then
@@ -1277,25 +1276,25 @@ begin
   Invalidate;
 end;
 
-constructor TONTrackBar.Create(AOwner: TComponent);
+constructor TONURTrackBar.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
 
 
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
 
-  FNormal := TONCUSTOMCROP.Create;
+  FNormal := TONURCUSTOMCROP.Create;
   FNormal.cropname := 'NORMAL';
-  FEnter := TONCUSTOMCROP.Create;
+  FEnter := TONURCUSTOMCROP.Create;
   FEnter.cropname := 'HOVER';
-  FPress := TONCUSTOMCROP.Create;
+  FPress := TONURCUSTOMCROP.Create;
   FPress.cropname := 'PRESSED';
-  Fdisable := TONCUSTOMCROP.Create;
+  Fdisable := TONURCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
 
   Customcroplist.Add(FCenter);
@@ -1325,12 +1324,12 @@ begin
   Captionvisible := False;
 end;
 
-destructor TONTrackBar.Destroy;
+destructor TONURTrackBar.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {begin
@@ -1348,7 +1347,7 @@ end;
 
 
 
-procedure TONTrackBar.centerbuttonareaset;
+procedure TONURTrackBar.centerbuttonareaset;
 //var
 // buttonh:integer;
 begin
@@ -1394,14 +1393,14 @@ begin
   end;
 end;
 
-procedure TONTrackBar.SetSkindata(Aimg: TONImg);
+procedure TONURTrackBar.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   calcsize;
 end;
 
 
-procedure TONTrackBar.calcsize;
+procedure TONURTrackBar.calcsize;
 begin
   if Kind = oHorizontal then
   begin
@@ -1417,7 +1416,7 @@ begin
 
   end;
 end;
-procedure TONTrackBar.Paint;
+procedure TONURTrackBar.Paint;
 var
   //TrgtRect,
   SrcRect: TRect;
@@ -1488,7 +1487,7 @@ begin
   inherited Paint;
 end;
 
-procedure TONTrackBar.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
+procedure TONURTrackBar.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
   Y: integer);
 begin
   inherited MouseDown(Button, Shift, X, Y);
@@ -1507,7 +1506,7 @@ begin
   end;
 end;
 
-procedure TONTrackBar.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
+procedure TONURTrackBar.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
   Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -1528,7 +1527,7 @@ begin
   end;
 end;
 
-procedure TONTrackBar.MouseMove(Shift: TShiftState; X, Y: integer);
+procedure TONURTrackBar.MouseMove(Shift: TShiftState; X, Y: integer);
 var
   MAXi: smallint;
 begin
@@ -1548,9 +1547,9 @@ begin
 end;
 
 
-{ TONProgressBar }
+{ TONURProgressBar }
 
-procedure TONProgressBar.setposition(const Val: int64);
+procedure TONURProgressBar.setposition(const Val: int64);
 begin
   fposition := ValueRange(Val, fmin, fmax);
   Caption := IntToStr(fposition);
@@ -1558,7 +1557,7 @@ begin
   Invalidate;
 end;
 
-procedure TONProgressBar.setmax(const Val: int64);
+procedure TONURProgressBar.setmax(const Val: int64);
 begin
   if fmax <> val then
   begin
@@ -1566,7 +1565,7 @@ begin
   end;
 end;
 
-procedure TONProgressBar.setmin(const Val: int64);
+procedure TONURProgressBar.setmin(const Val: int64);
 begin
   if fmin <> val then
   begin
@@ -1574,29 +1573,30 @@ begin
   end;
 end;
 
-function TONProgressBar.Getposition: int64;
+function TONURProgressBar.Getposition: int64;
 begin
   Result := fposition;
 end;
 
-function TONProgressBar.Getmin: int64;
+function TONURProgressBar.Getmin: int64;
 begin
   Result := fmin;
 end;
 
-function TONProgressBar.Getmax: int64;
+function TONURProgressBar.Getmax: int64;
 begin
   Result := fmax;
 end;
 
 
 
-procedure TONProgressBar.setkind(avalue: tonkindstate);
+procedure TONURProgressBar.setkind(avalue: TONURKindState);
 var
   a: integer;
 begin
   inherited setkind(avalue);
-  if (csDesigning in ComponentState) then
+  //if (csDesigning in ComponentState) then
+  if (csDesigning in ComponentState) and not ( csLoading in ComponentState) and not (csReading in ComponentState) then
   begin
     a := self.Width;
     if Kind = oHorizontal then
@@ -1619,7 +1619,7 @@ begin
   Invalidate;
 end;
 
-constructor TONProgressBar.Create(Aowner: TComponent);
+constructor TONURProgressBar.Create(Aowner: TComponent);
 begin
   inherited Create(Aowner);
 
@@ -1631,18 +1631,18 @@ begin
   fposition := 10;
   kind := oHorizontal;
 
-  Fleft   := TONCustomCrop.Create;
+  Fleft   := TONURCUSTOMCROP.Create;
   Fleft.cropname   := 'LEFT';
-  FCenter := TONCustomCrop.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight  := TONCustomCrop.Create;
+  FRight  := TONURCUSTOMCROP.Create;
   FRight.cropname  := 'RIGHT';
-  Ftop    := TONCustomCrop.Create;
+  Ftop    := TONURCUSTOMCROP.Create;
   Ftop.cropname    := 'TOP';
-  fbottom := TONCustomCrop.Create;
+  fbottom := TONURCUSTOMCROP.Create;
   fbottom.cropname := 'BOTTOM';
 
-  fbar := TONCustomCrop.Create;
+  fbar := TONURCUSTOMCROP.Create;
   fbar.cropname := 'BAR';
 
   Customcroplist.Add(Fleft);
@@ -1656,12 +1656,12 @@ begin
   FCaptonvisible := True;
 end;
 
-destructor TONProgressBar.Destroy;
+destructor TONURProgressBar.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
  { FreeAndNil(Fleft);
@@ -1674,13 +1674,13 @@ begin
   inherited Destroy;
 end;
 
-procedure TONProgressBar.SetSkindata(Aimg: TONImg);
+procedure TONURProgressBar.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
    calcsize;
 end;
 
-procedure TONProgressBar.calcsize;
+procedure TONURProgressBar.calcsize;
 begin
    if self.Kind = oHorizontal then   //yatay
   begin
@@ -1700,7 +1700,7 @@ begin
   end;
 end;
 
-procedure TONProgressBar.paint;
+procedure TONURProgressBar.paint;
 var
   //DR,
   DBAR: TRect;
@@ -1745,32 +1745,32 @@ end;
 
 
 
-procedure TONKnob.SetMaxValue(const aValue: Integer);
+procedure TONURKnob.SetMaxValue(const aValue: Integer);
 begin
   FMaxValue:=ValueRange(aValue,FMinValue,FMaxValue);
   Invalidate;
 end;
 
-procedure TONKnob.SetMinValue(const aValue: Integer);
+procedure TONURKnob.SetMinValue(const aValue: Integer);
 begin
  FMinValue:=ValueRange(aValue,FMinValue,FMaxValue);
   Invalidate;
 end;
 
-procedure TONKnob.SetValue(const aValue: Integer);
+procedure TONURKnob.SetValue(const aValue: Integer);
 begin
  fvalue:=ValueRange(aValue,FMinValue,FMaxValue);
   Invalidate;
 end;
 
-procedure TONKnob.cmonmouseleave(var messages: tmessage);
+procedure TONURKnob.cmonmouseleave(var messages: tmessage);
 begin
 //  fstate := obsnormal;
 //  FClick:= False;
 //  Invalidate;
 end;
 
-procedure TONKnob.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
+procedure TONURKnob.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
   Y: Integer);
 begin
   inherited MouseDown(Button, Shift, X, Y);
@@ -1780,7 +1780,7 @@ begin
   fState := obspressed;
 end;
 
-procedure TONKnob.MouseMove(Shift: TShiftState; X, Y: Integer);
+procedure TONURKnob.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited MouseMove(Shift, X, Y);
   if FClick then
@@ -1790,7 +1790,7 @@ begin
   end;
 end;
 
-procedure TONKnob.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
+procedure TONURKnob.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
   Y: Integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -1799,7 +1799,7 @@ begin
 
 end;
 
-function TONKnob.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
+function TONURKnob.DoMouseWheel(Shift: TShiftState; WheelDelta: Integer;
   MousePos: TPoint): Boolean;
 begin
   if WheelDelta > 0 then
@@ -1809,52 +1809,52 @@ begin
   Result:=inherited DoMouseWheel(Shift, WheelDelta, MousePos);
 end;
 
-procedure TONKnob.DoOnChange;
+procedure TONURKnob.DoOnChange;
 begin
  if Assigned(FOnChange) then FOnChange(Self);
 end;
 
-constructor TONKnob.Create(AOwner: TComponent);
+constructor TONURKnob.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname      := 'knob';
 
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
-  Fbuttonnormal:=TONCUSTOMCROP.Create;
+  Fbuttonnormal:=TONURCUSTOMCROP.Create;
   Fbuttonnormal.cropname := 'NORMAL';
-  Fbuttondown:=TONCUSTOMCROP.Create;
+  Fbuttondown:=TONURCUSTOMCROP.Create;
   Fbuttondown.cropname := 'PRESSED';
-  Fbuttonhover:=TONCUSTOMCROP.Create;
+  Fbuttonhover:=TONURCUSTOMCROP.Create;
   Fbuttonhover.cropname := 'HOVER';
-  Fbuttondisable:=TONCUSTOMCROP.Create;
+  Fbuttondisable:=TONURCUSTOMCROP.Create;
   Fbuttondisable.cropname := 'DISABLE';
 
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
   Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
   Customcroplist.Add(Fbuttonnormal);
   Customcroplist.Add(Fbuttondown);
   Customcroplist.Add(Fbuttonhover);
@@ -1877,12 +1877,12 @@ begin
   Caption:= IntToStr (FValue);
 end;
 
-destructor TONKnob.Destroy;
+destructor TONURKnob.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {begin
@@ -1903,13 +1903,13 @@ begin
 end;
 
 
-procedure TONKnob.SetSkindata(Aimg: TONImg);
+procedure TONURKnob.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   calcsize;
 end;
 
-procedure TONKnob.calcsize;
+procedure TONURKnob.calcsize;
 begin
  { FTopleft.Targetrect     := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect    := Rect(self.ClientWidth - (FTopRight.Width), 0, self.ClientWidth, (FTopRight.Height));
@@ -1925,7 +1925,7 @@ begin
 
 end;
 
-procedure TONKnob.Paint;
+procedure TONURKnob.Paint;
 var
   //  HEDEF,
   DR: TRect;

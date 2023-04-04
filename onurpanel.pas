@@ -14,11 +14,11 @@ type
 
   { TONPanel }
 
-  TONPanel = class(TONCustomControl)
+  TONURPanel = class(TONURCustomControl)
   private
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-    FTop, FBottom, FCenter: TONCUSTOMCROP;
-    procedure SetSkindata(Aimg: TONImg); override;
+    FTop, FBottom, FCenter: TONURCUSTOMCROP;
+    procedure SetSkindata(Aimg: TONURImg); override;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -27,15 +27,15 @@ type
 
 
     //Procedure Resizepanel;
-    property ONLEFT        : TONCUSTOMCROP read Fleft        write Fleft;
-    property ONRIGHT       : TONCUSTOMCROP read FRight       write FRight;
-    property ONCENTER      : TONCUSTOMCROP read FCenter      write FCenter;
-    property ONBOTTOM      : TONCUSTOMCROP read FBottom      write FBottom;
-    property ONBOTTOMLEFT  : TONCUSTOMCROP read FBottomleft  write FBottomleft;
-    property ONBOTTOMRIGHT : TONCUSTOMCROP read FBottomRight write FBottomRight;
-    property ONTOP         : TONCUSTOMCROP read FTop         write FTop;
-    property ONTOPLEFT     : TONCUSTOMCROP read FTopleft     write FTopleft;
-    property ONTOPRIGHT    : TONCUSTOMCROP read FTopRight    write FTopRight;
+    property OLEFT        : TONURCUSTOMCROP read Fleft        write Fleft;
+    property ORIGHT       : TONURCUSTOMCROP read FRight       write FRight;
+    property OCENTER      : TONURCUSTOMCROP read FCenter      write FCenter;
+    property OBOTTOM      : TONURCUSTOMCROP read FBottom      write FBottom;
+    property OBOTTOMLEFT  : TONURCUSTOMCROP read FBottomleft  write FBottomleft;
+    property OBOTTOMRIGHT : TONURCUSTOMCROP read FBottomRight write FBottomRight;
+    property OTOP         : TONURCUSTOMCROP read FTop         write FTop;
+    property OTOPLEFT     : TONURCUSTOMCROP read FTopleft     write FTopleft;
+    property OTOPRIGHT    : TONURCUSTOMCROP read FTopRight    write FTopRight;
     protected
   published
     property Alpha;
@@ -103,21 +103,12 @@ type
 
   { TONHeaderPanel }
 
-  TONHeaderPanel = class(TONPanel)
+  TONURHeaderPanel = class(TONURPanel)
   private
   public
     constructor Create(AOwner: TComponent); override;
   published
     property Alpha;
-{    property ONLEFT;
-    property ONRIGHT;
-    property ONCENTER;
-    property ONBOTTOM;
-    property ONBOTTOMLEFT;
-    property ONBOTTOMRIGHT;
-    property ONTOP;
-    property ONTOPLEFT;
-    property ONTOPRIGHT; }
     property Skindata;
     property Align;
     property Alignment;
@@ -182,35 +173,35 @@ type
 
   { TONCollapExpandPanel }
 
-  TONCollapExpandPanel = class(TonCustomcontrol)
+  TONURCollapExpandPanel = class(TonURCustomcontrol)
   private
-    FStatus          : TONExpandStatus;
+    FStatus          : TONURExpandStatus;
     FOnCollapse      : TNotifyEvent;
     FOnExpand        : TNotifyEvent;
     fbutonarea       : TRect;
     FAutoCollapse    : boolean;
     fminheight       : integer;
     fnormalheight    : integer;
-    Fstate           : TONButtonState;
-    Fheaderstate     : Tcapdirection;
-    fbutondirection  : TONButtonDirection;
-    Fleft, FTopleft  : TONCUSTOMCROP;
-    FBottomleft      : TONCUSTOMCROP;
-    FRight           : TONCUSTOMCROP;
-    FTopRight        : TONCUSTOMCROP;
-    FBottomRight     : TONCUSTOMCROP;
-    FTop, FBottom    : TONCUSTOMCROP;
-    FCenter, FNormal : TONCUSTOMCROP;
-    FPress, FEnter   : TONCUSTOMCROP;
-    Fdisable         : TONCUSTOMCROP;
-    Fcaptionarea     : TONCUSTOMCROP;
-    FexNormal        : TONCUSTOMCROP;
-    FexPress         : TONCUSTOMCROP;
-    FexEnter         : TONCUSTOMCROP;
-    Fexdisable       : TONCUSTOMCROP;
+    Fstate           : TONURButtonState;
+    Fheaderstate     : TONURCapDirection;
+    fbutondirection  : TONURButtonDirection;
+    Fleft, FTopleft  : TONURCUSTOMCROP;
+    FBottomleft      : TONURCUSTOMCROP;
+    FRight           : TONURCUSTOMCROP;
+    FTopRight        : TONURCUSTOMCROP;
+    FBottomRight     : TONURCUSTOMCROP;
+    FTop, FBottom    : TONURCUSTOMCROP;
+    FCenter, FNormal : TONURCUSTOMCROP;
+    FPress, FEnter   : TONURCUSTOMCROP;
+    Fdisable         : TONURCUSTOMCROP;
+    Fcaptionarea     : TONURCUSTOMCROP;
+    FexNormal        : TONURCUSTOMCROP;
+    FexPress         : TONURCUSTOMCROP;
+    FexEnter         : TONURCUSTOMCROP;
+    Fexdisable       : TONURCUSTOMCROP;
     //Procedure Resizecollapsedpanel;
-    procedure Setheaderstate(AValue: Tcapdirection);
-    procedure SetStatus(const AValue: TONExpandStatus);
+    procedure Setheaderstate(AValue: TONURCapDirection);
+    procedure SetStatus(const AValue: TONURExpandStatus);
     procedure SetAutoCollapse(const AValue: boolean);
     procedure SetOnCollapse(const AValue: TNotifyEvent);
     procedure SetOnExpand(const AValue: TNotifyEvent);
@@ -226,28 +217,28 @@ type
     procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
     procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   protected
     procedure DblClick; override;
    public
-    property ONLEFT         : TONCUSTOMCROP      read Fleft           write Fleft;
-    property ONRIGHT        : TONCUSTOMCROP      read FRight          write FRight;
-    property ONCENTER       : TONCUSTOMCROP      read FCenter         write FCenter;
-    property ONBOTTOM       : TONCUSTOMCROP      read FBottom         write FBottom;
-    property ONBOTTOMLEFT   : TONCUSTOMCROP      read FBottomleft     write FBottomleft;
-    property ONBOTTOMRIGHT  : TONCUSTOMCROP      read FBottomRight    write FBottomRight;
-    property ONTOP          : TONCUSTOMCROP      read FTop            write FTop;
-    property ONTOPLEFT      : TONCUSTOMCROP      read FTopleft        write FTopleft;
-    property ONTOPRIGHT     : TONCUSTOMCROP      read FTopRight       write FTopRight;
-    property ONNORMAL       : TONCUSTOMCROP      read FNormal         write FNormal;
-    property ONPRESSED      : TONCUSTOMCROP      read FPress          write FPress;
-    property ONHOVER        : TONCUSTOMCROP      read FEnter          write FEnter;
-    property ONDISABLE      : TONCUSTOMCROP      read Fdisable        write Fdisable;
-    property ONEXNORMAL     : TONCUSTOMCROP      read FexNormal       write FexNormal;
-    property ONEXPRESSED    : TONCUSTOMCROP      read FexPress        write FexPress;
-    property ONEXHOVER      : TONCUSTOMCROP      read FexEnter        write FexEnter;
-    property ONEXDISABLE    : TONCUSTOMCROP      read Fexdisable      write Fexdisable;
-    property ONCAPTION      : TONCUSTOMCROP      read Fcaptionarea    write Fcaptionarea;
+    property OLEFT         : TONURCUSTOMCROP      read Fleft           write Fleft;
+    property ORIGHT        : TONURCUSTOMCROP      read FRight          write FRight;
+    property OCENTER       : TONURCUSTOMCROP      read FCenter         write FCenter;
+    property OBOTTOM       : TONURCUSTOMCROP      read FBottom         write FBottom;
+    property OBOTTOMLEFT   : TONURCUSTOMCROP      read FBottomleft     write FBottomleft;
+    property OBOTTOMRIGHT  : TONURCUSTOMCROP      read FBottomRight    write FBottomRight;
+    property OTOP          : TONURCUSTOMCROP      read FTop            write FTop;
+    property OTOPLEFT      : TONURCUSTOMCROP      read FTopleft        write FTopleft;
+    property OTOPRIGHT     : TONURCUSTOMCROP      read FTopRight       write FTopRight;
+    property ONORMAL       : TONURCUSTOMCROP      read FNormal         write FNormal;
+    property OPRESSED      : TONURCUSTOMCROP      read FPress          write FPress;
+    property OHOVER        : TONURCUSTOMCROP      read FEnter          write FEnter;
+    property ODISABLE      : TONURCUSTOMCROP      read Fdisable        write Fdisable;
+    property OEXNORMAL     : TONURCUSTOMCROP      read FexNormal       write FexNormal;
+    property OEXPRESSED    : TONURCUSTOMCROP      read FexPress        write FexPress;
+    property OEXHOVER      : TONURCUSTOMCROP      read FexEnter        write FexEnter;
+    property OEXDISABLE    : TONURCUSTOMCROP      read Fexdisable      write Fexdisable;
+    property OCAPTION      : TONURCUSTOMCROP      read Fcaptionarea    write Fcaptionarea;
 
     constructor Create(Aowner: TComponent); override;
     destructor Destroy; override;
@@ -255,14 +246,14 @@ type
   published
     property Alpha;
     property Caption;
-    property OnExpand       : TNotifyEvent       read FOnExpand       write SetOnExpand;
-    property OnCollapse     : TNotifyEvent       read FOnCollapse     write SetOnCollapse;
-    property AutoCollapse   : boolean            read FAutoCollapse   write SetAutoCollapse;
-    property Status         : TONExpandStatus    read FStatus         write SetStatus;
-    property Minheight      : integer            read GetMinheight    write Setminheight;
-    property Normalheight   : integer            read GetNormalheight write Setnormalheight;
-    property HeaderState    : Tcapdirection      read Fheaderstate    write Setheaderstate;
-    property ButtonPosition : TONButtonDirection read fbutondirection write fbutondirection;
+    property OnExpand       : TNotifyEvent         read FOnExpand       write SetOnExpand;
+    property OnCollapse     : TNotifyEvent         read FOnCollapse     write SetOnCollapse;
+    property AutoCollapse   : boolean              read FAutoCollapse   write SetAutoCollapse;
+    property Status         : TONURExpandStatus    read FStatus         write SetStatus;
+    property Minheight      : integer              read GetMinheight    write Setminheight;
+    property Normalheight   : integer              read GetNormalheight write Setnormalheight;
+    property HeaderState    : TONURCapDirection    read Fheaderstate    write Setheaderstate;
+    property ButtonPosition : TONURButtonDirection read fbutondirection write fbutondirection;
     property Skindata;
     property Action;
     property Align;
@@ -302,30 +293,30 @@ type
 
 
 
-  { TONGraphicPanel }
+  { TONURGraphicPanel }
 
-  TONGraphicPanel = class(TONGraphicControl)
+  TONURGraphicPanel = class(TONURGraphicControl)
   private
-    Fleft, FTopleft         : TONCUSTOMCROP;
-    FBottomleft, FRight     : TONCUSTOMCROP;
-    FTopRight, FBottomRight : TONCUSTOMCROP;
-    FTop, FBottom, FCenter  : TONCUSTOMCROP;
+    Fleft, FTopleft         : TONURCUSTOMCROP;
+    FBottomleft, FRight     : TONURCUSTOMCROP;
+    FTopRight, FBottomRight : TONURCUSTOMCROP;
+    FTop, FBottom, FCenter  : TONURCUSTOMCROP;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
   protected
-    procedure SetSkindata(Aimg: TONImg); override;
-    property ONLEFT        : TONCUSTOMCROP read Fleft        write Fleft;
-    property ONRIGHT       : TONCUSTOMCROP read FRight       write FRight;
-    property ONCENTER      : TONCUSTOMCROP read FCenter      write FCenter;
-    property ONBOTTOM      : TONCUSTOMCROP read FBottom      write FBottom;
-    property ONBOTTOMLEFT  : TONCUSTOMCROP read FBottomleft  write FBottomleft;
-    property ONBOTTOMRIGHT : TONCUSTOMCROP read FBottomRight write FBottomRight;
-    property ONTOP         : TONCUSTOMCROP read FTop         write FTop;
-    property ONTOPLEFT     : TONCUSTOMCROP read FTopleft     write FTopleft;
-    property ONTOPRIGHT    : TONCUSTOMCROP read FTopRight    write FTopRight;
+    procedure SetSkindata(Aimg: TONURImg); override;
+    property OLEFT        : TONURCUSTOMCROP read Fleft        write Fleft;
+    property ORIGHT       : TONURCUSTOMCROP read FRight       write FRight;
+    property OCENTER      : TONURCUSTOMCROP read FCenter      write FCenter;
+    property OBOTTOM      : TONURCUSTOMCROP read FBottom      write FBottom;
+    property OBOTTOMLEFT  : TONURCUSTOMCROP read FBottomleft  write FBottomleft;
+    property OBOTTOMRIGHT : TONURCUSTOMCROP read FBottomRight write FBottomRight;
+    property OTOP         : TONURCUSTOMCROP read FTop         write FTop;
+    property OTOPLEFT     : TONURCUSTOMCROP read FTopleft     write FTopleft;
+    property OTOPRIGHT    : TONURCUSTOMCROP read FTopRight    write FTopRight;
   published
     property Alpha;
     property Skindata;
@@ -387,72 +378,72 @@ uses BGRAPath, inifiles, clipbrd, strutils, LazUnicode,BGRAFreeType, LazFreeType
 
 procedure Register;
 begin
-  RegisterComponents('ONUR', [TONPANEL]);
-  RegisterComponents('ONUR', [TONHeaderPanel]);
-  RegisterComponents('ONUR', [TONGraphicPanel]);
-  RegisterComponents('ONUR', [TONCollapExpandPanel]);
+  RegisterComponents('ONUR', [TONURPANEL]);
+  RegisterComponents('ONUR', [TONURHeaderPanel]);
+  RegisterComponents('ONUR', [TONURGraphicPanel]);
+  RegisterComponents('ONUR', [TONURCollapExpandPanel]);
 end;
 
-{ TONCollapExpandPanel }
+{ TONURCollapExpandPanel }
 
-procedure TONCollapExpandPanel.Setheaderstate(AValue: Tcapdirection);
+procedure TONURCollapExpandPanel.Setheaderstate(AValue: TONURcapdirection);
 begin
   if Fheaderstate = AValue then Exit;
   Fheaderstate := AValue;
   Invalidate;
 end;
 
-procedure TONCollapExpandPanel.SetStatus(const AValue: TONExpandStatus);
+procedure TONURCollapExpandPanel.SetStatus(const AValue: TONURExpandStatus);
 begin
   if FStatus = AValue then Exit;
   FStatus := AValue;
   if (FAutoCollapse) then ResizePanel();
 end;
 
-procedure TONCollapExpandPanel.SetAutoCollapse(const AValue: boolean);
+procedure TONURCollapExpandPanel.SetAutoCollapse(const AValue: boolean);
 begin
   if FAutoCollapse = AValue then Exit;
   FAutoCollapse := AValue;
   ResizePanel();
 end;
 
-procedure TONCollapExpandPanel.SetOnCollapse(const AValue: TNotifyEvent);
+procedure TONURCollapExpandPanel.SetOnCollapse(const AValue: TNotifyEvent);
 begin
   if FOnCollapse = AValue then Exit;
   FOnCollapse := AValue;
 end;
 
-procedure TONCollapExpandPanel.SetOnExpand(const AValue: TNotifyEvent);
+procedure TONURCollapExpandPanel.SetOnExpand(const AValue: TNotifyEvent);
 begin
   if FOnExpand = AValue then Exit;
   FOnExpand := AValue;
 end;
 
-function TONCollapExpandPanel.GetMinheight: integer;
+function TONURCollapExpandPanel.GetMinheight: integer;
 begin
   Result := fminheight;
 end;
 
-function TONCollapExpandPanel.GetNormalheight: integer;
+function TONURCollapExpandPanel.GetNormalheight: integer;
 begin
   Result := fnormalheight;
 end;
 
-procedure TONCollapExpandPanel.Setminheight(const Avalue: integer);
+procedure TONURCollapExpandPanel.Setminheight(const Avalue: integer);
 begin
   if fminheight = AValue then Exit;
   fminheight := AValue;
   Self.Constraints.MinHeight := fminheight;
 end;
 
-procedure TONCollapExpandPanel.Setnormalheight(const Avalue: integer);
+procedure TONURCollapExpandPanel.Setnormalheight(const Avalue: integer);
 begin
   if fnormalheight = AValue then Exit;
   fnormalheight := AValue;
   Self.Constraints.MaxHeight := fnormalheight;
 end;
 
-procedure TONCollapExpandPanel.ResizePanel;
+procedure TONURCollapExpandPanel.ResizePanel;
 begin
   if (FStatus = oExpanded) then
   begin
@@ -464,7 +455,7 @@ begin
   end;
 end;
 
-procedure TONCollapExpandPanel.MouseDown(Button: TMouseButton;
+procedure TONURCollapExpandPanel.MouseDown(Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
   if Enabled=false then exit;
@@ -488,7 +479,7 @@ begin
 
 end;
 
-procedure TONCollapExpandPanel.MouseUp(Button: TMouseButton;
+procedure TONURCollapExpandPanel.MouseUp(Button: TMouseButton;
   Shift: TShiftState; X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -496,7 +487,7 @@ begin
   Invalidate;
 end;
 
-procedure TONCollapExpandPanel.CMonmouseenter(var Messages: Tmessage);
+procedure TONURCollapExpandPanel.CMonmouseenter(var Messages: Tmessage);
 var
   aPnt: TPoint;
 begin
@@ -519,7 +510,7 @@ begin
   end;
 end;
 
-procedure TONCollapExpandPanel.CMonmouseleave(var Messages: Tmessage);
+procedure TONURCollapExpandPanel.CMonmouseleave(var Messages: Tmessage);
 // var
 //   aPnt: TPoint;
 begin
@@ -534,7 +525,7 @@ begin
   //   end;
 end;
 
-procedure TONCollapExpandPanel.MouseMove(Shift: TShiftState; X, Y: integer);
+procedure TONURCollapExpandPanel.MouseMove(Shift: TShiftState; X, Y: integer);
 begin
   inherited mousemove(shift, x, y);
   if enabled=false then exit;
@@ -558,7 +549,7 @@ end;
 
 
 
-procedure TONCollapExpandPanel.DblClick;
+procedure TONURCollapExpandPanel.DblClick;
 var
   aPnt: TPoint;
 begin
@@ -584,7 +575,7 @@ begin
   end;
 end;
 
-constructor TONCollapExpandPanel.Create(Aowner: TComponent);
+constructor TONURCollapExpandPanel.Create(Aowner: TComponent);
 begin
   inherited Create(Aowner);
   ControlStyle := ControlStyle + [csAcceptsControls];
@@ -599,48 +590,48 @@ begin
   fbutondirection := obright;
   Alpha := 255;
   Skinname := 'expandpanel';
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
-  FNormal := TONCUSTOMCROP.Create;
+  FNormal := TONURCUSTOMCROP.Create;
   FNormal.cropname := 'NORMAL';
-  FPress := TONCUSTOMCROP.Create;
+  FPress := TONURCUSTOMCROP.Create;
   FPress.cropname := 'PRESS';
-  FEnter := TONCUSTOMCROP.Create;
+  FEnter := TONURCUSTOMCROP.Create;
   FEnter.cropname := 'HOVER';
-  Fdisable := TONCUSTOMCROP.Create;
+  Fdisable := TONURCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
 
-  Fcaptionarea:= TONCUSTOMCROP.Create;
+  Fcaptionarea:= TONURCUSTOMCROP.Create;
   Fcaptionarea.cropname := 'CAPTION';
 
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
   Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
   Customcroplist.Add(FNormal);
-  Customcroplist.Add(FPress);
   Customcroplist.Add(FEnter);
+  Customcroplist.Add(FPress);
   Customcroplist.Add(Fdisable);
   Customcroplist.Add(Fcaptionarea);
 
@@ -652,12 +643,12 @@ begin
   Fheaderstate := ocup;
 end;
 
-destructor TONCollapExpandPanel.Destroy;
+destructor TONURCollapExpandPanel.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {begin
@@ -677,7 +668,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TONCollapExpandPanel.SetSkindata(Aimg: TONImg);
+procedure TONURCollapExpandPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   FTopleft.Targetrect       := Rect(0, 0, FTopleft.Width,FTopleft.Height);
@@ -696,7 +687,7 @@ begin
 
 end;
 
-procedure TONCollapExpandPanel.paint;
+procedure TONURCollapExpandPanel.paint;
 var
 SrcRect,captionrect: TRect;
 
@@ -813,9 +804,9 @@ end;
 
 
 
-{ TONHeaderPanel }
+{ TONURHeaderPanel }
 
-constructor TONHeaderPanel.Create(AOwner: TComponent);
+constructor TONURHeaderPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname := 'headerpanel';
@@ -824,38 +815,38 @@ end;
 
 { TONPanel }
 
-constructor TONPanel.Create(AOwner: TComponent);
+constructor TONURPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname := 'panel';
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
 
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
   Customcroplist.Add(FBottom);
+  Customcroplist.Add(FBottomRight);
+   Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
-  Customcroplist.Add(FTopRight);
-  Customcroplist.Add(FBottomRight);
-  Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
 
   Self.Height := 190;
   Self.Width := 190;
@@ -863,12 +854,12 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
-destructor TONPanel.Destroy;
+destructor TONURPanel.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {begin
@@ -885,7 +876,7 @@ begin
 end;
 // -----------------------------------------------------------------------------
 
-procedure TONPanel.Paint;
+procedure TONURPanel.Paint;
 begin
   if not Visible then exit;
 //  if csDesigning in ComponentState then
@@ -928,7 +919,7 @@ begin
   inherited Paint;
 end;
 
-procedure TONPanel.SetSkindata(Aimg: TONImg);
+procedure TONURPanel.SetSkindata(Aimg: TONURImg);
 Begin
   inherited SetSkindata(Aimg);
   FTopleft.Targetrect  := Rect(0, 0, FTopleft.Width,FTopleft.Height);
@@ -950,7 +941,7 @@ End;
 
 { TONGraphicPanel }
 
-procedure TONGraphicPanel.SetSkindata(Aimg: TONImg);
+procedure TONURGraphicPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   FTopleft.Targetrect  := Rect(0, 0, FTopleft.Width,FTopleft.Height);
@@ -966,38 +957,38 @@ begin
 
 end;
 
-constructor TONGraphicPanel.Create(AOwner: TComponent);
+constructor TONURGraphicPanel.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
   skinname := 'graphicpanel';
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
 
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
   Customcroplist.Add(FBottom);
+  Customcroplist.Add(FBottomRight);
+   Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
-  Customcroplist.Add(FTopRight);
-  Customcroplist.Add(FBottomRight);
-  Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
 
   Self.Height := 190;
   Self.Width := 190;
@@ -1005,12 +996,12 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
-destructor TONGraphicPanel.Destroy;
+destructor TONURGraphicPanel.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {begin
@@ -1026,7 +1017,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TONGraphicPanel.Paint;
+procedure TONURGraphicPanel.Paint;
 begin
 //  if csDesigning in ComponentState then
 //    exit;

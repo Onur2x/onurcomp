@@ -11,29 +11,95 @@ uses
 
 type
 
-  { TONCropButton }
+  //SYSTEM BUTTON -- close minimize help tray etc..
 
-  TONCropButton = class(TONCustomControl)
+   { TONURsystemButton }
+
+   TONURsystemButton = class(TONURGraphicControl)
+  private
+    Fnormal    : TONURCUSTOMCROP;
+    FPress     : TONURCUSTOMCROP;
+    FEnter     : TONURCUSTOMCROP;
+    Fdisable   : TONURCUSTOMCROP;
+    Fstate     : TONURButtonState;
+    FAutoWidth : boolean;
+    procedure SetSkindata(Aimg: TONURImg); override;
+  protected
+  {  }
+   public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Paint; override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    //    procedure MouseMove(Shift: TShiftState; X: integer; Y: integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    property ONORMAL: TONURCUSTOMCROP read FNormal write FNormal;
+    property OPRESSED: TONURCUSTOMCROP read FPress write FPress;
+    property OHOVER: TONURCUSTOMCROP read FEnter write FEnter;
+    property ODISABLE: TONURCUSTOMCROP read Fdisable write Fdisable;
+  protected
+  published
+    property Alpha;
+    property Skindata;
+    property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseUp;
+    property OnMouseMove;
+    property OnClick;
+    property Align;
+    property Anchors;
+    property AutoSize;
+    property BidiMode;
+    property ClientHeight;
+    property ClientWidth;
+    property Color;
+    property Constraints;
+    property Enabled;
+    property ParentBidiMode;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
+    property ShowHint;
+    property Visible;
+    property Transparent;
+    property OnContextPopup;
+    property OnDblClick;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
+    property OnPaint;
+    property OnResize;
+  end;
+
+
+
+
+  TONURCropButton = class(TONURCustomControl)
   private
     FNormalleft,FNormalright,
     FNormaltop,FNormalbottom,
-    Fnormal : TONCUSTOMCROP;
+    Fnormal : TONURCUSTOMCROP;
 
     FPressleft,FPressright,
     FPresstop,FPressbottom,
-    FPress  : TONCUSTOMCROP;
+    FPress  : TONURCUSTOMCROP;
 
     FEnterleft,FEnterright,
     FEntertop,FEnterbottom,
-    FEnter  : TONCUSTOMCROP;
+    FEnter  : TONURCUSTOMCROP;
 
     Fdisableleft,Fdisableright,
     Fdisabletop,Fdisablebottom,
-    Fdisable  : TONCUSTOMCROP;
+    Fdisable  : TONURCUSTOMCROP;
 
-    Fstate           : TONButtonState;
+    Fstate           : TONURButtonState;
     FAutoWidth       : boolean;
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   protected
     procedure MouseEnter; override;
     procedure MouseLeave; override;
@@ -50,30 +116,30 @@ type
     destructor Destroy; override;
     procedure Paint; override;
 
-    property ONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-    property ONNORMALLEFT: TONCUSTOMCROP read FNormalleft write FNormalleft;
-    property ONNORMALRIGHT: TONCUSTOMCROP read FNormalright write FNormalright;
-    property ONNORMALTOP: TONCUSTOMCROP read FNormaltop write FNormaltop;
-    property ONNORMALBOTTOM: TONCUSTOMCROP read FNormalbottom write FNormalbottom;
+    property ONORMAL: TONURCUSTOMCROP read FNormal write FNormal;
+    property ONORMALLEFT: TONURCUSTOMCROP read FNormalleft write FNormalleft;
+    property ONORMALRIGHT: TONURCUSTOMCROP read FNormalright write FNormalright;
+    property ONORMALTOP: TONURCUSTOMCROP read FNormaltop write FNormaltop;
+    property ONORMALBOTTOM: TONURCUSTOMCROP read FNormalbottom write FNormalbottom;
 
 
-    property ONPRESSED: TONCUSTOMCROP read FPress write FPress;
-    property ONPRESSEDLEFT: TONCUSTOMCROP read FPressleft write FPressleft;
-    property ONPRESSEDRIGHT: TONCUSTOMCROP read FPressright write FPressright;
-    property ONPRESSEDTOP: TONCUSTOMCROP read FPresstop write FPresstop;
-    property ONPRESSEDBOTTOM: TONCUSTOMCROP read FPressbottom write FPressbottom;
+    property OPRESSED: TONURCUSTOMCROP read FPress write FPress;
+    property OPRESSEDLEFT: TONURCUSTOMCROP read FPressleft write FPressleft;
+    property OPRESSEDRIGHT: TONURCUSTOMCROP read FPressright write FPressright;
+    property OPRESSEDTOP: TONURCUSTOMCROP read FPresstop write FPresstop;
+    property OPRESSEDBOTTOM: TONURCUSTOMCROP read FPressbottom write FPressbottom;
 
-    property ONHOVER: TONCUSTOMCROP read FEnter write FEnter;
-    property ONHOVERLEFT: TONCUSTOMCROP read FEnterleft write FEnterleft;
-    property ONHOVERRIGHT: TONCUSTOMCROP read FEnterright write FEnterright;
-    property ONHOVERTOP: TONCUSTOMCROP read FEntertop write FEntertop;
-    property ONHOVERBOTTOM: TONCUSTOMCROP read FEnterbottom write FEnterbottom;
+    property OHOVER: TONURCUSTOMCROP read FEnter write FEnter;
+    property OHOVERLEFT: TONURCUSTOMCROP read FEnterleft write FEnterleft;
+    property OHOVERRIGHT: TONURCUSTOMCROP read FEnterright write FEnterright;
+    property OHOVERTOP: TONURCUSTOMCROP read FEntertop write FEntertop;
+    property OHOVERBOTTOM: TONURCUSTOMCROP read FEnterbottom write FEnterbottom;
 
-    property ONDISABLE: TONCUSTOMCROP read Fdisable write Fdisable;
-    property ONDISABLELEFT: TONCUSTOMCROP read Fdisableleft write Fdisableleft;
-    property ONDISABLERIGHT: TONCUSTOMCROP read Fdisableright write Fdisableright;
-    property ONDISABLETOP: TONCUSTOMCROP read Fdisabletop write Fdisabletop;
-    property ONDISABLEBOTTOM: TONCUSTOMCROP read Fdisablebottom write Fdisablebottom;
+    property ODISABLE: TONURCUSTOMCROP read Fdisable write Fdisable;
+    property ODISABLELEFT: TONURCUSTOMCROP read Fdisableleft write Fdisableleft;
+    property ODISABLERIGHT: TONURCUSTOMCROP read Fdisableright write Fdisableright;
+    property ODISABLETOP: TONURCUSTOMCROP read Fdisabletop write Fdisabletop;
+    property ODISABLEBOTTOM: TONURCUSTOMCROP read Fdisablebottom write Fdisablebottom;
 
   published
     property Alpha;
@@ -110,29 +176,31 @@ type
   end;
 
 
-  { TONGraphicsButton }
+  { TONURGraphicsButton }
 
-  TONGraphicsButton = class(TONGraphicControl)
+  { TONURGraphicsButton }
+
+  TONURGraphicsButton = class(TONURGraphicControl)
   private
     FNormalleft,FNormalright,
     FNormaltop,FNormalbottom,
-    Fnormal : TONCUSTOMCROP;
+    Fnormal : TONURCUSTOMCROP;
 
     FPressleft,FPressright,
     FPresstop,FPressbottom,
-    FPress  : TONCUSTOMCROP;
+    FPress  : TONURCUSTOMCROP;
 
     FEnterleft,FEnterright,
     FEntertop,FEnterbottom,
-    FEnter  : TONCUSTOMCROP;
+    FEnter  : TONURCUSTOMCROP;
 
     Fdisableleft,Fdisableright,
     Fdisabletop,Fdisablebottom,
-    Fdisable  : TONCUSTOMCROP;
+    Fdisable  : TONURCUSTOMCROP;
 
-    Fstate: TONButtonState;
+    Fstate: TONURButtonState;
     FAutoWidth: boolean;
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   protected
     procedure SetAutoWidth(const Value: boolean);
     procedure CheckAutoWidth;
@@ -148,30 +216,30 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
 
-    property ONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-    property ONNORMALLEFT: TONCUSTOMCROP read FNormalleft write FNormalleft;
-    property ONNORMALRIGHT: TONCUSTOMCROP read FNormalright write FNormalright;
-    property ONNORMALTOP: TONCUSTOMCROP read FNormaltop write FNormaltop;
-    property ONNORMALBOTTOM: TONCUSTOMCROP read FNormalbottom write FNormalbottom;
+    property ONORMAL: TONURCUSTOMCROP read FNormal write FNormal;
+    property ONORMALLEFT: TONURCUSTOMCROP read FNormalleft write FNormalleft;
+    property ONORMALRIGHT: TONURCUSTOMCROP read FNormalright write FNormalright;
+    property ONORMALTOP: TONURCUSTOMCROP read FNormaltop write FNormaltop;
+    property ONORMALBOTTOM: TONURCUSTOMCROP read FNormalbottom write FNormalbottom;
 
 
-    property ONPRESSED: TONCUSTOMCROP read FPress write FPress;
-    property ONPRESSEDLEFT: TONCUSTOMCROP read FPressleft write FPressleft;
-    property ONPRESSEDRIGHT: TONCUSTOMCROP read FPressright write FPressright;
-    property ONPRESSEDTOP: TONCUSTOMCROP read FPresstop write FPresstop;
-    property ONPRESSEDBOTTOM: TONCUSTOMCROP read FPressbottom write FPressbottom;
+    property OPRESSED: TONURCUSTOMCROP read FPress write FPress;
+    property OPRESSEDLEFT: TONURCUSTOMCROP read FPressleft write FPressleft;
+    property OPRESSEDRIGHT: TONURCUSTOMCROP read FPressright write FPressright;
+    property OPRESSEDTOP: TONURCUSTOMCROP read FPresstop write FPresstop;
+    property OPRESSEDBOTTOM: TONURCUSTOMCROP read FPressbottom write FPressbottom;
 
-    property ONHOVER: TONCUSTOMCROP read FEnter write FEnter;
-    property ONHOVERLEFT: TONCUSTOMCROP read FEnterleft write FEnterleft;
-    property ONHOVERRIGHT: TONCUSTOMCROP read FEnterright write FEnterright;
-    property ONHOVERTOP: TONCUSTOMCROP read FEntertop write FEntertop;
-    property ONHOVERBOTTOM: TONCUSTOMCROP read FEnterbottom write FEnterbottom;
+    property OHOVER: TONURCUSTOMCROP read FEnter write FEnter;
+    property OHOVERLEFT: TONURCUSTOMCROP read FEnterleft write FEnterleft;
+    property OHOVERRIGHT: TONURCUSTOMCROP read FEnterright write FEnterright;
+    property OHOVERTOP: TONURCUSTOMCROP read FEntertop write FEntertop;
+    property OHOVERBOTTOM: TONURCUSTOMCROP read FEnterbottom write FEnterbottom;
 
-    property ONDISABLE: TONCUSTOMCROP read Fdisable write Fdisable;
-    property ONDISABLELEFT: TONCUSTOMCROP read Fdisableleft write Fdisableleft;
-    property ONDISABLERIGHT: TONCUSTOMCROP read Fdisableright write Fdisableright;
-    property ONDISABLETOP: TONCUSTOMCROP read Fdisabletop write Fdisabletop;
-    property ONDISABLEBOTTOM: TONCUSTOMCROP read Fdisablebottom write Fdisablebottom;
+    property ODISABLE: TONURCUSTOMCROP read Fdisable write Fdisable;
+    property ODISABLELEFT: TONURCUSTOMCROP read Fdisableleft write Fdisableleft;
+    property ODISABLERIGHT: TONURCUSTOMCROP read Fdisableright write Fdisableright;
+    property ODISABLETOP: TONURCUSTOMCROP read Fdisabletop write Fdisabletop;
+    property ODISABLEBOTTOM: TONURCUSTOMCROP read Fdisablebottom write Fdisablebottom;
   protected
   published
     property Alpha;
@@ -210,16 +278,16 @@ type
 
 
 
-  { TOnSwich }
+  { TONURSwich }
 
-  TOnSwich = class(TONGraphicControl)
+  TONURSwich = class(TONURGraphicControl)
   private
-    FOpen, Fclose, Fopenhover, Fclosehover, Fdisable: TONCUSTOMCROP;
-    Fstate: TONButtonState;
+    FOpen, Fclose, Fopenhover, Fclosehover, Fdisable: TONURCUSTOMCROP;
+    Fstate: TONURButtonState;
     FChecked: boolean;
     FOnChange: TNotifyEvent;
     procedure SetChecked(Value: boolean);
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   public
     procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
     procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
@@ -228,11 +296,11 @@ type
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    property ONOPEN: TONCUSTOMCROP read FOpen write FOpen;
-    property ONCLOSE: TONCUSTOMCROP read Fclose write Fclose;
-    property ONOPENHOVER: TONCUSTOMCROP read Fopenhover write Fopenhover;
-    property ONCLOSEHOVER: TONCUSTOMCROP read Fclosehover write Fclosehover;
-    property ONDISABLE: TONCUSTOMCROP read Fdisable write Fdisable;
+    property OOPEN: TONURCUSTOMCROP read FOpen write FOpen;
+    property OCLOSE: TONURCUSTOMCROP read Fclose write Fclose;
+    property OOPENHOVER: TONURCUSTOMCROP read Fopenhover write Fopenhover;
+    property OCLOSEHOVER: TONURCUSTOMCROP read Fclosehover write Fclosehover;
+    property ODISABLE: TONURCUSTOMCROP read Fdisable write Fdisable;
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -275,14 +343,14 @@ type
 
 
 
-  { TOnCheckbox }
+  { TONURCheckbox }
 
-  TOnCheckbox = class(TONGraphicControl)
+  TONURCheckbox = class(TONURGraphicControl)
   private
-    obenter, obleave, obdown, obdisabled, obcheckenters, obcheckleaves: TONCUSTOMCROP;
-    Fstate: TONButtonState;
+    obenter, obleave, obdown, obdisabled, obcheckenters, obcheckleaves: TONURCUSTOMCROP;
+    Fstate: TONURButtonState;
     fcheckwidth: integer;
-    fcaptiondirection: Tcapdirection;
+    fcaptiondirection: TONURCapDirection;
     FChecked: boolean;
     textx, Texty: integer;
     Fclientrect:Trect;
@@ -290,10 +358,10 @@ type
     procedure SetChecked(Value: boolean);
     function GetCheckWidth: integer;
     procedure SetCheckWidth(AValue: integer);
-    procedure SetCaptionmod(const val: Tcapdirection);
-    function GetCaptionmod: Tcapdirection;
+    procedure SetCaptionmod(const val: TONURCapDirection);
+    function GetCaptionmod: TONURCapDirection;
     procedure deaktifdigerleri;  /// for radiobutton
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   public
     procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
     procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
@@ -304,12 +372,12 @@ type
     procedure DoOnChange; virtual;
     procedure CMHittest(var msg: TCMHIttest);
 
-    property ONNORMAL: TONCUSTOMCROP read obleave write obleave;
-    property ONNORMALHOVER: TONCUSTOMCROP read obenter write obenter;
-    property ONNORMALDOWN: TONCUSTOMCROP read obdown write obdown;
-    property ONCHECKED: TONCUSTOMCROP read obcheckleaves write obcheckleaves;
-    property ONCHECKEDHOVER: TONCUSTOMCROP read obcheckenters write obcheckenters;
-    property ONDISABLE: TONCUSTOMCROP read obdisabled write obdisabled;
+    property ONORMAL: TONURCUSTOMCROP read obleave write obleave;
+    property ONORMALHOVER: TONURCUSTOMCROP read obenter write obenter;
+    property ONORMALDOWN: TONURCUSTOMCROP read obdown write obdown;
+    property OCHECKED: TONURCUSTOMCROP read obcheckleaves write obcheckleaves;
+    property OCHECKEDHOVER: TONURCUSTOMCROP read obcheckenters write obcheckenters;
+    property ODISABLE: TONURCUSTOMCROP read obdisabled write obdisabled;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -320,7 +388,7 @@ type
     property Alpha;
     property Skindata;
     property CheckWidth: integer read GetCheckWidth write SetCheckWidth;
-    property CaptionDirection: Tcapdirection read GetCaptionmod write SetCaptionmod;
+    property CaptionDirection: TONURCapDirection read GetCaptionmod write SetCaptionmod;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnMouseDown;
     property OnMouseEnter;
@@ -352,17 +420,17 @@ type
     property OnResize;
   end;
 
-  { TOnRadioButton }
+  { TONURRadioButton }
 
-  TOnRadioButton = class(TONGraphicControl)
+  TONURRadioButton = class(TONURGraphicControl)
   private
     obenter, obleave,
     obdown, obdisabled,
     obcheckenters,
-    obcheckleaves     : TONCUSTOMCROP;
-    Fstate            : TONButtonState;
+    obcheckleaves     : TONURCUSTOMCROP;
+    Fstate            : TONURButtonState;
     fcheckwidth       : integer;
-    fcaptiondirection : Tcapdirection;
+    fcaptiondirection : TONURCapDirection;
     FChecked          : boolean;
     textx, Texty      : integer;
     Fclientrect       : Trect;
@@ -370,10 +438,10 @@ type
     procedure SetChecked(Value: boolean);
     function GetCheckWidth: integer;
     procedure SetCheckWidth(AValue: integer);
-    procedure SetCaptionmod(const val: Tcapdirection);
-    function GetCaptionmod: Tcapdirection;
+    procedure SetCaptionmod(const val: TONURCapDirection);
+    function GetCaptionmod: TONURCapDirection;
     procedure deaktifdigerleri;  /// for radiobutton
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   public
     procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
     procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
@@ -384,12 +452,12 @@ type
     procedure DoOnChange; virtual;
     procedure CMHittest(var msg: TCMHIttest);
 
-    property ONNORMAL: TONCUSTOMCROP read obleave write obleave;
-    property ONNORMALHOVER: TONCUSTOMCROP read obenter write obenter;
-    property ONNORMALDOWN: TONCUSTOMCROP read obdown write obdown;
-    property ONCHECKED: TONCUSTOMCROP read obcheckleaves write obcheckleaves;
-    property ONCHECKEDHOVER: TONCUSTOMCROP read obcheckenters write obcheckenters;
-    property ONDISABLE: TONCUSTOMCROP read obdisabled write obdisabled;
+    property ONORMAL: TONURCUSTOMCROP read obleave write obleave;
+    property ONORMALHOVER: TONURCUSTOMCROP read obenter write obenter;
+    property ONORMALDOWN: TONURCUSTOMCROP read obdown write obdown;
+    property OCHECKED: TONURCUSTOMCROP read obcheckleaves write obcheckleaves;
+    property OCHECKEDHOVER: TONURCUSTOMCROP read obcheckenters write obcheckenters;
+    property ODISABLE: TONURCUSTOMCROP read obdisabled write obdisabled;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -400,7 +468,7 @@ type
     property Alpha;
     property Skindata;
     property CheckWidth: integer read GetCheckWidth write SetCheckWidth;
-    property CaptionDirection: Tcapdirection read GetCaptionmod write SetCaptionmod;
+    property CaptionDirection: TONURCapDirection read GetCaptionmod write SetCaptionmod;
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
     property OnMouseDown;
     property OnMouseEnter;
@@ -432,12 +500,12 @@ type
     property OnResize;
   end;
 
-  { TONlabel }
+  { TONURLabel }
 
-  TONlabel = class(TonGraphicControl)
+  TONURlabel = class(TONURGraphicControl)
   private
     { Private declarations }
-    fclientp: TONCUSTOMCROP;
+    fclientp: TONURCUSTOMCROP;
     FBitmap: TBGRABitmap;
     tempbitmap: TBGRABitmap;
     Flist: TStrings;
@@ -467,7 +535,7 @@ type
     procedure SetCharHeight(Value: integer);
     procedure SetString(AValue: TStrings); virtual;
     procedure listchange(Sender: TObject);
-    Procedure SetSkindata(Aimg: TONImg); override;
+    Procedure SetSkindata(Aimg: TONURImg); override;
 
   public
     { Public declarations }
@@ -476,7 +544,7 @@ type
     procedure paint; override;
 
 
-    property ONCLIENT: TONCUSTOMCROP  read fclientp write fclientp;
+    property OCLIENT: TONURCUSTOMCROP  read fclientp write fclientp;
 
   published
     { Published declarations }
@@ -544,7 +612,7 @@ type
 
   { TONNormalLabel }
 
-  TONNormalLabel = class(TGraphicControl)
+  TONURNormalLabel = class(TGraphicControl)
   private
     clr        : Tcolor;
     FBuffer    : TBGRABitmap;
@@ -615,15 +683,15 @@ type
   end;
 
 
- { TONLed }
+ { TONURLed }
 
- TONLed = class(TONGraphicControl)
+ TONURLed = class(TONURGraphicControl)
  private
     fcheck,fmouseon:boolean;
     FOnChange: TNotifyEvent;
-    Fonclientp, Foffclientp, Fonclientph, Foffclientph,Fdisabled: TONCUSTOMCROP;
+    Fonclientp, Foffclientp, Fonclientph, Foffclientph,Fdisabled: TONURCUSTOMCROP;
     procedure Setledonoff(val:boolean);
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
  public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -633,11 +701,11 @@ type
     procedure MouseEnter; override;
     procedure MouseLeave; override;
  public
-    property ONLEDONNORMAL  : TONCUSTOMCROP read Fonclientp   write Fonclientp;
-    property ONLEDONHOVER   : TONCUSTOMCROP read Fonclientph  write Fonclientph;
-    property ONLEDOFFNORMAL : TONCUSTOMCROP read Foffclientp  write Foffclientp;
-    property ONLEDOFFHOVER  : TONCUSTOMCROP read Foffclientph write Foffclientph;
-    property ONDISABLED     : TONCUSTOMCROP read Fdisabled    write Fdisabled;
+    property OLEDONNORMAL  : TONURCUSTOMCROP read Fonclientp   write Fonclientp;
+    property OLEDONHOVER   : TONURCUSTOMCROP read Fonclientph  write Fonclientph;
+    property OLEDOFFNORMAL : TONURCUSTOMCROP read Foffclientp  write Foffclientp;
+    property OLEDOFFHOVER  : TONURCUSTOMCROP read Foffclientph write Foffclientph;
+    property ODISABLED     : TONURCUSTOMCROP read Fdisabled    write Fdisabled;
  published
     property Alpha;
     Property LedOn          : Boolean       Read fcheck       write Setledonoff;
@@ -699,19 +767,173 @@ uses BGRAPath, LazUnicode,BGRAFreeType, LazFreeTypeFontCollection,BGRATransform;
 
 procedure Register;
 begin
-  RegisterComponents('ONUR', [TONCropButton]);
-  RegisterComponents('ONUR', [TONGraphicsButton]);
-  RegisterComponents('ONUR', [TOnSwich]);
-  RegisterComponents('ONUR', [TOnCheckbox]);
-  RegisterComponents('ONUR', [TOnRadioButton]);
-  RegisterComponents('ONUR', [TONlabel]);
-  RegisterComponents('ONUR', [TONNormalLabel]);
-  RegisterComponents('ONUR', [TONLed]);
+  RegisterComponents('ONUR', [TONURsystemButton]);
+  RegisterComponents('ONUR', [TONURCropButton]);
+  RegisterComponents('ONUR', [TONURGraphicsButton]);
+  RegisterComponents('ONUR', [TONURSwich]);
+  RegisterComponents('ONUR', [TONURCheckbox]);
+  RegisterComponents('ONUR', [TONURRadioButton]);
+  RegisterComponents('ONUR', [TONURlabel]);
+  RegisterComponents('ONUR', [TONURNormalLabel]);
+  RegisterComponents('ONUR', [TONURLed]);
 end;
 
-{ TOnRadioButton }
 
-procedure TOnRadioButton.SetChecked(Value: boolean);
+
+{ TONURsystemButton }
+
+
+
+procedure TONURsystemButton.SetSkindata(Aimg: TONURImg);
+begin
+  inherited SetSkindata(Aimg);
+end;
+
+constructor TONURsystemButton.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  skinname          := 'closebutton';
+  FNormal           := TONURCUSTOMCROP.Create;
+  FNormal.cropname  := 'NORMAL';
+  FPress            := TONURCUSTOMCROP.Create;
+  FPress.cropname   := 'PRESSED';
+  FEnter            := TONURCUSTOMCROP.Create;
+  FEnter.cropname   := 'HOVER';
+  Fdisable          := TONURCUSTOMCROP.Create;
+  Fdisable.cropname := 'DISABLE';
+
+  Customcroplist.Add(FNormal);
+  Customcroplist.Add(FEnter);
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(Fdisable);
+
+  Fstate            := obsNormal;
+  Height            := 20;
+  Width             := 20;
+  Transparent       := True;
+  FAutoWidth        := True;
+  Resim.SetSize(Width, Height);
+end;
+
+destructor TONURsystemButton.Destroy;
+var
+  A: integer;
+begin
+   for A:=0 to Customcroplist.Count-1 do
+  TONURCUSTOMCROP(Customcroplist.Items[A]).free;
+
+  Customcroplist.Clear;
+  inherited Destroy;
+end;
+
+procedure TONURsystemButton.Paint;
+var
+  DR: TRect;
+begin
+
+   if not Visible then Exit;
+  resim.SetSize(0, 0);
+  resim.SetSize(self.ClientWidth, Self.ClientHeight);
+
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+  begin
+    try
+      if Enabled = True then
+      begin
+        case Fstate of
+          obsNormal:
+          begin
+            DR := FNormal.Croprect;
+            Self.Font.Color := FNormal.Fontcolor;
+          end;
+          obspressed:
+          begin
+            DR :=FPress.Croprect;
+            Self.Font.Color := FPress.Fontcolor;
+          end;
+          obshover:
+          begin
+            DR :=FEnter.Croprect;
+            Self.Font.Color := FEnter.Fontcolor;
+          end;
+        end;
+      end
+      else
+      begin
+        DR := Fdisable.Croprect;
+        Self.Font.Color := Fdisable.Fontcolor;
+      end;
+
+      DrawPartstrech(DR, self, Width, Height, alpha);
+
+    finally
+
+    end;
+  end
+  else
+  begin
+    resim.Fill(BGRA(190, 208, 190), dmSet);
+  end;
+  inherited Paint;
+end;
+
+procedure TONURsystemButton.MouseEnter;
+begin
+  if (csDesigning in ComponentState) then
+  exit;
+  if (Enabled=false) or (Fstate = obshover) then
+  Exit;
+
+  inherited MouseEnter;
+  Fstate := obshover;
+  Invalidate;
+end;
+
+procedure TONURsystemButton.MouseLeave;
+begin
+   if (csDesigning in ComponentState) then
+  exit;
+  if (Enabled = false) or (Fstate = obsnormal) then
+  Exit;
+
+  inherited MouseLeave;
+  Fstate := obsnormal;
+  Invalidate;
+end;
+
+procedure TONURsystemButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X: integer; Y: integer);
+begin
+  if (csDesigning in ComponentState) then
+  exit;
+  if (Enabled=false) or (Fstate = obspressed) then
+  Exit;
+
+  inherited MouseDown(Button, Shift, X, Y);
+  if Button = mbLeft then
+  begin
+    Fstate := obspressed;
+    Invalidate;
+  end;
+end;
+
+procedure TONURsystemButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X: integer; Y: integer);
+begin
+  if (csDesigning in ComponentState) then
+  exit;
+  if (Enabled=false) or (Fstate = obshover) then
+  Exit;
+
+
+  inherited MouseUp(Button, Shift, X, Y);
+  Fstate := obshover;
+  Invalidate;
+end;
+
+{ TONURRadioButton }
+
+procedure TONURRadioButton.SetChecked(Value: boolean);
 begin
   if FChecked <> Value then
   begin
@@ -722,19 +944,19 @@ begin
   end;
 end;
 
-function TOnRadioButton.GetCheckWidth: integer;
+function TONURRadioButton.GetCheckWidth: integer;
 begin
  Result := fcheckwidth;
 end;
 
-procedure TOnRadioButton.SetCheckWidth(AValue: integer);
+procedure TONURRadioButton.SetCheckWidth(AValue: integer);
 begin
   if fcheckwidth = AValue then exit;
   fcheckwidth := AValue;
   Invalidate;
 end;
 
-procedure TOnRadioButton.SetCaptionmod(const val: Tcapdirection);
+procedure TONURRadioButton.SetCaptionmod(const val: TONURCapDirection);
 begin
    if fcaptiondirection = val then
     exit;
@@ -743,12 +965,12 @@ begin
   Invalidate;
 end;
 
-function TOnRadioButton.GetCaptionmod: Tcapdirection;
+function TONURRadioButton.GetCaptionmod: TONURCapDirection;
 begin
   Result := fcaptiondirection;
 end;
 
-procedure TOnRadioButton.deaktifdigerleri;
+procedure TONURRadioButton.deaktifdigerleri;
 var
   i: integer;
   Sibling: TControl;
@@ -759,17 +981,17 @@ begin
     for i := 0 to ControlCount - 1 do
     begin
       Sibling := Controls[i];
-      if (Controls[i] is TOnRadioButton) and (Sibling <> Self) then
+      if (Controls[i] is TONURRadioButton) and (Sibling <> Self) then
       begin
-        TOnRadioButton(Sibling).fchecked:=false;
-        TOnRadioButton(Sibling).fstate := obsnormal;
+        TONURRadioButton(Sibling).fchecked:=false;
+        TONURRadioButton(Sibling).fstate := obsnormal;
         Invalidate;
       end;
     end;
   end;
 end;
 
-procedure TOnRadioButton.SetSkindata(Aimg: TONImg);
+procedure TONURRadioButton.SetSkindata(Aimg: TONURImg);
 var
  fbuttoncenter: integer;
 begin
@@ -777,19 +999,19 @@ begin
 
 end;
 
-procedure TOnRadioButton.CMonmouseenter(var Messages: Tmessage);
+procedure TONURRadioButton.CMonmouseenter(var Messages: Tmessage);
 begin
   fstate := obshover;
   Invalidate;
 end;
 
-procedure TOnRadioButton.CMonmouseleave(var Messages: Tmessage);
+procedure TONURRadioButton.CMonmouseleave(var Messages: Tmessage);
 begin
  fstate := obsnormal;
   Invalidate;
 end;
 
-procedure TOnRadioButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURRadioButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseDown(Button, Shift, X, Y);
@@ -807,7 +1029,7 @@ begin
   end;
 end;
 
-procedure TOnRadioButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURRadioButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -815,13 +1037,13 @@ begin
   Invalidate;
 end;
 
-procedure TOnRadioButton.DoOnChange;
+procedure TONURRadioButton.DoOnChange;
 begin
   EditingDone;
   if Assigned(OnChange) then OnChange(Self);
 end;
 
-procedure TOnRadioButton.CMHittest(var msg: TCMHIttest);
+procedure TONURRadioButton.CMHittest(var msg: TCMHIttest);
 begin
   inherited;
    if PtInRegion(CreateRectRgn(0, 0, self.Width, self.Height), msg.XPos, msg.YPos) then
@@ -830,23 +1052,23 @@ begin
     msg.Result := HTNOWHERE;
 end;
 
-constructor TOnRadioButton.Create(AOwner: TComponent);
+constructor TONURRadioButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname := 'radiobox';
   fcheckwidth := 12;
   fcaptiondirection := ocright;
-  obenter := TONCUSTOMCROP.Create;
+  obenter := TONURCUSTOMCROP.Create;
   obenter.cropname := 'NORMALHOVER';
-  obleave := TONCUSTOMCROP.Create;
+  obleave := TONURCUSTOMCROP.Create;
   obleave.cropname := 'NORMAL';
-  obdown := TONCUSTOMCROP.Create;
+  obdown := TONURCUSTOMCROP.Create;
   obdown.cropname := 'PRESSED';
-  obcheckleaves := TONCUSTOMCROP.Create;
+  obcheckleaves := TONURCUSTOMCROP.Create;
   obcheckleaves.cropname := 'CHECK';
-  obcheckenters := TONCUSTOMCROP.Create;
+  obcheckenters := TONURCUSTOMCROP.Create;
   obcheckenters.cropname := 'CHECKHOVER';
-  obdisabled := TONCUSTOMCROP.Create;
+  obdisabled := TONURCUSTOMCROP.Create;
   obdisabled.cropname := 'DISABLE';
 
   Customcroplist.Add(obenter);
@@ -864,12 +1086,12 @@ begin
   Texty:=10;
 end;
 
-destructor TOnRadioButton.Destroy;
+destructor TONURRadioButton.Destroy;
 var
  i:byte;
 begin
  for i:=0 to Customcroplist.Count-1 do
- TONCustomCrop(Customcroplist.Items[i]).free;
+ TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
  Customcroplist.Clear;
 {begin
@@ -882,7 +1104,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TOnRadioButton.Paint;
+procedure TONURRadioButton.Paint;
 var
   DR: TRect;
   fbuttoncenter: integer;
@@ -1072,9 +1294,9 @@ begin
 end;
 
 
-{ TONNormalLabel }
+{ TONURNormalLabel }
 
-function TONNormalLabel.GetTextDefaultPos: smallint;
+function TONURNormalLabel.GetTextDefaultPos: smallint;
 begin
   if (FBuffer.Width<self.ClientWidth) then
   Result := (self.ClientWidth - FBuffer.Width) div 2
@@ -1083,7 +1305,7 @@ begin
 
 end;
 
-procedure TONNormalLabel.SetBilink(AValue: boolean);
+procedure TONURNormalLabel.SetBilink(AValue: boolean);
 begin
   if fbilink = AValue then Exit;
   fbilink := AValue;
@@ -1099,7 +1321,7 @@ begin
 
 end;
 
-procedure TONNormalLabel.Setblinkinterval(AValue: integer);
+procedure TONURNormalLabel.Setblinkinterval(AValue: integer);
 begin
   if fblinkinterval=AValue then Exit;
   fblinkinterval:=AValue;
@@ -1108,7 +1330,7 @@ begin
 end;
 
 
-procedure TONNormalLabel.SetAnimate(AValue: boolean);
+procedure TONURNormalLabel.SetAnimate(AValue: boolean);
 begin
   if AValue = FAnimate then exit;
 
@@ -1136,13 +1358,13 @@ begin
   end;
 end;
 
-procedure TONNormalLabel.Setclr(AValue: TBGRAPixel);
+procedure TONURNormalLabel.Setclr(AValue: TBGRAPixel);
 begin
   if clr = AValue then Exit;
   clr := AValue;
 end;
 
-procedure TONNormalLabel.SetScrollBy(AValue: integer);
+procedure TONURNormalLabel.SetScrollBy(AValue: integer);
 begin
   if FScrollBy = AValue then exit;
   FScrollBy := AValue;
@@ -1150,12 +1372,12 @@ end;
 
 
 
-function TONNormalLabel.GetScroll: integer;
+function TONURNormalLabel.GetScroll: integer;
 begin
   Result := ABS(FScrollBy);
 end;
 
-procedure TONNormalLabel.SetText(AValue: string);
+procedure TONURNormalLabel.SetText(AValue: string);
 begin
   FText := AValue;
   DrawFontText;
@@ -1165,7 +1387,7 @@ begin
   Invalidate;
 end;
 
-procedure TONNormalLabel.Settimerinterval(AValue: integer);
+procedure TONURNormalLabel.Settimerinterval(AValue: integer);
 begin
   if ftimerinterval=AValue then Exit;
   ftimerinterval:=AValue;
@@ -1173,19 +1395,19 @@ begin
     FTimer.Interval := ftimerinterval;//100;
 end;
 
-procedure TONNormalLabel.Setwaiting(AValue: byte);
+procedure TONURNormalLabel.Setwaiting(AValue: byte);
 begin
   if Fwaiting=AValue then Exit;
   Fwaiting:=AValue;
 end;
 
-procedure TONNormalLabel.SetYazibuyuk(AValue: boolean);
+procedure TONURNormalLabel.SetYazibuyuk(AValue: boolean);
 begin
   if fyazibuyuk=AValue then Exit;
   fyazibuyuk:=AValue;
 end;
 
-procedure TONNormalLabel.TimerEvent(Sender: TObject);
+procedure TONURNormalLabel.TimerEvent(Sender: TObject);
 begin
   if FWait > 0 then
   begin
@@ -1238,7 +1460,7 @@ begin
   Invalidate;
 end;
 
-procedure TONNormalLabel.DrawFontText;
+procedure TONURNormalLabel.DrawFontText;
 begin
   FBuffer.SetSize(0, 0);
   FBuffer.FontName := self.font.Name;
@@ -1254,7 +1476,7 @@ begin
    fyazibuyuk:=false;
 end;
 
-procedure TONNormalLabel.DrawFontTextcolor(incolor,outcolor:TBGRAPixel);
+procedure TONURNormalLabel.DrawFontTextcolor(incolor,outcolor:TBGRAPixel);
 begin
   FBuffer.SetSize(0, 0);
   FBuffer.SetSize(FBuffer.TextSize(FText).cx, self.ClientHeight);
@@ -1271,7 +1493,7 @@ begin
 end;
 
 
-procedure TONNormalLabel.FreeTimer;
+procedure TONURNormalLabel.FreeTimer;
 begin
   if Assigned(FTimer) then
   begin
@@ -1281,7 +1503,7 @@ begin
   end;
 end;
 
-procedure TONNormalLabel.Blinktimerevent(sender: TObject);
+procedure TONURNormalLabel.Blinktimerevent(sender: TObject);
 begin
   fbilink:= not fbilinki;
   fbilinki:= not fbilinki;
@@ -1289,13 +1511,13 @@ begin
   Invalidate;
 end;
 
-procedure TONNormalLabel.Loaded;
+procedure TONURNormalLabel.Loaded;
 begin
   inherited Loaded;
     DrawFontText;
 end;
 
-procedure TONNormalLabel.Paint;
+procedure TONURNormalLabel.Paint;
 begin
   if fbilink then
   begin
@@ -1308,7 +1530,7 @@ end;
 
 
 
-constructor TONNormalLabel.Create(AOwner: TComponent);
+constructor TONURNormalLabel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   Width                 := 150;
@@ -1335,7 +1557,7 @@ begin
 
 end;
 
-destructor TONNormalLabel.Destroy;
+destructor TONURNormalLabel.Destroy;
 begin
   FreeTimer;
   if fblinktimer.Enabled then fblinktimer.Enabled:=false;
@@ -1350,9 +1572,9 @@ end;
 
 
 
-{ TONLed }
+{ TONURLed }
 
-procedure TONLed.Setledonoff(val: boolean);
+procedure TONURLed.Setledonoff(val: boolean);
 Begin
   if val <> fcheck then
   begin
@@ -1364,20 +1586,20 @@ End;
 
 
 
-constructor TONLed.Create(AOwner: TComponent);
+constructor TONURLed.Create(AOwner: TComponent);
 Begin
   inherited Create(AOwner);
   Self.Height           := 30;
   Self.Width            := 30;
-  Fonclientp            := TONCUSTOMCROP.Create;
+  Fonclientp            := TONURCUSTOMCROP.Create;
   Fonclientp.cropname   := 'LEDONNORMAL';
-  Fonclientph           := TONCUSTOMCROP.Create;
+  Fonclientph           := TONURCUSTOMCROP.Create;
   Fonclientph.cropname  := 'LEDONHOVER';
-  Foffclientp           := TONCUSTOMCROP.Create;
+  Foffclientp           := TONURCUSTOMCROP.Create;
   Foffclientp.cropname  := 'LEDOFFNORMAL';
-  Foffclientph          := TONCUSTOMCROP.Create;
+  Foffclientph          := TONURCUSTOMCROP.Create;
   Foffclientph.cropname := 'LEDOFFHOVER';
-  Fdisabled             := TONCUSTOMCROP.Create;
+  Fdisabled             := TONURCUSTOMCROP.Create;
   Fdisabled.cropname    := 'LEDDISABLE';
 
   Customcroplist.Add(Fonclientp);
@@ -1395,12 +1617,12 @@ Begin
 end;
 
 // -----------------------------------------------------------------------------
-destructor TONLed.Destroy;
+destructor TONURLed.Destroy;
 var
  i:byte;
 begin
  for i:=0 to Customcroplist.Count-1 do
- TONCustomCrop(Customcroplist.Items[i]).free;
+ TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
  Customcroplist.Clear;
 {begin
@@ -1415,12 +1637,12 @@ begin
 End;
 
 
-procedure TONLed.SetSkindata(Aimg: TONImg);
+procedure TONURLed.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
 end;
 
-procedure TONLed.Paint;
+procedure TONURLed.Paint;
 var
   TrgtRect, SrcRect: TRect;
 begin
@@ -1462,29 +1684,29 @@ begin
   inherited Paint;
 End;
 
-procedure TONLed.MouseEnter;
+procedure TONURLed.MouseEnter;
 Begin
   Inherited Mouseenter;
   fmouseon:=true;
   Invalidate;
 End;
 
-procedure TONLed.MouseLeave;
+procedure TONURLed.MouseLeave;
 Begin
   Inherited Mouseleave;
   fmouseon:=false;
   Invalidate;
 End;
 
-{ TONlabel }
+{ TONURLabel }
 
 
-function TONlabel.GetScrollBy: integer;
+function TONURLabel.GetScrollBy: integer;
 begin
   Result := ABS(FScrollBy);
 end;
 
-procedure TONlabel.SetActive(Value: boolean);
+procedure TONURLabel.SetActive(Value: boolean);
 begin
   if Value <> FActive then
   begin
@@ -1499,7 +1721,7 @@ begin
   end;
 end;
 
-procedure TONlabel.Setcaption(Avalue: Tcaption);
+procedure TONURLabel.Setcaption(Avalue: Tcaption);
 begin
   if fcaption = Avalue then Exit;
   fcaption := Avalue;
@@ -1507,7 +1729,7 @@ begin
   Invalidate;
 end;
 
-procedure TONlabel.SetStretch(Value: boolean);
+procedure TONURLabel.SetStretch(Value: boolean);
 var
   Rec: TRect;
 begin
@@ -1526,7 +1748,7 @@ begin
   if not FStretch then FScale := 1;
 end;
 
-procedure TONlabel.SetInterval(Value: cardinal);
+procedure TONURLabel.SetInterval(Value: cardinal);
 begin
   if Value <> FInterval then
   begin
@@ -1537,7 +1759,7 @@ end;
 
 
 
-procedure TONlabel.Activate;
+procedure TONURLabel.Activate;
 begin
   FActive := True;
   FTimer.Enabled := True;
@@ -1549,14 +1771,14 @@ begin
   Invalidate;
 end;
 
-procedure TONlabel.Deactivate;
+procedure TONURLabel.Deactivate;
 begin
   FTimer.Enabled := False;
   FActive := False;
   Invalidate;
 end;
 
-procedure TONlabel.UpdatePos;
+procedure TONURLabel.UpdatePos;
 begin
   if (Length(Caption) * CharWidth) * FScale > Self.Width then
   begin
@@ -1587,7 +1809,7 @@ begin
 
 end;
 
-procedure TONlabel.DoOnTimer(Sender: TObject);
+procedure TONURLabel.DoOnTimer(Sender: TObject);
 begin
   if FWaiting then
   begin
@@ -1599,7 +1821,7 @@ begin
   Invalidate;
 end;
 
-procedure TONlabel.SetCharWidth(Value: integer);
+procedure TONURLabel.SetCharWidth(Value: integer);
 begin
   if Value = CharWidth then exit;
   fCharWidth := Value;
@@ -1607,7 +1829,7 @@ begin
   Invalidate;
 end;
 
-procedure TONlabel.SetCharHeight(Value: integer);
+procedure TONURLabel.SetCharHeight(Value: integer);
 begin
   if Value = CharHeight then exit;
   fCharHeight := Value;
@@ -1617,7 +1839,7 @@ end;
 
 
 
-procedure TONlabel.SetString(AValue: TStrings);
+procedure TONURLabel.SetString(AValue: TStrings);
 begin
   if Flist = AValue then Exit;
   flist.BeginUpdate;
@@ -1626,18 +1848,18 @@ begin
   Getbmp;
 end;
 
-procedure TONlabel.listchange(Sender: TObject);
+procedure TONURLabel.listchange(Sender: TObject);
 begin
   Getbmp;
 end;
 
 
 
-constructor TONlabel.Create(AOwner: TComponent);
+constructor TONURLabel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname := 'label';
-  fclientp := TONCustomCrop.Create;
+  fclientp := TONURCUSTOMCROP.Create;
   fclientp.cropname := 'ONCLIENT';
   Customcroplist.Add(fclientp);
 
@@ -1682,7 +1904,7 @@ begin
   Getbmp;
 end;
 
-destructor TONlabel.Destroy;
+destructor TONURLabel.Destroy;
 begin
   Deactivate;
   FBitmap.Free;
@@ -1695,7 +1917,7 @@ begin
 end;
 
 
-procedure TONlabel.Getbmp;
+procedure TONURLabel.Getbmp;
 var
   i, w, h, a, n: integer;
   tmpText:
@@ -1757,12 +1979,12 @@ begin
  end;
 
 
-procedure TONlabel.SetSkindata(Aimg: TONImg);
+procedure TONURLabel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
 end;
 
-procedure TONlabel.paint;
+procedure TONURLabel.paint;
 var
   TrgtRect, SrcRect: TRect;
    img: TBGRACustomBitmap;
@@ -1818,10 +2040,10 @@ end;
 
 
 
-{ TONCropButton }
+{ TONURCropButton }
 
 // -----------------------------------------------------------------------------
-constructor TONCropButton.Create(AOwner: TComponent);
+constructor TONURCropButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
 
@@ -1830,52 +2052,52 @@ begin
 
   skinname := 'cropbutton';
 
-  FNormal := TONCUSTOMCROP.Create;
+  FNormal := TONURCUSTOMCROP.Create;
   FNormal.cropname := 'NORMAL';
-  FNormalleft   := TONCustomCrop.Create;
+  FNormalleft   := TONURCUSTOMCROP.Create;
   FNormalleft.cropname:='NORMALLEFT';
-  FNormalright  := TONCustomCrop.Create;
+  FNormalright  := TONURCUSTOMCROP.Create;
   FNormalright.cropname:='NORMALRIGHT';
-  FNormaltop    := TONCustomCrop.Create;
+  FNormaltop    := TONURCUSTOMCROP.Create;
   FNormaltop.cropname:='NORMALTOP';
-  FNormalbottom := TONCustomCrop.Create;
+  FNormalbottom := TONURCUSTOMCROP.Create;
   FNormalbottom.cropname:='NORMALBOTTOM';
 
-  FPress := TONCUSTOMCROP.Create;
+  FPress := TONURCUSTOMCROP.Create;
   FPress.cropname := 'PRESSED';
-  FPressleft    := TONCustomCrop.Create;
+  FPressleft    := TONURCUSTOMCROP.Create;
   FPressleft.cropname := 'PRESSEDLEFT';
-  FPressright   := TONCustomCrop.Create;
+  FPressright   := TONURCUSTOMCROP.Create;
   FPressright.cropname := 'PRESSEDRIGHT';
-  FPresstop     := TONCustomCrop.Create;
+  FPresstop     := TONURCUSTOMCROP.Create;
   FPresstop.cropname := 'PRESSEDTOP';
-  FPressbottom  := TONCustomCrop.Create;
+  FPressbottom  := TONURCUSTOMCROP.Create;
   FPressbottom.cropname := 'PRESSEDBOTTOM';
 
 
 
-  FEnter := TONCUSTOMCROP.Create;
+  FEnter := TONURCUSTOMCROP.Create;
   FEnter.cropname := 'ENTER';
-  FEnterleft    := TONCustomCrop.Create;
+  FEnterleft    := TONURCUSTOMCROP.Create;
   FEnterleft.cropname := 'ENTERLEFT';
-  FEnterright   := TONCustomCrop.Create;
+  FEnterright   := TONURCUSTOMCROP.Create;
   FEnterright.cropname := 'ENTERRIGHT';
-  FEntertop     := TONCustomCrop.Create;
+  FEntertop     := TONURCUSTOMCROP.Create;
   FEntertop.cropname := 'ENTERTOP';
-  FEnterbottom  := TONCustomCrop.Create;
+  FEnterbottom  := TONURCUSTOMCROP.Create;
   FEnterbottom.cropname := 'ENTERBOTTOM';
 
 
 
-  Fdisable := TONCUSTOMCROP.Create;
+  Fdisable := TONURCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
-  Fdisableleft    := TONCustomCrop.Create;
+  Fdisableleft    := TONURCUSTOMCROP.Create;
   Fdisableleft.cropname := 'DISABLELEFT';
-  Fdisableright   := TONCustomCrop.Create;
+  Fdisableright   := TONURCUSTOMCROP.Create;
   Fdisableright.cropname := 'DISABLERIGHT';
-  Fdisabletop     := TONCustomCrop.Create;
+  Fdisabletop     := TONURCUSTOMCROP.Create;
   Fdisabletop.cropname := 'DISABLETOP';
-  Fdisablebottom  := TONCustomCrop.Create;
+  Fdisablebottom  := TONURCUSTOMCROP.Create;
   Fdisablebottom.cropname := 'DISABLEBOTTOM';
   Fstate := obsNormal;
   FAutoWidth := True;
@@ -1888,17 +2110,17 @@ begin
   Customcroplist.Add(FNormalright);
   Customcroplist.Add(FNormalbottom);
 
-  Customcroplist.Add(FPress);
-  Customcroplist.Add(FPressleft);
-  Customcroplist.Add(FPresstop);
-  Customcroplist.Add(FPressright);
-  Customcroplist.Add(FPressbottom);
-
   Customcroplist.Add(FEnter);
   Customcroplist.Add(FEnterleft);
   Customcroplist.Add(FEntertop);
   Customcroplist.Add(FEnterright);
   Customcroplist.Add(FEnterbottom);
+
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(FPressleft);
+  Customcroplist.Add(FPresstop);
+  Customcroplist.Add(FPressright);
+  Customcroplist.Add(FPressbottom);
 
   Customcroplist.Add(Fdisable);
   Customcroplist.Add(Fdisableleft);
@@ -1909,12 +2131,12 @@ end;
 
 // -----------------------------------------------------------------------------
 
-destructor TONCropButton.Destroy;
+destructor TONURCropButton.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 
@@ -1949,7 +2171,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TONCropButton.CheckAutoWidth;
+procedure TONURCropButton.CheckAutoWidth;
 begin
   if FAutoWidth and Assigned(resim) then
   begin
@@ -1959,13 +2181,13 @@ begin
 
 end;
 
-procedure TONCropButton.SetAutoWidth(const Value: boolean);
+procedure TONURCropButton.SetAutoWidth(const Value: boolean);
 begin
   FAutoWidth := Value;
   CheckAutoWidth;
 end;
 
-procedure TONCropButton.SetSkindata(Aimg: TONImg);
+procedure TONURCropButton.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   FNormalleft.Targetrect:=RECT(0,0,FNormalleft.Width,SELF.ClientHeight);
@@ -1978,7 +2200,7 @@ begin
 
 end;
 
-procedure TONCropButton.Paint;
+procedure TONURCropButton.Paint;
 var
   DR,DRL,DRR,DRT,DRB: TRect;
 begin
@@ -2053,7 +2275,7 @@ end;
 
 
 
-procedure TONCropButton.MouseLeave;
+procedure TONURCropButton.MouseLeave;
 begin
 
   if (csDesigning in ComponentState) then
@@ -2066,7 +2288,7 @@ begin
 
 end;
 // -----------------------------------------------------------------------------
-procedure TONCropButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURCropButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
 
@@ -2085,7 +2307,7 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
-procedure TONCropButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURCropButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -2096,7 +2318,7 @@ end;
 
 
 
-procedure TONCropButton.MouseEnter;
+procedure TONURCropButton.MouseEnter;
 begin
 
   if (csDesigning in ComponentState) then    exit;
@@ -2108,7 +2330,7 @@ begin
 end;
 
 
-procedure TONCropButton.CMHittest(var msg: TCMHittest);
+procedure TONURCropButton.CMHittest(var msg: TCMHittest);
 begin
   inherited;
   if csDesigning in ComponentState then
@@ -2124,10 +2346,10 @@ end;
 
 
 
-{ TONGraphicsButton }
+{ TONURGraphicsButton }
 
 
-procedure TONGraphicsButton.MouseEnter;
+procedure TONURGraphicsButton.MouseEnter;
 begin
  if (csDesigning in ComponentState) then
   exit;
@@ -2140,7 +2362,7 @@ begin
 end;
 
 
-procedure TONGraphicsButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURGraphicsButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -2148,7 +2370,7 @@ begin
   Invalidate;
 end;
 
-procedure TONGraphicsButton.MouseLeave;
+procedure TONURGraphicsButton.MouseLeave;
 begin
   if (csDesigning in ComponentState) then
   exit;
@@ -2160,7 +2382,7 @@ begin
   Invalidate;
 end;
 // -----------------------------------------------------------------------------
-procedure TONGraphicsButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURGraphicsButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   if (csDesigning in ComponentState) then
@@ -2176,56 +2398,56 @@ begin
   end;
 end;
 
-constructor TONGraphicsButton.Create(AOwner: TComponent);
+constructor TONURGraphicsButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname := 'button';
-  FNormal   := TONCustomCrop.Create;
+  FNormal   := TONURCUSTOMCROP.Create;
   FNormal.cropname := 'NORMAL';
-  FNormalleft   := TONCustomCrop.Create;
+  FNormalleft   := TONURCUSTOMCROP.Create;
   FNormalleft.cropname:='NORMALLEFT';
-  FNormalright  := TONCustomCrop.Create;
+  FNormalright  := TONURCUSTOMCROP.Create;
   FNormalright.cropname:='NORMALRIGHT';
-  FNormaltop    := TONCustomCrop.Create;
+  FNormaltop    := TONURCUSTOMCROP.Create;
   FNormaltop.cropname:='NORMALTOP';
-  FNormalbottom := TONCustomCrop.Create;
+  FNormalbottom := TONURCUSTOMCROP.Create;
   FNormalbottom.cropname:='NORMALBOTTOM';
 
-  FPress := TONCUSTOMCROP.Create;
+  FPress := TONURCUSTOMCROP.Create;
   FPress.cropname := 'PRESSED';
-  FPressleft    := TONCustomCrop.Create;
+  FPressleft    := TONURCUSTOMCROP.Create;
   FPressleft.cropname := 'PRESSEDLEFT';
-  FPressright   := TONCustomCrop.Create;
+  FPressright   := TONURCUSTOMCROP.Create;
   FPressright.cropname := 'PRESSEDRIGHT';
-  FPresstop     := TONCustomCrop.Create;
+  FPresstop     := TONURCUSTOMCROP.Create;
   FPresstop.cropname := 'PRESSEDTOP';
-  FPressbottom  := TONCustomCrop.Create;
+  FPressbottom  := TONURCUSTOMCROP.Create;
   FPressbottom.cropname := 'PRESSEDBOTTOM';
 
 
 
-  FEnter := TONCUSTOMCROP.Create;
+  FEnter := TONURCUSTOMCROP.Create;
   FEnter.cropname := 'ENTER';
-  FEnterleft    := TONCustomCrop.Create;
+  FEnterleft    := TONURCUSTOMCROP.Create;
   FEnterleft.cropname := 'ENTERLEFT';
-  FEnterright   := TONCustomCrop.Create;
+  FEnterright   := TONURCUSTOMCROP.Create;
   FEnterright.cropname := 'ENTERRIGHT';
-  FEntertop     := TONCustomCrop.Create;
+  FEntertop     := TONURCUSTOMCROP.Create;
   FEntertop.cropname := 'ENTERTOP';
-  FEnterbottom  := TONCustomCrop.Create;
+  FEnterbottom  := TONURCUSTOMCROP.Create;
   FEnterbottom.cropname := 'ENTERBOTTOM';
 
 
 
-  Fdisable := TONCUSTOMCROP.Create;
+  Fdisable := TONURCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
-  Fdisableleft    := TONCustomCrop.Create;
+  Fdisableleft    := TONURCUSTOMCROP.Create;
   Fdisableleft.cropname := 'DISABLELEFT';
-  Fdisableright   := TONCustomCrop.Create;
+  Fdisableright   := TONURCUSTOMCROP.Create;
   Fdisableright.cropname := 'DISABLERIGHT';
-  Fdisabletop     := TONCustomCrop.Create;
+  Fdisabletop     := TONURCUSTOMCROP.Create;
   Fdisabletop.cropname := 'DISABLETOP';
-  Fdisablebottom  := TONCustomCrop.Create;
+  Fdisablebottom  := TONURCUSTOMCROP.Create;
   Fdisablebottom.cropname := 'DISABLEBOTTOM';
 
   Customcroplist.Add(Fnormal);
@@ -2234,17 +2456,17 @@ begin
   Customcroplist.Add(FNormalright);
   Customcroplist.Add(FNormalbottom);
 
-  Customcroplist.Add(FPress);
-  Customcroplist.Add(FPressleft);
-  Customcroplist.Add(FPresstop);
-  Customcroplist.Add(FPressright);
-  Customcroplist.Add(FPressbottom);
-
   Customcroplist.Add(FEnter);
   Customcroplist.Add(FEnterleft);
   Customcroplist.Add(FEntertop);
   Customcroplist.Add(FEnterright);
   Customcroplist.Add(FEnterbottom);
+
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(FPressleft);
+  Customcroplist.Add(FPresstop);
+  Customcroplist.Add(FPressright);
+  Customcroplist.Add(FPressbottom);
 
   Customcroplist.Add(Fdisable);
   Customcroplist.Add(Fdisableleft);
@@ -2264,12 +2486,12 @@ end;
 
 // -----------------------------------------------------------------------------
 
-destructor TONGraphicsButton.Destroy;
+destructor TONURGraphicsButton.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {  FreeAndNil(FNormal);
@@ -2302,7 +2524,7 @@ end;
 
 // -----------------------------------------------------------------------------
 
-procedure TONGraphicsButton.CheckAutoWidth;
+procedure TONURGraphicsButton.CheckAutoWidth;
 begin
   if FAutoWidth and Assigned(resim) then
   begin
@@ -2312,7 +2534,7 @@ begin
 
 end;
 
-procedure TONGraphicsButton.SetSkindata(Aimg: TONImg);
+procedure TONURGraphicsButton.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   FNormalleft.Targetrect:=RECT(0,0,FNormalleft.Width,SELF.ClientHeight);
@@ -2323,13 +2545,13 @@ begin
 
 end;
 
-procedure TONGraphicsButton.SetAutoWidth(const Value: boolean);
+procedure TONURGraphicsButton.SetAutoWidth(const Value: boolean);
 begin
   FAutoWidth := Value;
   CheckAutoWidth;
 end;
 
-procedure TONGraphicsButton.Paint;
+procedure TONURGraphicsButton.Paint;
 var
   DR,DRL,DRR,DRT,DRB: TRect;
 begin
@@ -2406,9 +2628,9 @@ end;
 
 
 
-{ TOnSwich }
+{ TONURSwich }
 
-procedure TOnSwich.SetChecked(Value: boolean);
+procedure TONURSwich.SetChecked(Value: boolean);
 begin
   if FChecked <> Value then
   begin
@@ -2419,7 +2641,7 @@ end;
 
 
 
-procedure TOnSwich.CMonmouseenter(var Messages: Tmessage);
+procedure TONURSwich.CMonmouseenter(var Messages: Tmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2429,7 +2651,7 @@ begin
   Invalidate;
 end;
 
-procedure TOnSwich.CMonmouseleave(var Messages: Tmessage);
+procedure TONURSwich.CMonmouseleave(var Messages: Tmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2441,7 +2663,7 @@ end;
 
 
 
-procedure TOnSwich.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURSwich.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited mousedown(button, shift, x, y);
@@ -2458,7 +2680,7 @@ begin
   end;
 end;
 
-procedure TOnSwich.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURSwich.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -2472,39 +2694,39 @@ end;
 
 
 
-constructor TOnSwich.Create(AOwner: TComponent);
+constructor TONURSwich.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
   skinname := 'swich';
-  FOpen := TONCUSTOMCROP.Create;
+  FOpen := TONURCUSTOMCROP.Create;
   FOpen.cropname := 'OPEN';
-  Fclose := TONCUSTOMCROP.Create;
+  Fclose := TONURCUSTOMCROP.Create;
   Fclose.cropname := 'CLOSE';
-  Fopenhover := TONCUSTOMCROP.Create;
+  Fopenhover := TONURCUSTOMCROP.Create;
   Fopenhover.cropname := 'OPENHOVER';
-  Fclosehover := TONCUSTOMCROP.Create;
+  Fclosehover := TONURCUSTOMCROP.Create;
   Fclosehover.cropname := 'CLOSEHOVER';
-  Fdisable := TONCUSTOMCROP.Create;
+  Fdisable := TONURCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
   Fstate := obsnormal;
   FChecked := False;
   Captionvisible := False;
 
   Customcroplist.Add(FOpen);
-  Customcroplist.Add(Fclose);
   Customcroplist.Add(Fopenhover);
+  Customcroplist.Add(Fclose);
   Customcroplist.Add(Fclosehover);
   Customcroplist.Add(Fdisable);
 
   //  FOnChange:=TNotifyEvent;
 end;
 
-destructor TOnSwich.Destroy;
+destructor TONURSwich.Destroy;
   var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {  FreeAndNil(FOpen);
@@ -2516,13 +2738,13 @@ begin
 end;
 
 
-procedure TOnSwich.SetSkindata(Aimg: TONImg);
+procedure TONURSwich.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
 
 end;
 
-procedure TOnSwich.Paint;
+procedure TONURSwich.Paint;
 var
   //  HEDEF,
   DR: TRect;
@@ -2604,48 +2826,48 @@ end;
 
 
 
-{ TOnCheckbox }
+{ TONURCheckbox }
 
 
 
-procedure TOnCheckbox.SetChecked(Value: boolean);
+procedure TONURCheckbox.SetChecked(Value: boolean);
 begin
   if FChecked <> Value then
   begin
     FChecked := Value;
 
- //   if (self is TOnRadioButton) then
+ //   if (self is TONURRadioButton) then
  //     deaktifdigerleri;
 
     Invalidate;
   end;
 end;
 
-function TOnCheckbox.GetCheckWidth: integer;
+function TONURCheckbox.GetCheckWidth: integer;
 begin
   Result := fcheckwidth;
 end;
 
-procedure TOnCheckbox.SetCheckWidth(AValue: integer);
+procedure TONURCheckbox.SetCheckWidth(AValue: integer);
 begin
   if fcheckwidth = AValue then exit;
   fcheckwidth := AValue;
   Invalidate;
 end;
 
-procedure TOnCheckbox.SetCaptionmod(const val: Tcapdirection);
+procedure TONURCheckbox.SetCaptionmod(const val: TONURCapDirection);
 begin
   if fcaptiondirection = val then  exit;
   fcaptiondirection := val;
   Invalidate;
 end;
 
-function TOnCheckbox.GetCaptionmod: Tcapdirection;
+function TONURCheckbox.GetCaptionmod: TONURCapDirection;
 begin
   Result := fcaptiondirection;
 end;
 
-procedure TOnCheckbox.deaktifdigerleri;
+procedure TONURCheckbox.deaktifdigerleri;
 var
   i: integer;
   Sibling: TControl;
@@ -2657,10 +2879,10 @@ begin
       for i := 0 to ControlCount - 1 do
       begin
         Sibling := Controls[i];
-        if (Controls[i] is TOnRadioButton) and (Sibling <> Self)  then
+        if (Controls[i] is TONURRadioButton) and (Sibling <> Self)  then
         begin
-          TonRadiobutton(Sibling).SetChecked(False);// Checked := False;
-          TonRadiobutton(Sibling).fstate := obsnormal;// Checked := False;
+          TONURRadioButton(Sibling).SetChecked(False);// Checked := False;
+          TONURRadioButton(Sibling).fstate := obsnormal;// Checked := False;
       //    ShowMessage(self.Parent.Name);
          // Invalidate;
         end;
@@ -2673,19 +2895,19 @@ end;
 
 
 
-procedure TOnCheckbox.CMonmouseenter(var Messages: Tmessage);
+procedure TONURCheckbox.CMonmouseenter(var Messages: Tmessage);
 begin
   fstate := obshover;
   Invalidate;
 end;
 
-procedure TOnCheckbox.CMonmouseleave(var Messages: Tmessage);
+procedure TONURCheckbox.CMonmouseleave(var Messages: Tmessage);
 begin
   fstate := obsnormal;
   Invalidate;
 end;
 
-procedure TOnCheckbox.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURCheckbox.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited mousedown(button, shift, x, y);
@@ -2698,7 +2920,7 @@ begin
   end;
 end;
 
-procedure TOnCheckbox.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURCheckbox.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited mouseup(button, shift, x, y);
@@ -2706,13 +2928,13 @@ begin
   Invalidate;
 end;
 
-procedure TOnCheckbox.DoOnChange;
+procedure TONURCheckbox.DoOnChange;
 begin
   EditingDone;
   if Assigned(OnChange) then OnChange(Self);
 end;
 
-procedure TOnCheckbox.CMHittest(var msg: TCMHIttest);
+procedure TONURCheckbox.CMHittest(var msg: TCMHIttest);
 begin
   inherited;
   if PtInRegion(CreateRectRgn(0, 0, self.Width, self.Height), msg.XPos, msg.YPos) then
@@ -2721,28 +2943,28 @@ begin
     msg.Result := HTNOWHERE;
 end;
 
-constructor TOnCheckbox.Create(AOwner: TComponent);
+constructor TONURCheckbox.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
   skinname := 'checkbox';
   fcheckwidth := 12;
   fcaptiondirection := ocright;
-  obenter := TONCUSTOMCROP.Create;
+  obenter := TONURCUSTOMCROP.Create;
   obenter.cropname := 'NORMALHOVER';
-  obleave := TONCUSTOMCROP.Create;
+  obleave := TONURCUSTOMCROP.Create;
   obleave.cropname := 'NORMAL';
-  obdown := TONCUSTOMCROP.Create;
+  obdown := TONURCUSTOMCROP.Create;
   obdown.cropname := 'PRESSED';
-  obcheckleaves := TONCUSTOMCROP.Create;
+  obcheckleaves := TONURCUSTOMCROP.Create;
   obcheckleaves.cropname := 'CHECK';
-  obcheckenters := TONCUSTOMCROP.Create;
+  obcheckenters := TONURCUSTOMCROP.Create;
   obcheckenters.cropname := 'CHECKHOVER';
-  obdisabled := TONCUSTOMCROP.Create;
+  obdisabled := TONURCUSTOMCROP.Create;
   obdisabled.cropname := 'DISABLE';
 
 
-  Customcroplist.Add(obenter);
   Customcroplist.Add(obleave);
+  Customcroplist.Add(obenter);
   Customcroplist.Add(obdown);
   Customcroplist.Add(obcheckleaves);
   Customcroplist.Add(obcheckenters);
@@ -2755,12 +2977,12 @@ begin
   Texty:=10;
 end;
 
-destructor TOnCheckbox.Destroy;
+destructor TONURCheckbox.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {begin
@@ -2775,7 +2997,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TOnCheckbox.SetSkindata(Aimg: TONImg);
+procedure TONURCheckbox.SetSkindata(Aimg: TONURImg);
 var
    fbuttoncenter: integer;
 
@@ -2783,7 +3005,7 @@ begin
   inherited SetSkindata(Aimg);
 end;
 
-procedure TOnCheckbox.Paint;
+procedure TONURCheckbox.Paint;
 var
   DR: TRect; 
    fbuttoncenter: integer;

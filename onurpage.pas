@@ -11,23 +11,23 @@ uses
   Dialogs, onurctrl, ComponentEditors, PropEdits, TypInfo;
 
 type
-  TONPageControl = class;
+  TONURPageControl = class;
 
-  { TONPageButton }
+  { TONURPageButton }
 
-  TONPageButton = class(TOnGraphicControl)
+  TONURPageButton = class(TONURGraphicControl)
   private
-    Fnormal: TONCUSTOMCROP;
-    FPress: TONCUSTOMCROP;
-    FEnter: TONCUSTOMCROP;
-    Fdisable: TONCUSTOMCROP;
-    Fstate: TONButtonState;
+    Fnormal: TONURCUSTOMCROP;
+    FPress: TONURCUSTOMCROP;
+    FEnter: TONURCUSTOMCROP;
+    Fdisable: TONURCUSTOMCROP;
+    Fstate: TONURButtonState;
     FAutoWidth: boolean;
   protected
     procedure SetAutoWidth(const Value: boolean);
     procedure CheckAutoWidth;
   public
-    // fPgCntrl     : TONPageControl;
+    // fPgCntrl     : TONURPageControl;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
@@ -37,12 +37,12 @@ type
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    property ONENTER: TONCUSTOMCROP read FEnter write FEnter;
-    property ONNORMAL: TONCUSTOMCROP read Fnormal write Fnormal;
-    property ONPRESS: TONCUSTOMCROP read FPress write FPress;
-    property ONDISABLE: TONCUSTOMCROP read Fdisable write Fdisable;
+    property OENTER   : TONURCUSTOMCROP read FEnter   write FEnter;
+    property ONORMAL  : TONURCUSTOMCROP read Fnormal  write Fnormal;
+    property OPRESS   : TONURCUSTOMCROP read FPress   write FPress;
+    property ODISABLE : TONURCUSTOMCROP read Fdisable write Fdisable;
 
-    //   property PageCntrl : TOnPageControl read fPgCntrl write setPgCntrl;
+    //   property PageCntrl : TONURPageControl read fPgCntrl write setPgCntrl;
   protected
   published
 
@@ -79,15 +79,15 @@ type
   end;
 
 
-  { TONPage}
+  { TONURPage}
 
-  TONPage = class(TOnCustomControl)
+  TONURPage = class(TONURCustomControl)
   private
 
     Fcaption: TCaption;
-    FPageControl: TONPageControl;
+    FPageControl: TONURPageControl;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-    FTop, FBottom, FCenter: TONCUSTOMCROP;
+    FTop, FBottom, FCenter: TONURCUSTOMCROP;
     function GetAutoWidth: boolean;
     function getbutonw: integer;
     function GetPageOrderIndex: integer;
@@ -95,28 +95,28 @@ type
     procedure SetAutoWidth(AValue: boolean);
     procedure SetButtonwidth(AValue: integer);
     procedure SetCaption(AValue: TCaption);
-    procedure SetPageControl(ANotebookControl: TONPageControl);
+    procedure SetPageControl(ANotebookControl: TONURPageControl);
     procedure SetPageOrderIndex(Value: integer);
   protected
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
     procedure ReadState(Reader: TReader); override;
     procedure Loaded; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
-    property PageControl: TONPageControl read FPageControl write SetPageControl;
-    property ONLEFT: TONCUSTOMCROP read Fleft write Fleft;
-    property ONRIGHT: TONCUSTOMCROP read FRight write FRight;
-    property ONCENTER: TONCUSTOMCROP read FCenter write FCenter;
-    property ONBOTTOM: TONCUSTOMCROP read FBottom write FBottom;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FBottomleft write FBottomleft;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FBottomRight write FBottomRight;
-    property ONTOP: TONCUSTOMCROP read FTop write FTop;
-    property ONTOPLEFT: TONCUSTOMCROP read FTopleft write FTopleft;
-    property ONTOPRIGHT: TONCUSTOMCROP read FTopRight write FTopRight;
+    property PageControl  : TONURPageControl read FPageControl write SetPageControl;
+    property OLEFT        : TONURCUSTOMCROP  read Fleft        write Fleft;
+    property ORIGHT       : TONURCUSTOMCROP  read FRight       write FRight;
+    property OCENTER      : TONURCUSTOMCROP  read FCenter      write FCenter;
+    property OBOTTOM      : TONURCUSTOMCROP  read FBottom      write FBottom;
+    property OBOTTOMLEFT  : TONURCUSTOMCROP  read FBottomleft  write FBottomleft;
+    property OBOTTOMRIGHT : TONURCUSTOMCROP  read FBottomRight write FBottomRight;
+    property OTOP         : TONURCUSTOMCROP  read FTop         write FTop;
+    property OTOPLEFT     : TONURCUSTOMCROP  read FTopleft     write FTopleft;
+    property OTOPRIGHT    : TONURCUSTOMCROP  read FTopRight    write FTopRight;
   published
-    Fbutton: TONPageButton;
+    Fbutton: TONURPageButton;
     property AutoCaptionWidth: boolean read GetAutoWidth write SetAutoWidth default True;
     property Buttonwidth: integer read getbutonw write SetButtonwidth;
     property Skindata;
@@ -158,46 +158,46 @@ type
 
   { TonbuttonareaCntrl }
 
-  TonbuttonareaCntrl = class(TOnCustomControl)
+  TONURButtonAreaCntrl = class(TONURCustomControl)
   private
-    Fbttnarea: TONCustomCrop;
+    Fbttnarea: TONURCUSTOMCROP;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
-    property ONCLIENT: TONCUSTOMCROP read Fbttnarea write Fbttnarea;
+    property OCLIENT: TONURCUSTOMCROP read Fbttnarea write Fbttnarea;
   end;
 
   TPageChangingEvent = procedure(Sender: TObject; NewPageIndex: integer;
     var AllowChange: boolean) of object;
 
-  { TONPageControlu }
+  { TONURPageControlu }
 
-  TONPageControl = class(TONCustomControl)
+  TONURPageControl = class(TONURCustomControl)
   private
 
     FPages: TList;
-    FActivePage: TOnPage;
+    FActivePage: TONURPage;
     FPageChanged: TNotifyEvent;
     FPageChanging: TPageChangingEvent;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-    FTop, FBottom, FCenter, Fbuttonarea: TONCUSTOMCROP;
-    fbuttondirection: TONButtonDirection;
+    FTop, FBottom, FCenter, Fbuttonarea: TONURCUSTOMCROP;
+    fbuttondirection: TONURButtonDirection;
     FbuttonbarHeight: integer;
     procedure buttonclicke(Sender: TObject);
-    function GetPage(Index: integer): TOnPage;
+    function GetPage(Index: integer): TONURPage;
     function GetPageCount: integer;
     function GetActivePageIndex: integer;
-    procedure SetButtonDirection(val: TONButtonDirection);
+    procedure SetButtonDirection(val: TONURButtonDirection);
   protected
 
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
     procedure SetChildOrder(Child: TComponent; Order: integer); override;
     procedure ShowControl(AControl: TControl); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
 
-    procedure SetActivePage(Page: TOnPage); virtual;
+    procedure SetActivePage(Page: TONURPage); virtual;
     procedure SetActivePageIndex(PageIndex: integer); virtual;
     procedure DoPageChanged; virtual;
     function DoPageChanging(NewPageIndex: integer): boolean; virtual;
@@ -209,27 +209,27 @@ type
     procedure Paint; override;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    function NewPage: TOnPage;
-    procedure InsertPage(Page: TOnPage); virtual;
-    procedure RemovePage(Page: TOnPage); virtual;
-    function FindNextPage(CurPage: TOnPage; GoForward: boolean): TOnPage;
+    function NewPage: TONURPage;
+    procedure InsertPage(Page: TONURPage); virtual;
+    procedure RemovePage(Page: TONURPage); virtual;
+    function FindNextPage(CurPage: TONURPage; GoForward: boolean): TONURPage;
     procedure SelectNextPage(GoForward: boolean);
     property PageCount: integer read GetPageCount;
-    property Pages[Index: integer]: TOnPage read GetPage;
-    property ONLEFT: TONCUSTOMCROP read Fleft write Fleft;
-    property ONRIGHT: TONCUSTOMCROP read FRight write FRight;
-    property ONCENTER: TONCUSTOMCROP read FCenter write FCenter;
-    property ONBOTTOM: TONCUSTOMCROP read FBottom write FBottom;
-    property ONBOTTOMLEFT: TONCUSTOMCROP read FBottomleft write FBottomleft;
-    property ONBOTTOMRIGHT: TONCUSTOMCROP read FBottomRight write FBottomRight;
-    property ONTOP: TONCUSTOMCROP read FTop write FTop;
-    property ONTOPLEFT: TONCUSTOMCROP read FTopleft write FTopleft;
-    property ONTOPRIGHT: TONCUSTOMCROP read FTopRight write FTopRight;
-    property ONBUTTONAREA: TONCUSTOMCROP read Fbuttonarea write Fbuttonarea;
+    property Pages[Index: integer]: TONURPage read GetPage;
+    property OLEFT        : TONURCUSTOMCROP read Fleft        write Fleft;
+    property ORIGHT       : TONURCUSTOMCROP read FRight       write FRight;
+    property OCENTER      : TONURCUSTOMCROP read FCenter      write FCenter;
+    property OBOTTOM      : TONURCUSTOMCROP read FBottom      write FBottom;
+    property OBOTTOMLEFT  : TONURCUSTOMCROP read FBottomleft  write FBottomleft;
+    property OBOTTOMRIGHT : TONURCUSTOMCROP read FBottomRight write FBottomRight;
+    property OTOP         : TONURCUSTOMCROP read FTop         write FTop;
+    property OTOPLEFT     : TONURCUSTOMCROP read FTopleft     write FTopleft;
+    property OTOPRIGHT    : TONURCUSTOMCROP read FTopRight    write FTopRight;
+    property OBUTTONAREA  : TONURCUSTOMCROP read Fbuttonarea  write Fbuttonarea;
   published
-    btnarea: TonbuttonareaCntrl;
-    property ActivePage: TOnPage read FActivePage write SetActivePage;
-    property ButtonDirection: TONButtonDirection
+    btnarea: TONURButtonAreaCntrl;
+    property ActivePage: TONURPage read FActivePage write SetActivePage;
+    property ButtonDirection: TONURButtonDirection
       read fbuttondirection write SetButtonDirection;
     property Alpha;
     property Skindata;
@@ -293,7 +293,7 @@ type
     property OnUnDock;
   end;
 
-  TOnpagecontrolEditor = class(TComponentEditor)
+  TONURPageControlEditor = class(TComponentEditor)
   private
     procedure Addpage;
   public
@@ -304,9 +304,9 @@ type
 
 
 
-  { TONPageActivePageProperty }
+  { TONURPageActivePageProperty }
 
-  TONPageActivePageProperty = class(TComponentProperty)
+  TONURPageActivePageProperty = class(TComponentProperty)
   public
     function GetAttributes: TPropertyAttributes; override;
     procedure GetValues(Proc: TGetStrProc); override;
@@ -342,7 +342,7 @@ procedure Register;
 
 implementation
 
-uses  BGRAPath, imgfrm;
+uses  BGRAPath;
 
 const
   StringAddPage = 'New Page';
@@ -351,15 +351,15 @@ const
 
 procedure Register;
 begin
-  RegisterComponents('ONUR', [TONPageControl]);
-  RegisterClasses([TONPageControl, TOnPage]);
-  RegisterNoIcon([TOnPage]);
-  RegisterPropertyEditor(TypeInfo(TOnPage), TONPageControl, 'ActivePage',
-    TONPageActivePageProperty);
-  RegisterComponentEditor(TOnPage, TOnpagecontrolEditor);
-  RegisterComponentEditor(TONPageControl, TOnpagecontrolEditor);
+  RegisterComponents('ONUR', [TONURPageControl]);
+  RegisterClasses([TONURPageControl, TONURPage]);
+  RegisterNoIcon([TONURPage]);
+  RegisterPropertyEditor(TypeInfo(TONURPage), TONURPageControl, 'ActivePage',
+    TONURPageActivePageProperty);
+  RegisterComponentEditor(TONURPage, TONURPageControlEditor);
+  RegisterComponentEditor(TONURPageControl, TONURPageControlEditor);
 
-  RegisterPropertyEditor(TypeInfo(string), TONImg, 'Loadskins', TonimgPropertyEditor);
+  RegisterPropertyEditor(TypeInfo(string), TONURImg, 'Loadskins', TonimgPropertyEditor);
 end;
 
 { TOnStringProperty }
@@ -396,14 +396,14 @@ procedure TonimgPropertyEditor.Edit;
 var
   dlg: TOpenDialog;
 begin
-  if (GetOnComponent is TONImg) then
+  if (GetOnComponent is TONURImg) then
   begin
     dlg := TOpenDialog.Create(nil);
     try
       if dlg.Execute then
       begin
         //(GetOnComponent as TONImg).LoadSkins:=dlg.FileName;
-        (GetOnComponent as TONImg).Loadskin(dlg.FileName);
+        (GetOnComponent as TONURImg).Loadskin(dlg.FileName);
 
         SetStrValue(dlg.FileName);
       end;
@@ -434,12 +434,12 @@ end;
 
 
 
-function TONPageActivePageProperty.GetAttributes: TPropertyAttributes;
+function TONURPageActivePageProperty.GetAttributes: TPropertyAttributes;
 begin
   Result := [paValueList];
 end;
 
-procedure TONPageActivePageProperty.GetValues(Proc: TGetStrProc);
+procedure TONURPageActivePageProperty.GetValues(Proc: TGetStrProc);
 var
   I: integer;
   Component: TComponent;
@@ -449,30 +449,30 @@ begin
     for I := 0 to TComponent(GlobalDesignHook.LookupRoot).ComponentCount - 1 do
     begin
       Component := TComponent(GlobalDesignHook.LookupRoot).Components[I];
-      if (Component.Name <> '') and (Component is TOnPage) and
-        (TOnPage(Component).PageControl = GetComponent(0)) then
+      if (Component.Name <> '') and (Component is TONURPage) and
+        (TONURPage(Component).PageControl = GetComponent(0)) then
         Proc(Component.Name);
     end;
 end;
 
-{ TOnpagecontrolEditor }
+{ TONURPageControlEditor }
 
-procedure TOnpagecontrolEditor.Addpage;
+procedure TONURPageControlEditor.Addpage;
 var
-  P: TOnPage;
-  C: TOnPagecontrol;
+  P: TONURPage;
+  C: TONURPageControl;
   Hook: TPropertyEditorHook = nil;
 begin
   if not GetHook(Hook) then
     Exit;
 
-  if Component is TOnPage then
-    c := TOnPage(Component).PageControl
+  if Component is TONURPage then
+    c := TONURPage(Component).PageControl
   else
-    c := TonPageControl(Component);
+    c := TONURPageControl(Component);
 
 
-  P := TOnPage.Create(C.Owner);
+  P := TONURPage.Create(C.Owner);
   try
     P.Parent := C;
     P.Name := GetDesigner.CreateUniqueComponentName(p.ClassName);
@@ -489,9 +489,9 @@ begin
   end;
 end;
 
-function TOnpagecontrolEditor.GetVerb(Index: integer): string;
+function TONURPageControlEditor.GetVerb(Index: integer): string;
 var
-  PageControl: TOnPagecontrol;
+  PageControl: TONURPageControl;
 begin
   case Index of
     0: Result := StringAddPage;
@@ -500,10 +500,10 @@ begin
     else
     begin
       Result := '';
-      if Component is TOnPage then
-        PageControl := TOnPage(Component).PageControl
+      if Component is TONURPage then
+        PageControl := TONURPage(Component).PageControl
       else
-        PageControl := TOnPageControl(Component);
+        PageControl := TONURPageControl(Component);
 
       if PageControl <> nil then
       begin
@@ -515,16 +515,16 @@ begin
   end;
 end;
 
-function TOnpagecontrolEditor.GetVerbCount: integer;
+function TONURPageControlEditor.GetVerbCount: integer;
 var
-  PageControl: TOnPageControl;
+  PageControl: TONURPageControl;
   PageCount: integer;
 begin
   PageCount := 0;
-  if Component is TOnPage then
-    PageControl := TOnPage(Component).PageControl
+  if Component is TONURPage then
+    PageControl := TONURPage(Component).PageControl
   else
-    PageControl := TOnPageControl(Component);
+    PageControl := TONURPageControl(Component);
 
   if PageControl <> nil then
     PageCount := PageControl.PageCount;
@@ -533,16 +533,16 @@ begin
   Result := 3 + PageCount;
 end;
 
-procedure TOnpagecontrolEditor.ExecuteVerb(Index: integer);
+procedure TONURPageControlEditor.ExecuteVerb(Index: integer);
 var
-  PageControl: TONPageControl;
-  Page: TOnPage;
+  PageControl: TONURPageControl;
+  Page: TONURPage;
   //Hook: TPropertyEditorHook;
 begin
-  if Component is TOnPage then
-    PageControl := TOnPage(Component).PageControl
+  if Component is TONURPage then
+    PageControl := TONURPage(Component).PageControl
   else
-    PageControl := TonPageControl(Component);
+    PageControl := TONURPageControl(Component);
   if PageControl <> nil then
   begin
     if Index = 0 then
@@ -556,7 +556,7 @@ begin
       if (Page <> nil) and (Page <> PageControl.ActivePage) then
       begin
         PageControl.ActivePage := Page;
-        if Component is TOnPage then
+        if Component is TONURPage then
           GetDesigner.SelectOnlyThisComponent(Page);
         GetDesigner.Modified;
       end;
@@ -570,7 +570,7 @@ begin
         if (Page <> nil) and (Page <> PageControl.ActivePage) then
         begin
           PageControl.ActivePage := Page;
-          if Component is TOnPage then
+          if Component is TONURPage then
             GetDesigner.SelectOnlyThisComponent(Page);
           GetDesigner.Modified;
         end;
@@ -582,10 +582,10 @@ end;
 
 
 
-{ TONPageControl }
+{ TONURPageControl }
 
 
-constructor TONPageControl.Create(AOwner: TComponent);
+constructor TONURPageControl.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   parent := TWinControl(Aowner);
@@ -604,40 +604,39 @@ begin
 
 
   skinname := 'pagecontrol';
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
-  Fbuttonarea := TONCUSTOMCROP.Create;
+  Fbuttonarea := TONURCUSTOMCROP.Create;
   Fbuttonarea.cropname := 'BUTTONAREA';
 
-
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
   Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
   Customcroplist.Add(Fbuttonarea);
 
-  btnarea := TonbuttonareaCntrl.Create(self);
+  btnarea := TONURButtonAreaCntrl.Create(self);
   btnarea.Parent := self;
   //  btnarea.Skindata:=nil;//self.Skindata;
   btnarea.Height := 30;
@@ -646,7 +645,7 @@ begin
   // ChildSizing.VerticalSpacing:=3;
 end;
 
-destructor TONPageControl.Destroy;
+destructor TONURPageControl.Destroy;
 var
   A: integer;
 begin
@@ -654,7 +653,7 @@ begin
     Pages[A].Free;
 
    for A:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[A]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[A]).free;
 
   Customcroplist.Clear;
   FPages.Free;
@@ -676,7 +675,7 @@ begin
 end;
 
 
-procedure TONPageControl.Paint;
+procedure TONURPageControl.Paint;
 begin
 
   if not Visible then exit;
@@ -720,7 +719,7 @@ begin
   inherited Paint;
 end;
 
-procedure TONPageControl.SetSkindata(Aimg: TONImg);
+procedure TONURPageControl.SetSkindata(Aimg: TONURImg);
 var
   i: integer;
 begin
@@ -758,23 +757,23 @@ begin
 end;
 
 
-function TONPageControl.NewPage: TOnPage;
+function TONURPageControl.NewPage: TONURPage;
 begin
-  Result := TOnPage.Create(nil);
+  Result := TONURPage.Create(nil);
   Result.PageControl := Self;
   ActivePage := Result;
 end;
 
-procedure TONPageControl.InsertPage(Page: TOnPage);
+procedure TONURPageControl.InsertPage(Page: TONURPage);
 begin
   FPages.Add(Page);
   Page.FPageControl := Self;
   Page.FreeNotification(Self);
 end;
 
-procedure TONPageControl.RemovePage(Page: TOnPage);
+procedure TONURPageControl.RemovePage(Page: TONURPage);
 var
-  APage: TONPage;
+  APage: TONURPage;
 begin
   if FActivePage = Page then
   begin
@@ -792,17 +791,17 @@ end;
 
 
 
-function TONPageControl.GetPage(Index: integer): TOnPage;
+function TONURPageControl.GetPage(Index: integer): TONURPage;
 begin
-  Result := TONPage(FPages[Index]);
+  Result := TONURPage(FPages[Index]);
 end;
 
-function TONPageControl.GetPageCount: integer;
+function TONURPageControl.GetPageCount: integer;
 begin
   Result := FPages.Count;
 end;
 
-function TONPageControl.GetActivePageIndex: integer;
+function TONURPageControl.GetActivePageIndex: integer;
 begin
   if Assigned(FActivePage) then
     Result := FPages.IndexOf(FActivePage)
@@ -811,7 +810,7 @@ begin
 end;
 
 
-procedure TONPageControl.SetButtonDirection(val: TONButtonDirection);
+procedure TONURPageControl.SetButtonDirection(val: TONURButtonDirection);
 var
   c: integer;
 begin
@@ -849,47 +848,49 @@ begin
 end;
 
 
-procedure TONPageControl.buttonclicke(Sender: TObject);
+
+
+procedure TONURPageControl.buttonclicke(Sender: TObject);
 var
   i: integer;
 begin
-  i := TONPageButton(Sender).Tag;
+  i := TONURPageButton(Sender).Tag;
   if GetActivePageIndex = i then exit;
   SetActivePageIndex(i);
 end;
 
-procedure TONPageControl.GetChildren(Proc: TGetChildProc; Root: TComponent);
+procedure TONURPageControl.GetChildren(Proc: TGetChildProc; Root: TComponent);
 begin
   inherited GetChildren(Proc, Root);
 end;
 
-procedure TONPageControl.SetChildOrder(Child: TComponent; Order: integer);
+procedure TONURPageControl.SetChildOrder(Child: TComponent; Order: integer);
 begin
   inherited SetChildOrder(Child, Order);
-  TOnPage(Child).PageOrderIndex := Order;
+  TONURPage(Child).PageOrderIndex := Order;
 end;
 
-procedure TONPageControl.ShowControl(AControl: TControl);
+procedure TONURPageControl.ShowControl(AControl: TControl);
 begin
-  if (AControl is TOnPage) and (TOnPage(AControl).PageControl = Self) then
-    SetActivePage(TOnPage(AControl));
+  if (AControl is TONURPage) and (TONURPage(AControl).PageControl = Self) then
+    SetActivePage(TONURPage(AControl));
   inherited ShowControl(AControl);
 end;
 
-procedure TONPageControl.Notification(AComponent: TComponent; Operation: TOperation);
+procedure TONURPageControl.Notification(AComponent: TComponent; Operation: TOperation);
 begin
   inherited Notification(AComponent, Operation);
   if Operation = opRemove then
   begin
-    if (AComponent is TOnPage) and (TOnPage(AComponent).PageControl = Self) then
-      RemovePage(TOnPage(AComponent));
+    if (AComponent is TONURPage) and (TONURPage(AComponent).PageControl = Self) then
+      RemovePage(TONURPage(AComponent));
   end;
 end;
 
 
-procedure TONPageControl.SetActivePage(Page: TOnPage);
+procedure TONURPageControl.SetActivePage(Page: TONURPage);
 var
-  AOldPage: TOnPage;
+  AOldPage: TONURPage;
   APageChanged: boolean;
 begin
   APageChanged := False;
@@ -931,19 +932,19 @@ begin
 
 end;
 
-procedure TONPageControl.SetActivePageIndex(PageIndex: integer);
+procedure TONURPageControl.SetActivePageIndex(PageIndex: integer);
 begin
   if not (csLoading in ComponentState) then
     SetActivePage(Pages[PageIndex]);
 end;
 
-procedure TONPageControl.DoPageChanged;
+procedure TONURPageControl.DoPageChanged;
 begin
   if not (csDestroying in ComponentState) and Assigned(FPageChanged) then
     FPageChanged(Self);
 end;
 
-function TONPageControl.DoPageChanging(NewPageIndex: integer): boolean;
+function TONURPageControl.DoPageChanging(NewPageIndex: integer): boolean;
 begin
   Result := True;
   if Assigned(FPageChanging) then
@@ -952,7 +953,7 @@ end;
 
 
 
-function TONPageControl.FindNextPage(CurPage: TOnPage; GoForward: boolean): TOnPage;
+function TONURPageControl.FindNextPage(CurPage: TONURPage; GoForward: boolean): TONURPage;
 var
   StartIndex: integer;
 begin
@@ -983,15 +984,15 @@ begin
   end;
 end;
 
-procedure TONPageControl.SelectNextPage(GoForward: boolean);
+procedure TONURPageControl.SelectNextPage(GoForward: boolean);
 begin
   SetActivePage(FindNextPage(ActivePage, GoForward));
 end;
 
 
-{ TONPages }
+{ TONURPages }
 
-constructor TONPage.Create(AOwner: TComponent);
+constructor TONURPage.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   parent := TWinControl(Aowner);
@@ -1009,43 +1010,48 @@ begin
 
 
   skinname := 'pagecontrol';
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'PAGETOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'PAGEBOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'PAGECENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'PAGERIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'PAGETOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'PAGEBOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'PAGELEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'PAGETOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'PAGEBOTTOMLEFT';
 
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
   Customcroplist.Add(FBottom);
+  Customcroplist.Add(FBottomRight);
+   Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
-  Customcroplist.Add(FTopRight);
-  Customcroplist.Add(FBottomRight);
-  Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
+
+
+
+
+
   resim.SetSize(190, 190);
 end;
 
-destructor TONPage.Destroy;
+destructor TONURPage.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 {begin
@@ -1063,7 +1069,7 @@ begin
 end;
 
 
-function TONPage.GetPageOrderIndex: integer;
+function TONURPage.GetPageOrderIndex: integer;
 begin
   if FPageControl <> nil then
     Result := FPageControl.FPages.IndexOf(Self)
@@ -1072,25 +1078,25 @@ begin
 
 end;
 
-function TONPage.getbutonw: integer;
+function TONURPage.getbutonw: integer;
 begin
   if Assigned(Fbutton) then
     Result := Fbutton.Width;
 end;
 
-function TONPage.GetAutoWidth: boolean;
+function TONURPage.GetAutoWidth: boolean;
 begin
   if Assigned(Fbutton) then
     Result := Fbutton.AutoWidth;
 end;
 
-procedure TONPage.SetAutoWidth(AValue: boolean);
+procedure TONURPage.SetAutoWidth(AValue: boolean);
 begin
   if Assigned(Fbutton) then
     Fbutton.AutoWidth := AValue;
 end;
 
-procedure TONPage.SetButtonwidth(AValue: integer);
+procedure TONURPage.SetButtonwidth(AValue: integer);
 begin
   if Assigned(Fbutton) then
   begin
@@ -1100,7 +1106,7 @@ begin
 end;
 
 
-procedure TONPage.Getposition;
+procedure TONURPage.Getposition;
 begin
 
   //  if (FPageControl<>nil) or (FPageControl.Skindata<> nil) then
@@ -1170,7 +1176,7 @@ end;
 
 
 
-procedure TONPage.SetCaption(AValue: TCaption);
+procedure TONURPage.SetCaption(AValue: TCaption);
 begin
   if Fcaption = AValue then Exit;
   Fcaption := AValue;
@@ -1181,7 +1187,7 @@ end;
 
 
 
-procedure TONPage.SetPageControl(ANotebookControl: TONPageControl);
+procedure TONURPage.SetPageControl(ANotebookControl: TONURPageControl);
 begin
   if FPageControl <> ANotebookControl then
   begin
@@ -1197,7 +1203,7 @@ begin
     begin
       FPageControl.InsertPage(Self);
 
-      Fbutton := TONPageButton.Create(self);
+      Fbutton := TONURPageButton.Create(self);
 
       with fbutton do
       begin
@@ -1218,7 +1224,7 @@ begin
 
 end;
 
-procedure TONPage.SetPageOrderIndex(Value: integer);
+procedure TONURPage.SetPageOrderIndex(Value: integer);
 var
   MaxPageIndex: integer;
 begin
@@ -1231,7 +1237,7 @@ begin
   end;
 end;
 
-procedure TONPage.SetSkindata(Aimg: TONImg);
+procedure TONURPage.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   FTopleft.Targetrect :=
@@ -1272,15 +1278,15 @@ end;
 
 
 
-procedure TONPage.ReadState(Reader: TReader);
+procedure TONURPage.ReadState(Reader: TReader);
 begin
   inherited ReadState(Reader);
-  if Reader.Parent is TONPageControl then
-    PageControl := TONPageControl(Reader.Parent);
+  if Reader.Parent is TONURPageControl then
+    PageControl := TONURPageControl(Reader.Parent);
 
 end;
 
-procedure TONPage.Loaded;
+procedure TONURPage.Loaded;
 begin
   inherited Loaded;
   if (csDesigning in ComponentState) and not Visible then
@@ -1289,7 +1295,7 @@ end;
 
 
 
-procedure TONPage.Paint;
+procedure TONURPage.Paint;
 begin
   if FPageControl = nil then exit;
   if not Visible then exit;
@@ -1334,7 +1340,7 @@ end;
 
 
 
-procedure TONPageButton.MouseEnter;
+procedure TONURPageButton.MouseEnter;
 begin
   if (csDesigning in ComponentState) then
     exit;
@@ -1347,7 +1353,7 @@ begin
 end;
 
 
-procedure TONPageButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURPageButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -1355,7 +1361,7 @@ begin
   Invalidate;
 end;
 
-procedure TONPageButton.MouseLeave;
+procedure TONURPageButton.MouseLeave;
 begin
   if (csDesigning in ComponentState) then
     exit;
@@ -1367,7 +1373,7 @@ begin
   Invalidate;
 end;
 // -----------------------------------------------------------------------------
-procedure TONPageButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURPageButton.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   if (csDesigning in ComponentState) then
@@ -1383,7 +1389,7 @@ begin
   end;
 end;
 
-constructor TONPageButton.Create(AOwner: TComponent);
+constructor TONURPageButton.Create(AOwner: TComponent);
 begin
 
   inherited Create(AOwner);
@@ -1392,31 +1398,31 @@ begin
   FAutoWidth := True;
   Fstate := obsNormal;
   Skinname := 'pagecontrol';
-  FNormal := TONCustomCrop.Create;
+  FNormal := TONURCUSTOMCROP.Create;
   FNormal.cropname := 'BUTTONNORMAL';
-  FPress := TONCUSTOMCROP.Create;
+  FPress := TONURCUSTOMCROP.Create;
   FPress.cropname := 'BUTTONDOWN';
-  FEnter := TONCUSTOMCROP.Create;
+  FEnter := TONURCUSTOMCROP.Create;
   FEnter.cropname := 'BUTTONHOVER';
-  Fdisable := TONCUSTOMCROP.Create;
+  Fdisable := TONURCUSTOMCROP.Create;
   Fdisable.cropname := 'BUTTONDISABLE';
 
 
-  Customcroplist.Add(Fnormal);
-  Customcroplist.Add(FPress);
+  Customcroplist.Add(Fnormal); 
   Customcroplist.Add(FEnter);
+  Customcroplist.Add(FPress);
   Customcroplist.Add(Fdisable);
 
 end;
 
 // -----------------------------------------------------------------------------
 
-destructor TONPageButton.Destroy;
+destructor TONURPageButton.Destroy;
 var
   i: byte;
 begin
   for i := 0 to Customcroplist.Count - 1 do
-    TONCustomCrop(Customcroplist.Items[i]).Free;
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
 {begin
@@ -1427,7 +1433,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TONPageButton.CheckAutoWidth;
+procedure TONURPageButton.CheckAutoWidth;
 var
   a: Tsize;
 begin
@@ -1449,13 +1455,13 @@ end;
 
 
 
-procedure TONPageButton.SetAutoWidth(const Value: boolean);
+procedure TONURPageButton.SetAutoWidth(const Value: boolean);
 begin
   FAutoWidth := Value;
   CheckAutoWidth;
 end;
 
-procedure TONPageButton.Paint;
+procedure TONURPageButton.Paint;
 var
   DR: TRect;
 begin
@@ -1513,31 +1519,31 @@ end;
 
 
 
-constructor TonbuttonareaCntrl.Create(AOwner: TComponent);
+constructor TONURButtonAreaCntrl.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   parent := TWinControl(Aowner);
   Width := 50;
   Height := 50;
   Skinname := 'pagecontrol';
-  Fbttnarea := TONCustomCrop.Create;
+  Fbttnarea := TONURCUSTOMCROP.Create;
 
   Fbttnarea.cropname := 'BUTTONAREA';
 
   Customcroplist.Add(Fbttnarea);
 end;
 
-destructor TonbuttonareaCntrl.Destroy;
+destructor TONURButtonAreaCntrl.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
   Customcroplist.Clear;
   inherited Destroy;
 end;
 
-procedure TonbuttonareaCntrl.Paint;
+procedure TONURButtonAreaCntrl.Paint;
 begin
   if not Visible then exit;
 

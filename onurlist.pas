@@ -12,20 +12,20 @@ uses
 
 type
 
-   { ToNListBox }
+   { TONURListBox }
 
-  ToNListBox = class(ToNCustomcontrol)
+  TONURListBox = class(TONURCustomControl)
   private
     Flist: TStrings;//List;
     findex: integer;
     fmodusewhelll:boolean;
-    vScrollBar, hScrollBar: ToNScrollBar;
+    vScrollBar, hScrollBar: TONURScrollBar;
     FItemsShown, FitemHeight, FItemVOffset,FItemHOffset: integer;
   //  itempaintHeight: Trect;
     fchangelist:boolean;
     Fselectedcolor: Tcolor;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-    FTop, FBottom, FCenter, factiveitems, fitems: TONCUSTOMCROP;
+    FTop, FBottom, FCenter, factiveitems, fitems: TONURCUSTOMCROP;
 
     //FFocusedItem: integer;
 
@@ -51,7 +51,7 @@ type
     procedure HScrollchange(Sender: TObject);
 
     procedure dblclick; override;
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   protected
     procedure KeyDown(var Key: word; Shift: TShiftState); virtual;
     procedure SetString(AValue: TStrings); virtual;
@@ -63,25 +63,25 @@ type
     procedure BeginUpdate;
     procedure EndUpdate;
     procedure Clear;
-    property ONITEM           : TONCUSTOMCROP read Fitems         write fitems;
-    property ONLEFT           : TONCUSTOMCROP read Fleft          write Fleft;
-    property ONRIGHT          : TONCUSTOMCROP read FRight         write FRight;
-    property ONCENTER         : TONCUSTOMCROP read FCenter        write FCenter;
-    property ONBOTTOM         : TONCUSTOMCROP read FBottom        write FBottom;
-    property ONBOTTOMLEFT     : TONCUSTOMCROP read FBottomleft    write FBottomleft;
-    property ONBOTTOMRIGHT    : TONCUSTOMCROP read FBottomRight   write FBottomRight;
-    property ONTOP            : TONCUSTOMCROP read FTop           write FTop;
-    property ONTOPLEFT        : TONCUSTOMCROP read FTopleft       write FTopleft;
-    property ONTOPRIGHT       : TONCUSTOMCROP read FTopRight      write FTopRight;
-    property ONACTIVEITEM     : TONCUSTOMCROP read factiveitems   write factiveitems;
+    property OITEM           : TONURCUSTOMCROP read Fitems         write fitems;
+    property OLEFT           : TONURCUSTOMCROP read Fleft          write Fleft;
+    property ORIGHT          : TONURCUSTOMCROP read FRight         write FRight;
+    property OCENTER         : TONURCUSTOMCROP read FCenter        write FCenter;
+    property OBOTTOM         : TONURCUSTOMCROP read FBottom        write FBottom;
+    property OBOTTOMLEFT     : TONURCUSTOMCROP read FBottomleft    write FBottomleft;
+    property OBOTTOMRIGHT    : TONURCUSTOMCROP read FBottomRight   write FBottomRight;
+    property OTOP            : TONURCUSTOMCROP read FTop           write FTop;
+    property OTOPLEFT        : TONURCUSTOMCROP read FTopleft       write FTopleft;
+    property OTOPRIGHT       : TONURCUSTOMCROP read FTopRight      write FTopRight;
+    property OACTIVEITEM     : TONURCUSTOMCROP read factiveitems   write factiveitems;
   published
     property Alpha;
-    property Items            : TStrings      read Flist          write SetString;
-    property ItemIndex        : integer       read GetItemIndex   write SetItemIndex;
-    property ItemHeight       : integer       read GetItemHeight  write SetItemHeight;
-    property HorizontalScroll : ToNScrollBar  read hScrollBar     write hScrollBar;
-    property VertialScroll    : ToNScrollBar  read vScrollBar     write vScrollBar;
-    property Selectedcolor    : Tcolor        read Fselectedcolor write Fselectedcolor;
+    property Items            : TStrings       read Flist          write SetString;
+    property ItemIndex        : integer        read GetItemIndex   write SetItemIndex;
+    property ItemHeight       : integer        read GetItemHeight  write SetItemHeight;
+    property HorizontalScroll : TONURScrollBar read hScrollBar     write hScrollBar;
+    property VertialScroll    : TONURScrollBar read vScrollBar     write vScrollBar;
+    property Selectedcolor    : Tcolor         read Fselectedcolor write Fselectedcolor;
     property Skindata;
     property Action;
     property Align;
@@ -122,9 +122,9 @@ type
   end;
 
 
-  { TONcombobox }
+  { TONURComboBox }
 
-  TONcombobox = class(Toncustomedit)//(TonCustomcontrol)
+  TONURComboBox = class(TONURCustomEdit)//(TonCustomcontrol)
   private
     Fliste: TStrings;
     FOnCloseUp: TNotifyEvent;
@@ -139,10 +139,10 @@ type
     Fitemoffset: integer;
     Fselectedcolor: Tcolor;
     fdropdown: boolean;
-    FNormal, FPress, FEnter, Fdisable: TONCUSTOMCROP;
+    FNormal, FPress, FEnter, Fdisable: TONURCUSTOMCROP;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-    FTop, FBottom, FCenter: TONCUSTOMCROP;
-    Fstate: TONButtonState;
+    FTop, FBottom, FCenter: TONURCUSTOMCROP;
+    Fstate: TONURButtonState;
     procedure Change;
     procedure kclick(Sender: TObject);
     function Gettext: string;
@@ -164,7 +164,7 @@ type
       X: integer; Y: integer); override;
     procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
     procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
 
   protected
 
@@ -175,25 +175,25 @@ type
     procedure CloseUp; virtual;
     procedure SetStrings(AValue: TStrings); virtual;
     //    procedure KeyDown(var Key: word; Shift: TShiftState);  virtual;
-    property OnCloseUp: TNotifyEvent read FOnCloseUp write FOnCloseUp;
-    property OnDropDown: TNotifyEvent read FOnDropDown write FOnDropDown;
-    property OnGetItems: TNotifyEvent read FOnGetItems write FOnGetItems;
-    property OnSelect: TNotifyEvent read FOnSelect write FOnSelect;
+    property OnCloseUp  : TNotifyEvent read FOnCloseUp  write FOnCloseUp;
+    property OnDropDown : TNotifyEvent read FOnDropDown write FOnDropDown;
+    property OnGetItems : TNotifyEvent read FOnGetItems write FOnGetItems;
+    property OnSelect   : TNotifyEvent read FOnSelect   write FOnSelect;
     public
       fbutonarea: Trect;
-      property ONLEFT: TONCUSTOMCROP read Fleft write Fleft;
-      property ONRIGHT: TONCUSTOMCROP read FRight write FRight;
-      property ONCENTER: TONCUSTOMCROP read FCenter write FCenter;
-      property ONBOTTOM: TONCUSTOMCROP read FBottom write FBottom;
-      property ONBOTTOMLEFT: TONCUSTOMCROP read FBottomleft write FBottomleft;
-      property ONBOTTOMRIGHT: TONCUSTOMCROP read FBottomRight write FBottomRight;
-      property ONTOP: TONCUSTOMCROP read FTop write FTop;
-      property ONTOPLEFT: TONCUSTOMCROP read FTopleft write FTopleft;
-      property ONTOPRIGHT: TONCUSTOMCROP read FTopRight write FTopRight;
-      property ONBUTONNORMAL: TONCUSTOMCROP read FNormal write FNormal;
-      property ONBUTONPRESS: TONCUSTOMCROP read FPress write FPress;
-      property ONBUTONHOVER: TONCUSTOMCROP read FEnter write FEnter;
-      property ONBUTONDISABLE: TONCUSTOMCROP read Fdisable write Fdisable;
+      property OLEFT         : TONURCUSTOMCROP read Fleft        write Fleft;
+      property ORIGHT        : TONURCUSTOMCROP read FRight       write FRight;
+      property OCENTER       : TONURCUSTOMCROP read FCenter      write FCenter;
+      property OBOTTOM       : TONURCUSTOMCROP read FBottom      write FBottom;
+      property OBOTTOMLEFT   : TONURCUSTOMCROP read FBottomleft  write FBottomleft;
+      property OBOTTOMRIGHT  : TONURCUSTOMCROP read FBottomRight write FBottomRight;
+      property OTOP          : TONURCUSTOMCROP read FTop         write FTop;
+      property OTOPLEFT      : TONURCUSTOMCROP read FTopleft     write FTopleft;
+      property OTOPRIGHT     : TONURCUSTOMCROP read FTopRight    write FTopRight;
+      property OBUTONNORMAL  : TONURCUSTOMCROP read FNormal      write FNormal;
+      property OBUTONPRESS   : TONURCUSTOMCROP read FPress       write FPress;
+      property OBUTONHOVER   : TONURCUSTOMCROP read FEnter       write FEnter;
+      property OBUTONDISABLE : TONURCUSTOMCROP read Fdisable     write Fdisable;
 
       constructor Create(AOwner: TComponent); override;
       destructor Destroy; override;
@@ -207,9 +207,9 @@ type
     property Items: TStrings read Fliste write SetStrings;
     property OnChange;//      : TNotifyEvent  read FOnChange      write FOnChange;
     property ReadOnly;//      : boolean       read freadonly      write freadonly;
-    property ItemIndex: integer read Getitemindex write Setitemindex;
-    property Selectedcolor: Tcolor read Fselectedcolor write Fselectedcolor;
-    property ItemHeight: integer read FitemHeight write SetItemHeight;
+    property ItemIndex     : integer read Getitemindex   write Setitemindex;
+    property Selectedcolor : Tcolor  read Fselectedcolor write Fselectedcolor;
+    property ItemHeight    : integer read FitemHeight    write SetItemHeight;
     property Skindata;
     property Action;
     property Align;
@@ -262,9 +262,9 @@ type
     //    procedure FormCreate(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);
   private
-    FCaller: ToNcombobox;
+    FCaller: TONURComboBox;
     FClosed: boolean;
-    oblist: TonListBox;
+    oblist: TONURListBox;
     FOnReturnDate: TReturnStintEvent;
     constructor Create(TheOwner: TComponent); override;
     procedure CMDeactivate(var Message: TLMessage); message CM_DEACTIVATE;
@@ -276,7 +276,7 @@ type
     // procedure Paint; override;
   end;
 
-  TOncolumlist = class;
+  TONURColumList = class;
   { TOlistItem }
 {  TOnurStrings = class
   private
@@ -295,7 +295,7 @@ type
     property Count: integer read GetRowCount write SetRowCount;
   end;
  }
-  TONlistItem = class(TCollectionItem)
+  TONURlistItem = class(TCollectionItem)
   private
     FCells: array of string;
     FSize: integer;
@@ -305,7 +305,7 @@ type
     function GetColCount: integer;
     procedure SetCell(X: integer; AValue: string);virtual;
     procedure SetColCount(AValue: integer);
-    function Insert(Indexi: integer; avalue: string): TONlistItem;
+    function Insert(Indexi: integer; avalue: string): TONURlistItem;
   public
     constructor Create(Collectioni: TCollection); override;
     procedure Add(s: string);
@@ -320,33 +320,33 @@ type
     property ID;
   end;
 
-  { TONlistItems }
+  { TONURlistItems }
 
-  TONlistItems = class(TOwnedCollection)
+  TONURlistItems = class(TOwnedCollection)
   private
 
-    function GetItem(Indexi: integer): TONlistItem;
-    procedure SetItem(Indexi: integer; const Value: TONlistItem);
+    function GetItem(Indexi: integer): TONURlistItem;
+    procedure SetItem(Indexi: integer; const Value: TONURlistItem);
     procedure Setcells(Acol, Arow: integer; Avalue: string);
     function Getcells(Acol, Arow: integer): string;
   protected
     procedure Update(Item: TCollectionItem); override;
   public
     constructor Create(AOwner: TPersistent; ItemClassi: TCollectionItemClass);
-    function Add: TOnlistItem;
+    function Add: TONURlistItem;
     property Count;// override;
     procedure Clear;
     procedure Delete(Indexi: integer);
     function Insert(Indexi: Integer; col: array of integer; avalue: array of string
-      ): Tonlistitem;
-    function IndexOf(Value: TONlistItem): integer;
-    property Items[Indexi: integer]: TONlistItem read GetItem write SetItem; default;
+      ): TONURlistItem;
+    function IndexOf(Value: TONURlistItem): integer;
+    property Items[Indexi: integer]: TONURlistItem read GetItem write SetItem; default;
     property Cells[ACol, ARow: integer]: string read GetCells write SetCells;
   end;
 
-  { TONColumn }
+  { TONURColumn }
 
-  TONColumn = class(TCollectionItem)
+  TONURColumn = class(TCollectionItem)
   private
     FCaption: string;
     fvisible: boolean;
@@ -373,44 +373,44 @@ type
 
 
 
-  { TONListColums }
+  { TONURListColums }
 
-  TONListColums = class(TOwnedCollection)
+  TONURListColums = class(TOwnedCollection)
   private
 
-    function GetItem(Indexi: integer): TONColumn;
-    procedure SetItem(Indexi: integer; const Value: TONColumn);
+    function GetItem(Indexi: integer): TONURColumn;
+    procedure SetItem(Indexi: integer; const Value: TONURColumn);
     procedure Setcells(Acol, Arow: integer; Avalue: string);
     function Getcells(Acol, Arow: integer): string;
   protected
     procedure Update(Item: TCollectionItem); override;
   public
     constructor Create(AOwner: TPersistent; ItemClassi: TCollectionItemClass);
-    function Add: TONColumn;
+    function Add: TONURColumn;
     procedure Clear;
     procedure Delete(Indexi: integer);
-    function Insert(Indexi: integer): TONColumn;
-    Function Indexof(Value: Toncolumn): Integer;
-    property Items[Indexi: integer]: TONColumn read GetItem write SetItem; default;
+    function Insert(Indexi: integer): TONURColumn;
+    Function Indexof(Value: TONURColumn): Integer;
+    property Items[Indexi: integer]: TONURColumn read GetItem write SetItem; default;
     property Cells[ACol, ARow: integer]: string read GetCells write SetCells;
   end;
 
   TOnDeleteItem = procedure(Sender: TObject) of object;
-  TOnCellClick = procedure(Sender: TObject; Column: TONlistItem) of object;
+  TOnCellClick = procedure(Sender: TObject; Column: TONURlistItem) of object;
 
-  { TOncolumlist }
+  { TONURColumList }
 
-  TOncolumlist = class(TOnCustomControl)
+  TONURColumList = class(TONURCustomControl)
   private
 
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-    FTop, FBottom, FCenter, factiveitems, fheader, fitems: TONCUSTOMCROP;
+    FTop, FBottom, FCenter, factiveitems, fheader, fitems: TONURCUSTOMCROP;
 
 
     //itempaintHeight: Trect;
     fheaderfont: Tfont;
-    FListItems: TONlistItems;
-    Fcolumns: TONListColums;
+    FListItems: TONURlistItems;
+    Fcolumns: TONURListColums;
 
     FItemvOffset: integer;
     FItemHOffset: integer;
@@ -425,8 +425,8 @@ type
     fcolumindex: integer;
     fselectcolor: TColor;
     fbackgroundvisible: boolean;
-    VScrollBar: TONScrollBar;
-    HScrollBar: TONScrollBar;
+    VScrollBar: TONURScrollBar;
+    HScrollBar: TONURScrollBar;
     FItemDblClick: TNotifyEvent;
     FItemEnterKey: TNotifyEvent;
     FOnDeleteItem: TOnDeleteItem;
@@ -439,32 +439,32 @@ type
     procedure Scrollscreen;
     procedure Setcells(Acol, Arow: integer; Avalue: string);
     procedure SetHeadervisible(AValue: boolean);
-    procedure SetItems(Value: TONlistItems);
-    procedure Setcolums(Value: TONListColums);
+    procedure SetItems(Value: TONURlistItems);
+    procedure Setcolums(Value: TONURListColums);
 
     function ItemRect(Item: integer): TRect;
     function GetItemAt(Pos: TPoint): integer;
     procedure VScrollBarChange(Sender: TObject);
     procedure HScrollBarChange(Sender: TObject);
     procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
-    procedure SetSkindata(Aimg: TONImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
 
   public
     wait: boolean;
     function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): boolean; override;
     function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): boolean; override;
-    property ONHEADER      : TONCUSTOMCROP  read fheader      write fheader;
-    property ONLEFT        : TONCUSTOMCROP  read Fleft        write Fleft;
-    property ONRIGHT       : TONCUSTOMCROP  read FRight       write FRight;
-    property ONCENTER      : TONCUSTOMCROP  read FCenter      write FCenter;
-    property ONBOTTOM      : TONCUSTOMCROP  read FBottom      write FBottom;
-    property ONBOTTOMLEFT  : TONCUSTOMCROP  read FBottomleft  write FBottomleft;
-    property ONBOTTOMRIGHT : TONCUSTOMCROP  read FBottomRight write FBottomRight;
-    property ONTOP         : TONCUSTOMCROP  read FTop         write FTop;
-    property ONTOPLEFT     : TONCUSTOMCROP  read FTopleft     write FTopleft;
-    property ONTOPRIGHT    : TONCUSTOMCROP  read FTopRight    write FTopRight;
-    property ONACTIVEITEM  : TONCUSTOMCROP  read factiveitems write factiveitems;
-    property ONITEM        : TONCUSTOMCROP  read fitems       write fitems;
+    property OHEADER      : TONURCUSTOMCROP  read fheader      write fheader;
+    property OLEFT        : TONURCUSTOMCROP  read Fleft        write Fleft;
+    property ORIGHT       : TONURCUSTOMCROP  read FRight       write FRight;
+    property OCENTER      : TONURCUSTOMCROP  read FCenter      write FCenter;
+    property OBOTTOM      : TONURCUSTOMCROP  read FBottom      write FBottom;
+    property OBOTTOMLEFT  : TONURCUSTOMCROP  read FBottomleft  write FBottomleft;
+    property OBOTTOMRIGHT : TONURCUSTOMCROP  read FBottomRight write FBottomRight;
+    property OTOP         : TONURCUSTOMCROP  read FTop         write FTop;
+    property OTOPLEFT     : TONURCUSTOMCROP  read FTopleft     write FTopleft;
+    property OTOPRIGHT    : TONURCUSTOMCROP  read FTopRight    write FTopRight;
+    property OACTIVEITEM  : TONURCUSTOMCROP  read factiveitems write factiveitems;
+    property OITEM        : TONURCUSTOMCROP  read fitems       write fitems;
 
     constructor Create(Aowner: TComponent); override;
     destructor Destroy; override;
@@ -485,22 +485,22 @@ type
 
   published
     property Alpha;
-    property OnCellClick       : TOnCellClick  read FOnCellclick       write FOnCellclick;
-    property Columns           : TONListColums read Fcolumns           write Setcolums;
-    property Items             : TONlistItems  read FListItems         write SetItems;
-    property ItemIndex         : integer       read FFocusedItem       write FFocusedItem;
-    property Columindex        : integer       read fcolumindex        write fcolumindex;
-    property ItemHeight        : integer       read FItemHeight        write FItemHeight;
-    property HeaderHeight      : integer       read FheaderHeight      write FheaderHeight;
-    property Selectedcolor     : Tcolor        read fselectcolor       write fselectcolor;
-    property Headervisible     : boolean       read fheadervisible     write SetHeadervisible;
-    property Headerfont        : TFont         read fheaderfont        write fheaderfont;
-    property AutoHideScrollBar : boolean       read FAutoHideScrollBar write FAutoHideScrollBar;
-    property OnItemDblClick    : TNotifyEvent  read FItemDblClick      write FItemDblClick;
-    property OnItemEnterKey    : TNotifyEvent  read FItemEnterKey      write FItemEnterKey;
-    property OnDeleteItem      : TOnDeleteItem read FOnDeleteItem      write FOnDeleteItem;
-    property VertialScroll     : ToNScrollBar  read VScrollBar         write VScrollBar;
-    property HorizontalScroll  : ToNScrollBar  read hScrollBar         write HScrollBar;
+    property OnCellClick       : TOnCellClick    read FOnCellclick       write FOnCellclick;
+    property Columns           : TONURListColums read Fcolumns           write Setcolums;
+    property Items             : TONURlistItems  read FListItems         write SetItems;
+    property ItemIndex         : integer         read FFocusedItem       write FFocusedItem;
+    property Columindex        : integer         read fcolumindex        write fcolumindex;
+    property ItemHeight        : integer         read FItemHeight        write FItemHeight;
+    property HeaderHeight      : integer         read FheaderHeight      write FheaderHeight;
+    property Selectedcolor     : Tcolor          read fselectcolor       write fselectcolor;
+    property Headervisible     : boolean         read fheadervisible     write SetHeadervisible;
+    property Headerfont        : TFont           read fheaderfont        write fheaderfont;
+    property AutoHideScrollBar : boolean         read FAutoHideScrollBar write FAutoHideScrollBar;
+    property OnItemDblClick    : TNotifyEvent    read FItemDblClick      write FItemDblClick;
+    property OnItemEnterKey    : TNotifyEvent    read FItemEnterKey      write FItemEnterKey;
+    property OnDeleteItem      : TOnDeleteItem   read FOnDeleteItem      write FOnDeleteItem;
+    property VertialScroll     : TONURScrollBar  read VScrollBar         write VScrollBar;
+    property HorizontalScroll  : TONURScrollBar  read hScrollBar         write HScrollBar;
     property Anchors;
     property Font;
     property OnDblClick;
@@ -521,64 +521,64 @@ uses BGRAPath, inifiles, clipbrd, strutils, LazUnicode,BGRAFreeType, LazFreeType
 
 procedure Register;
 begin
-  RegisterComponents('ONUR', [ToNListBox]);
-  RegisterComponents('ONUR', [TOncolumlist]);
-  RegisterComponents('ONUR', [TONcombobox]);
+  RegisterComponents('ONUR', [TONURListBox]);
+  RegisterComponents('ONUR', [TONURColumList]);
+  RegisterComponents('ONUR', [TONURComboBox]);
 end;
 
 
-{ TONListColums }
+{ TONURListColums }
 
-Function Tonlistcolums.Getitem(Indexi: Integer): Toncolumn;
+Function TONURListColums.Getitem(Indexi: Integer): TONURColumn;
 Begin
    if Indexi <> -1 then
- Result := TONColumn(inherited GetItem(Indexi));
+ Result := TONURColumn(inherited GetItem(Indexi));
 End;
 
-Procedure Tonlistcolums.Setitem(Indexi: Integer; Const Value: Toncolumn);
+Procedure TONURListColums.Setitem(Indexi: Integer; Const Value: TONURColumn);
 Begin
    inherited SetItem(Indexi, Value);
   Changed;
 End;
 
-Procedure Tonlistcolums.Setcells(Acol, Arow: Integer; Avalue: String);
+Procedure TONURListColums.Setcells(Acol, Arow: Integer; Avalue: String);
 Begin
 
 End;
 
-Function Tonlistcolums.Getcells(Acol, Arow: Integer): String;
+Function TONURListColums.Getcells(Acol, Arow: Integer): String;
 Begin
 
 End;
 
-Procedure Tonlistcolums.Update(Item: Tcollectionitem);
+Procedure TONURListColums.Update(Item: Tcollectionitem);
 Begin
- //   TOncolumlist(GetOwner).Invalidate;//Paint;
+ //   TONURColumList(GetOwner).Invalidate;//Paint;
 
- TOncolumlist(GetOwner).Scrollscreen;
+ TONURColumList(GetOwner).Scrollscreen;
  // inherited Update(Item);
 End;
 
-Constructor Tonlistcolums.Create(Aowner: Tpersistent;
+Constructor TONURListColums.Create(Aowner: Tpersistent;
   Itemclassi: Tcollectionitemclass);
 Begin
   inherited Create(AOwner, ItemClassi);
 End;
 
-Function Tonlistcolums.Add: Toncolumn;
+Function TONURListColums.Add: TONURColumn;
 Begin
-  Result := Toncolumn(inherited Add);
+  Result := TONURColumn(inherited Add);
 End;
 
-Procedure Tonlistcolums.Clear;
+Procedure TONURListColums.Clear;
 Begin
-  with TOncolumlist(GetOwner) do
+  with TONURColumList(GetOwner) do
   begin
     FItemvOffset  := 0;  FFocusedItem := -1;
   end;
 End;
 
-Procedure Tonlistcolums.Delete(Indexi: Integer);
+Procedure TONURListColums.Delete(Indexi: Integer);
 var
   i:integer;
 begin
@@ -590,12 +590,12 @@ begin
   Changed;
 End;
 
-Function Tonlistcolums.Insert(Indexi: Integer): Toncolumn;
+Function TONURListColums.Insert(Indexi: Integer): TONURColumn;
 Begin
-   Result := Toncolumn(inherited Insert(Indexi));
+   Result := TONURColumn(inherited Insert(Indexi));
 End;
 
-Function Tonlistcolums.Indexof(Value: Toncolumn): Integer;
+Function TONURListColums.Indexof(Value: TONURColumn): Integer;
   var
     i : Integer;
   begin
@@ -609,11 +609,11 @@ End;
 
 
 
-{ TOncolumlist }
+{ TONURColumList }
 
 
 
-function TOncolumlist.Getcells(Acol, Arow: integer): string;
+function TONURColumList.Getcells(Acol, Arow: integer): string;
 begin
   if (Columns.Count > -1) and (Columns.Count <= Acol) then
     Result := ''
@@ -629,7 +629,7 @@ end;
 
 
 
-procedure TOncolumlist.Setcells(Acol, Arow: integer; Avalue: string);
+procedure TONURColumList.Setcells(Acol, Arow: integer; Avalue: string);
 
 var
   i: integer;
@@ -660,7 +660,7 @@ begin
 
 end;
 
-procedure TOncolumlist.SetHeadervisible(AValue: boolean);
+procedure TONURColumList.SetHeadervisible(AValue: boolean);
 begin
   if fheadervisible=AValue then Exit;
   fheadervisible:=AValue;
@@ -668,7 +668,7 @@ begin
 end;
 
 
-procedure TOncolumlist.SetItems(Value: TONlistItems);
+procedure TONURColumList.SetItems(Value: TONURlistItems);
 begin
   FListItems.BeginUpdate;
   FListItems.Assign(Value);
@@ -677,7 +677,7 @@ begin
 //  Invalidate;
 end;
 
-procedure TOncolumlist.Setcolums(Value: TONListColums);
+procedure TONURColumList.Setcolums(Value: TONURListColums);
 Begin
   Fcolumns.BeginUpdate;
   Fcolumns.Assign(Value);
@@ -688,7 +688,7 @@ End;
 
 
 
-procedure TOncolumlist.VScrollBarChange(Sender: TObject);
+procedure TONURColumList.VScrollBarChange(Sender: TObject);
 begin
   if fmodusewhelll = False then
   begin
@@ -698,7 +698,7 @@ begin
   end;
 end;
 
-procedure TOncolumlist.HScrollBarChange(Sender: TObject);
+procedure TONURColumList.HScrollBarChange(Sender: TObject);
 begin
   if fmodusewhelll = False then
   begin
@@ -708,7 +708,7 @@ begin
   end;
 end;
 
-procedure TOncolumlist.CNKeyDown(var Message: TWMKeyDown);
+procedure TONURColumList.CNKeyDown(var Message: TWMKeyDown);
 var
   x: integer;
 begin
@@ -766,7 +766,7 @@ end;
 
 
 
-function TOncolumlist.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint
+function TONURColumList.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint
   ): boolean;
 begin
   inherited;
@@ -780,7 +780,7 @@ begin
   fmodusewhelll := False;
 end;
 
-function TOncolumlist.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint
+function TONURColumList.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint
   ): boolean;
 begin
   inherited;
@@ -794,7 +794,7 @@ begin
   fmodusewhelll := False;
 end;
 
-constructor TOncolumlist.Create(Aowner: TComponent);
+constructor TONURColumList.Create(Aowner: TComponent);
 begin
   inherited Create(Aowner);
   parent := TWinControl(Aowner);
@@ -806,8 +806,8 @@ begin
     [csParentBackground, csClickEvents, csCaptureMouse, csDoubleClicks];
 
 
-  FListItems := TOnlistItems.Create(Self, TOnlistItem);
-  Fcolumns   := TONListColums.Create(Self, TONColumn);
+  FListItems := TONURlistItems.Create(Self, TONURlistItem);
+  Fcolumns   := TONURListColums.Create(Self, TONURColumn);
   fselectcolor := Clblue;
   FItemVOffset := 0;
   FItemHOffset := 0;
@@ -829,45 +829,45 @@ begin
   Fheaderfont.Style := [];
 
 
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
-  fitems := TONCUSTOMCROP.Create;
+  fitems := TONURCUSTOMCROP.Create;
   fitems.cropname := 'ITEM';
 
-  factiveitems := TONCUSTOMCROP.Create;
+  factiveitems := TONURCUSTOMCROP.Create;
   factiveitems.cropname := 'ACTIVEITEM';
-  fheader := TONCUSTOMCROP.Create;
+  fheader := TONURCUSTOMCROP.Create;
   fheader.cropname := 'HEADER';
 
 
 
 
 
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
   Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
 
   Customcroplist.Add(fitems);
   Customcroplist.Add(factiveitems);
@@ -878,7 +878,7 @@ begin
   Captionvisible := False;
 
 
-  VScrollBar := TonScrollBar.Create(self);
+  VScrollBar := TONURScrollBar.Create(self);
   with VScrollBar do
   begin
     Parent := self;
@@ -896,7 +896,7 @@ begin
 
   end;
 
-  HScrollBar := TonScrollBar.Create(self);
+  HScrollBar := TonURScrollBar.Create(self);
   with HScrollBar do
   begin
     Parent := self;
@@ -917,12 +917,12 @@ begin
 
 end;
 
-destructor TOncolumlist.Destroy;
+destructor TONURColumList.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 
@@ -950,7 +950,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TOncolumlist.Scrollscreen;
+procedure TONURColumList.Scrollscreen;
 var
     fark,z: Integer;
 begin
@@ -971,11 +971,11 @@ begin
 
          if (Skindata <> nil) then
          begin
-           Width :=(self.ONleft.Width)+ (ONNORMAL.Width);
+           Width :=(self.Oleft.Width)+ (ONORMAL.Width);
            left := Self.ClientWidth - ClientWidth;
-           Top := self.ONTOP.Height;
+           Top := self.OTOP.Height;
 
-           Height := Self.ClientHeight - ((self.ONBOTTOM.Height) + (self.ONTOP.Height));
+           Height := Self.ClientHeight - ((self.OBOTTOM.Height) + (self.OTOP.Height));
            Max := (FListItems.Count - FItemsShown) ;//+ 1;
            Alpha := self.Alpha;
            if kind<>oVertical then Kind:=oVertical;
@@ -1021,7 +1021,7 @@ begin
           left   := self.Fleft.Width;//(self.ONleft.Right - self.ONleft.Left);
           Width  := self.ClientWidth-(self.Fleft.Width+self.FRight.Width);//(self.ONRIGHT.Right - self.ONRIGHT.Left));
 
-          Height := self.FTop.Height+ONNORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
+          Height := self.FTop.Height+ONORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
           Top    := self.ClientHeight-Height;//(self.ONTOP.Bottom - self.ONTOP.Top);
 
          if (fark>0) and (fark>ClientWidth) then
@@ -1048,7 +1048,7 @@ end;
 
 
 
-procedure TOncolumlist.SetSkindata(Aimg: TONImg);
+procedure TONURColumList.SetSkindata(Aimg: TONURImg);
 Begin
   Inherited Setskindata(Aimg);
   if (Aimg <> nil) then
@@ -1059,7 +1059,7 @@ Begin
   resizee;
  End;
 
-procedure TOncolumlist.resizee;
+procedure TONURColumList.resizee;
 begin
    FTopleft.Targetrect     := Rect(0, 0,FTopleft.Width,FTopleft.Height);
    FTopRight.Targetrect    := Rect(self.ClientWidth - FTopRight.Width,0, self.ClientWidth, FTopRight.Height);
@@ -1078,7 +1078,7 @@ end;
 
 
 
-procedure TOncolumlist.Paint;
+procedure TONURColumList.Paint;
 var
   a, b, k, z, i: integer;
   x1, x2, x3, x4,fheaderh, fark,fark2: integer;
@@ -1308,7 +1308,7 @@ end;
 
 
 
-function TOncolumlist.Itemrectcel(Item, Col: integer): Trect;
+function TONURColumList.Itemrectcel(Item, Col: integer): Trect;
 var
   r: TRect;
 begin
@@ -1333,7 +1333,7 @@ begin
 
 end;
 
-function TOncolumlist.ItemRect(Item: integer): TRect;
+function TONURColumList.ItemRect(Item: integer): TRect;
 var
   r: TRect;
 begin
@@ -1358,7 +1358,7 @@ begin
 
 end;
 
-function TOncolumlist.GetItemAt(Pos: TPoint): integer;
+function TONURColumList.GetItemAt(Pos: TPoint): integer;
 var
   i, m, w: integer;
 begin
@@ -1392,7 +1392,7 @@ end;
 
 
 
-procedure TOncolumlist.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
+procedure TONURColumList.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
   Y: integer);
 var
   Clickeditem: integer;
@@ -1423,7 +1423,7 @@ begin
   inherited Mousedown(Button, Shift, X, Y);
 end;
 
-procedure TOncolumlist.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
+procedure TONURColumList.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
   Y: integer);
 begin
   if (Button = mbLeft) then
@@ -1433,17 +1433,17 @@ begin
 
 end;
 
-procedure TOncolumlist.Delete(indexi: integer);
+procedure TONURColumList.Delete(indexi: integer);
 begin
     FListItems.Delete(Indexi);
 end;
 
-procedure TOncolumlist.Clear;
+procedure TONURColumList.Clear;
 begin
   FListItems.Clear;
 end;
 
-procedure TOncolumlist.MoveUp;
+procedure TONURColumList.MoveUp;
 begin
   if FListItems.Count > 0 then
   begin
@@ -1467,7 +1467,7 @@ end;
 
 
 
-procedure TOncolumlist.MoveDown;
+procedure TONURColumList.MoveDown;
 begin
   if FListItems.Count > 0 then
   begin
@@ -1487,7 +1487,7 @@ begin
   end;
 end;
 
-procedure TOncolumlist.MoveHome;
+procedure TONURColumList.MoveHome;
 var
   i: integer;
 begin
@@ -1498,7 +1498,7 @@ begin
   end;
 end;
 
-procedure TOncolumlist.MoveEnd;
+procedure TONURColumList.MoveEnd;
 var
   i: integer;
 begin
@@ -1517,9 +1517,9 @@ end;
 
 
 
-{ TONColumn }
+{ TONURColumn }
 
-Constructor Toncolumn.Create(Collectioni: Tcollection);
+Constructor TONURColumn.Create(Collectioni: Tcollection);
 Begin
   FCaption := '';
   fwidth := 80;
@@ -1533,9 +1533,9 @@ Begin
   inherited Create(Collectioni);
 End;
 
-Destructor Toncolumn.Destroy;
+Destructor TONURColumn.Destroy;
 Begin
-  with TONColumlist(TOwnedCollection(GetOwner).Owner) do
+  with TONURColumList(TOwnedCollection(GetOwner).Owner) do
     if not (csDestroying in ComponentState) then
       if Assigned(FOnDeleteItem) then
       begin
@@ -1547,10 +1547,10 @@ Begin
   Inherited Destroy;
 End;
 
-Procedure Toncolumn.Assign(Source: Tpersistent);
+Procedure TONURColumn.Assign(Source: Tpersistent);
 Begin
-    if (Source is TONListColums) then
-    with (Source as TONListColums) do
+    if (Source is TONURListColums) then
+    with (Source as TONURListColums) do
     begin
       Self.FCaption := FCaption;
     end
@@ -1558,28 +1558,28 @@ Begin
     inherited Assign(Source);
 End;
 
-Procedure Toncolumn.Delete(Indexi: Integer);
+Procedure TONURColumn.Delete(Indexi: Integer);
 Begin
 
 End;
 
 
-function TONlistItem.GetCell(X: integer): string;
+function TONURlistItem.GetCell(X: integer): string;
 begin
   if x<=Length(FCells) then
  Result:=FCells[x];
 end;
 
-function TONlistItem.GetColCount: integer;
+function TONURlistItem.GetColCount: integer;
 begin
   Result:=fsize;
 end;
 
-procedure TONlistItem.SetCell(X: integer; AValue: string);
+procedure TONURlistItem.SetCell(X: integer; AValue: string);
 var
   a:integer;
 begin
-  a:=TONColumlist(TOwnedCollection(GetOwner).Owner).Columns.Count;
+  a:=TONURColumList(TOwnedCollection(GetOwner).Owner).Columns.Count;
   if x>a then
    SetColCount(x)
   else
@@ -1588,52 +1588,52 @@ begin
   FCells[x]:=AValue;
 end;
 
-procedure TONlistItem.SetColCount(AValue: integer);
+procedure TONURlistItem.SetColCount(AValue: integer);
 begin
    if (Length(FCells)>=AValue) then Exit;
    SetLength(FCells, AValue);
    FSize:=AValue;
 end;
 
-function TONlistItem.Insert(Indexi: integer; avalue: string
-  ): TONlistItem;
+function TONURlistItem.Insert(Indexi: integer; avalue: string
+  ): TONURlistItem;
 begin
   if Length(FCells)>= Indexi then
   SetCell(Indexi,avalue);
 end;
 
-constructor TONlistItem.Create(Collectioni: TCollection);
+constructor TONURlistItem.Create(Collectioni: TCollection);
 var
   a:integer;
 begin
   inherited Create(Collectioni);
-  a:= TONColumlist(TOwnedCollection(GetOwner).Owner).Columns.Count;
+  a:= TONURColumList(TOwnedCollection(GetOwner).Owner).Columns.Count;
   SetLength(FCells,a);
   FSize:=a;
   ffont:=Tfont.Create;
-  ffont.Assign(TONColumlist(TOwnedCollection(GetOwner).Owner).Font);
+  ffont.Assign(TONURColumList(TOwnedCollection(GetOwner).Owner).Font);
 
 end;
 
 
-procedure TONlistItem.Add(s: string);
+procedure TONURlistItem.Add(s: string);
 begin
 //  FSize+=1;
 //  SetCell(FSize,s);
 end;
 
-procedure TONlistItem.Clear;
+procedure TONURlistItem.Clear;
 begin
   FSize:=0;
   SetLength(FCells,0);
 end;
 
-procedure TONlistItem.Delete;
+procedure TONURlistItem.Delete;
 begin
  Finalize(FCells);
 end;
 
-function TONlistItem.arrayofstring(aranan: string): integer;
+function TONURlistItem.arrayofstring(aranan: string): integer;
  var
  i:integer;
 begin
@@ -1652,17 +1652,17 @@ end;
 
 
 
-{ TONlistItems }
+{ TONURlistItems }
 
 
 
-function TONlistItems.GetItem(Indexi: integer): TONlistItem;
+function TONURlistItems.GetItem(Indexi: integer): TONURlistItem;
 begin
   if Indexi <> -1 then
-    Result := TOnlistItem(inherited GetItem(Indexi));
+    Result := TOnURlistItem(inherited GetItem(Indexi));
 end;
 
-procedure TONlistItems.SetItem(Indexi: integer; const Value: TONlistItem);
+procedure TONURlistItems.SetItem(Indexi: integer; const Value: TONURlistItem);
 begin
 //  WriteLn(Indexi, '  ',Count);
   if indexi>Count-1 then Add;
@@ -1670,14 +1670,14 @@ begin
   Changed;
 end;
 
-procedure TONlistItems.Setcells(Acol, Arow: integer; Avalue: string);
+procedure TONURlistItems.Setcells(Acol, Arow: integer; Avalue: string);
 var
   i: integer;
-  a:TONlistItem;
+  a:TONURlistItem;
 begin
-  if Acol>=TOncolumlist(GetOwner).Columns.Count then
+  if Acol>=TONURColumList(GetOwner).Columns.Count then
 
-  TOncolumlist(GetOwner).Columns.Add;
+  TONURColumList(GetOwner).Columns.Add;
 
   if (Count > 0) and (Count > Arow) then
   begin
@@ -1690,34 +1690,34 @@ begin
   end;
 end;
 
-function TONlistItems.Getcells(Acol, Arow: integer): string;
+function TONURlistItems.Getcells(Acol, Arow: integer): string;
 begin
   if Acol <> -1 then
    Result := GetItem(Arow).Cells[acol];
 end;
 
-procedure TONlistItems.Update(Item: TCollectionItem);
+procedure TONURlistItems.Update(Item: TCollectionItem);
 begin
   Inherited Update(Item);
 
-   TOncolumlist(GetOwner).resizee;
-   TOncolumlist(GetOwner).Invalidate;
+   TONURColumList(GetOwner).resizee;
+   TONURColumList(GetOwner).Invalidate;
 end;
 
-constructor TONlistItems.Create(AOwner: TPersistent;
+constructor TONURlistItems.Create(AOwner: TPersistent;
   ItemClassi: TCollectionItemClass);
 begin
   inherited Create(AOwner, ItemClassi);
 
 end;
 
-function TONlistItems.Add: TOnlistItem;
+function TONURlistItems.Add: TOnURlistItem;
 begin
-  Result := TOnlistItem(inherited Add);
-  //SetLength(Result.flist,TOncolumlist(GetOwner).Columns.Count);
+  Result := TOnURlistItem(inherited Add);
+  //SetLength(Result.flist,TONURColumList(GetOwner).Columns.Count);
 end;
 
-procedure TONlistItems.Clear;
+procedure TONURlistItems.Clear;
 var
   i:integer;
 begin
@@ -1725,7 +1725,7 @@ begin
   for i:=self.Count-1 downto 0 do
     Delete(i);
 
-  with TOncolumlist(GetOwner) do
+  with TONURColumList(GetOwner) do
   begin
     FItemvOffset := 0;
     FFocusedItem := -1;
@@ -1733,7 +1733,7 @@ begin
   end;
 end;
 
-procedure TONlistItems.Delete(Indexi: integer);
+procedure TONURlistItems.Delete(Indexi: integer);
 Var
   Item : TCollectionItem;
 begin
@@ -1744,8 +1744,8 @@ begin
   Changed;
 end;
 
-function TONlistItems.Insert(Indexi: Integer; col: array of integer; avalue: array of string
-  ): Tonlistitem;
+function TONURlistItems.Insert(Indexi: Integer; col: array of integer; avalue: array of string
+  ): TonURlistitem;
 var
   i : integer;
 begin
@@ -1759,7 +1759,7 @@ begin
  Changed;
 end;
 
-function TONlistItems.IndexOf(Value: TONlistItem): integer;
+function TONURlistItems.IndexOf(Value: TONURlistItem): integer;
 var
   i: integer;
 begin
@@ -1775,10 +1775,10 @@ end;
 
 
 
-{ ToNListBox }
+{ TONURListBox }
 
 
-constructor ToNListBox.Create(Aowner: TComponent);
+constructor TONURListBox.Create(Aowner: TComponent);
 begin
   inherited Create(Aowner);
   parent          := TWinControl(Aowner);
@@ -1798,7 +1798,7 @@ begin
 
 
 
-  vScrollBar := TonScrollBar.Create(self);
+  vScrollBar := TonURScrollBar.Create(self);
   with vScrollBar do
   begin
     Parent    := self;
@@ -1816,7 +1816,7 @@ begin
 
   end;
 
-  HScrollBar := TonScrollBar.Create(self);
+  HScrollBar := TonURScrollBar.Create(self);
   with HScrollBar do
   begin
     Parent     := self;
@@ -1834,38 +1834,39 @@ begin
     Position   := 0;
   end;
 
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
-  factiveitems := TONCUSTOMCROP.Create;
+  factiveitems := TONURCUSTOMCROP.Create;
   factiveitems.cropname := 'ACTIVEITEM';
-  fitems := TONCUSTOMCROP.Create;
+  fitems := TONURCUSTOMCROP.Create;
   fitems.cropname := 'ITEM';
 
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
   Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+
   Customcroplist.Add(factiveitems);
   Customcroplist.Add(fitems);
 
@@ -1874,12 +1875,12 @@ begin
   fchangelist := true;
 end;
 
-destructor ToNListBox.Destroy;
+destructor TONURListBox.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 
@@ -1905,7 +1906,7 @@ begin
 end;
 
 
-function ToNListBox.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint
+function TONURListBox.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint
   ): boolean;
 begin
   fmodusewhelll := True;
@@ -1920,7 +1921,7 @@ begin
   fmodusewhelll := False;
 end;
 
-function ToNListBox.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint
+function TONURListBox.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint
   ): boolean;
 begin
   inherited;
@@ -1933,13 +1934,13 @@ begin
   Invalidate;
   fmodusewhelll := False;
 end;
-procedure ToNListBox.LinesChanged(Sender: TObject);
+procedure TONURListBox.LinesChanged(Sender: TObject);
 begin
  fchangelist:=true;
  Invalidate;
 end;
 
-procedure ToNListBox.Scrollscreen;
+procedure TONURListBox.Scrollscreen;
 var
   fark,z,p: Integer;
 begin
@@ -1954,10 +1955,10 @@ begin
       begin
         if (Skindata = nil) then
           Skindata := Self.Skindata;
-        Width   := ONNORMAL.Width;
+        Width   := ONORMAL.Width;
         left    := Self.ClientWidth - ClientWidth;
         Top     := self.ftop.Height;
-        Height  := Self.ClientHeight - (self.ONTOP.Height+self.ONBOTTOM.Height);
+        Height  := Self.ClientHeight - (self.OTOP.Height+self.OBOTTOM.Height);
         Max     := Flist.Count - FItemsShown;
         Alpha   := self.Alpha;
         if Kind = oHorizontal then  Kind := oVertical;
@@ -1990,7 +1991,7 @@ begin
           left   := self.Fleft.Width;//(self.ONleft.Right - self.ONleft.Left);
           Width  := self.ClientWidth-(Left+self.FRight.Width);//(self.ONRIGHT.Right - self.ONRIGHT.Left));
 
-          Height := self.FTop.Height+ONNORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
+          Height := self.FTop.Height+ONORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
           Top    := self.ClientHeight-Height;//(self.ONTOP.Bottom - self.ONTOP.Top);
 
           if fark>0 then
@@ -2020,7 +2021,7 @@ begin
 end;
 
 
-procedure ToNListBox.SetSkindata(Aimg: TONImg);
+procedure TONURListBox.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   if (Aimg <> nil) then
@@ -2043,7 +2044,7 @@ begin
 
 end;
 
-procedure ToNListBox.paint;
+procedure TONURListBox.paint;
 var
   a, b, k, i: integer;
    Target: Trect;
@@ -2138,7 +2139,7 @@ begin
   inherited paint;
 end;
 
-function ToNListBox.ItemRect(Item: integer): TRect;
+function TONURListBox.ItemRect(Item: integer): TRect;
 var
   r: TRect;
 begin
@@ -2168,7 +2169,7 @@ end;
 
 
 
-function ToNListBox.GetItemAt(Pos: TPoint): integer;
+function TONURListBox.GetItemAt(Pos: TPoint): integer;
 var
   w: Integer;
 begin
@@ -2185,12 +2186,12 @@ begin
   end;
 end;
 
-function ToNListBox.getitemheight: integer;
+function TONURListBox.getitemheight: integer;
 begin
   Result := FitemHeight;
 end;
 
-procedure ToNListBox.setitemheight(avalue: integer);
+procedure TONURListBox.setitemheight(avalue: integer);
 begin
   if avalue <> FitemHeight then FitemHeight := avalue;
 end;
@@ -2199,7 +2200,7 @@ end;
 
 
 
-procedure ToNListBox.MoveDown;
+procedure TONURListBox.MoveDown;
 //  var
 //    Shift: boolean;
 begin
@@ -2221,7 +2222,7 @@ begin
   end;
 end;
 
-procedure ToNListBox.MoveEnd;
+procedure TONURListBox.MoveEnd;
 var
   i: integer;
 begin
@@ -2236,7 +2237,7 @@ begin
 
 end;
 
-procedure ToNListBox.MoveHome;
+procedure TONURListBox.MoveHome;
 var
   i: integer;
 begin
@@ -2248,7 +2249,7 @@ begin
 
 end;
 
-procedure ToNListBox.MoveUp;
+procedure TONURListBox.MoveUp;
 
 begin
   if flist.Count > 0 then
@@ -2275,12 +2276,12 @@ end;
 
 
 
-function ToNListBox.GetItemIndex: integer;
+function TONURListBox.GetItemIndex: integer;
 begin
   Result := findex;
 end;
 
-procedure ToNListBox.SetItemIndex(Avalue: integer);
+procedure TONURListBox.SetItemIndex(Avalue: integer);
 var
   Shown: integer;
 begin
@@ -2305,7 +2306,7 @@ begin
   Invalidate;
 end;
 
-procedure ToNListBox.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURListBox.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 var
   ClickedItem: integer;
@@ -2321,7 +2322,7 @@ begin
   inherited MouseDown(Button, Shift, X, Y);
 end;
 
-procedure ToNListBox.VScrollchange(Sender: TObject);
+procedure TONURListBox.VScrollchange(Sender: TObject);
 begin
   if fmodusewhelll = False then
   begin
@@ -2330,7 +2331,7 @@ begin
   end;
 end;
 
-procedure ToNListBox.HScrollchange(Sender: TObject);
+procedure TONURListBox.HScrollchange(Sender: TObject);
 begin
   if fmodusewhelll = False then
   begin
@@ -2341,7 +2342,7 @@ end;
 
 
 
-procedure ToNListBox.dblclick;
+procedure TONURListBox.dblclick;
 var
   pt: TPoint;
   i: integer;
@@ -2363,7 +2364,7 @@ end;
 
 
 
-procedure ToNListBox.KeyDown(var Key: word; Shift: TShiftState);
+procedure TONURListBox.KeyDown(var Key: word; Shift: TShiftState);
 var
   x: integer;
 begin
@@ -2416,24 +2417,24 @@ begin
   inherited;
 end;
 
-procedure ToNListBox.SetString(AValue: TStrings);
+procedure TONURListBox.SetString(AValue: TStrings);
 begin
   if Flist = AValue then Exit;
   Flist.Assign(AValue);
 end;
 
 
-procedure ToNListBox.BeginUpdate;
+procedure TONURListBox.BeginUpdate;
 begin
   flist.BeginUpdate;
 end;
 
-procedure ToNListBox.EndUpdate;
+procedure TONURListBox.EndUpdate;
 begin
   Flist.EndUpdate;
 end;
 
-procedure ToNListBox.Clear;
+procedure TONURListBox.Clear;
 begin
   Flist.Clear;
 end;
@@ -2444,7 +2445,7 @@ end;
 
 procedure ShowCombolistPopup(const APosition: TPoint;
   const OnReturnDate: TReturnStintEvent; const OnShowHide: TNotifyEvent;
-  ACaller: TONcombobox);
+  ACaller: TONURComboBox);
 var
   PopupForm: Tpopupformcombobox;
   b: integer;
@@ -2472,7 +2473,7 @@ end;
 
 procedure tpopupformcombobox.listboxdblclick(Sender: TObject);
 begin
-  if ToNListBox(Sender).items.Count > 0 then
+  if TONURListBox(Sender).items.Count > 0 then
     ReturnstringAnditemindex;
 end;
 
@@ -2490,7 +2491,7 @@ begin
   BorderStyle    := bsNone;
   FClosed        := False;
   Application.AddOnDeactivateHandler(@FormDeactivate);
-  oblist         := ToNListBox.Create(nil);
+  oblist         := TONURListBox.Create(nil);
   oblist.Parent  := self;
   oblist.Align   := alClient;
   oblist.OnClick := @listboxDblClick;
@@ -2577,12 +2578,12 @@ end;
 
 
 
-{ TONcombobox }
+{ TONURComboBox }
 
 
 
 
-function TONcombobox.Gettext: string;
+function TONURComboBox.Gettext: string;
 begin
   if Fitemindex > -1 then
     Result := Fliste[Fitemindex]
@@ -2590,24 +2591,24 @@ begin
     Result := '';
 end;
 
-function TONcombobox.GetItemIndex: integer;
+function TONURComboBox.GetItemIndex: integer;
 begin
   Result := Fitemindex;
 end;
 
-procedure TONcombobox.LinesChanged(Sender: TObject);
+procedure TONURComboBox.LinesChanged(Sender: TObject);
 begin
 
 end;
 
-procedure TONcombobox.setitemheight(avalue: integer);
+procedure TONURComboBox.setitemheight(avalue: integer);
 begin
 if FitemHeight=avalue then exit;
 FitemHeight:=avalue;
 Invalidate;
 end;
 
-procedure TONcombobox.SetItemIndex(Avalue: integer);
+procedure TONURComboBox.SetItemIndex(Avalue: integer);
 var
   Shown: integer;
 begin
@@ -2637,7 +2638,7 @@ end;
 
 
 
-procedure TONcombobox.MouseDown(Button: TMouseButton; Shift: TShiftState;
+procedure TONURComboBox.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
  { if button = mbLeft then
@@ -2667,7 +2668,7 @@ begin
   Invalidate;
 end;
 
-procedure TONcombobox.MouseMove(Shift: TShiftState; X, Y: integer);
+procedure TONURComboBox.MouseMove(Shift: TShiftState; X, Y: integer);
 begin
   inherited mousemove(shift, x, y);
   if csDesigning in ComponentState then  Exit;
@@ -2685,7 +2686,7 @@ begin
   Invalidate;
 end;
 
-procedure TONcombobox.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURComboBox.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited mouseup(button, shift, x, y);
@@ -2696,7 +2697,7 @@ begin
   end;
 end;
 
-procedure TONcombobox.CMonmouseenter(var Messages: Tmessage);
+procedure TONURComboBox.CMonmouseenter(var Messages: Tmessage);
 var
   aPnt: TPoint;
 begin
@@ -2721,7 +2722,7 @@ begin
   Invalidate;
 end;
 
-procedure TONcombobox.CMonmouseleave(var Messages: Tmessage);
+procedure TONURComboBox.CMonmouseleave(var Messages: Tmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2737,7 +2738,7 @@ end;
 
 
 
-procedure TONcombobox.LstPopupReturndata(Sender: TObject; const Str: string;
+procedure TONURComboBox.LstPopupReturndata(Sender: TObject; const Str: string;
   const indx: integer);
 var
   i: integer;
@@ -2756,7 +2757,7 @@ begin
   end;
 end;
 
-procedure TONcombobox.LstPopupShowHide(Sender: TObject);
+procedure TONURComboBox.LstPopupShowHide(Sender: TObject);
 begin
   fdropdown := (Sender as Tpopupformcombobox).Visible;
   //  if fdropdown=true then
@@ -2767,28 +2768,28 @@ begin
   Invalidate;
 end;
 
-procedure TONcombobox.BeginUpdate;
+procedure TONURComboBox.BeginUpdate;
 begin
   Fliste.BeginUpdate;
 end;
 
-procedure TONcombobox.Clear;
+procedure TONURComboBox.Clear;
 begin
   Fliste.Clear;
 end;
 
-procedure TONcombobox.EndUpdate;
+procedure TONURComboBox.EndUpdate;
 begin
   Fliste.EndUpdate;
 end;
 
-procedure TONcombobox.Change;
+procedure TONURComboBox.Change;
 begin
   inherited Changed;
   if Assigned(OnChange) then OnChange(Self);
 end;
 
-procedure TONcombobox.kclick(Sender: TObject);
+procedure TONURComboBox.kclick(Sender: TObject);
 var
   aa: Tpoint;
 begin
@@ -2810,29 +2811,29 @@ begin
 end;
 
 
-procedure TONcombobox.Select;
+procedure TONURComboBox.Select;
 begin
   if Assigned(FOnSelect) and (ItemIndex >= 0) then FOnSelect(Self);
   if Assigned(OnChange) and (ItemIndex >= 0) then OnChange(self);
 end;
 
-procedure TONcombobox.DropDown;
+procedure TONURComboBox.DropDown;
 begin
   if Assigned(FOnDropDown) then FOnDropDown(Self);
 end;
 
-procedure TONcombobox.GetItems;
+procedure TONURComboBox.GetItems;
 begin
   if Assigned(FOnGetItems) then FOnGetItems(Self);
 end;
 
-procedure TONcombobox.CloseUp;
+procedure TONURComboBox.CloseUp;
 begin
   if [csLoading, csDestroying, csDesigning] * ComponentState <> [] then exit;
   if Assigned(FOnCloseUp) then FOnCloseUp(Self);
 end;
 
-procedure TONcombobox.SetStrings(AValue: TStrings);
+procedure TONURComboBox.SetStrings(AValue: TStrings);
 begin
   if Fliste = AValue then Exit;
   Fliste.Assign(AValue);
@@ -2840,7 +2841,7 @@ end;
 
 
 
-constructor TONcombobox.Create(AOwner: TComponent);
+constructor TONURComboBox.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   ControlStyle := ControlStyle - [csAcceptsControls] +
@@ -2854,42 +2855,45 @@ begin
   skinname := 'combobox';
   fpopupopen := False;
 
-  FTop := TONCUSTOMCROP.Create;
+  FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
-  FBottom := TONCUSTOMCROP.Create;
+  FBottom := TONURCUSTOMCROP.Create;
   FBottom.cropname := 'BOTTOM';
-  FCenter := TONCUSTOMCROP.Create;
+  FCenter := TONURCUSTOMCROP.Create;
   FCenter.cropname := 'CENTER';
-  FRight := TONCUSTOMCROP.Create;
+  FRight := TONURCUSTOMCROP.Create;
   FRight.cropname := 'RIGHT';
-  FTopRight := TONCUSTOMCROP.Create;
+  FTopRight := TONURCUSTOMCROP.Create;
   FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONCUSTOMCROP.Create;
+  FBottomRight := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONCUSTOMCROP.Create;
+  Fleft := TONURCUSTOMCROP.Create;
   Fleft.cropname := 'LEFT';
-  FTopleft := TONCUSTOMCROP.Create;
+  FTopleft := TONURCUSTOMCROP.Create;
   FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONCUSTOMCROP.Create;
+  FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
-  FNormal := TONCUSTOMCROP.Create;
+  FNormal := TONURCUSTOMCROP.Create;
   FNormal.cropname := 'NORMAL';
-  FPress := TONCUSTOMCROP.Create;
+  FPress := TONURCUSTOMCROP.Create;
   FPress.cropname := 'PRESS';
-  FEnter := TONCUSTOMCROP.Create;
+  FEnter := TONURCUSTOMCROP.Create;
   FEnter.cropname := 'HOVER';
-  Fdisable := TONCUSTOMCROP.Create;
+  Fdisable := TONURCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
 
+
+
+  Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
   Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+
   Customcroplist.Add(FNormal);
   Customcroplist.Add(FPress);
   Customcroplist.Add(FEnter);
@@ -2903,12 +2907,12 @@ begin
 
 end;
 
-destructor TONcombobox.Destroy;
+destructor TONURComboBox.Destroy;
 var
   i:byte;
 begin
   for i:=0 to Customcroplist.Count-1 do
-  TONCustomCrop(Customcroplist.Items[i]).free;
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
 
@@ -2932,7 +2936,7 @@ begin
 end;
 
 
-procedure TONcombobox.SetSkindata(Aimg: TONImg);
+procedure TONURComboBox.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   fbutonarea              := Rect(Self.ClientWidth - self.ClientHeight, 0, self.ClientWidth, self.ClientHeight);
@@ -2947,7 +2951,7 @@ begin
   FCenter.Targetrect      := Rect((Fleft.FSRight - Fleft.FSLeft), (FTop.FSBottom - FTop.FSTop), Self.ClientWidth - ((FRight.FSRight - FRight.FSLeft) + fbutonarea.Width), self.ClientHeight - (FBottom.FSBottom - FBottom.FSTop));
 end;
 
-procedure TONcombobox.Paint;
+procedure TONURComboBox.Paint;
 var
   TrgtRect, SrcRect: TRect;
 begin
