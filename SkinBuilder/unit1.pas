@@ -18,7 +18,13 @@ type
   { Tskinsbuildier }
 
   Tskinsbuildier = class(TForm)
+    Button1: TButton;
     Button2: TButton;
+    Button3: TButton;
+    Button4: TButton;
+    Button5: TButton;
+    Panel1: TPanel;
+    traybut: TONURsystemButton;
     ColorBox1: TColorBox;
     ColorBox2: TColorBox;
     colorbox3: tcolorbox;
@@ -31,36 +37,33 @@ type
     Label6: TLabel;
     mainpicture: tbgravirtualscreen;
     odf: TOpenDialog;
-    oncheckbox1: toncheckbox;
-    ONColExpPanel1: toncollapexpandpanel;
-    Oncolumlist1: Toncolumlist;
-    ONGraphicsButton2: TONGraphicsButton;
-    ONGraphicsButton3: TONGraphicsButton;
-    ONGraphicsButton4: TONGraphicsButton;
-    ONGraphicsButton5: TONGraphicsButton;
-    ONHeaderPanel2: TONHeaderPanel;
+    oncheckbox1: TONURcheckbox;
+    ONColExpPanel1: TONURcollapexpandpanel;
+    Oncolumlist1: TONURColumList;
+    closebut: TONURsystemButton;
     infoedit: TValueListEditor;
-    Skinbuild: TONImg;
-    ONKnob1: TONKnob;
-    ONlabel1: TONlabel;
-    ONLed1: TONLed;
-    ONPage1: TONPage;
-    ONPage2: TONPage;
-    ONPageControl1: TONPageControl;
-    ONProgressBar1: TONProgressBar;
-    ONProgressBar2: TONProgressBar;
-    onradiobutton1: tonradiobutton;
-    onscrollbar2: tonscrollbar;
-    OnSpinEdit1: TOnSpinEdit;
-    onswich1: tonswich;
-    ontrackbar1: tontrackbar;
-    ontrackbar2: tontrackbar;
+    Skinbuild: TONURImg;
+    ONKnob1: TONURKnob;
+    ONlabel1: TONURlabel;
+    ONLed1: TONURLed;
+    ONPage1: TONURPage;
+    ONPage2: TONURPage;
+    ONPageControl1: TONURPageControl;
+    ONProgressBar1: TONURProgressBar;
+    ONProgressBar2: TONURProgressBar;
+    onradiobutton1: TONURradiobutton;
+    onscrollbar2: TONURscrollbar;
+    OnSpinEdit1: TONURSpinEdit;
+    onswich1: TONURswich;
+    ontrackbar1: TONURtrackbar;
+    ontrackbar2: TONURtrackbar;
     Panel5: TPanel;
     Panel8: TPanel;
     Panel9: TPanel;
     ScrollBox1: TScrollBox;
     sdf: TSaveDialog;
     SpinEdit1: TSpinEdit;
+    maxbut: TONURsystemButton;
     TreeView1: TTreeView;
     PropEdit: TValueListEditor;
     zoomx: tbgravirtualscreen;
@@ -69,17 +72,17 @@ type
     label3: tlabel;
     label4: tlabel;
     label5: tlabel;
-    ONcombobox1: TONcombobox;
-    oncropbutton1: toncropbutton;
-    onEdit1: TonEdit;
-    ONGraphicPanel1: TONGraphicPanel;
-    ongraphicsbutton1: tongraphicsbutton;
-    onheaderpanel1: tonheaderpanel;
-    ONImg1: TONImg;
-    oNListBox1: ToNListBox;
-    ONMemo1: TONMemo;
-    ONPanel1: TONPanel;
-    oNScrollBar1: ToNScrollBar;
+    ONcombobox1: TONURComboBox;
+    oncropbutton1: TONURcropbutton;
+    onEdit1: TONUREdit;
+    ONGraphicPanel1: TONURGraphicPanel;
+    ongraphicsbutton1: TONURgraphicsbutton;
+    onheaderpanel1: TONURheaderpanel;
+    ONImg1: TONURImg;
+    oNListBox1: TONURListBox;
+    ONMemo1: TONURMemo;
+    ONPanel1: TONURPanel;
+    oNScrollBar1: TONURScrollBar;
     opd: topenpicturedialog;
     Panel2: TPanel;
     panel3: tpanel;
@@ -124,17 +127,17 @@ type
     procedure zoomxredraw(Sender: TObject; bitmap: tbgrabitmap);
   private
 
-    procedure readdata(Ab: TONCustomCrop);
+    procedure readdata(Ab: TONURCustomCrop);
     //    procedure readskin;
     procedure updatefrm;
     //   procedure updateocustomcontrolu(aworkbook: tcontrol);
-    procedure writedata(Ab: TONCustomCrop);
+    procedure writedata(Ab: TONURCUSTOMCROP);
     //    procedure writeskin;
     procedure zoomtimertimer;
   public
     objlist: TList;
     gg: Tcontrol;
-    oncrop: TONCustomCrop;
+    oncrop: TONURCUSTOMCROP;
 
   end;
 
@@ -158,7 +161,7 @@ uses Variants;
 { Tskinsbuildier }
 
 
-procedure cropparse(Crp: TONCustomCrop; val: string);
+procedure cropparse(Crp: TONURCUSTOMCROP; val: string);
 var
   myst: TStringList;
 begin
@@ -180,7 +183,7 @@ begin
 end;
 
 
-procedure Tskinsbuildier.readdata(Ab: TONCustomCrop);
+procedure Tskinsbuildier.readdata(Ab: TONURCUSTOMCROP);
 begin
   skn := Tinifile.Create(GetTempDir + 'skins.ini');
   try
@@ -203,7 +206,7 @@ begin
 
 end;
 
-function croptostring(Crp: TONCustomCrop): string;
+function croptostring(Crp: TONURCUSTOMCROP): string;
 begin
   Result := '';
   if Crp <> nil then
@@ -212,7 +215,7 @@ begin
       ColorToString(Crp.Fontcolor);
 end;
 
-procedure Tskinsbuildier.writedata(Ab: TONCustomCrop);
+procedure Tskinsbuildier.writedata(Ab: TONURCUSTOMCROP);
 begin
   if PropEdit.Cells[1, 2] <> '' then ab.Left := StrToInt(PropEdit.Cells[1, 2])
   else
@@ -435,149 +438,181 @@ begin
   mainpicture.RedrawBitmap;
 
 
+  rootNode := TreeView1.Items.Add(nil, 'FORM');
+  subnode := TreeView1.Items.AddChild(rootNode,'TOPLEFT');
+  subnode := TreeView1.Items.AddChild(rootNode,'TOP');
+  subnode := TreeView1.Items.AddChild(rootNode,'TOPRIGHT');
+  subnode := TreeView1.Items.AddChild(rootNode,'BOTTOMLEFT');
+  subnode := TreeView1.Items.AddChild(rootNode,'BOTTOM');
+  subnode := TreeView1.Items.AddChild(rootNode,'BOTTOMRIGHT');
+  subnode := TreeView1.Items.AddChild(rootNode,'LEFT');
+  subnode := TreeView1.Items.AddChild(rootNode,'RIGHT');
+  subnode := TreeView1.Items.AddChild(rootNode,'CENTER');
+
+
+  rootNode := TreeView1.Items.Add(nil, 'CLOSE BUTTON');
+  for i := 0 to closebut.Customcroplist.Count - 1 do
+    subnode := TreeView1.Items.AddChild(rootNode,
+      TONURCUSTOMCROP(closebut.Customcroplist[i]).cropname);
+
+  rootNode := TreeView1.Items.Add(nil, 'MAX BUTTON');
+  for i := 0 to maxbut.Customcroplist.Count - 1 do
+    subnode := TreeView1.Items.AddChild(rootNode,
+      TONURCUSTOMCROP(maxbut.Customcroplist[i]).cropname);
+
+  rootNode := TreeView1.Items.Add(nil, 'TRAY BUTTON');
+  for i := 0 to traybut.Customcroplist.Count - 1 do
+    subnode := TreeView1.Items.AddChild(rootNode,
+      TONURCUSTOMCROP(traybut.Customcroplist[i]).cropname);
+
 
   rootNode := TreeView1.Items.Add(nil, 'GRAPHIC BUTTON');
   for i := 0 to ongraphicsbutton1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ongraphicsbutton1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ongraphicsbutton1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'CROP BUTTON');
   for i := 0 to oncropbutton1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(oncropbutton1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(oncropbutton1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'RADIO BUTTON');
   for i := 0 to onradiobutton1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(onradiobutton1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(onradiobutton1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'CHECKBOX');
   for i := 0 to oncheckbox1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(oncheckbox1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(oncheckbox1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'SWICH');
   for i := 0 to onswich1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(onswich1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(onswich1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'LED');
   for i := 0 to ONLed1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONLed1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONLed1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'LABEL');
   for i := 0 to ONlabel1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONlabel1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONlabel1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'TRACKBAR_HORIZONTAL');
   for i := 0 to ontrackbar1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ontrackbar1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ontrackbar1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'TRACKBAR_VERTICAL');
   for i := 0 to ontrackbar2.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ontrackbar2.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ontrackbar2.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'PROGRESSBAR_HORIZONTAL');
   for i := 0 to ONProgressBar1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONProgressBar1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONProgressBar1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'PROGRESSBAR_VERTICAL');
   for i := 0 to ONProgressBar2.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONProgressBar2.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONProgressBar2.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'SCROLLBAR_HORIZONTAL');
   for i := 0 to oNScrollBar1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(oNScrollBar1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(oNScrollBar1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'SCROLLBAR_VERTICAL');
   for i := 0 to oNScrollBar2.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(oNScrollBar2.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(oNScrollBar2.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'KNOB');
   for i := 0 to ONKnob1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONKnob1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONKnob1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'PANEL');
   for i := 0 to ONPanel1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONPanel1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONPanel1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'GRAPHICSPANEL');
   for i := 0 to ONGraphicPanel1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONGraphicPanel1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONGraphicPanel1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'HEADERPANEL');
   for i := 0 to onheaderpanel1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(onheaderpanel1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(onheaderpanel1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'COLLAPSEDPANEL');
   for i := 0 to ONColExpPanel1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONColExpPanel1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONColExpPanel1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'LISTBOX');
   for i := 0 to oNListBox1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(oNListBox1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(oNListBox1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'COLUMNLIST');
   for i := 0 to Oncolumlist1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(Oncolumlist1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(Oncolumlist1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'COMBOBOX');
   for i := 0 to ONcombobox1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONcombobox1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONcombobox1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'EDIT');
   for i := 0 to onEdit1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(onEdit1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(onEdit1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'MEMO');
   for i := 0 to ONMemo1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONMemo1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONMemo1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'SPINEDIT');
   for i := 0 to OnSpinEdit1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(OnSpinEdit1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(OnSpinEdit1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'PAGECONTROL');
   for i := 0 to ONPageControl1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONPageControl1.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONPageControl1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'PAGECONTROL BUTTONAREA');
   for i := 0 to ONPageControl1.btnarea.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONPageControl1.btnarea.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONPageControl1.btnarea.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'PAGE');
   for i := 0 to ONPageControl1.Pages[1].Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONPageControl1.Pages[1].Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONPageControl1.Pages[1].Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'PAGE BUTTON');
   for i := 0 to ONPageControl1.Pages[1].Fbutton.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
-      TONCustomCrop(ONPageControl1.Pages[1].Fbutton.Customcroplist[i]).cropname);
+      TONURCUSTOMCROP(ONPageControl1.Pages[1].Fbutton.Customcroplist[i]).cropname);
 
 
   objlist := TList.Create;
+  objlist.Add(skinsbuildier);
+  objlist.Add(closebut);
+  objlist.Add(maxbut);
+  objlist.Add(traybut);
+
   objlist.add(ongraphicsbutton1);
   objlist.add(oncropbutton1);
   objlist.add(onradiobutton1);
@@ -707,6 +742,9 @@ begin
     ONLed1.Visible := False;
     ONPageControl1.Visible := False;
     ONKnob1.Visible := False;
+    maxbut.Visible:=false;
+    traybut.Visible:=false;
+    closebut.Visible:=false;
     gg := Tcontrol(objlist[TreeView1.Selected.Index]);
     gg.Visible := True;
   end
@@ -715,17 +753,25 @@ begin
     if gg <> nil then
     begin
       s := '';
-      if gg is TONGraphicControl then
+      if  gg is TForm then
       begin
-        oncrop := TONCustomCrop(TONGraphicControl(
-          gg).Customcroplist[TreeView1.Selected.Index]);
-        s := TONGraphicControl(gg).Skinname;
+       oncrop := TONURCUSTOMCROP(ONImg1.Customcroplist[TreeView1.Selected.Index]);
+        s := 'form';
       end
       else
-      if gg is TONCustomControl then
       begin
-        oncrop := TONCustomCrop(TONCustomControl(gg).Customcroplist[TreeView1.Selected.Index]);
-        s := TONCustomControl(gg).Skinname;
+        if gg is TONURGraphicControl then
+        begin
+          oncrop := TONURCUSTOMCROP(TONURGraphicControl(
+            gg).Customcroplist[TreeView1.Selected.Index]);
+          s := TONURGraphicControl(gg).Skinname;
+        end
+        else
+        if gg is TONURCustomControl then
+        begin
+          oncrop := TONURCUSTOMCROP(TONURCustomControl(gg).Customcroplist[TreeView1.Selected.Index]);
+          s := TONURCustomControl(gg).Skinname;
+        end;
       end;
 
       PropEdit.Keys[1] := 'SKINNAME';
