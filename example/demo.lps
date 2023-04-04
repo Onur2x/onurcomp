@@ -12,17 +12,18 @@
         <WindowIndex Value="-1"/>
         <TopLine Value="-1"/>
         <CursorPos X="-1" Y="-1"/>
-        <UsageCount Value="20"/>
+        <UsageCount Value="24"/>
       </Unit>
       <Unit>
         <Filename Value="main.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <IsVisibleTab Value="True"/>
-        <TopLine Value="70"/>
-        <CursorPos X="14" Y="92"/>
-        <UsageCount Value="20"/>
+        <TopLine Value="53"/>
+        <CursorPos X="29" Y="70"/>
+        <UsageCount Value="24"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
@@ -43,66 +44,38 @@
       </Unit>
       <Unit>
         <Filename Value="..\onurbutton.pas"/>
-        <EditorIndex Value="2"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="2869"/>
         <CursorPos X="4" Y="2897"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="12"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\onurpage.pas"/>
-        <EditorIndex Value="1"/>
+        <EditorIndex Value="3"/>
         <TopLine Value="1482"/>
         <CursorPos X="3" Y="1462"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="12"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\onurbar.pas"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="110"/>
+        <CursorPos X="21" Y="312"/>
+        <UsageCount Value="11"/>
+        <Loaded Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\..\..\..\fpc\3.2.2\source\rtl\objpas\classes\classesh.inc"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="1827"/>
+        <CursorPos X="38" Y="1844"/>
+        <UsageCount Value="11"/>
         <Loaded Value="True"/>
       </Unit>
     </Units>
     <JumpHistory HistoryIndex="29">
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="88" Column="52" TopLine="69"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="89" Column="52" TopLine="70"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="90" Column="52" TopLine="71"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="91" Column="52" TopLine="72"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="92" Column="52" TopLine="73"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="94" Column="52" TopLine="75"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="106" Column="52" TopLine="76"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="108" Column="5" TopLine="85"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="123" Column="39" TopLine="88"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="113" Column="42" TopLine="88"/>
-      </Position>
-      <Position>
-        <Filename Value="main.pas"/>
-        <Caret Line="114" Column="42" TopLine="89"/>
-      </Position>
       <Position>
         <Filename Value="main.pas"/>
         <Caret Line="115" Column="42" TopLine="90"/>
@@ -178,6 +151,50 @@
       <Position>
         <Filename Value="main.pas"/>
         <Caret Line="105" Column="9" TopLine="87"/>
+      </Position>
+      <Position>
+        <Filename Value="main.pas"/>
+        <Caret Line="70" Column="29" TopLine="53"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="47" Column="21" TopLine="35"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="549" Column="45" TopLine="543"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="552" Column="39" TopLine="543"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="549" TopLine="531"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="138" Column="20" TopLine="128"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="1600" Column="3" TopLine="1593"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="47" Column="21" TopLine="36"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="549" Column="120" TopLine="543"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="225" Column="19" TopLine="196"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbar.pas"/>
+        <Caret Line="1258" Column="121" TopLine="1254"/>
       </Position>
     </JumpHistory>
     <RunParams>
