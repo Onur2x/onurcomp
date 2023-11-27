@@ -6,7 +6,7 @@ unit onurlist;
 interface
 
 uses
-  Windows, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
+  {$IFDEF UNIX} linux {$ELSE} Windows{$ENDIF}, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes,
   Dialogs, types, LazUTF8, Zipper,onurctrl,onurbar,onuredit;
 
@@ -162,8 +162,8 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSELEAVE;
     procedure SetSkindata(Aimg: TONURImg); override;
 
   protected
@@ -446,7 +446,7 @@ type
     function GetItemAt(Pos: TPoint): integer;
     procedure VScrollBarChange(Sender: TObject);
     procedure HScrollBarChange(Sender: TObject);
-    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
+    procedure CNKeyDown(var Message: {$IFDEF UNIX} TLMKeyDown {$ELSE} TWMKeyDown{$ENDIF} ); message CN_KEYDOWN;
     procedure SetSkindata(Aimg: TONURImg); override;
 
   public
@@ -708,7 +708,7 @@ begin
   end;
 end;
 
-procedure TONURColumList.CNKeyDown(var Message: TWMKeyDown);
+procedure TONURColumList.CNKeyDown(var Message:{$IFDEF UNIX} TLMKeyDown {$ELSE} TWMKeyDown{$ENDIF});
 var
   x: integer;
 begin
@@ -2697,7 +2697,7 @@ begin
   end;
 end;
 
-procedure TONURComboBox.CMonmouseenter(var Messages: Tmessage);
+procedure TONURComboBox.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 var
   aPnt: TPoint;
 begin
@@ -2722,7 +2722,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURComboBox.CMonmouseleave(var Messages: Tmessage);
+procedure TONURComboBox.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 begin
   if csDesigning in ComponentState then
     Exit;

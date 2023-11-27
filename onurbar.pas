@@ -6,7 +6,7 @@ unit onurbar;
 interface
 
 uses
-  Windows, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
+  {$IFDEF UNIX} linux {$ELSE} Windows{$ENDIF}, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes,
   Dialogs, types, LazUTF8, Zipper,onurctrl;
 
@@ -51,8 +51,8 @@ type
         X: integer; Y: integer); override;
       procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
 
-      procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-      procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+      procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSEENTER;
+      procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSELEAVE;
     public
       constructor Create(Aowner: TComponent); override;
       destructor Destroy; override;
@@ -211,8 +211,8 @@ type
     function MaxMin: integer;
     function CalculatePosition(const Value: integer): integer;
     function GetPosition: integer;
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSELEAVE;
     procedure SetMax(const Value: integer);
     procedure SetMin(const Value: integer);
     function SliderFromPosition(const Value: integer): integer;
@@ -312,7 +312,7 @@ type
     procedure SetSkindata(Aimg: TONURImg);override;
     procedure SetValue(const aValue: Integer);
   protected
-    procedure cmonmouseleave(var messages: tmessage);
+    procedure cmonmouseleave(var messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF});
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,
       Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -748,7 +748,7 @@ begin
 
 end;
 
-procedure TONURScrollBar.CMonmouseenter(var Messages: Tmessage);
+procedure TONURScrollBar.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF});
 var
   Cursorpos: TPoint;
 begin
@@ -805,7 +805,7 @@ begin
 
 end;
 
-procedure TONURScrollBar.CMonmouseleave(var Messages: Tmessage);
+procedure TONURScrollBar.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF});
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -1145,7 +1145,7 @@ begin
   Result := CalculatePosition(SliderFromPosition(FPosition));
 end;
 
-procedure TONURTrackBar.CMonmouseenter(var Messages: Tmessage);
+procedure TONURTrackBar.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF});
 begin
   if (not FIsPressed) and (Enabled) and (FState<>obshover) then
   begin
@@ -1154,7 +1154,7 @@ begin
   end;
 end;
 
-procedure TONURTrackBar.CMonmouseleave(var Messages: Tmessage);
+procedure TONURTrackBar.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF});
 begin
   if Enabled then
   begin
@@ -1763,7 +1763,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURKnob.cmonmouseleave(var messages: tmessage);
+procedure TONURKnob.cmonmouseleave(var messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF});
 begin
 //  fstate := obsnormal;
 //  FClick:= False;

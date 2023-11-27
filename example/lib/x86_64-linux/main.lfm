@@ -1,0 +1,966 @@
+object Form1: TForm1
+  Left = 351
+  Height = 584
+  Top = 250
+  Width = 918
+  Caption = 'Form1'
+  ClientHeight = 584
+  ClientWidth = 918
+  LCLVersion = '3.0.0.1'
+  object ONPageControl1: TONURPageControl
+    Left = 0
+    Height = 536
+    Top = 48
+    Width = 918
+    Align = alClient
+    Skindata = ONImg1
+    Skinname = 'pagecontrol'
+    Caption = 'PAGE'
+    ClientHeight = 536
+    ClientWidth = 918
+    DoubleBuffered = True
+    Font.CharSet = TURKISH_CHARSET
+    Font.Color = clSilver
+    Font.Height = -12
+    Font.Name = 'Calibri'
+    Font.Pitch = fpVariable
+    Font.Quality = fqDraft
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    ParentFont = False
+    TabOrder = 0
+    TabStop = True
+    UseDockManager = False
+    ActivePage = ONPage5
+    ButtonDirection = obup
+    object ONPage6: TONURPage
+      Left = 5
+      Height = 496
+      Top = 36
+      Width = 907
+      Skindata = ONImg1
+      Skinname = 'pagecontrol'
+      Caption = 'LABEL'
+      ClientHeight = 496
+      ClientWidth = 907
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      TabOrder = 6
+      UseDockManager = False
+      Visible = False
+      Buttonwidth = 61
+      object ONNormalLabel1: TONURNormalLabel
+        Left = 0
+        Height = 30
+        Top = 144
+        Width = 904
+        FlashColor = clRed
+        Flashinterval = 500
+        Animateinterval = 100
+        Animatewait = 15
+        Text = 'ONNORMALLABEL NORMAL FONT LABEL ONCLICK TO ANIMATE LABEL'
+        Scroll = 8
+        Font.CharSet = TURKISH_CHARSET
+        Font.Color = clSilver
+        Font.Height = -27
+        Font.Name = 'Calibri'
+        Font.Pitch = fpVariable
+        Font.Quality = fqDraft
+      end
+      object ONlabel1: TONURlabel
+        Left = 8
+        Height = 54
+        Top = 7
+        Width = 896
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'label'
+        Caption = 'On CLICK TO ACTIVE ANIMATE ONLABEL SCROLL LEFT TO RIGHT RIGHT TO LEFT'
+        OnClick = ONlabel1Click
+        Strings.Strings = (
+          'ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZXW'
+          '0123456789:.,<> '
+        )
+        Active = False
+        Stretch = True
+        ScrollBy = 2
+        Interval = 80
+        CharHeight = 33
+        CharWidth = 20
+        WaitOnEnd = 1000
+      end
+      object Label5: TLabel
+        Left = 141
+        Height = 14
+        Top = 227
+        Width = 96
+        Caption = 'ANIMATION SPEED'
+        ParentColor = False
+      end
+      object onEdit4: TONUREdit
+        Cursor = crIBeam
+        Left = 254
+        Height = 30
+        Top = 220
+        Width = 80
+        Skindata = ONImg1
+        Skinname = 'edit'
+        Caption = '100'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 0
+        TabStop = True
+        UseDockManager = False
+        NumberOnly = False
+        Selstart = 0
+        CharCase = ecNormal
+      end
+      object onEdit5: TONUREdit
+        Cursor = crIBeam
+        Left = 408
+        Height = 30
+        Top = 220
+        Width = 80
+        Skindata = ONImg1
+        Skinname = 'edit'
+        Caption = '2'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 1
+        TabStop = True
+        UseDockManager = False
+        NumberOnly = False
+        Selstart = 0
+        CharCase = ecNormal
+      end
+      object Label6: TLabel
+        Left = 361
+        Height = 14
+        Top = 227
+        Width = 24
+        Caption = 'STEP'
+        ParentColor = False
+      end
+      object ONGraphicsButton5: TONURGraphicsButton
+        Left = 522
+        Height = 30
+        Top = 220
+        Width = 100
+        Skindata = ONImg1
+        Skinname = 'button'
+        Caption = 'APPLY'
+        Color = clNone
+        ParentColor = False
+        OnClick = ONGraphicsButton5Click
+      end
+    end
+    object ONPage3: TONURPage
+      Left = 5
+      Height = 496
+      Top = 36
+      Width = 907
+      Skindata = ONImg1
+      Skinname = 'pagecontrol'
+      Caption = 'EDIT'
+      ClientHeight = 496
+      ClientWidth = 907
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      TabOrder = 3
+      UseDockManager = False
+      Visible = False
+      Buttonwidth = 45
+      object onEdit1: TONUREdit
+        Cursor = crIBeam
+        Left = 31
+        Height = 29
+        Top = 27
+        Width = 148
+        Skindata = ONImg1
+        Skinname = 'edit'
+        Caption = 'onEdit1'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 0
+        TabStop = True
+        UseDockManager = False
+        NumberOnly = False
+        Selstart = 0
+        CharCase = ecNormal
+      end
+      object ONMemo1: TONURMemo
+        Cursor = crIBeam
+        Left = 223
+        Height = 262
+        Top = 28
+        Width = 243
+        Skindata = ONImg1
+        Skinname = 'memo'
+        Caption = 'ONMemo1'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 1
+        TabStop = True
+        UseDockManager = False
+        NumberOnly = False
+        Selstart = 0
+        CharCase = ecNormal
+        Lines.Strings = (
+          'ONMemo1'
+        )
+      end
+      object OnSpinEdit1: TONURSpinEdit
+        Cursor = crIBeam
+        Left = 32
+        Height = 35
+        Top = 103
+        Width = 51
+        Skindata = ONImg1
+        Skinname = 'spinedit'
+        Caption = '0'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 2
+        TabStop = True
+        UseDockManager = False
+        NumberOnly = True
+        Selstart = 0
+        CharCase = ecNormal
+        Value = 0
+        MaxValue = 0
+        MinValue = 0
+        Buttonwidth = 11
+        Buttonheight = 11
+      end
+    end
+    object ONPage2: TONURPage
+      Left = 5
+      Height = 496
+      Top = 36
+      Width = 907
+      Skindata = ONImg1
+      Skinname = 'pagecontrol'
+      Caption = 'PANEL'
+      ClientHeight = 496
+      ClientWidth = 907
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      TabOrder = 2
+      UseDockManager = False
+      Visible = False
+      Buttonwidth = 63
+      object ONPanel1: TONURPanel
+        Left = 24
+        Height = 191
+        Top = 24
+        Width = 225
+        Skindata = ONImg1
+        Skinname = 'panel'
+        Caption = 'ONPanel1'
+        ChildSizing.LeftRightSpacing = 5
+        ChildSizing.TopBottomSpacing = 5
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 0
+        UseDockManager = False
+      end
+      object ONHeaderPanel2: TONURHeaderPanel
+        Left = 283
+        Height = 45
+        Top = 23
+        Width = 225
+        Skindata = ONImg1
+        Skinname = 'headerpanel'
+        Caption = 'ONHeaderPanel2'
+        ChildSizing.LeftRightSpacing = 6
+        ChildSizing.TopBottomSpacing = 4
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 1
+        UseDockManager = False
+      end
+      object ONGraphicPanel1: TONURGraphicPanel
+        Left = 544
+        Height = 195
+        Top = 17
+        Width = 190
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'graphicpanel'
+        Caption = 'ONGraphicPanel1'
+      end
+      object ONCollapExpandPanel1: TONURCollapExpandPanel
+        Left = 182
+        Height = 231
+        Top = 254
+        Width = 494
+        Skindata = ONImg1
+        Skinname = 'expandpanel'
+        Caption = 'ONCollapExpandPanel1'
+        ChildSizing.LeftRightSpacing = 5
+        ChildSizing.TopBottomSpacing = 6
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 2
+        UseDockManager = False
+        AutoCollapse = False
+        Status = oExpanded
+        Minheight = 30
+        Normalheight = 150
+        HeaderState = ocup
+        ButtonPosition = obright
+      end
+    end
+    object ONPage1: TONURPage
+      Left = 5
+      Height = 496
+      Top = 36
+      Width = 907
+      Skindata = ONImg1
+      Skinname = 'pagecontrol'
+      Caption = 'BUTTON'
+      ClientHeight = 496
+      ClientWidth = 907
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      TabOrder = 1
+      UseDockManager = False
+      Visible = False
+      Buttonwidth = 81
+      object ONCropButton2: TONURCropButton
+        Left = 32
+        Height = 38
+        Top = 24
+        Width = 143
+        Skindata = ONImg1
+        Skinname = 'cropbutton'
+        Crop = True
+        Caption = 'ONCropButton2'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 0
+        UseDockManager = False
+      end
+      object ONGraphicsButton2: TONURGraphicsButton
+        Left = 32
+        Height = 44
+        Top = 80
+        Width = 143
+        Skindata = ONImg1
+        Skinname = 'button'
+        Caption = 'ONGraphicsButton2'
+        Color = clNone
+        ParentColor = False
+      end
+      object OnRadioButton1: TONURRadioButton
+        Left = 258
+        Height = 30
+        Top = 31
+        Width = 118
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'radiobox'
+        Caption = 'OnRadioButton1'
+        CheckWidth = 15
+        CaptionDirection = ocright
+      end
+      object OnCheckbox1: TONURCheckbox
+        Left = 256
+        Height = 26
+        Top = 84
+        Width = 118
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'checkbox'
+        Caption = 'OnCheckbox1'
+        CheckWidth = 15
+        CaptionDirection = ocright
+      end
+      object OnSwich1: TONURSwich
+        Left = 414
+        Height = 27
+        Top = 35
+        Width = 90
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'swich'
+        Caption = 'OnSwich1'
+        Checked = True
+        OnChange = OnSwich1Change
+      end
+      object Label1: TLabel
+        Left = 535
+        Height = 14
+        Top = 36
+        Width = 31
+        Caption = 'Swich'
+        ParentColor = False
+      end
+      object ONLed1: TONURLed
+        Left = 414
+        Height = 30
+        Top = 80
+        Width = 30
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'led'
+        LedOn = True
+      end
+      object ONKnob1: TONURKnob
+        Left = 32
+        Height = 100
+        Top = 176
+        Width = 100
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'knob'
+        Caption = 'ONKnob1'
+        MaxValue = 100
+        MinValue = -100
+        Step = 2
+        ScroolStep = 5
+        CurrentValue = 0
+      end
+    end
+    object ONPage4: TONURPage
+      Left = -8
+      Height = 496
+      Top = 32
+      Width = 907
+      Skindata = ONImg1
+      Skinname = 'pagecontrol'
+      Caption = 'LISTBOX'
+      ClientHeight = 496
+      ClientWidth = 907
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      TabOrder = 4
+      UseDockManager = False
+      Visible = False
+      Buttonwidth = 84
+      object Oncolumlist1: TONURColumList
+        Left = 288
+        Height = 338
+        Top = 28
+        Width = 251
+        Skindata = ONImg1
+        Skinname = 'columlist'
+        Caption = 'Oncolumlist1'
+        ClientHeight = 338
+        ClientWidth = 251
+        DoubleBuffered = True
+        Font.Color = 13882313
+        Font.Height = -12
+        Font.Name = 'Calibri'
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 0
+        TabStop = True
+        UseDockManager = False
+        Columns = <        
+          item
+            Caption = 'COL-A'
+            Width = 80
+            Font.Height = -12
+            Font.Name = 'Calibri'
+            Textalign = taLeftJustify
+          end        
+          item
+            Caption = 'COL-B'
+            Width = 80
+            Font.Height = -12
+            Font.Name = 'Calibri'
+            Textalign = taLeftJustify
+          end        
+          item
+            Caption = 'COL-C'
+            Width = 80
+            Font.Height = -12
+            Font.Name = 'Calibri'
+            Textalign = taLeftJustify
+          end        
+          item
+            Caption = 'COL-D'
+            Width = 80
+            Font.Height = -12
+            Font.Name = 'Calibri'
+            Textalign = taLeftJustify
+          end>
+        Items = <>
+        ItemIndex = -1
+        Columindex = 0
+        ItemHeight = 24
+        HeaderHeight = 24
+        Selectedcolor = clBlue
+        Headervisible = True
+        Headerfont.Color = clBlue
+        Headerfont.Height = -13
+        Headerfont.Name = 'Calibri'
+        Headerfont.Style = [fsBold]
+        AutoHideScrollBar = True
+      end
+      object oNListBox1: TONURListBox
+        Left = 29
+        Height = 346
+        Top = 27
+        Width = 207
+        Skindata = ONImg1
+        Skinname = 'listbox'
+        Caption = 'oNListBox1'
+        ClientHeight = 346
+        ClientWidth = 207
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 1
+        UseDockManager = False
+        ItemIndex = -1
+        ItemHeight = 24
+        Selectedcolor = clBlue
+      end
+      object ONcombobox1: TONURComboBox
+        Cursor = crIBeam
+        Left = 576
+        Height = 30
+        Top = 28
+        Width = 150
+        Skindata = ONImg1
+        Skinname = 'combobox'
+        Caption = 'ONcombobox1'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 2
+        TabStop = True
+        UseDockManager = False
+        NumberOnly = False
+        Selstart = 0
+        CharCase = ecNormal
+        Items.Strings = (
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST2'
+          'TEST2'
+          'TEST2'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST6'
+          'TEST6'
+          'TEST6'
+          'TEST6'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST2'
+          'TEST2'
+          'TEST2'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST6'
+          'TEST6'
+          'TEST6'
+          'TEST6'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST2'
+          'TEST2'
+          'TEST2'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST6'
+          'TEST6'
+          'TEST6'
+          'TEST6'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST1'
+          'TEST2'
+          'TEST2'
+          'TEST2'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST3'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST4'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST5'
+          'TEST6'
+          'TEST6'
+          'TEST6'
+          'TEST6'
+        )
+        ItemIndex = -1
+        Selectedcolor = clBlue
+        ItemHeight = 0
+      end
+      object ONGraphicsButton3: TONURGraphicsButton
+        Left = 439
+        Height = 30
+        Top = 384
+        Width = 100
+        Skindata = ONImg1
+        Skinname = 'button'
+        Caption = 'ADD 100 ITEM'
+        Color = clNone
+        ParentColor = False
+        OnClick = ONGraphicsButton3Click
+      end
+      object ONGraphicsButton4: TONURGraphicsButton
+        Left = 168
+        Height = 30
+        Top = 384
+        Width = 68
+        Skindata = ONImg1
+        Skinname = 'button'
+        Caption = 'ADD'
+        Color = clNone
+        ParentColor = False
+        OnClick = ONGraphicsButton4Click
+      end
+      object onEdit2: TONUREdit
+        Cursor = crIBeam
+        Left = 31
+        Height = 30
+        Top = 385
+        Width = 65
+        Skindata = ONImg1
+        Skinname = 'edit'
+        Caption = '100'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 3
+        TabStop = True
+        UseDockManager = False
+        NumberOnly = True
+        Selstart = 0
+        CharCase = ecNormal
+      end
+      object Label2: TLabel
+        Left = 112
+        Height = 14
+        Top = 392
+        Width = 31
+        Caption = 'items'
+        ParentColor = False
+      end
+      object onEdit3: TONUREdit
+        Cursor = crIBeam
+        Left = 290
+        Height = 30
+        Top = 384
+        Width = 65
+        Skindata = ONImg1
+        Skinname = 'edit'
+        Caption = '100'
+        DoubleBuffered = True
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        TabOrder = 4
+        TabStop = True
+        UseDockManager = False
+        NumberOnly = True
+        Selstart = 0
+        CharCase = ecNormal
+      end
+      object Label3: TLabel
+        Left = 369
+        Height = 14
+        Top = 391
+        Width = 31
+        Caption = 'items'
+        ParentColor = False
+      end
+      object OnSwich2: TONURSwich
+        Left = 432
+        Height = 30
+        Top = 430
+        Width = 100
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'swich'
+        Caption = 'OnSwich2'
+        Checked = True
+        OnChange = OnSwich2Change
+      end
+      object Label4: TLabel
+        Left = 290
+        Height = 14
+        Top = 440
+        Width = 84
+        Caption = 'HEADER VISIBLE'
+        ParentColor = False
+      end
+    end
+    object ONPage5: TONURPage
+      Left = 5
+      Height = 496
+      Top = 36
+      Width = 907
+      Skindata = ONImg1
+      Skinname = 'pagecontrol'
+      Caption = 'BAR'
+      ClientHeight = 496
+      ClientWidth = 907
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      TabOrder = 5
+      UseDockManager = False
+      Buttonwidth = 40
+      object ONTrackBar1: TONURTrackBar
+        Left = 16
+        Height = 22
+        Top = 64
+        Width = 411
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'trackbarh'
+        Caption = 'ONTrackBar1'
+        Position = 0
+        Percentage = 0
+        Max = 100
+        Min = 0
+        OnChange = ONTrackBar1Change
+      end
+      object ONProgressBar1: TONURProgressBar
+        Left = 16
+        Height = 22
+        Top = 116
+        Width = 411
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'progressbarh'
+        Caption = '10'
+        Textvisible = True
+        Min = 0
+        Max = 100
+        Position = 10
+      end
+      object oNScrollBar1: TONURScrollBar
+        Left = 16
+        Height = 22
+        Top = 17
+        Width = 411
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'scrollbarh'
+        Caption = 'oNScrollBar1'
+        Step = 1
+        Min = 0
+        Max = 100
+        Position = 0
+        OnChange = oNScrollBar1Change
+      end
+      object ONTrackBar2: TONURTrackBar
+        Left = 488
+        Height = 280
+        Top = 64
+        Width = 23
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'trackbarv'
+        Caption = 'ONTrackBar2'
+        Position = 0
+        Percentage = 100
+        Kind = oVertical
+        Max = 100
+        Min = 0
+        OnChange = ONTrackBar2Change
+      end
+      object ONProgressBar2: TONURProgressBar
+        Left = 568
+        Height = 280
+        Top = 64
+        Width = 23
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'progressbarv'
+        Caption = '10'
+        Textvisible = True
+        Min = 0
+        Max = 100
+        Position = 10
+        Kind = oVertical
+      end
+      object oNScrollBar2: TONURScrollBar
+        Left = 528
+        Height = 280
+        Top = 64
+        Width = 24
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'scrollbarv'
+        Caption = 'oNScrollBar2'
+        Step = 1
+        Min = 0
+        Max = 100
+        Position = 0
+        OnChange = oNScrollBar2Change
+        Kind = oVertical
+      end
+      object ONKnob2: TONURKnob
+        Left = 112
+        Height = 100
+        Top = 258
+        Width = 100
+        Transparent = False
+        Skindata = ONImg1
+        Skinname = 'knob'
+        Caption = 'ONKnob2'
+        MaxValue = 100
+        MinValue = -100
+        Step = 2
+        ScroolStep = 5
+        CurrentValue = 0
+      end
+    end
+  end
+  object ONHeaderPanel1: TONURHeaderPanel
+    Left = 0
+    Height = 48
+    Top = 0
+    Width = 918
+    Align = alTop
+    Skindata = ONImg1
+    Skinname = 'headerpanel'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.TopBottomSpacing = 4
+    ClientHeight = 48
+    ClientWidth = 918
+    DoubleBuffered = True
+    ParentBackground = True
+    ParentDoubleBuffered = False
+    TabOrder = 1
+    UseDockManager = False
+    OnMouseDown = ONHeaderPanel1MouseDown
+    object ONGraphicsButton1: TONURGraphicsButton
+      Left = 868
+      Height = 26
+      Top = 8
+      Width = 34
+      Skindata = ONImg1
+      Skinname = 'button'
+      Caption = 'X'
+      Color = clNone
+      ParentColor = False
+      OnClick = ONGraphicsButton1Click
+    end
+    object ONCropButton1: TONURCropButton
+      Left = 78
+      Height = 30
+      Top = 7
+      Width = 100
+      Skindata = ONImg1
+      Skinname = 'cropbutton'
+      Crop = True
+      Caption = 'LOAD SKINS'
+      DoubleBuffered = True
+      ParentBackground = True
+      ParentDoubleBuffered = False
+      TabOrder = 0
+      UseDockManager = False
+      OnClick = ONCropButton1Click
+    end
+  end
+  object ONImg1: TONURImg
+    MColor = 'clnone'
+    Opacity = 255
+    Left = 342
+    Top = 207
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.*.osf'
+    Filter = 'Skin File|*.osf'
+    Left = 224
+    Top = 107
+  end
+end

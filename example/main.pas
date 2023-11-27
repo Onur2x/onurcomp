@@ -89,7 +89,13 @@ var
   Form1: TForm1;
 
 implementation
-uses windows;
+uses
+  {$IFDEF UNIX}
+    unix,LMessages
+    {$ELSE}
+  windows
+  {$ENDIF}
+  ;
 {$R *.lfm}
 
 { TForm1 }
@@ -137,8 +143,12 @@ end;
 procedure TForm1.ONHeaderPanel1MouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
+  {$IFNDEF UNIX}
+
    ReleaseCapture;
   SendMessage(self.Handle, WM_SYSCOMMAND, $F012, 0);
+
+ {$ENDIF}
 end;
 
 procedure TForm1.ONlabel1Click(Sender: TObject);

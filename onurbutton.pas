@@ -5,7 +5,7 @@ unit onurbutton;
 interface
 
 uses
-  Windows, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
+  {$IFDEF UNIX} linux {$ELSE} Windows{$ENDIF}, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes,
   Dialogs, types, LazUTF8, Contnrs,onurctrl;
 
@@ -289,8 +289,8 @@ type
     procedure SetChecked(Value: boolean);
     procedure SetSkindata(Aimg: TONURImg); override;
   public
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSELEAVE;
 
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
@@ -363,8 +363,8 @@ type
     procedure deaktifdigerleri;  /// for radiobutton
     procedure SetSkindata(Aimg: TONURImg); override;
   public
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSELEAVE;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
@@ -443,8 +443,8 @@ type
     procedure deaktifdigerleri;  /// for radiobutton
     procedure SetSkindata(Aimg: TONURImg); override;
   public
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSELEAVE;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
@@ -999,13 +999,13 @@ begin
 
 end;
 
-procedure TONURRadioButton.CMonmouseenter(var Messages: Tmessage);
+procedure TONURRadioButton.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 begin
   fstate := obshover;
   Invalidate;
 end;
 
-procedure TONURRadioButton.CMonmouseleave(var Messages: Tmessage);
+procedure TONURRadioButton.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 begin
  fstate := obsnormal;
   Invalidate;
@@ -1232,7 +1232,11 @@ begin
   try
     while not Terminated do
     begin
+      {$IFDEF UNIX}
+      RTLEventWaitFor(@self.handle, FInterval);
+      {$ELSE}
       WaitForSingleObject(self.Handle, FInterval);
+     {$ENDIF}
       Synchronize(@Call);
     end;
   except
@@ -2641,7 +2645,7 @@ end;
 
 
 
-procedure TONURSwich.CMonmouseenter(var Messages: Tmessage);
+procedure TONURSwich.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2651,7 +2655,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURSwich.CMonmouseleave(var Messages: Tmessage);
+procedure TONURSwich.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2895,13 +2899,13 @@ end;
 
 
 
-procedure TONURCheckbox.CMonmouseenter(var Messages: Tmessage);
+procedure TONURCheckbox.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 begin
   fstate := obshover;
   Invalidate;
 end;
 
-procedure TONURCheckbox.CMonmouseleave(var Messages: Tmessage);
+procedure TONURCheckbox.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 begin
   fstate := obsnormal;
   Invalidate;

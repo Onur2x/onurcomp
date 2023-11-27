@@ -6,7 +6,7 @@ unit onuredit;
 interface
 
 uses
-  LCLType,Windows, SysUtils, LMessages, Forms ,Classes, StdCtrls,
+  LCLType,{$IFDEF UNIX} linux {$ELSE} Windows{$ENDIF}, SysUtils, LMessages, Forms ,Classes, StdCtrls,
   Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes, Dialogs,onurctrl,Types;
 
  type
@@ -364,8 +364,8 @@ uses
     //   procedure Resize;override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer); override;
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSELEAVE;
     procedure SetText(AValue: string); override;
     procedure SetSkindata(Aimg: TONURImg); override;
   public
@@ -449,7 +449,7 @@ procedure Register;
 
 implementation
 
-uses  BGRAPath,LazUTF8,onurlist,Clipbrd,StrUtils;
+uses  BGRAPath,LazUTF8,onurlist,Clipbrd,StrUtils {$IFDEF UNIX}, Math{$ENDIF};
 
 procedure Register;
 begin
@@ -2149,7 +2149,7 @@ begin
   Invalidate;
 end;
 
-procedure TOnURSpinEdit.CMonmouseenter(var Messages: Tmessage);
+procedure TOnURSpinEdit.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 var
   aPnt: TPoint;
 begin
@@ -2158,7 +2158,11 @@ begin
   if not Enabled then
     Exit;
   inherited MouseEnter;
+
+  {$IFDEF UNIX} aPnt:=Mouse.CursorPos; {$ELSE}
+
   GetCursorPos(aPnt);
+  {$ENDIF}
   aPnt := ScreenToClient(aPnt);
   if PtInRect(Fubuttonarea, aPnt) then
   begin
@@ -2185,7 +2189,7 @@ begin
   Invalidate;
 end;
 
-procedure TOnURSpinEdit.CMonmouseleave(var Messages: Tmessage);
+procedure TOnURSpinEdit.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 begin
   if csDesigning in ComponentState then
     Exit;

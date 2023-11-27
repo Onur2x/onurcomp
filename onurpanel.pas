@@ -6,7 +6,7 @@ unit onurpanel;
 interface
 
 uses
-  Windows, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
+ {$IFDEF UNIX} UNIX,LMessages {$ELSE} Windows{$ENDIF}, SysUtils,  Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes,
   Dialogs, types, LazUTF8, Zipper,onurctrl;
 
@@ -214,8 +214,8 @@ type
       X, Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSELEAVE;
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
     procedure SetSkindata(Aimg: TONURImg); override;
   protected
@@ -487,7 +487,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURCollapExpandPanel.CMonmouseenter(var Messages: Tmessage);
+procedure TONURCollapExpandPanel.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 var
   aPnt: TPoint;
 begin
@@ -510,7 +510,7 @@ begin
   end;
 end;
 
-procedure TONURCollapExpandPanel.CMonmouseleave(var Messages: Tmessage);
+procedure TONURCollapExpandPanel.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
 // var
 //   aPnt: TPoint;
 begin
