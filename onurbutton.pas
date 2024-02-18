@@ -5,44 +5,41 @@ unit onurbutton;
 interface
 
 uses
-  {$IFDEF UNIX} linux {$ELSE} Windows{$ENDIF}, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
-  Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes,
-  Dialogs, types, LazUTF8, Contnrs,onurctrl;
+  Windows, SysUtils, Classes, Controls, Graphics, ExtCtrls, BGRABitmap, BGRABitmapTypes,ComponentEditors, PropEdits, onurctrl;
 
-type
-
+  type
   //SYSTEM BUTTON -- close minimize help tray etc..
+
+   TONURButtonType       = (OBTNClose, OBTNMinimize,OBTNMaximize, OBTNHelp);
 
    { TONURsystemButton }
 
    TONURsystemButton = class(TONURGraphicControl)
-  private
-    Fnormal    : TONURCUSTOMCROP;
-    FPress     : TONURCUSTOMCROP;
-    FEnter     : TONURCUSTOMCROP;
-    Fdisable   : TONURCUSTOMCROP;
-    Fstate     : TONURButtonState;
-    FAutoWidth : boolean;
+   private
+    Fnormal      : TONURCUSTOMCROP;
+    FPress       : TONURCUSTOMCROP;
+    FEnter       : TONURCUSTOMCROP;
+    Fdisable     : TONURCUSTOMCROP;
+    Fstate       : TONURButtonState;
+    FAutoWidth   : boolean;
+    FButtonType : TONURButtonType;
+    function GetButtonType: TONURButtonType;
+    procedure SetButtonType(AValue: TONURButtonType);
+   protected
     procedure SetSkindata(Aimg: TONURImg); override;
-  protected
-  {  }
-   public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-    procedure Paint; override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    //    procedure MouseMove(Shift: TShiftState; X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    property ONORMAL: TONURCUSTOMCROP read FNormal write FNormal;
-    property OPRESSED: TONURCUSTOMCROP read FPress write FPress;
-    property OHOVER: TONURCUSTOMCROP read FEnter write FEnter;
-    property ODISABLE: TONURCUSTOMCROP read Fdisable write Fdisable;
-  protected
+    procedure Click; override;
+   public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Paint; override;
   published
+    property ButtonType : TONURButtonType read GetButtonType write SetButtonType;
     property Alpha;
     property Skindata;
     property OnMouseDown;
@@ -84,23 +81,19 @@ type
     FNormalleft,FNormalright,
     FNormaltop,FNormalbottom,
     Fnormal : TONURCUSTOMCROP;
-
     FPressleft,FPressright,
     FPresstop,FPressbottom,
     FPress  : TONURCUSTOMCROP;
-
     FEnterleft,FEnterright,
     FEntertop,FEnterbottom,
     FEnter  : TONURCUSTOMCROP;
-
     Fdisableleft,Fdisableright,
     Fdisabletop,Fdisablebottom,
     Fdisable  : TONURCUSTOMCROP;
-
     Fstate           : TONURButtonState;
     FAutoWidth       : boolean;
-    procedure SetSkindata(Aimg: TONURImg); override;
   protected
+    procedure SetSkindata(Aimg: TONURImg); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -110,37 +103,10 @@ type
     procedure SetAutoWidth(const Value: boolean);
     procedure CheckAutoWidth;
     procedure CMHittest(var msg: TCMHittest); message CM_HITTEST;
-
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
-
-    property ONORMAL: TONURCUSTOMCROP read FNormal write FNormal;
-    property ONORMALLEFT: TONURCUSTOMCROP read FNormalleft write FNormalleft;
-    property ONORMALRIGHT: TONURCUSTOMCROP read FNormalright write FNormalright;
-    property ONORMALTOP: TONURCUSTOMCROP read FNormaltop write FNormaltop;
-    property ONORMALBOTTOM: TONURCUSTOMCROP read FNormalbottom write FNormalbottom;
-
-
-    property OPRESSED: TONURCUSTOMCROP read FPress write FPress;
-    property OPRESSEDLEFT: TONURCUSTOMCROP read FPressleft write FPressleft;
-    property OPRESSEDRIGHT: TONURCUSTOMCROP read FPressright write FPressright;
-    property OPRESSEDTOP: TONURCUSTOMCROP read FPresstop write FPresstop;
-    property OPRESSEDBOTTOM: TONURCUSTOMCROP read FPressbottom write FPressbottom;
-
-    property OHOVER: TONURCUSTOMCROP read FEnter write FEnter;
-    property OHOVERLEFT: TONURCUSTOMCROP read FEnterleft write FEnterleft;
-    property OHOVERRIGHT: TONURCUSTOMCROP read FEnterright write FEnterright;
-    property OHOVERTOP: TONURCUSTOMCROP read FEntertop write FEntertop;
-    property OHOVERBOTTOM: TONURCUSTOMCROP read FEnterbottom write FEnterbottom;
-
-    property ODISABLE: TONURCUSTOMCROP read Fdisable write Fdisable;
-    property ODISABLELEFT: TONURCUSTOMCROP read Fdisableleft write Fdisableleft;
-    property ODISABLERIGHT: TONURCUSTOMCROP read Fdisableright write Fdisableright;
-    property ODISABLETOP: TONURCUSTOMCROP read Fdisabletop write Fdisabletop;
-    property ODISABLEBOTTOM: TONURCUSTOMCROP read Fdisablebottom write Fdisablebottom;
-
   published
     property Alpha;
     property Skindata;
@@ -175,9 +141,6 @@ type
     property OnResize;
   end;
 
-
-  { TONURGraphicsButton }
-
   { TONURGraphicsButton }
 
   TONURGraphicsButton = class(TONURGraphicControl)
@@ -200,47 +163,20 @@ type
 
     Fstate: TONURButtonState;
     FAutoWidth: boolean;
-    procedure SetSkindata(Aimg: TONURImg); override;
   protected
+    procedure SetSkindata(Aimg: TONURImg); override;
     procedure SetAutoWidth(const Value: boolean);
     procedure CheckAutoWidth;
-  public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-    procedure Paint; override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    //    procedure MouseMove(Shift: TShiftState; X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-
-    property ONORMAL: TONURCUSTOMCROP read FNormal write FNormal;
-    property ONORMALLEFT: TONURCUSTOMCROP read FNormalleft write FNormalleft;
-    property ONORMALRIGHT: TONURCUSTOMCROP read FNormalright write FNormalright;
-    property ONORMALTOP: TONURCUSTOMCROP read FNormaltop write FNormaltop;
-    property ONORMALBOTTOM: TONURCUSTOMCROP read FNormalbottom write FNormalbottom;
-
-
-    property OPRESSED: TONURCUSTOMCROP read FPress write FPress;
-    property OPRESSEDLEFT: TONURCUSTOMCROP read FPressleft write FPressleft;
-    property OPRESSEDRIGHT: TONURCUSTOMCROP read FPressright write FPressright;
-    property OPRESSEDTOP: TONURCUSTOMCROP read FPresstop write FPresstop;
-    property OPRESSEDBOTTOM: TONURCUSTOMCROP read FPressbottom write FPressbottom;
-
-    property OHOVER: TONURCUSTOMCROP read FEnter write FEnter;
-    property OHOVERLEFT: TONURCUSTOMCROP read FEnterleft write FEnterleft;
-    property OHOVERRIGHT: TONURCUSTOMCROP read FEnterright write FEnterright;
-    property OHOVERTOP: TONURCUSTOMCROP read FEntertop write FEntertop;
-    property OHOVERBOTTOM: TONURCUSTOMCROP read FEnterbottom write FEnterbottom;
-
-    property ODISABLE: TONURCUSTOMCROP read Fdisable write Fdisable;
-    property ODISABLELEFT: TONURCUSTOMCROP read Fdisableleft write Fdisableleft;
-    property ODISABLERIGHT: TONURCUSTOMCROP read Fdisableright write Fdisableright;
-    property ODISABLETOP: TONURCUSTOMCROP read Fdisabletop write Fdisabletop;
-    property ODISABLEBOTTOM: TONURCUSTOMCROP read Fdisablebottom write Fdisablebottom;
-  protected
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Paint; override;
   published
     property Alpha;
     property Skindata;
@@ -276,6 +212,111 @@ type
     property OnResize;
   end;
 
+  TONURNavMenuButton = class;
+
+
+
+  { TONURNavButton }
+
+  TONURNavButton=class(TONURGraphicsButton)
+  private
+    FButtonControl: TONURNavMenuButton;
+    function GetButtonOrderIndex: integer;
+    function GetOrderIndex: integer;
+    procedure Getposition;
+    procedure SetButtonControl(ANavButton: TONURNavMenuButton);
+    procedure SetButtonOrderIndex(Value: integer);
+  protected
+    procedure ReadState(Reader: TReader); override;
+    procedure Loaded; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    property ButtonControl  : TONURNavMenuButton read FButtonControl write SetButtonControl;
+  published
+    property ButtonOrderIndex: integer read GetButtonOrderIndex
+      write SetButtonOrderIndex stored False;
+  end;
+
+  { TONURNavMenuButton }
+   TButtonChangingEvent = procedure(Sender: TObject; NewButtonIndex: integer;
+    var AllowChange: boolean) of object;
+
+  TONURNavMenuButton = class(TONURCustomControl)
+  private
+   Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
+   FTop, FBottom, FCenter: TONURCUSTOMCROP;
+   fbuttonleft,Fbuttonright,fbuttoncenter,Fsplitter : TONURCUSTOMCROP;
+   FButton: TList;
+   FButtonChanged: TNotifyEvent;
+   FButtonChanging: TButtonChangingEvent;
+   factiveButton: TONURNavButton;
+   function GetButtons(Index: integer): TONURNavButton;
+   function GetButtonCount: integer;
+   function GetActiveButtonIndex: integer;
+  protected
+    procedure SetSkindata(Aimg: TONURImg); override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure ShowControl(AControl: TControl); override;
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure SetActiveButton(Buttoni: TONURNavButton); virtual;
+    procedure SetActiveButtonIndex(ButtonIndex: integer); virtual;
+    procedure DoButtonChanged; virtual;
+    function DoButtonChanging(NewButtonIndex: integer): boolean; virtual;
+    property ActiveButtonIndex: integer read GetActiveButtonIndex
+      write SetActiveButtonIndex stored False;
+    property OnButtonChanging: TButtonChangingEvent read FButtonChanging write FButtonChanging;
+    property OnButtonChanged: TNotifyEvent read FButtonChanged write FButtonChanged;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Paint; override;
+
+    function NewButton: TONURNavButton;
+    procedure InsertButton(Buttoni: TONURNavButton); virtual;
+    procedure RemoveButton(Buttoni: TONURNavButton); virtual;
+    function NextButton(CurButton: TONURNavButton; GoForward: boolean): TONURNavButton;
+    procedure SelectNextButton(GoForward: boolean);
+    property ButtonCount: integer read GetButtonCount;
+    property Buttons[Index: integer]: TONURNavButton read GetButtons;
+  published
+    property ActiveButton: TONURNavButton read FActiveButton write SetActiveButton;
+    property Alpha;
+    property Skindata;
+    property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseUp;
+    property OnMouseMove;
+    property OnClick;
+    property Align;
+    property Anchors;
+    property AutoSize;
+    property BidiMode;
+    property ClientHeight;
+    property ClientWidth;
+    property Color;
+    property Constraints;
+    property Enabled;
+    property ParentBidiMode;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
+    property ShowHint;
+    property Visible;
+    property OnContextPopup;
+    property OnDblClick;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
+    property OnPaint;
+    property OnResize;
+  end;
+
 
 
   { TONURSwich }
@@ -287,21 +328,15 @@ type
     FChecked: boolean;
     FOnChange: TNotifyEvent;
     procedure SetChecked(Value: boolean);
+    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    protected
     procedure SetSkindata(Aimg: TONURImg); override;
-  public
-    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSELEAVE;
-
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    property OOPEN: TONURCUSTOMCROP read FOpen write FOpen;
-    property OCLOSE: TONURCUSTOMCROP read Fclose write Fclose;
-    property OOPENHOVER: TONURCUSTOMCROP read Fopenhover write Fopenhover;
-    property OCLOSEHOVER: TONURCUSTOMCROP read Fclosehover write Fclosehover;
-    property ODISABLE: TONURCUSTOMCROP read Fdisable write Fdisable;
-
+  public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
@@ -360,24 +395,16 @@ type
     procedure SetCheckWidth(AValue: integer);
     procedure SetCaptionmod(const val: TONURCapDirection);
     function GetCaptionmod: TONURCapDirection;
-    procedure deaktifdigerleri;  /// for radiobutton
+    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMHittest(var msg: TCMHIttest);
+  protected
     procedure SetSkindata(Aimg: TONURImg); override;
-  public
-    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSELEAVE;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure DoOnChange; virtual;
-    procedure CMHittest(var msg: TCMHIttest);
-
-    property ONORMAL: TONURCUSTOMCROP read obleave write obleave;
-    property ONORMALHOVER: TONURCUSTOMCROP read obenter write obenter;
-    property ONORMALDOWN: TONURCUSTOMCROP read obdown write obdown;
-    property OCHECKED: TONURCUSTOMCROP read obcheckleaves write obcheckleaves;
-    property OCHECKEDHOVER: TONURCUSTOMCROP read obcheckenters write obcheckenters;
-    property ODISABLE: TONURCUSTOMCROP read obdisabled write obdisabled;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -441,23 +468,16 @@ type
     procedure SetCaptionmod(const val: TONURCapDirection);
     function GetCaptionmod: TONURCapDirection;
     procedure deaktifdigerleri;  /// for radiobutton
+    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMHittest(var msg: TCMHIttest);
+  protected
     procedure SetSkindata(Aimg: TONURImg); override;
-  public
-    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSELEAVE;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure DoOnChange; virtual;
-    procedure CMHittest(var msg: TCMHIttest);
-
-    property ONORMAL: TONURCUSTOMCROP read obleave write obleave;
-    property ONORMALHOVER: TONURCUSTOMCROP read obenter write obenter;
-    property ONORMALDOWN: TONURCUSTOMCROP read obdown write obdown;
-    property OCHECKED: TONURCUSTOMCROP read obcheckleaves write obcheckleaves;
-    property OCHECKEDHOVER: TONURCUSTOMCROP read obcheckenters write obcheckenters;
-    property ODISABLE: TONURCUSTOMCROP read obdisabled write obdisabled;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -500,6 +520,8 @@ type
     property OnResize;
   end;
 
+
+
   { TONURLabel }
 
   TONURlabel = class(TONURGraphicControl)
@@ -535,17 +557,13 @@ type
     procedure SetCharHeight(Value: integer);
     procedure SetString(AValue: TStrings); virtual;
     procedure listchange(Sender: TObject);
+  protected
     Procedure SetSkindata(Aimg: TONURImg); override;
-
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure paint; override;
-
-
-    property OCLIENT: TONURCUSTOMCROP  read fclientp write fclientp;
-
   published
     { Published declarations }
     property Strings: TStrings read Flist write SetString;
@@ -610,7 +628,7 @@ type
   TTextDirection = (tdLeftToRight, tdRightToLeft);
   TTextStylee = (tsPingPong, tsScroll);
 
-  { TONNormalLabel }
+  { TONURNormalLabel }
 
   TONURNormalLabel = class(TGraphicControl)
   private
@@ -651,14 +669,13 @@ type
     procedure DrawFontText;
     procedure FreeTimer;
     procedure Blinktimerevent(sender:TObject);
-    procedure Loaded; override;
   protected
-    { Protected declarations }
-    procedure Paint; override;
+    procedure Loaded; override;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure Paint; override;
   published
     { Published declarations }
     property Flash           : boolean      read fbilink        write SetBilink default False;
@@ -691,21 +708,15 @@ type
     FOnChange: TNotifyEvent;
     Fonclientp, Foffclientp, Fonclientph, Foffclientph,Fdisabled: TONURCUSTOMCROP;
     procedure Setledonoff(val:boolean);
-    procedure SetSkindata(Aimg: TONURImg); override;
  public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
  protected
+    procedure SetSkindata(Aimg: TONURImg); override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
- public
-    property OLEDONNORMAL  : TONURCUSTOMCROP read Fonclientp   write Fonclientp;
-    property OLEDONHOVER   : TONURCUSTOMCROP read Fonclientph  write Fonclientph;
-    property OLEDOFFNORMAL : TONURCUSTOMCROP read Foffclientp  write Foffclientp;
-    property OLEDOFFHOVER  : TONURCUSTOMCROP read Foffclientph write Foffclientph;
-    property ODISABLED     : TONURCUSTOMCROP read Fdisabled    write Fdisabled;
  published
     property Alpha;
     Property LedOn          : Boolean       Read fcheck       write Setledonoff;
@@ -757,32 +768,255 @@ type
   end;
 
 
+  { TONURButtonControlEditor }
+
+  TONURButtonControlEditor = class(TComponentEditor)
+  private
+    procedure AddButton;
+  public
+    function GetVerb(Index: integer): string; override;
+    function GetVerbCount: integer; override;
+    procedure ExecuteVerb(Index: integer); override;
+  end;
+
+   { TONURButtonActiveButtonProperty }
+
+   TONURButtonActiveButtonProperty = class(TComponentProperty)
+  public
+    function GetAttributes: TPropertyAttributes; override;
+    procedure GetValues(Proc: TGetStrProc); override;
+  end;
 procedure Register;
 
 
 
 implementation
 
-uses BGRAPath, LazUnicode,BGRAFreeType, LazFreeTypeFontCollection,BGRATransform;
+uses LazUnicode,Forms,Dialogs;
+
+const
+  StringAddButton  = 'New Button';
+  StringNextButton = 'Next Button';
+  StringPrevButton = 'Previous Button';
+
 
 procedure Register;
 begin
   RegisterComponents('ONUR', [TONURsystemButton]);
   RegisterComponents('ONUR', [TONURCropButton]);
   RegisterComponents('ONUR', [TONURGraphicsButton]);
+  RegisterComponents('ONUR', [TONURNavMenuButton]);
   RegisterComponents('ONUR', [TONURSwich]);
   RegisterComponents('ONUR', [TONURCheckbox]);
   RegisterComponents('ONUR', [TONURRadioButton]);
   RegisterComponents('ONUR', [TONURlabel]);
   RegisterComponents('ONUR', [TONURNormalLabel]);
   RegisterComponents('ONUR', [TONURLed]);
+
+  RegisterClasses([TONURNavMenuButton, TONURNavButton]);
+  RegisterNoIcon([TONURNavButton]);
+
+  RegisterPropertyEditor(TypeInfo(TONURNavButton), TONURNavMenuButton, 'ActiveButton',
+    TONURButtonActiveButtonProperty);
+  RegisterComponentEditor(TONURNavMenuButton, TONURButtonControlEditor);
+  RegisterComponentEditor(TONURNavButton, TONURButtonControlEditor);
 end;
 
+
+
+{ TONURButtonControlEditor }
+
+procedure TONURButtonControlEditor.AddButton;
+var
+  P: TONURNavButton;
+  C: TONURNavMenuButton;
+  Hook: TPropertyEditorHook = nil;
+begin
+  if not GetHook(Hook) then
+    Exit;
+
+  if Component is TONURNavButton then
+    c := TONURNavButton(Component).ButtonControl
+  else
+    c := TONURNavMenuButton(Component);
+
+
+    P := TONURNavButton.Create(C.Owner);
+  try
+    P.Parent := C;
+    P.Name := GetDesigner.CreateUniqueComponentName(p.ClassName);
+    p.Caption := p.Name;
+    P.ButtonControl:= C;
+    c.ActiveButton:=P;
+    Hook.PersistentAdded(P, True);
+    GlobalDesignHook.SelectOnlyThis(P);
+    Modified;
+  except
+    P.Free;
+    raise;
+  end;
+end;
+
+
+
+function TONURButtonControlEditor.GetVerb(Index: integer): string;
+var
+  NavmenuControl: TONURNavMenuButton;
+begin
+  case Index of
+    0: Result := StringAddButton;
+    1: Result := StringNextButton;
+    2: Result := StringPrevButton;
+    else
+    begin
+      Result := '';
+      if Component is TONURNavButton then
+        NavmenuControl := TONURNavButton(Component).ButtonControl
+      else
+        NavmenuControl := TONURNavMenuButton(Component);
+
+      if NavmenuControl <> nil then
+      begin
+        Dec(Index, 3);
+        if Index < NavmenuControl.ButtonCount then
+          Result := 'Open ' + NavmenuControl.Buttons[Index].Name;
+      end;
+    end;
+  end;
+end;
+
+
+function TONURButtonControlEditor.GetVerbCount: integer;
+var
+  NavmenuControl: TONURNavMenuButton;
+  ButtonCount: integer;
+begin
+  ButtonCount := 0;
+  if Component is TONURNavButton then
+    NavmenuControl := TONURNavButton(Component).ButtonControl
+  else
+    NavmenuControl := TONURNavMenuButton(Component);
+
+  if NavmenuControl <> nil then
+    ButtonCount := NavmenuControl.ButtonCount;
+
+
+  Result := 3 + ButtonCount;
+end;
+
+
+procedure TONURButtonControlEditor.ExecuteVerb(Index: integer);
+var
+  NavmenuControl: TONURNavMenuButton;
+  Button: TONURNavButton;
+begin
+  if Component is TONURNavButton then
+    NavmenuControl := TONURNavButton(Component).ButtonControl
+  else
+    NavmenuControl := TONURNavMenuButton(Component);
+
+  if NavmenuControl <> nil then
+  begin
+    if Index = 0 then
+    begin
+      AddButton;
+    end
+    else
+    if Index < 3 then
+    begin
+      Button := NavmenuControl.NextButton(NavmenuControl.ActiveButton, Index = 1);
+      if (Button <> nil) and (Button <> NavmenuControl.ActiveButton) then
+      begin
+        NavmenuControl.ActiveButton := Button;
+        if Component is TONURNavButton then
+          GetDesigner.SelectOnlyThisComponent(Button);
+        GetDesigner.Modified;
+      end;
+    end
+    else
+    begin
+      Dec(Index, 3);
+      if Index < NavmenuControl.ButtonCount then
+      begin
+        Button := NavmenuControl.Buttons[Index];
+        if (Button <> nil) and (Button <> NavmenuControl.ActiveButton) then
+        begin
+          NavmenuControl.ActiveButton := Button;
+          if Component is TONURNavButton then
+            GetDesigner.SelectOnlyThisComponent(Button);
+          GetDesigner.Modified;
+        end;
+      end;
+    end;
+  end;
+end;
+
+{ TONURButtonActiveButtonProperty }
+
+function TONURButtonActiveButtonProperty.GetAttributes: TPropertyAttributes;
+begin
+   Result := [paValueList];
+end;
+
+procedure TONURButtonActiveButtonProperty.GetValues(Proc: TGetStrProc);
+  var
+    I: integer;
+    Component: TComponent;
+  begin
+    if (GlobalDesignHook <> nil) and (GlobalDesignHook.LookupRoot <> nil) and
+      (GlobalDesignHook.LookupRoot is TComponent) then
+      for I := 0 to TComponent(GlobalDesignHook.LookupRoot).ComponentCount - 1 do
+      begin
+        Component := TComponent(GlobalDesignHook.LookupRoot).Components[I];
+        if (Component.Name <> '') and (Component is TONURNavButton) and
+          (TONURNavButton(Component).ButtonControl = GetComponent(0)) then
+          Proc(Component.Name);
+      end;
+end;
 
 
 { TONURsystemButton }
 
 
+function TONURsystemButton.GetButtonType: TONURButtonType;
+begin
+  Result:=fButtonType;
+end;
+
+procedure TONURsystemButton.SetButtonType(AValue: TONURButtonType);
+begin
+  if AValue<>fButtonType then
+  begin
+    FButtonType:=AValue;
+    case FButtonType of
+      OBTNClose    : skinname := 'closebutton';
+      OBTNMinimize : skinname := 'minimizebutton';
+      OBTNMaximize : skinname := 'maximizebutton';
+      OBTNHelp     : skinname := 'helpbutton';
+    end;
+  end;
+
+end;
+
+
+procedure TONURsystemButton.Click;
+begin
+  if Assigned(Skindata) and (Enabled) and not (csDesigning in ComponentState) then
+  case FButtonType of
+    OBTNClose    : Skindata.Fparent.Close;
+    OBTNMinimize : Application.Minimize; //Skindata.Fparent.WindowState:=wsma;
+    OBTNMaximize :
+    begin
+      if Skindata.Fparent.WindowState<>wsMaximized then
+      Skindata.Fparent.WindowState:=wsMaximized
+      else
+      Skindata.Fparent.WindowState:=wsNormal;
+
+      Skindata.Refresh;
+    end;
+    //OBTNHelp     : nil?;
+  end;
+end;
 
 procedure TONURsystemButton.SetSkindata(Aimg: TONURImg);
 begin
@@ -792,6 +1026,7 @@ end;
 constructor TONURsystemButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
+  FButtonType       := OBTNClose;
   skinname          := 'closebutton';
   FNormal           := TONURCUSTOMCROP.Create;
   FNormal.cropname  := 'NORMAL';
@@ -813,6 +1048,9 @@ begin
   Transparent       := True;
   FAutoWidth        := True;
   Resim.SetSize(Width, Height);
+
+  //Align := alRight; // for parent right
+
 end;
 
 destructor TONURsystemButton.Destroy;
@@ -837,7 +1075,7 @@ begin
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-    try
+
       if Enabled = True then
       begin
         case Fstate of
@@ -866,9 +1104,6 @@ begin
 
       DrawPartstrech(DR, self, Width, Height, alpha);
 
-    finally
-
-    end;
   end
   else
   begin
@@ -931,6 +1166,7 @@ begin
   Invalidate;
 end;
 
+
 { TONURRadioButton }
 
 procedure TONURRadioButton.SetChecked(Value: boolean);
@@ -961,7 +1197,6 @@ begin
    if fcaptiondirection = val then
     exit;
   fcaptiondirection := val;
-  //  paint;
   Invalidate;
 end;
 
@@ -992,20 +1227,17 @@ begin
 end;
 
 procedure TONURRadioButton.SetSkindata(Aimg: TONURImg);
-var
- fbuttoncenter: integer;
 begin
   inherited SetSkindata(Aimg);
-
 end;
 
-procedure TONURRadioButton.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURRadioButton.CMonmouseenter(var Messages: Tmessage);
 begin
   fstate := obshover;
   Invalidate;
 end;
 
-procedure TONURRadioButton.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURRadioButton.CMonmouseleave(var Messages: Tmessage);
 begin
  fstate := obsnormal;
   Invalidate;
@@ -1019,13 +1251,8 @@ begin
 
   if Button = mbLeft then
   begin
-   // fchecked := not fchecked;
     fState := obspressed;
-    //if Assigned(FOnChange) then FOnChange(Self);
     SetChecked(true);
-   // deaktifdigerleri;
-   //  Invalidate;
-
   end;
 end;
 
@@ -1094,14 +1321,7 @@ begin
  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
  Customcroplist.Clear;
-{begin
-  FreeAndNil(obenter);
-  FreeAndNil(obleave);
-  FreeAndNil(obdown);
-  FreeAndNil(obcheckenters);
-  FreeAndNil(obcheckleaves);
-  FreeAndNil(obdisabled); }
-  inherited Destroy;
+ inherited Destroy;
 end;
 
 procedure TONURRadioButton.Paint;
@@ -1122,7 +1342,7 @@ begin
       ocup:
       begin
         textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := obleave.Croprect.Top;//fborderWidth;
+        Texty := DR.top;//obleave.Croprect.Top;//fborderWidth;
         fbuttoncenter := ((self.clientHeight div 2) div 2) + (fcheckwidth div 2);
         Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
           fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
@@ -1130,7 +1350,7 @@ begin
       ocdown:
       begin
         textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := ((self.clientHeight div 2)) + obleave.Croprect.Top;// + fborderWidth;
+        Texty := ((self.clientHeight div 2)) + DR.Top;//obleave.Croprect.Top;// + fborderWidth;
         fbuttoncenter := ((self.clientHeight div 2) div 2) - (fcheckwidth div 2);
         Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
           fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
@@ -1232,11 +1452,7 @@ begin
   try
     while not Terminated do
     begin
-      {$IFDEF UNIX}
-      RTLEventWaitFor(@self.handle, FInterval);
-      {$ELSE}
       WaitForSingleObject(self.Handle, FInterval);
-     {$ENDIF}
       Synchronize(@Call);
     end;
   except
@@ -1472,8 +1688,6 @@ begin
   FBuffer.SetSize(FBuffer.TextSize(FText).cx, self.ClientHeight);
   FBuffer.TextRect(FBuffer.ClipRect,FText,taLeftJustify,tlcenter,BGRAToColor(self.font.color));
 
-  //FBuffer.TextOut(0, 0, FText, BGRAToColor(self.font.color), False);
-
   if FBuffer.Width> self.Width then
    fyazibuyuk:=true
   else
@@ -1629,15 +1843,7 @@ begin
  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
  Customcroplist.Clear;
-{begin
-  FreeAndNil(Fonclientp);
-  FreeAndNil(Fonclientph);
-  FreeAndNil(Foffclientp);
-  FreeAndNil(Foffclientph);
-  FreeAndNil(Fdisabled); }
-
-
-  inherited Destroy;
+ inherited Destroy;
 End;
 
 
@@ -1650,12 +1856,9 @@ procedure TONURLed.Paint;
 var
   TrgtRect, SrcRect: TRect;
 begin
-//  if csDesigning in ComponentState then
-//    exit;
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
@@ -1701,6 +1904,8 @@ Begin
   fmouseon:=false;
   Invalidate;
 End;
+
+
 
 { TONURLabel }
 
@@ -1990,14 +2195,10 @@ end;
 
 procedure TONURLabel.paint;
 var
-  TrgtRect, SrcRect: TRect;
+  TrgtRect: TRect;
    img: TBGRACustomBitmap;
 begin
-
-//  if csDesigning in ComponentState then
-//     exit;
-   if not Visible then exit;
-
+  if not Visible then exit;
   resim.SetSize(0,0);
 
   resim.Setsize((Length(self.Caption) * CharWidth),self.ClientHeight);
@@ -2006,13 +2207,13 @@ begin
   tempbitmap.SetSize(fclientp.Croprect.Width, fclientp.Croprect.Height);
   FBitmap.SetSize(0,0);
 
-//  if (Skindata <> nil) then
+
  if (Skindata <> nil) and not (csDesigning in ComponentState) then
-  begin
+ begin
     TrgtRect := Rect(0, 0, tempbitmap.Width, tempbitmap.Height);
     DrawPartnormalbmp(fclientp.Croprect, self, tempbitmap, TrgtRect, Alpha);
     Getbmp;
-  end;
+ end;
 
 
   if not FStretch then
@@ -2143,31 +2344,6 @@ begin
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
-
- { FreeAndNil(FNormal);
-  FreeAndNil(FNormalleft);
-  FreeAndNil(FNormalright);
-  FreeAndNil(FNormaltop);
-  FreeAndNil(FNormalbottom);
-
-  FreeAndNil(FPress);
-  FreeAndNil(FPressleft);
-  FreeAndNil(FPressright);
-  FreeAndNil(FPresstop);
-  FreeAndNil(FPressbottom);
-
-  FreeAndNil(FEnter);
-  FreeAndNil(FEnterleft);
-  FreeAndNil(FEnterright);
-  FreeAndNil(FEntertop);
-  FreeAndNil(FEnterbottom);
-
-  FreeAndNil(Fdisable);
-  FreeAndNil(Fdisableleft);
-  FreeAndNil(Fdisableright);
-  FreeAndNil(Fdisabletop);
-  FreeAndNil(Fdisablebottom);  }
-
   inherited Destroy;
 end;
 
@@ -2208,12 +2384,10 @@ procedure TONURCropButton.Paint;
 var
   DR,DRL,DRR,DRT,DRB: TRect;
 begin
-//  if csDesigning in ComponentState then
-//    exit;
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.Width, Self.Height);
-//  if (Skindata <> nil) then
+
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
@@ -2483,7 +2657,6 @@ begin
   Height := 30;
   Transparent := True;
 
-  //  ControlStyle := ControlStyle + [csClickEvents, csDoubleClicks, csCaptureMouse];
   FAutoWidth := True;
   resim.SetSize(ClientWidth, ClientHeight);
 end;
@@ -2498,29 +2671,6 @@ begin
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
-{  FreeAndNil(FNormal);
-  FreeAndNil(FNormalleft);
-  FreeAndNil(FNormalright);
-  FreeAndNil(FNormaltop);
-  FreeAndNil(FNormalbottom);
-
-  FreeAndNil(FPress);
-  FreeAndNil(FPressleft);
-  FreeAndNil(FPressright);
-  FreeAndNil(FPresstop);
-  FreeAndNil(FPressbottom);
-
-  FreeAndNil(FEnter);
-  FreeAndNil(FEnterleft);
-  FreeAndNil(FEnterright);
-  FreeAndNil(FEntertop);
-  FreeAndNil(FEnterbottom);
-
-  FreeAndNil(Fdisable);
-  FreeAndNil(Fdisableleft);
-  FreeAndNil(Fdisableright);
-  FreeAndNil(Fdisabletop);
-  FreeAndNil(Fdisablebottom); }
   inherited Destroy;
 end;
 
@@ -2559,13 +2709,9 @@ procedure TONURGraphicsButton.Paint;
 var
   DR,DRL,DRR,DRT,DRB: TRect;
 begin
-//  if csDesigning in ComponentState then
-//    exit;
   if not Visible then exit;
-
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-  //if (Skindata <> nil) then
  if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
@@ -2614,7 +2760,7 @@ begin
       DrawPartnormal(DRR, self,FNormalright.Targetrect,alpha);
       DrawPartnormal(DRT, self,FNormaltop.Targetrect,alpha);
       DrawPartnormal(DRB, self,FNormalbottom.Targetrect,alpha);
-      DrawPartnormal(DR, self, Fnormal.Targetrect,alpha); //Width, ClientHeight, falpha);
+      DrawPartnormal(DR, self, Fnormal.Targetrect,alpha);
 
     finally
 
@@ -2628,6 +2774,424 @@ begin
 end;
 
 
+
+{ TONURNavMenuButton }
+
+function TONURNavMenuButton.GetButtons(Index: integer): TONURNavButton;
+begin
+  Result := TONURNavButton(FButton[Index]);
+end;
+
+function TONURNavMenuButton.GetButtonCount: integer;
+begin
+  Result := FButton.Count;
+end;
+
+function TONURNavMenuButton.GetActiveButtonIndex: integer;
+begin
+  if Assigned(factiveButton) then
+    Result := FButton.IndexOf(factiveButton)
+  else
+    Result := -1;
+end;
+
+procedure TONURNavMenuButton.SetSkindata(Aimg: TONURImg);
+var
+  i:integer;
+begin
+  inherited SetSkindata(Aimg); FTopleft.Targetrect  := Rect(0, 0, FTopleft.Width,FTopleft.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width, 0, self.clientWidth, FTopRight.Height);
+  Ftop.Targetrect:= Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width, FTop.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height, FBottomleft.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,  self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Width,self.clientHeight - FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Height,Fleft.Width, self.clientHeight - FBottomleft.Height);
+
+  FRight.Targetrect := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.clientWidth, self.clientHeight - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
+
+
+   if Fbutton.Count > 0 then
+    for i := 0 to Fbutton.Count - 1 do
+    begin
+      if self.Skindata <> nil then
+      Buttons[i].Skindata:=self.Skindata;
+//        TONURGraphicsButton(i).Skindata := self.Skindata;// Paint;
+    end;
+
+end;
+
+procedure TONURNavMenuButton.MouseEnter;
+begin
+  inherited MouseEnter;
+end;
+
+procedure TONURNavMenuButton.MouseLeave;
+begin
+  inherited MouseLeave;
+end;
+
+procedure TONURNavMenuButton.MouseDown(Button: TMouseButton;
+  Shift: TShiftState; X: integer; Y: integer);
+begin
+  inherited MouseDown(Button, Shift, X, Y);
+end;
+
+procedure TONURNavMenuButton.MouseUp(Button: TMouseButton; Shift: TShiftState;
+  X: integer; Y: integer);
+begin
+  inherited MouseUp(Button, Shift, X, Y);
+end;
+
+procedure TONURNavMenuButton.ShowControl(AControl: TControl);
+begin
+   if (AControl is TONURNavButton) and (TONURNavButton(AControl).ButtonControl = Self) then
+    SetActiveButton(TONURNavButton(AControl));
+  inherited ShowControl(AControl);
+end;
+
+procedure TONURNavMenuButton.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited Notification(AComponent, Operation);
+   if Operation = opRemove then
+   begin
+     if (AComponent is TONURNavButton) and (TONURNavButton(AComponent).ButtonControl = Self) then
+       RemoveButton(TONURNavButton(AComponent));
+   end;
+end;
+
+procedure TONURNavMenuButton.SetActiveButton(Buttoni: TONURNavButton);
+var
+  AOldButton: TONURGraphicsButton;
+  AButtonChanged: boolean;
+begin
+  AButtonChanged := False;
+  if not (csDestroying in ComponentState) then
+  begin
+    if (Assigned(Buttoni) and (Buttoni.ButtonControl = Self)) or (Buttoni = nil) then
+    begin
+      if Assigned(FActiveButton) then
+      begin
+        if FActiveButton <> Buttoni then
+        begin
+          AOldButton := FActiveButton;
+          FActiveButton := Buttoni;
+         // AOldButton.Visible := False;
+          AOldButton.Enabled := True;
+          FActiveButton.Enabled := False;
+      //    FActiveButton.Visible := False;
+          if csDesigning in ComponentState then
+          begin
+            FActiveButton.BringToFront;
+            AOldButton.SendToBack;
+            Invalidate;
+          end;
+
+          AButtonChanged := True;
+        end;
+      end
+      else
+      begin
+        FActiveButton := Buttoni;
+        FActiveButton.Visible := True;
+      //  factiveButton.Enabled := False;
+        AButtonChanged := True;
+      end;
+    end;
+  end;
+  if AButtonChanged then DoButtonChanged;
+
+
+end;
+
+procedure TONURNavMenuButton.SetActiveButtonIndex(ButtonIndex: integer);
+begin
+  if not (csLoading in ComponentState) then
+    SetActiveButton(Buttons[ButtonIndex]);
+end;
+
+procedure TONURNavMenuButton.DoButtonChanged;
+begin
+  if not (csDestroying in ComponentState) and Assigned(FbuttonChanged) then
+    FbuttonChanged(Self);
+end;
+
+function TONURNavMenuButton.DoButtonChanging(NewButtonIndex: integer): boolean;
+begin
+   Result := True;
+  if Assigned(FbuttonChanging) then
+    FbuttonChanging(Self, NewbuttonIndex, Result);
+end;
+
+
+constructor TONURNavMenuButton.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  parent            := TWinControl(Aowner);
+  Width             := 300;
+  Height            := 40;
+  TabStop           := True;
+  FButton           := TList.Create;
+  Font.Name         := 'Calibri';
+  Font.Size         := 9;
+  TabStop           := True;
+  Align             := alTop;
+
+  skinname          := 'Navmenu';
+  FTop              := TONURCUSTOMCROP.Create;
+  FTop.cropname     := 'TOP';
+  FBottom           := TONURCUSTOMCROP.Create;
+  FBottom.cropname  := 'BOTTOM';
+  FCenter           := TONURCUSTOMCROP.Create;
+  FCenter.cropname  := 'CENTER';
+  FRight            := TONURCUSTOMCROP.Create;
+  FRight.cropname   := 'RIGHT';
+  FTopRight         := TONURCUSTOMCROP.Create;
+  FTopRight.cropname := 'TOPRIGHT';
+  FBottomRight       := TONURCUSTOMCROP.Create;
+  FBottomRight.cropname := 'BOTTOMRIGHT';
+  Fleft                 := TONURCUSTOMCROP.Create;
+  Fleft.cropname        := 'LEFT';
+  FTopleft              := TONURCUSTOMCROP.Create;
+  FTopleft.cropname     := 'TOPLEFT';
+  FBottomleft           := TONURCUSTOMCROP.Create;
+  FBottomleft.cropname  := 'BOTTOMLEFT';
+  Captionvisible        := False;
+
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+
+end;
+
+destructor TONURNavMenuButton.Destroy;
+ var
+  A: integer;
+begin
+  for A := Fbutton.Count - 1 downto 0 do
+    Buttons[A].Free;
+
+   for A:=0 to Customcroplist.Count-1 do
+  TONURCUSTOMCROP(Customcroplist.Items[A]).free;
+
+  Customcroplist.Clear;
+  Fbutton.Free;
+  inherited Destroy;
+end;
+
+procedure TONURNavMenuButton.Paint;
+begin
+   if not Visible then exit;
+
+     resim.SetSize(0, 0);
+     resim.SetSize(self.ClientWidth, self.ClientHeight);
+
+
+
+     if (Skindata <> nil) and not (csDesigning in ComponentState) then
+     begin
+
+       //CENTER //ORTA
+       DrawPartnormal(Fcenter.Croprect, self, FCenter.Targetrect, alpha);
+
+       //TOPLEFT   //SOLÜST
+       DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
+       //TOPRIGHT //SAĞÜST
+       DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
+       //TOP  //ÜST
+       DrawPartnormal(ftop.Croprect, self, FTop.Targetrect, alpha);
+       //BOTTOMLEFT // SOLALT
+       DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
+       //BOTTOMRIGHT  //SAĞALT
+       DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
+       //BOTTOM  //ALT
+       DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
+       //LEFT CENTERLEFT // SOLORTA
+       DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
+       //CENTERRIGHT // SAĞORTA
+       DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
+
+       if Crop then
+         CropToimg(resim);
+     end
+     else
+     begin
+       resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
+     end;
+
+  inherited Paint;
+end;
+
+function TONURNavMenuButton.NewButton: TONURNavButton;
+begin
+  Result := TONURNavButton.Create(nil);
+  Result.ButtonControl := Self;
+  ActiveButton := Result;
+end;
+
+procedure TONURNavMenuButton.InsertButton(Buttoni: TONURNavButton);
+begin
+  FButton.Add(Buttoni);
+  Buttoni.FButtonControl := Self;
+  Buttoni.FreeNotification(Self);
+end;
+
+procedure TONURNavMenuButton.RemoveButton(Buttoni: TONURNavButton);
+ var
+   AButton: TONURNavButton;
+ begin
+   if factiveButton = Buttoni then
+   begin
+     AButton := NextButton(FActiveButton, True);
+     if AButton = Buttoni then FActiveButton := nil
+     else
+       FActiveButton := AButton;
+   end;
+   FButton.Remove(Buttoni);
+   Buttoni.FButtonControl := nil;
+   if not (csDestroying in ComponentState) then
+     Invalidate;
+
+end;
+
+function TONURNavMenuButton.NextButton(CurButton: TONURNavButton;
+  GoForward: boolean): TONURNavButton;
+  var
+    StartIndex: integer;
+  begin
+    Result := nil;
+    if FButton.Count <> 0 then
+    begin
+      StartIndex := FButton.IndexOf(CurButton);
+      if StartIndex = -1 then
+      begin
+        if GoForward then
+          StartIndex := FButton.Count - 1
+        else
+          StartIndex := 0;
+      end;
+      if GoForward then
+      begin
+        Inc(StartIndex);
+        if StartIndex = FButton.Count then
+          StartIndex := 0;
+      end
+      else
+      begin
+        if StartIndex = 0 then
+          StartIndex := FButton.Count;
+        Dec(StartIndex);
+      end;
+      Result := Buttons[StartIndex];
+    end;
+end;
+
+procedure TONURNavMenuButton.SelectNextButton(GoForward: boolean);
+begin
+  SetActiveButton(NextButton(ActiveButton, GoForward));
+end;
+
+
+
+
+
+{ TONURNavButton }
+
+function TONURNavButton.GetButtonOrderIndex: integer;
+begin
+  if FButtonControl <> nil then
+    Result := FButtonControl.FButton.IndexOf(Self)
+  else
+    Result := -1;
+end;
+
+function TONURNavButton.GetOrderIndex: integer;
+begin
+
+end;
+
+procedure TONURNavButton.Getposition;
+begin
+
+end;
+
+procedure TONURNavButton.SetButtonControl(ANavButton: TONURNavMenuButton);
+begin
+ if FButtonControl <> ANavButton then
+  begin
+
+    if FButtonControl <> nil then
+      FButtonControl.RemoveButton(Self);
+
+    FButtonControl := ANavButton;
+
+    Parent := FButtonControl;
+
+    if FButtonControl <> nil then
+    begin
+      FButtonControl.InsertButton(Self);
+
+    {  Fbutton := TONURPageButton.Create(self);
+
+      with fbutton do
+      begin
+        parent := FPageControl.btnarea;
+        align := alleft;
+        tag := self.GetPageOrderIndex;
+        OnClick := @self.FPageControl.buttonclicke;
+        Caption := self.Caption;
+        AutoWidth := self.AutoCaptionWidth;
+        // BorderSpacing.Bottom:=5;
+      end;
+      }
+      Skindata := FButtonControl.Skindata;
+      Getposition;
+      Invalidate;
+    end;
+  end;
+end;
+
+procedure TONURNavButton.SetButtonOrderIndex(Value: integer);
+ var
+    MaxPageIndex: integer;
+  begin
+    if FButtonControl <> nil then
+    begin
+      MaxPageIndex := FButtonControl.FButton.Count - 1;
+      if Value > MaxPageIndex then
+        raise EListError.CreateFmt('Sheet Index Error', [Value, MaxPageIndex]);
+      FButtonControl.FButton.Move(ButtonOrderIndex, Value);
+    end;
+end;
+
+procedure TONURNavButton.ReadState(Reader: TReader);
+begin
+   inherited ReadState(Reader);
+  if Reader.Parent is TONURNavMenuButton then
+    ButtonControl := TONURNavMenuButton(Reader.Parent);
+end;
+
+procedure TONURNavButton.Loaded;
+begin
+   inherited Loaded;
+  if (csDesigning in ComponentState) and not Visible then
+    SendToBack;
+end;
+
+constructor TONURNavButton.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  Align:=alLeft;
+  Skinname:='navbutton';
+  Enabled:=true;
+end;
 
 
 
@@ -2645,7 +3209,7 @@ end;
 
 
 
-procedure TONURSwich.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURSwich.CMonmouseenter(var Messages: Tmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2655,7 +3219,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURSwich.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURSwich.CMonmouseleave(var Messages: Tmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2733,11 +3297,6 @@ begin
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
-{  FreeAndNil(FOpen);
-  FreeAndNil(Fclose);
-  FreeAndNil(Fopenhover);
-  FreeAndNil(Fclosehover);
-  FreeAndNil(Fdisable);}
   inherited Destroy;
 end;
 
@@ -2750,16 +3309,12 @@ end;
 
 procedure TONURSwich.Paint;
 var
-  //  HEDEF,
   DR: TRect;
 begin
-//  if csDesigning in ComponentState then
-//    Exit;
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
- // if (Skindata <> nil) then
-    // or (FSkindata.Fimage <> nil) or (csDesigning in ComponentState) then
+
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
@@ -2770,20 +3325,14 @@ begin
           case Fstate of
             obsNormal:
             begin
-              DR := FOpen.Croprect;//Rect(FOpen.FSLeft, FOpen.FSTop, FOpen.FSRight, FOpen.FSBottom);
+              DR := FOpen.Croprect;
               Self.Font.Color := FOpen.Fontcolor;
             end;
             obshover:
             begin
-              DR := Fopenhover.Croprect;//Rect(Fopenhover.FSLeft, Fopenhover.FSTop, Fopenhover.FSRight, Fopenhover.FSBottom);
+              DR := Fopenhover.Croprect;
               Self.Font.Color := Fopenhover.Fontcolor;
             end;
-          {  obspressed:
-            begin
-              DR := Rect(FDown.FSLeft, FEnter.FSTop,
-                FEnter.FSRight, FEnter.FSBottom);
-              Self.Font.Color:=FEnter.Fontcolor;
-            end;       }
           end;
         end
         else
@@ -2791,26 +3340,20 @@ begin
           case Fstate of
             obsNormal:
             begin
-              DR := Fclose.Croprect;//Rect(Fclose.FSLeft, Fclose.FSTop, Fclose.FSRight, Fclose.FSBottom);
+              DR := Fclose.Croprect;
               Self.Font.Color := Fclose.Fontcolor;
             end;
             obshover:
             begin
-              DR := Fclosehover.Croprect;//Rect(Fclosehover.FSLeft, Fclosehover.FSTop, Fclosehover.FSRight, Fclosehover.FSBottom);
+              DR := Fclosehover.Croprect;
               Self.Font.Color := Fclosehover.Fontcolor;
             end;
-          {  obspressed:
-            begin
-              DR := Rect(FDown.FSLeft, FEnter.FSTop,
-                FEnter.FSRight, FEnter.FSBottom);
-              Self.Font.Color:=FEnter.Fontcolor;
-            end;       }
           end;
         end;
       end
       else
       begin
-        DR := Fdisable.Croprect;//Rect(Fdisable.FSLeft, Fdisable.FSTop, Fdisable.FSRight, Fdisable.FSBottom);
+        DR := Fdisable.Croprect;
         Self.Font.Color := Fdisable.Fontcolor;
       end;
 
@@ -2832,17 +3375,11 @@ end;
 
 { TONURCheckbox }
 
-
-
 procedure TONURCheckbox.SetChecked(Value: boolean);
 begin
   if FChecked <> Value then
   begin
     FChecked := Value;
-
- //   if (self is TONURRadioButton) then
- //     deaktifdigerleri;
-
     Invalidate;
   end;
 end;
@@ -2871,41 +3408,14 @@ begin
   Result := fcaptiondirection;
 end;
 
-procedure TONURCheckbox.deaktifdigerleri;
-var
-  i: integer;
-  Sibling: TControl;
-begin
 
-  if self.Parent <> nil then
-    with self.Parent do
-    begin
-      for i := 0 to ControlCount - 1 do
-      begin
-        Sibling := Controls[i];
-        if (Controls[i] is TONURRadioButton) and (Sibling <> Self)  then
-        begin
-          TONURRadioButton(Sibling).SetChecked(False);// Checked := False;
-          TONURRadioButton(Sibling).fstate := obsnormal;// Checked := False;
-      //    ShowMessage(self.Parent.Name);
-         // Invalidate;
-        end;
-      end;
-
-    end;
-  fChecked:=true;
-end;
-
-
-
-
-procedure TONURCheckbox.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURCheckbox.CMonmouseenter(var Messages: Tmessage);
 begin
   fstate := obshover;
   Invalidate;
 end;
 
-procedure TONURCheckbox.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURCheckbox.CMonmouseleave(var Messages: Tmessage);
 begin
   fstate := obsnormal;
   Invalidate;
@@ -2989,22 +3499,11 @@ begin
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
-{begin
-  FreeAndNil(obenter);
-  FreeAndNil(obleave);
-  FreeAndNil(obdown);
-  FreeAndNil(obcheckenters);
-  FreeAndNil(obcheckleaves);
-  FreeAndNil(obdisabled);
 
-  }
   inherited Destroy;
 end;
 
 procedure TONURCheckbox.SetSkindata(Aimg: TONURImg);
-var
-   fbuttoncenter: integer;
-
 begin
   inherited SetSkindata(Aimg);
 end;
@@ -3012,14 +3511,13 @@ end;
 procedure TONURCheckbox.Paint;
 var
   DR: TRect; 
-   fbuttoncenter: integer;
+  fbuttoncenter: integer;
 begin
-//  if csDesigning in ComponentState then
-//     Exit;
+
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-//  if (Skindata <> nil) then
+
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
@@ -3030,17 +3528,17 @@ begin
         case Fstate of
           obsNormal:
           begin
-            DR :=obcheckleaves.Croprect;// Rect(obcheckleaves.FSLeft, obcheckleaves.FSTop,obcheckleaves.FSRight, obcheckleaves.FSBottom);
+            DR :=obcheckleaves.Croprect;
             Self.Font.Color := obcheckleaves.Fontcolor;
           end;
           obshover:
           begin
-            DR :=obcheckenters.Croprect;// Rect(obcheckenters.FSLeft, obcheckenters.FSTop, obcheckenters.FSRight, obcheckenters.FSBottom);
+            DR :=obcheckenters.Croprect;
             Self.Font.Color := obcheckenters.Fontcolor;
           end;
           obspressed:
           begin
-            DR := obdown.Croprect;//Rect(obdown.FSLeft, obdown.FSTop, obdown.FSRight, obdown.FSBottom);
+            DR := obdown.Croprect;
             Self.Font.Color := obdown.Fontcolor;
           end;
         end;
@@ -3050,17 +3548,17 @@ begin
         case Fstate of
           obsNormal:
           begin
-            DR := obleave.Croprect;// Rect(obleave.FSLeft, obleave.FSTop, obleave.FSRight, obleave.FSBottom);
+            DR := obleave.Croprect;
             Self.Font.Color := obleave.Fontcolor;
           end;
           obshover:
           begin
-            DR := obenter.Croprect;//Rect(obenter.FSLeft, obenter.FSTop,obenter.FSRight, obenter.FSBottom);
+            DR := obenter.Croprect;
             Self.Font.Color := obenter.Fontcolor;
           end;
           obspressed:
           begin
-            DR := obdown.Croprect;//Rect(obdown.FSLeft, obdown.FSTop, obdown.FSRight, obdown.FSBottom);
+            DR := obdown.Croprect;
             Self.Font.Color := obdown.Fontcolor;
           end;
         end;
@@ -3068,15 +3566,9 @@ begin
     end
     else
     begin
-      DR := obdisabled.Croprect;//Rect(obdisabled.FSLeft, obdisabled.FSTop, obdisabled.FSRight, obdisabled.FSBottom);
+      DR := obdisabled.Croprect;
       Self.Font.Color := obdisabled.Fontcolor;
     end;
-
-
-
-    //  DrawPartstrech(DR, self, fcheckwidth,fcheckwidth);//Width, Height);
-   // DrawPartnormal(DR, Self, Fclientrect, alpha);
-
   end
   else
   begin
@@ -3088,7 +3580,7 @@ begin
       ocup:
       begin
         textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := obleave.Croprect.Top;//fborderWidth;
+        Texty := DR.Top; //obleave.Croprect.Top;//fborderWidth;
         fbuttoncenter := ((self.clientHeight div 2) div 2) + (fcheckwidth div 2);
         Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
           fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
@@ -3096,7 +3588,7 @@ begin
       ocdown:
       begin
         textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := ((self.clientHeight div 2)) + obleave.Croprect.Top;// + fborderWidth;
+        Texty := (self.clientHeight div 2) + Dr.Top;//obleave.Croprect.Top;// + fborderWidth;
         fbuttoncenter := ((self.clientHeight div 2) div 2) - (fcheckwidth div 2);
         Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
           fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
@@ -3123,11 +3615,14 @@ begin
 
   inherited paint;
 
+
   if Length(Caption) > 0 then
   begin
+    //self.resim.TextOut(textx,Texty,(Caption+' RRR'),ColorToBGRA(self.font.Color));
     canvas.Brush.Style := bsClear;
-    canvas.TextOut(Textx, Texty, (Caption));
+    canvas.TextOut(Textx, Texty, Caption);
   end;
+  //inherited paint;
 end;
 
 

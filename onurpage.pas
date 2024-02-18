@@ -6,9 +6,9 @@ unit onurpage;
 interface
 
 uses
-  SysUtils, Forms, LCLType, LCLIntf, Classes,
-  Controls, Graphics, ExtCtrls, BGRABitmap, BGRABitmapTypes,
-  Dialogs, onurctrl, ComponentEditors, PropEdits, TypInfo;
+  SysUtils, Classes,
+  Controls, Graphics, BGRABitmap, BGRABitmapTypes,
+  onurctrl, ComponentEditors, PropEdits;
 
 type
   TONURPageControl = class;
@@ -17,35 +17,26 @@ type
 
   TONURPageButton = class(TONURGraphicControl)
   private
-    Fnormal: TONURCUSTOMCROP;
-    FPress: TONURCUSTOMCROP;
-    FEnter: TONURCUSTOMCROP;
-    Fdisable: TONURCUSTOMCROP;
-    Fstate: TONURButtonState;
-    FAutoWidth: boolean;
+    Fnormal    : TONURCUSTOMCROP;
+    FPress     : TONURCUSTOMCROP;
+    FEnter     : TONURCUSTOMCROP;
+    Fdisable   : TONURCUSTOMCROP;
+    Fstate     : TONURButtonState;
+    FAutoWidth : boolean;
   protected
     procedure SetAutoWidth(const Value: boolean);
     procedure CheckAutoWidth;
-  public
-    // fPgCntrl     : TONURPageControl;
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-    procedure Paint; override;
     procedure MouseEnter; override;
     procedure MouseLeave; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    property OENTER   : TONURCUSTOMCROP read FEnter   write FEnter;
-    property ONORMAL  : TONURCUSTOMCROP read Fnormal  write Fnormal;
-    property OPRESS   : TONURCUSTOMCROP read FPress   write FPress;
-    property ODISABLE : TONURCUSTOMCROP read Fdisable write Fdisable;
-
-    //   property PageCntrl : TONURPageControl read fPgCntrl write setPgCntrl;
-  protected
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Paint; override;
   published
-
     property Skindata;
     property AutoWidth: boolean read FAutoWidth write SetAutoWidth default True;
     property OnMouseDown;
@@ -83,7 +74,6 @@ type
 
   TONURPage = class(TONURCustomControl)
   private
-
     Fcaption: TCaption;
     FPageControl: TONURPageControl;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
@@ -106,15 +96,6 @@ type
     destructor Destroy; override;
     procedure Paint; override;
     property PageControl  : TONURPageControl read FPageControl write SetPageControl;
-    property OLEFT        : TONURCUSTOMCROP  read Fleft        write Fleft;
-    property ORIGHT       : TONURCUSTOMCROP  read FRight       write FRight;
-    property OCENTER      : TONURCUSTOMCROP  read FCenter      write FCenter;
-    property OBOTTOM      : TONURCUSTOMCROP  read FBottom      write FBottom;
-    property OBOTTOMLEFT  : TONURCUSTOMCROP  read FBottomleft  write FBottomleft;
-    property OBOTTOMRIGHT : TONURCUSTOMCROP  read FBottomRight write FBottomRight;
-    property OTOP         : TONURCUSTOMCROP  read FTop         write FTop;
-    property OTOPLEFT     : TONURCUSTOMCROP  read FTopleft     write FTopleft;
-    property OTOPRIGHT    : TONURCUSTOMCROP  read FTopRight    write FTopRight;
   published
     Fbutton: TONURPageButton;
     property AutoCaptionWidth: boolean read GetAutoWidth write SetAutoWidth default True;
@@ -165,7 +146,6 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
-    property OCLIENT: TONURCUSTOMCROP read Fbttnarea write Fbttnarea;
   end;
 
   TPageChangingEvent = procedure(Sender: TObject; NewPageIndex: integer;
@@ -175,7 +155,6 @@ type
 
   TONURPageControl = class(TONURCustomControl)
   private
-
     FPages: TList;
     FActivePage: TONURPage;
     FPageChanged: TNotifyEvent;
@@ -190,13 +169,11 @@ type
     function GetActivePageIndex: integer;
     procedure SetButtonDirection(val: TONURButtonDirection);
   protected
-
     procedure SetSkindata(Aimg: TONURImg); override;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
     procedure SetChildOrder(Child: TComponent; Order: integer); override;
     procedure ShowControl(AControl: TControl); override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
-
     procedure SetActivePage(Page: TONURPage); virtual;
     procedure SetActivePageIndex(PageIndex: integer); virtual;
     procedure DoPageChanged; virtual;
@@ -216,16 +193,6 @@ type
     procedure SelectNextPage(GoForward: boolean);
     property PageCount: integer read GetPageCount;
     property Pages[Index: integer]: TONURPage read GetPage;
-    property OLEFT        : TONURCUSTOMCROP read Fleft        write Fleft;
-    property ORIGHT       : TONURCUSTOMCROP read FRight       write FRight;
-    property OCENTER      : TONURCUSTOMCROP read FCenter      write FCenter;
-    property OBOTTOM      : TONURCUSTOMCROP read FBottom      write FBottom;
-    property OBOTTOMLEFT  : TONURCUSTOMCROP read FBottomleft  write FBottomleft;
-    property OBOTTOMRIGHT : TONURCUSTOMCROP read FBottomRight write FBottomRight;
-    property OTOP         : TONURCUSTOMCROP read FTop         write FTop;
-    property OTOPLEFT     : TONURCUSTOMCROP read FTopleft     write FTopleft;
-    property OTOPRIGHT    : TONURCUSTOMCROP read FTopRight    write FTopRight;
-    property OBUTTONAREA  : TONURCUSTOMCROP read Fbuttonarea  write Fbuttonarea;
   published
     btnarea: TONURButtonAreaCntrl;
     property ActivePage: TONURPage read FActivePage write SetActivePage;
@@ -342,7 +309,7 @@ procedure Register;
 
 implementation
 
-uses  BGRAPath;
+uses Dialogs;
 
 const
   StringAddPage = 'New Page';
@@ -402,9 +369,7 @@ begin
     try
       if dlg.Execute then
       begin
-        //(GetOnComponent as TONImg).LoadSkins:=dlg.FileName;
         (GetOnComponent as TONURImg).Loadskin(dlg.FileName);
-
         SetStrValue(dlg.FileName);
       end;
     finally
@@ -480,7 +445,6 @@ begin
     P.PageControl := C;
     C.ActivePage := P;
     Hook.PersistentAdded(P, True);
-    //     GetDesigner.SelectOnlyThisComponent(P);
     GlobalDesignHook.SelectOnlyThis(P);
     Modified;
   except
@@ -657,18 +621,6 @@ begin
 
   Customcroplist.Clear;
   FPages.Free;
-
- { FreeAndNil(FTop);
-  FreeAndNil(FBottom);
-  FreeAndNil(FCenter);
-  FreeAndNil(FRight);
-  FreeAndNil(Fleft);
-  FreeAndNil(FTopRight);
-  FreeAndNil(FBottomRight);
-  FreeAndNil(FTopleft);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(Fbuttonarea);
-  }
   btnarea.Free;
 
   inherited Destroy;
@@ -1001,13 +953,11 @@ begin
 
   DoubleBuffered := True;
   ParentBackground := True;
-  //  Fresim :=TBGRABitmap.Create;
   Self.Height := 190;
   Self.Width := 190;
   Visible := False;
 
   //Align := alClient;
-
 
   skinname := 'pagecontrol';
   FTop := TONURCUSTOMCROP.Create;
@@ -1035,7 +985,7 @@ begin
   Customcroplist.Add(FBottomleft);
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
-   Customcroplist.Add(Fleft);
+  Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
 
@@ -1054,17 +1004,6 @@ begin
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
-{begin
-  FreeAndNil(FTop);
-  FreeAndNil(FBottom);
-  FreeAndNil(FCenter);
-  FreeAndNil(FRight);
-  FreeAndNil(FTopRight);
-  FreeAndNil(FBottomRight);
-  FreeAndNil(Fleft);
-  FreeAndNil(FTopleft);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(Fbutton); }
   inherited Destroy;
 end;
 
@@ -1108,13 +1047,6 @@ end;
 
 procedure TONURPage.Getposition;
 begin
-
-  //  if (FPageControl<>nil) or (FPageControl.Skindata<> nil) then
-  //     fbutton.skindata:=FPageControl.Skindata;
-  //    else
-  //    exit;
-
-
 
   if (FPageControl = nil) then exit;
   if (FPageControl.Skindata = nil) then exit;
@@ -1218,10 +1150,8 @@ begin
       Skindata := FPageControl.Skindata;
       Getposition;
       Invalidate;
-
     end;
   end;
-
 end;
 
 procedure TONURPage.SetPageOrderIndex(Value: integer);
@@ -1306,7 +1236,6 @@ begin
 
   if (FPageControl.Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-
     if Fbutton.Skindata = nil then
       Fbutton.Skindata := self.Skindata;
 
@@ -1425,11 +1354,6 @@ begin
     TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
-{begin
-  FreeAndNil(FNormal);
-  FreeAndNil(FPress);
-  FreeAndNil(FEnter);
-  FreeAndNil(Fdisable); }
   inherited Destroy;
 end;
 
@@ -1439,8 +1363,6 @@ var
 begin
   if FAutoWidth and Assigned(resim) then
   begin
-    //    resim.FontName:=self.parent.font.Name;
-    //    resim.FontHeight:=self.parent.Font.Height;
 
     a := resim.TextSize(Caption);
     resim.SetSize(a.cX, self.Height);

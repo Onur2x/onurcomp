@@ -7,18 +7,18 @@ unit onurctrl;
 interface
 
 uses
-  {$IFDEF UNIX} linux {$ELSE} Windows{$ENDIF},LMessages ,SysUtils, Forms, LCLType, LCLIntf, Classes,
+  Windows, SysUtils, Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, BGRABitmap, BGRABitmapTypes,
    types, LazUTF8, Zipper,Dialogs;
 
 type
-  TONURButtonState = (obshover, obspressed, obsnormal);
-  TONURExpandStatus = (oExpanded, oCollapsed);
-  TONURButtonDirection = (obleft, obright,obup,obdown);
-  TONURSwichState = (FonN, FonH, FoffN, FoffH);
-  TONURKindState = (oVertical, oHorizontal);
-  TONURScroll = (FDown, FUp);
-  TONURCapDirection = (ocup, ocdown, ocleft, ocright);
+  TONURButtonState       = (obshover, obspressed, obsnormal);
+  TONURExpandStatus      = (oExpanded, oCollapsed);
+  TONURButtonDirection   = (obleft, obright,obup,obdown);
+  TONURSwichState        = (FonN, FonH, FoffN, FoffH);
+  TONURKindState         = (oVertical, oHorizontal);
+  TONURScroll            = (FDown, FUp);
+  TONURCapDirection      = (ocup, ocdown, ocleft, ocright);
 
 
   { TonPersistent }
@@ -58,30 +58,19 @@ type
     Fopacity    : Byte;
     FRes        : TPicture;
     List        : TStringList;
-    fparent     : TForm;
+   // fparent     : TForm;
 
     skinread    : boolean;
     Frmain,
     tempbitmap  : TBGRABitmap;
     clrr        : string;
     ffilename   : TFileName;
-    {$IFDEF UNIX}
-     movef      : boolean;
-     x9,y9      : integer;
-    {$ENDIF}
     Procedure Colorbgrabitmap;
     procedure CropToimg(Buffer: TBGRABitmap);
     procedure ImageSet(Sender: TObject);
-    Procedure Loadskin2;
+   // Procedure Loadskin2;
     procedure mousedwn(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: integer);
-
-     {$IFDEF UNIX}
-    procedure FormMouseUpp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-    procedure FormMouseMovee(Sender: TObject; Shift: TShiftState; X, Y: Integer);
-     {$ENDIF}
-
     procedure pant(Sender: TObject);
     procedure Setloadskin(AValue: String);
     Procedure Setopacity(Avalue: Byte);
@@ -108,6 +97,7 @@ type
     FBottom,
     FCenter    : TONURCUSTOMCROP;
     Customcroplist:TList;
+    Fparent : TForm;
     const
     ColorTheme : string = 'ClNone';
     constructor Create(AOwner: TComponent); override;
@@ -116,9 +106,8 @@ type
     procedure Loadskin(FileName: string; const Resource: boolean = False);
     procedure GetSkinInfo(const FileName: string; const Resource: boolean = False);
     procedure Saveskin(filename: string);
-
-
-  published
+    procedure Refresh;
+    published
 
     property MColor    : string   read clrr        write Setcolor;
     property Picture   : TPicture read FRes        write Fres;
@@ -139,9 +128,7 @@ type
     Fskinname   : string;
     falpha      : byte;
 
-{$IFDEF UNIX} Procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
-{$ELSE} Procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;  {$ENDIF}
-//    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
     procedure CreateParams(var Params: TCreateParams);
     procedure SetAlignment(const Value: TAlignment);
     function GetTransparent: boolean;
@@ -227,11 +214,7 @@ type
     procedure SetAlignment(const Value: TAlignment);
 
     procedure setalpha(val: byte);
-    {$IFDEF UNIX}
-     procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
-    {$ELSE}
     procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
-    {$ENDIF}
     procedure CreateParams(var Params: TCreateParams);
   public
     { Public declarations }
@@ -361,7 +344,11 @@ procedure Register;
 
 implementation
 
-uses  inifiles,  onurpanel,onuredit,onurpage,onurbutton,onurbar,onurlist;
+//{$DEFINE XML}
+
+uses onuredit,onurbar,onurpage,onurlist,onurpanel,onurbutton,
+  {$IFDEF XML}uXMLIni{$ELSE}inifiles{$ENDIF};
+
 
 
 procedure Register;
@@ -465,7 +452,6 @@ begin
 
 end;
 
-{
 function GetTempDir: string;
 var
   lng: DWORD;
@@ -474,7 +460,6 @@ begin
   lng := GetTempPath(MAX_PATH, PChar(Result));
   SetLength(Result, lng);
 end;
-}
 
 procedure yaziyaz(TT: TCanvas; TF: TFont; re: TRect; Fcap: string; asd: TAlignment);  // For caption
 var
@@ -595,7 +580,8 @@ var
 begin
   k := bmp.Data;
   p := bmp2.Data;
-  for i := 0 to bmp.NbPixels - 1 do
+  //for i := 0 to bmp.NbPixels - 1 do
+  for i := bmp.NbPixels - 1 downto 0 do
   begin
     if k^.alpha <> 0 then
       p^ := clr;
@@ -921,13 +907,14 @@ begin
   FBottomleft := TONURCUSTOMCROP.Create;
   FBottomleft.cropname := 'BOTTOMLEFT';
   Customcroplist:=TList.Create;
+
   Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
   Customcroplist.Add(FTopRight);
   Customcroplist.Add(FBottomleft);
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
-   Customcroplist.Add(Fleft);
+  Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
 
@@ -943,7 +930,7 @@ begin
 
   List := TStringList.Create;
 
-  //if not (csDesigning in ComponentState) then
+  if not (csDesigning in ComponentState) then
   //  exit;
 
 
@@ -967,16 +954,7 @@ begin
 
   Customcroplist.Clear;
   FreeAndNil(Customcroplist);
-{begin
-  FreeAndNil(FTop);
-  FreeAndNil(FTopleft);
-  FreeAndNil(FTopRight);
-  FreeAndNil(FBottom);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(FBottomRight);
-  FreeAndNil(Fleft);
-  FreeAndNil(FRight);
-  FreeAndNil(FCenter);  }
+
   FreeAndNil(Frmain);
   FreeAndNil(tempbitmap);
   FreeAndNil(FImage);
@@ -1004,7 +982,12 @@ begin
   if (colr <> 'clnone') and (colr <> '') then
   begin
     clrr := colr;
-    Loadskin2;
+
+   // Frmain.PutImage(0, 0, Fimage, dmDrawWithTransparency, Fopacity);
+
+   // Loadskin2;
+    Colorbgrabitmap;
+   //
   end;
 end;
 
@@ -1016,10 +999,15 @@ begin
    a := Tbgrabitmap.Create;
     try
       a.SetSize(tempbitmap.Width, tempbitmap.Height);
-      replacepixel(tempbitmap, a, ColorToBGRA(StringToColor(clrr), 150));
+      replacepixel(tempbitmap, a, ColorToBGRA(StringToColor(clrr), 20)); //Opacity));
       a.InvalidateBitmap;
+
+     // Frmain.BlendImage(0, 0, a, boTransparent);
       Fimage.BlendImage(0, 0, a, boTransparent);
-    finally
+      //CropToimg(a);
+      Refresh;
+     // Loadskin2;
+     finally
       FreeAndNil(a);
     end;
 End;
@@ -1033,7 +1021,7 @@ Begin
 
   a:=TBGRABitmap.Create(Frmain.Width,Frmain.Height);
   try
-   a.PutImage(0, 0, tempbitmap, dmDrawWithTransparency, 255);
+   a.PutImage(0, 0, Fimage{tempbitmap}, dmDrawWithTransparency, 255);
    Frmain.SetSize(0,0);
    Frmain.SetSize(a.Width,a.Height);
    Frmain.PutImage(0, 0, a, dmDrawWithTransparency, Fopacity);
@@ -1046,7 +1034,7 @@ End;
 procedure TONURImg.CropToimg(Buffer: TBGRABitmap);
 var
   x, y: integer;
-  SpanRgn,hdc1: LCLType.HDC;//integer;
+  hdc1, SpanRgn: hdc;//integer;
   WindowRgn: HRGN;
   TrgtRect: Trect;
   p: PBGRAPixel;
@@ -1131,40 +1119,15 @@ begin
   self.fparent.ChildSizing.TopBottomSpacing:=FTop.Height;
 
 
-
-
-
- if ThemeStyle='modern' then
+ if ThemeStyle='modern' then        // if Theme style modern region corner
  begin
-
   WindowRgn := CreateRectRgn(0, 0, frmain.Width, frmain.Height);
-
- // Premultiply(frmain);
-
-
-  //if Frmain.Width>0 then
-  {
-  for x := 1 to frmain.Width do
-  begin
-    for y := 1 to frmain.Height do
-    begin
-      if (frmain.GetPixel(x - 1, y - 1) = BGRAPixelTransparent) then
-      begin
-        SpanRgn := CreateRectRgn(x - 1, y - 1, x, y);
-        CombineRgn(WindowRgn, WindowRgn, SpanRgn, RGN_DIFF);
-        DeleteObject(SpanRgn);
-      end;
-    end;
-  end;
-  }
 
   for Y := 0 to frmain.Height-1 do
   begin
     p := frmain.Scanline[Y];
     for X := frmain.Width-1 downto 0 do
     begin
-     //  if x<10 then
-     //  WriteLn(Y,'  ',X,'  ',P^.alpha);
 
       if p^.Alpha =0 then//<255 then
       begin
@@ -1189,16 +1152,10 @@ begin
 
   SetWindowRgn(self.fparent.Handle, WindowRgn, True);
   hdc1 := GetDC(fparent.Handle);
-
   ReleaseDC(self.fparent.Handle, hdc1);
-  {$ifndef WINDOWS}
-  DeleteDC(WindowRgn);
-  DeleteDC(hdc1);
-  {$else}
-   DeleteObject(WindowRgn);
-   DeleteObject(hdc1);
-  {$endif}
-  end;
+  DeleteObject(WindowRgn);
+  DeleteObject(hdc1);
+ end;
 
 end;
 
@@ -1210,7 +1167,7 @@ end;
 
 procedure TONURImg.Setloadskin(AValue: String);
 begin
-  if ffilename=AValue then Exit;
+  if (ffilename=AValue) or (ffilename='') then Exit;
   ffilename:=AValue;
   Loadskin(ffilename,false);
 end;
@@ -1218,35 +1175,9 @@ end;
 procedure TONURImg.mousedwn(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
-  {$IFDEF UNIX}
-  movef := True;
-  x9 := x;
-  y9 := y;
- // SendMessage(self.fparent.Handle, LM_SYSCOMMAND, $F012, 0);
-  {$ELSE}
   ReleaseCapture;
   SendMessage(self.fparent.Handle, WM_SYSCOMMAND, $F012, 0);
-  {$ENDIF}
 end;
-
-
-{$IFDEF UNIX}
-procedure TONURImg.FormMouseUpp(Sender: TObject; Button: TMouseButton;
-  Shift: TShiftState; X, Y: Integer);
-begin
-  movef := False;
-end;
-
-procedure TONURImg.FormMouseMovee(Sender: TObject; Shift: TShiftState; X,
-  Y: Integer);
-begin
-  if movef then
-  begin
-   self.fparent.Left := self.fparent.Left +x - x9;
-   self.fparent.top  := self.fparent.Top +y - y9;
-  end;
-end;
-{$ENDIF}
 
 procedure cropparse(Crp: TONURCustomCrop; val: string);
 var
@@ -1281,12 +1212,23 @@ end;
 
 procedure TONURImg.ReadSkinsComp(Com: TComponent);
 var
+
+  {$IFDEF XML}
+  skn: TXMLIni;
+  {$ELSE}
   skn: TIniFile;
+  {$ENDIF}
   a: Integer;
 begin
-  if not FileExists(GetTempDir + 'skins.ini') then exit;
 
-  skn := TIniFile.Create(GetTempDir + 'skins.ini');
+  {$IFDEF XML}
+   if not FileExists(GetTempDir + 'skins.xml') then exit;
+   skn := TXMLIni.Create(GetTempDir + 'skins.xml');
+  {$ELSE}
+   if not FileExists(GetTempDir + 'skins.ini') then exit;
+   skn := TIniFile.Create(GetTempDir + 'skins.ini');
+  {$ENDIF}
+
   try
     with skn do
     begin
@@ -1310,8 +1252,10 @@ begin
         cropparse(FRight, ReadString('FORM', FRIGHT.cropname, '0,0,0,0,clblack'));
         cropparse(FCenter, ReadString('FORM', FCENTER.cropname, '0,0,0,0,clblack'));
         colortheme := ReadString('FORM', 'Color', 'ClNone');
-        CropToimg(Fimage); // for crop Tform
+
         tempbitmap.putimage(0,0,Fimage,dmSetExceptTransparent,255);
+
+        CropToimg(Fimage); // for crop Tform
       end;
      end;
 
@@ -1325,6 +1269,20 @@ begin
         begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+           if PageCount>0 then
+           begin
+             for a:=0 to pages[0].Customcroplist.Count-1 do
+             cropparse(TONURCustomCrop(pages[0].Customcroplist[a]),ReadString(pages[0].Skinname, TONURCustomCrop(pages[0].Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+              for a:=0 to pages[0].Fbutton.Customcroplist.Count-1 do
+             cropparse(TONURCustomCrop(pages[0].Fbutton.Customcroplist[a]),ReadString(pages[0].Fbutton.Skinname, TONURCustomCrop(pages[0].Fbutton.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+           end;
+
+           if Assigned(btnarea) then
+           for a:=0 to btnarea.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(btnarea.Customcroplist[a]),ReadString(btnarea.Skinname, TONURCustomCrop(btnarea.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
         end;
       end;
 
@@ -1342,8 +1300,8 @@ begin
       begin
         with (TonURbuttonareaCntrl(Com)) do
         begin
-          cropparse(OCLIENT, ReadString(Skinname,
-            OCLIENT.cropname, '0,0,0,0,clblack'));
+            for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
       end;
 
@@ -1356,17 +1314,14 @@ begin
         end;
       end;
 
-
       if (Com is TONURsystemButton) and (TONURsystemButton(com).Skindata = Self) then
       begin
         with (TONURsystemButton(Com)) do
         begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+        end;
       end;
-
-
 
       if (Com is TONURPANEL) and (TONURPANEL(com).Skindata = Self) then
       begin
@@ -1375,14 +1330,14 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
 
       if (Com is TONURlabel) and (TONURlabel(com).Skindata = Self) then
       begin
         with (TONURlabel(Com)) do
         begin
-          cropparse(OCLIENT, ReadString(Skinname,
-            OCLIENT.cropname, '0,0,0,0,clblack'));
+            for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
       end;// else
 
@@ -1392,7 +1347,7 @@ begin
         begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-        end;
+         end;
       end;// else
 
       if (Com is TONURKnob) and (TONURKnob(com).Skindata = Self) then
@@ -1410,7 +1365,7 @@ begin
         begin
           for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+        end;
       end;
       if (Com is TONURGraphicsButton) and (TONURGraphicsButton(com).Skindata = Self) then
       begin
@@ -1428,7 +1383,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURCollapExpandPanel) and
         (TONURCollapExpandPanel(com).Skindata = Self) then
       begin
@@ -1437,23 +1393,43 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURListBox) and (TONURListBox(com).Skindata = Self) then
       begin
         with (TONURListBox(Com)) do
         begin
-           for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(HorizontalScroll) then
+          for a:=0 to HorizontalScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(HorizontalScroll.Customcroplist[a]),ReadString(HorizontalScroll.Skinname, TONURCustomCrop(HorizontalScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(VertialScroll) then
+          for a:=0 to VertialScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(VertialScroll.Customcroplist[a]),ReadString(VertialScroll.Skinname, TONURCustomCrop(VertialScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;//else
+      end;
+
       if (Com is TONURColumList) and (TONURColumList(com).Skindata = Self) then
       begin
         with (TONURColumList(Com)) do
         begin
-           for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(HorizontalScroll) then
+          for a:=0 to HorizontalScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(HorizontalScroll.Customcroplist[a]),ReadString(HorizontalScroll.Skinname, TONURCustomCrop(HorizontalScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(VertialScroll) then
+          for a:=0 to VertialScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(VertialScroll.Customcroplist[a]),ReadString(VertialScroll.Skinname, TONURCustomCrop(VertialScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
         end;
-      end;// else
+      end;
+
       if (Com is TONURHeaderPanel) and (TONURHeaderPanel(com).Skindata = Self) then
       begin
         with (TONURHeaderPanel(Com)) do
@@ -1461,7 +1437,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
 
       if (Com is TONUREdit) and (TONUREdit(com).Skindata = Self) then
       begin
@@ -1470,7 +1447,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURSpinEdit) and (TONURSpinEdit(com).Skindata = Self) then
         // if component SpinEdit
       begin
@@ -1479,7 +1457,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURMemo) and (TONURMemo(com).Skindata = Self) then  // if component Memo
       begin
         with (TONURMemo(Com)) do
@@ -1487,8 +1466,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
+      end;
 
-      end;// else
       if (Com is TONURSwich) and (TONURSwich(com).Skindata = Self) then
       begin
         with (TONURSwich(Com)) do
@@ -1496,7 +1475,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURCheckbox) and (TONURCheckbox(com).Skindata = Self) then
       begin
         with (TONURCheckbox(Com)) do
@@ -1504,7 +1484,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURRadioButton) and (TONURRadioButton(com).Skindata = Self) then
       begin
         with (TONURRadioButton(Com)) do
@@ -1512,7 +1493,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURProgressBar) and (TONURProgressBar(com).Skindata = Self) then
       begin
         with (TONURProgressBar(Com)) do
@@ -1520,7 +1502,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURTrackBar) and (TONURTrackBar(com).Skindata = Self) then
       begin
         with (TONURTrackBar(Com)) do
@@ -1528,7 +1511,8 @@ begin
            for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-      end;// else
+      end;
+
       if (Com is TONURScrollBar) and (TONURScrollBar(com).Skindata = Self) then
       begin
         with (TONURScrollBar(Com)) do
@@ -1544,20 +1528,28 @@ begin
   end;
 end;
 
-
-
-procedure TONURImg.Loadskin2;//(Filename: String; Const Resource: Boolean);
+procedure TONURImg.Refresh;
+//procedure TONURImg.Loadskin2;//(Filename: String; Const Resource: Boolean);
 var
   Dir: string;
   i,a: integer;
-  skn: Tinifile;
+
+  {$IFDEF XML}
+  skn: TXMLIni;
+  {$ELSE}
+  skn: TIniFile;
+  {$ENDIF}
 begin
 
+  {$IFDEF XML}
+   if not FileExists(GetTempDir + 'skins.xml') then exit;
+   skn := TXMLIni.Create(dir + 'skins.xml');
+  {$ELSE}
+   if not FileExists(GetTempDir + 'skins.ini') then exit;
+   skn := TIniFile.Create(dir + 'skins.ini');
+  {$ENDIF}
 
-  if not FileExists(GetTempDir + 'skins.ini') then exit;
 
-
-  skn := TIniFile.Create(dir + 'skins.ini');
 
   skinread := True;
   try
@@ -1566,34 +1558,35 @@ begin
 
 
       // skin info
-      Skinname := ReadString('GENERAL', 'SKINNAME', 'DEFAULT');
-      version := ReadString('GENERAL', 'VERSION', '1.0');
-      author := ReadString('GENERAL', 'AUTHOR', 'SKIN CODER');
-      email := ReadString('GENERAL', 'EMAIL', 'mail@mail.com');
-      homepage := ReadString('GENERAL', 'HOMEPAGE', 'www.lazarus-ide.com');
-      comment := ReadString('GENERAL', 'COMMENT', 'SKIN COMMENT');
+      Skinname   := ReadString('GENERAL', 'SKINNAME', 'DEFAULT');
+      version    := ReadString('GENERAL', 'VERSION', '1.0');
+      author     := ReadString('GENERAL', 'AUTHOR', 'SKIN CODER');
+      email      := ReadString('GENERAL', 'EMAIL', 'mail@mail.com');
+      homepage   := ReadString('GENERAL', 'HOMEPAGE', 'www.lazarus-ide.com');
+      comment    := ReadString('GENERAL', 'COMMENT', 'SKIN COMMENT');
       screenshot := ReadString('GENERAL', 'SCREENSHOT', '');
 
       // skin info finish
 
+     // Fimage.SetSize(0,0);
 
       // Skin image reading
-    {  if FileExists(dir + ReadString('FORM', 'IMAGE', '')) then
+      if FileExists(dir + ReadString('FORM', 'IMAGE', '')) then
         Fimage.LoadFromFile(dir + ReadString('FORM', 'IMAGE', ''))
       else
         Fimage.Fill(BGRA(207, 220, 207), dmSet);
-      }
+
+      tempbitmap.putimage(0,0,Fimage,dmSetExceptTransparent,255);  // for color
 
      // if MColor<>'clNone' then
     //  colorbgrabitmap;
 
       // Skin image ok
-      ThemeStyle := ReadString('FORM', 'style', '');
-      ColorTheme := ReadString('FORM', 'Color', 'ClNone');
-      self.fparent.Font.Name := ReadString('FORM', 'Fontname', 'calibri');
-      self.fparent.Font.color :=
-        StringToColor(ReadString('FORM', 'Fontcolor', 'clblack'));
-      self.fparent.Font.size := ReadInteger('FORM', 'Fontzie', 11);
+      ThemeStyle         := ReadString('FORM', 'style', '');
+      ColorTheme         := ReadString('FORM', 'Color', 'ClNone');
+      fparent.Font.Name  := ReadString('FORM', 'Fontname', 'calibri');
+      fparent.Font.color := StringToColor(ReadString('FORM', 'Fontcolor', 'clblack'));
+      fparent.Font.size  := ReadInteger('FORM', 'Fontzie', 11);
 
 
 
@@ -1613,11 +1606,12 @@ begin
         cropparse(Fleft, ReadString('FORM', FLEFT.cropname, '0,0,0,0,clblack'));
         cropparse(FRight, ReadString('FORM', FRIGHT.cropname, '0,0,0,0,clblack'));
         cropparse(FCenter, ReadString('FORM', FCENTER.cropname, '0,0,0,0,clblack'));
-        colortheme := ReadString('FORM', 'Color', 'ClNone');
+        if clrr='' then
+         colortheme := ReadString('FORM', 'Color', 'ClNone')
+        else
+         colortheme :=clrr;
 
         CropToimg(Fimage); // for crop Tform
-
-
       end;
       // Tform ok
 
@@ -1627,225 +1621,255 @@ begin
       for i := 0 to fparent.ComponentCount - 1 do
       begin
 
-         if (fparent.Components[i] is TONURPageControl) and
-            (TONURPageControl(fparent.Components[i]).Skindata = Self) then
+        if (fparent.Components[i] is TONURPageControl) and
+            (TONURPageControl(fparent.Components[i]).Skindata = Self) then    // if component PageControl
+        with (TONURPageControl(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
 
-         // if component PageControl
-         with (TONURPageControl(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-           ReadSkinsComp(btnarea);
-         end;
+           if PageCount>0 then
+           begin
+             for a:=0 to pages[0].Customcroplist.Count-1 do
+             cropparse(TONURCustomCrop(pages[0].Customcroplist[a]),ReadString(pages[0].Skinname, TONURCustomCrop(pages[0].Customcroplist[a]).cropname, '0,0,0,0,clblack'));
 
-         if (fparent.Components[i] is TONURPage) and
-            (TONURPage(fparent.Components[i]).Skindata = Self) then
-         with (TONURPage(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-           ReadSkinsComp(Fbutton);
-         end;
+              for a:=0 to pages[0].Fbutton.Customcroplist.Count-1 do
+             cropparse(TONURCustomCrop(pages[0].Fbutton.Customcroplist[a]),ReadString(pages[0].Fbutton.Skinname, TONURCustomCrop(pages[0].Fbutton.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+           end;
 
-         if (fparent.Components[i] is TONURBUTtonareaCntrl) and
-            (TONURBUTtonareaCntrl(fparent.Components[i]).Skindata = Self) then
-         with (TONURBUTtonareaCntrl(fparent.Components[i])) do
-         begin
-            cropparse(OCLIENT, ReadString(Skinname,  OCLIENT.cropname, '0,0,0,0,clblack'));
-         end;
+           if Assigned(btnarea) then
+           for a:=0 to btnarea.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(btnarea.Customcroplist[a]),ReadString(btnarea.Skinname, TONURCustomCrop(btnarea.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
 
-         if (fparent.Components[i] is TONURPageButton) and
-           (TONURPageButton(fparent.Components[i]).Skindata = Self) then
-         with (TONURPageButton(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+          //ReadSkinsComp(btnarea);
+        end;
 
-         if (fparent.Components[i] is TONURsystemButton) and
+
+
+        if (fparent.Components[i] is TONURPage) and
+          (TONURPage(fparent.Components[i]).Skindata = Self) then
+        with (TONURPage(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+  //          ReadSkinsComp(Fbutton);
+        end;
+
+        if (fparent.Components[i] is TONURBUTtonareaCntrl) and
+          (TONURBUTtonareaCntrl(fparent.Components[i]).Skindata = Self) then
+        with (TONURBUTtonareaCntrl(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURPageButton) and
+          (TONURPageButton(fparent.Components[i]).Skindata = Self) then
+        with (TONURPageButton(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURsystemButton) and
             (TONURsystemButton(fparent.Components[i]).Skindata = Self) then
-         with (TONURsystemButton(fparent.Components[i])) do
-         begin
+        with (TONURsystemButton(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURGraphicsButton) and
+        (TONURGraphicsButton(fparent.Components[i]).Skindata = Self) then     // if component GraphicButton
+        with (TONURGraphicsButton(fparent.Components[i])) do
+        begin
            for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
+        if (fparent.Components[i] is TONURlabel) and
+        (TONURlabel(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
+        with (TONURlabel(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
-         if (fparent.Components[i] is TONURGraphicsButton) and
-          (TONURGraphicsButton(fparent.Components[i]).Skindata = Self) then
-          // if component GraphicButton
-         with (TONURGraphicsButton(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-
-         end;
-
-         if (fparent.Components[i] is TONURlabel) and
-          (TONURlabel(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
-         with (TONURlabel(fparent.Components[i])) do
-         begin
-            cropparse(OCLIENT, ReadString(Skinname, OCLIENT.cropname, '0,0,0,0,clblack'));
-         end;
-
-
-
-         if (fparent.Components[i] is TONURKnob) and
+        if (fparent.Components[i] is TONURKnob) and
           (TONURKnob(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
-         with (TONURKnob(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-           calcsize;
-         end;
-
-         if (fparent.Components[i] is TONURLed) and
-          (TONURLed(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
-         with (TONURLed(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONURCropButton) and
-          (TONURCropButton(fparent.Components[i]).Skindata = Self) then   // if component CropButton
-         with (TONURCropButton(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONURPanel) and
-          (TONURPanel(fparent.Components[i]).Skindata = Self) then    // if component Panel
-         with (TONURPanel(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONURCollapExpandPanel) and
-          (TONURCollapExpandPanel(fparent.Components[i]).Skindata = Self) then
-          // if component CollapsedExpandedPanel
-         with (TONURCollapExpandPanel(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONUREdit) and
-          (TONUREdit(fparent.Components[i]).Skindata = Self) then    // if component Edit
-         with (TONUREdit(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONURSpinEdit) and
-          (TONURSpinEdit(fparent.Components[i]).Skindata = Self) then  // if component SpinEdit
-         with (TONURSpinEdit(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONURMemo) and
-          (TONURMemo(fparent.Components[i]).Skindata = Self) then  // if component Memo
-         with (TONURMemo(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONURComboBox) and
-          (TONURComboBox(fparent.Components[i]).Skindata = Self) then  // if component Combobox
-         with (TONURComboBox(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONURSwich) and
-          (TONURSwich(fparent.Components[i]).Skindata = Self) then
-         with (TONURSwich(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-         if (fparent.Components[i] is TONURCheckbox) and
-          (TONURCheckbox(fparent.Components[i]).Skindata = Self) then
-         with (TONURCheckbox(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
-
-
-         if (fparent.Components[i] is TONURRadioButton) and
-          (TONURRadioButton(fparent.Components[i]).Skindata = Self) then
-         with (TONURRadioButton(fparent.Components[i])) do
-         begin
+        with (TONURKnob(fparent.Components[i])) do
+        begin
             for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+         calcsize;
+        end;
 
-         if (fparent.Components[i] is TONURProgressBar) and
-          (TONURProgressBar(fparent.Components[i]).Skindata = Self) then
-         with (TONURProgressBar(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-           calcsize;
-         end;
+        if (fparent.Components[i] is TONURLed) and
+        (TONURLed(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
+        with (TONURLed(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
-         if (fparent.Components[i] is TONURTrackBar) and
-          (TONURTrackBar(fparent.Components[i]).Skindata = Self) then
-         with (TONURTrackBar(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-           calcsize;
-         end;
+        if (fparent.Components[i] is TONURCropButton) and
+        (TONURCropButton(fparent.Components[i]).Skindata = Self) then   // if component CropButton
+        with (TONURCropButton(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
-         if (fparent.Components[i] is TONURScrollBar) and
-          (TONURScrollBar(fparent.Components[i]).Skindata = Self) then
-         with (TONURScrollBar(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+        if (fparent.Components[i] is TONURPanel) and
+        (TONURPanel(fparent.Components[i]).Skindata = Self) then    // if component Panel
+        with (TONURPanel(fparent.Components[i])) do
+        begin
+         for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
-         if (fparent.Components[i] is TONURColumList) and
-          (TONURColumList(fparent.Components[i]).Skindata = Self) then
-         with (TONURColumList(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+        if (fparent.Components[i] is TONURCollapExpandPanel) and
+        (TONURCollapExpandPanel(fparent.Components[i]).Skindata = Self) then
+        // if component CollapsedExpandedPanel
+        with (TONURCollapExpandPanel(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
+        if (fparent.Components[i] is TONUREdit) and
+        (TONUREdit(fparent.Components[i]).Skindata = Self) then    // if component Edit
+        with (TONUREdit(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
-         if (fparent.Components[i] is TONURListBox) and
-          (TONURListBox(fparent.Components[i]).Skindata = Self) then
-         with (TONURListBox(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+        if (fparent.Components[i] is TONURSpinEdit) and
+        (TONURSpinEdit(fparent.Components[i]).Skindata = Self) then  // if component SpinEdit
+        with (TONURSpinEdit(fparent.Components[i])) do
+        begin
+         for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
-         if (fparent.Components[i] is TONURHeaderPanel) and
-          (TONURHeaderPanel(fparent.Components[i]).Skindata = Self) then
-         with (TONURHeaderPanel(fparent.Components[i])) do
-         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         end;
+        if (fparent.Components[i] is TONURMemo) and
+        (TONURMemo(fparent.Components[i]).Skindata = Self) then  // if component Memo
+        with (TONURMemo(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURComboBox) and
+        (TONURComboBox(fparent.Components[i]).Skindata = Self) then  // if component Combobox
+        with (TONURComboBox(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURSwich) and
+        (TONURSwich(fparent.Components[i]).Skindata = Self) then
+        with (TONURSwich(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURCheckbox) and
+        (TONURCheckbox(fparent.Components[i]).Skindata = Self) then
+        with (TONURCheckbox(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURRadioButton) and
+        (TONURRadioButton(fparent.Components[i]).Skindata = Self) then
+        with (TONURRadioButton(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURProgressBar) and
+        (TONURProgressBar(fparent.Components[i]).Skindata = Self) then
+        with (TONURProgressBar(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          calcsize;
+        end;
+
+        if (fparent.Components[i] is TONURTrackBar) and
+        (TONURTrackBar(fparent.Components[i]).Skindata = Self) then
+        with (TONURTrackBar(fparent.Components[i])) do
+        begin
+         for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+         calcsize;
+        end;
+
+        if (fparent.Components[i] is TONURScrollBar) and
+        (TONURScrollBar(fparent.Components[i]).Skindata = Self) then
+        with (TONURScrollBar(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURColumList) and
+        (TONURColumList(fparent.Components[i]).Skindata = Self) then
+        with (TONURColumList(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(HorizontalScroll) then
+          for a:=0 to HorizontalScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(HorizontalScroll.Customcroplist[a]),ReadString(HorizontalScroll.Skinname, TONURCustomCrop(HorizontalScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(VertialScroll) then
+          for a:=0 to VertialScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(VertialScroll.Customcroplist[a]),ReadString(VertialScroll.Skinname, TONURCustomCrop(VertialScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURListBox) and
+        (TONURListBox(fparent.Components[i]).Skindata = Self) then
+        with (TONURListBox(fparent.Components[i])) do
+        begin
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          if Assigned(HorizontalScroll) then
+          for a:=0 to HorizontalScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(HorizontalScroll.Customcroplist[a]),ReadString(HorizontalScroll.Skinname, TONURCustomCrop(HorizontalScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(VertialScroll) then
+          for a:=0 to VertialScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(VertialScroll.Customcroplist[a]),ReadString(VertialScroll.Skinname, TONURCustomCrop(VertialScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURHeaderPanel) and
+        (TONURHeaderPanel(fparent.Components[i]).Skindata = Self) then
+        with (TONURHeaderPanel(fparent.Components[i])) do
+        begin
+         for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
       end;
     end;
+    //   end;
+
   finally
     self.fparent.Invalidate;// Repaint;
     FreeAndNil(skn);
   end;
+
 end;
+
+
+
 
 
 procedure TONURImg.Loadskin(FileName: string; const Resource: boolean);
@@ -1855,9 +1879,12 @@ var
   Dir: string;
   UnZipper: TUnZipper;
   i, a: integer;
-  skn: Tinifile;
-  onlistb:TONURListBox;
-  onlistcol:TONURColumList;
+
+  {$IFDEF XML}
+  skn: TXMLIni;
+  {$ELSE}
+  skn: TIniFile;
+  {$ENDIF}
 begin
 
   if (Resource=false) and (ExtractFileExt(filename)<>'.osf') then exit;
@@ -1866,16 +1893,12 @@ begin
     exit;
 
 
-
   if Resource then
   begin
     res := TResourceStream.Create(HInstance, 'skn', RT_RCDATA);
     try
       res.Position := 0;
       Dir := GetTempDir;
-
-
-
       res.SaveToFile(Dir + 'skins.osf');
       UnZipper := TUnZipper.Create;
       try
@@ -1895,7 +1918,7 @@ begin
   begin
 
     if ExtractFileExt(FileName) = '' then
-      Dir := ExtractFilePath(Application.ExeName) +  {$IFDEF UNIX} 'skins/' + FileName + '/' {$ELSE}'skins\' + FileName + '\' {$ENDIF}
+      Dir := ExtractFilePath(Application.ExeName) + 'skins\' + FileName + '\'
     else
     begin
       Dir := GetTempDir;
@@ -1920,7 +1943,13 @@ begin
   //VerOk := False;
 
 
-  skn := TIniFile.Create(dir + 'skins.ini');
+  //skn := TIniFile.Create(dir + 'skins.ini');
+
+  {$IFDEF XML}
+  skn:= TXMLIni.Create(dir + 'skins.xml');
+  {$ELSE}
+  skn:= TIniFile.Create(dir + 'skins.ini');
+  {$ENDIF}
 
   skinread := True;
   try
@@ -1942,12 +1971,12 @@ begin
       //   begin
 
       // skin info
-      Skinname := ReadString('GENERAL', 'SKINNAME', 'DEFAULT');
-      version := ReadString('GENERAL', 'VERSION', '1.0');
-      author := ReadString('GENERAL', 'AUTHOR', 'SKIN CODER');
-      email := ReadString('GENERAL', 'EMAIL', 'mail@mail.com');
-      homepage := ReadString('GENERAL', 'HOMEPAGE', 'www.lazarus-ide.com');
-      comment := ReadString('GENERAL', 'COMMENT', 'SKIN COMMENT');
+      Skinname   := ReadString('GENERAL', 'SKINNAME', 'DEFAULT');
+      version    := ReadString('GENERAL', 'VERSION', '1.0');
+      author     := ReadString('GENERAL', 'AUTHOR', 'SKIN CODER');
+      email      := ReadString('GENERAL', 'EMAIL', 'mail@mail.com');
+      homepage   := ReadString('GENERAL', 'HOMEPAGE', 'www.lazarus-ide.com');
+      comment    := ReadString('GENERAL', 'COMMENT', 'SKIN COMMENT');
       screenshot := ReadString('GENERAL', 'SCREENSHOT', '');
 
       // skin info finish
@@ -1966,14 +1995,11 @@ begin
 
 
 
-
-
-      ThemeStyle := ReadString('FORM', 'style', '');
-      ColorTheme := ReadString('FORM', 'Color', 'ClNone');
-      self.fparent.Font.Name := ReadString('FORM', 'Fontname', 'calibri');
-      self.fparent.Font.color :=
-        StringToColor(ReadString('FORM', 'Fontcolor', 'clblack'));
-      self.fparent.Font.size := ReadInteger('FORM', 'Fontzie', 11);
+      ThemeStyle         := ReadString('FORM', 'style', '');
+      ColorTheme         := ReadString('FORM', 'Color', 'ClNone');
+      fparent.Font.Name  := ReadString('FORM', 'Fontname', 'calibri');
+      fparent.Font.color := StringToColor(ReadString('FORM', 'Fontcolor', 'clblack'));
+      fparent.Font.size  := ReadInteger('FORM', 'Fontzie', 11);
 
 
 
@@ -1998,13 +2024,6 @@ begin
         self.fparent.BorderStyle := bsNone;
         self.fparent.OnMouseDown := @mousedwn;
 
-       {$IFDEF UNIX}
-        self.fparent.OnMouseMove := @FormMouseMovee;
-        self.fparent.OnMouseUp   := @formmouseupp;
-       {$ENDIF}
-
-
-
 
         CropToimg(Fimage); // for crop Tform
 
@@ -2018,228 +2037,247 @@ begin
       // Tform component reading
       for i := 0 to fparent.ComponentCount - 1 do
       begin
-
-
         if (fparent.Components[i] is TONURPageControl) and
-        (TONURPageControl(fparent.Components[i]).Skindata = Self) then
-
-          // if component PageControl
+            (TONURPageControl(fparent.Components[i]).Skindata = Self) then    // if component PageControl
         with (TONURPageControl(fparent.Components[i])) do
         begin
           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-          ReadSkinsComp(btnarea);
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+           if PageCount>0 then
+           begin
+             for a:=0 to pages[0].Customcroplist.Count-1 do
+             cropparse(TONURCustomCrop(pages[0].Customcroplist[a]),ReadString(pages[0].Skinname, TONURCustomCrop(pages[0].Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+              for a:=0 to pages[0].Fbutton.Customcroplist.Count-1 do
+             cropparse(TONURCustomCrop(pages[0].Fbutton.Customcroplist[a]),ReadString(pages[0].Fbutton.Skinname, TONURCustomCrop(pages[0].Fbutton.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+           end;
+
+           if Assigned(btnarea) then
+           for a:=0 to btnarea.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(btnarea.Customcroplist[a]),ReadString(btnarea.Skinname, TONURCustomCrop(btnarea.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          //ReadSkinsComp(btnarea);
         end;
+
+
 
         if (fparent.Components[i] is TONURPage) and
           (TONURPage(fparent.Components[i]).Skindata = Self) then
         with (TONURPage(fparent.Components[i])) do
         begin
           for a:=0 to Customcroplist.Count-1 do
-           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-          ReadSkinsComp(Fbutton);
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+  //          ReadSkinsComp(Fbutton);
         end;
-
-
-
 
         if (fparent.Components[i] is TONURBUTtonareaCntrl) and
           (TONURBUTtonareaCntrl(fparent.Components[i]).Skindata = Self) then
         with (TONURBUTtonareaCntrl(fparent.Components[i])) do
         begin
-          cropparse(OCLIENT, ReadString(Skinname,
-            OCLIENT.cropname, '0,0,0,0,clblack'));
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-
 
         if (fparent.Components[i] is TONURPageButton) and
           (TONURPageButton(fparent.Components[i]).Skindata = Self) then
         with (TONURPageButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURsystemButton) and
-          (TONURsystemButton(fparent.Components[i]).Skindata = Self) then
+            (TONURsystemButton(fparent.Components[i]).Skindata = Self) then
         with (TONURsystemButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURGraphicsButton) and
-          (TONURGraphicsButton(fparent.Components[i]).Skindata = Self) then
-          // if component GraphicButton
+        (TONURGraphicsButton(fparent.Components[i]).Skindata = Self) then     // if component GraphicButton
         with (TONURGraphicsButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+           for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURlabel) and
-          (TONURlabel(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
+        (TONURlabel(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
         with (TONURlabel(fparent.Components[i])) do
         begin
-         cropparse(OCLIENT, ReadString(Skinname, OCLIENT.cropname, '0,0,0,0,clblack'));
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURKnob) and
           (TONURKnob(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
         with (TONURKnob(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+            for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+         calcsize;
         end;
 
         if (fparent.Components[i] is TONURLed) and
-          (TONURLed(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
+        (TONURLed(fparent.Components[i]).Skindata = Self) then   // if component GraphicButton
         with (TONURLed(fparent.Components[i])) do
         begin
-             for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURCropButton) and
-          (TONURCropButton(fparent.Components[i]).Skindata = Self) then   // if component CropButton
+        (TONURCropButton(fparent.Components[i]).Skindata = Self) then   // if component CropButton
         with (TONURCropButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURPanel) and
-          (TONURPanel(fparent.Components[i]).Skindata = Self) then    // if component Panel
+        (TONURPanel(fparent.Components[i]).Skindata = Self) then    // if component Panel
         with (TONURPanel(fparent.Components[i])) do
         begin
          for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURCollapExpandPanel) and
-          (TONURCollapExpandPanel(fparent.Components[i]).Skindata = Self) then
-          // if component CollapsedExpandedPanel
+        (TONURCollapExpandPanel(fparent.Components[i]).Skindata = Self) then
+        // if component CollapsedExpandedPanel
         with (TONURCollapExpandPanel(fparent.Components[i])) do
         begin
-             for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
-        if (fparent.Components[i] is TonUREdit) and
-          (TonUREdit(fparent.Components[i]).Skindata = Self) then    // if component Edit
-        with (TonUREdit(fparent.Components[i])) do
+        if (fparent.Components[i] is TONUREdit) and
+        (TONUREdit(fparent.Components[i]).Skindata = Self) then    // if component Edit
+        with (TONUREdit(fparent.Components[i])) do
         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURSpinEdit) and
-          (TONURSpinEdit(fparent.Components[i]).Skindata = Self) then  // if component SpinEdit
+        (TONURSpinEdit(fparent.Components[i]).Skindata = Self) then  // if component SpinEdit
         with (TONURSpinEdit(fparent.Components[i])) do
         begin
          for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURMemo) and
-          (TONURMemo(fparent.Components[i]).Skindata = Self) then  // if component Memo
+        (TONURMemo(fparent.Components[i]).Skindata = Self) then  // if component Memo
         with (TONURMemo(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
-        if (fparent.Components[i] is TONURcombobox) and
-          (TONURcombobox(fparent.Components[i]).Skindata = Self) then  // if component Combobox
-        with (TONURcombobox(fparent.Components[i])) do
+        if (fparent.Components[i] is TONURComboBox) and
+        (TONURComboBox(fparent.Components[i]).Skindata = Self) then  // if component Combobox
+        with (TONURComboBox(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-
 
         if (fparent.Components[i] is TONURSwich) and
-          (TONURSwich(fparent.Components[i]).Skindata = Self) then
+        (TONURSwich(fparent.Components[i]).Skindata = Self) then
         with (TONURSwich(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-
 
         if (fparent.Components[i] is TONURCheckbox) and
-          (TONURCheckbox(fparent.Components[i]).Skindata = Self) then
+        (TONURCheckbox(fparent.Components[i]).Skindata = Self) then
         with (TONURCheckbox(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
-        if (fparent.Components[i] is TOnURRadioButton) and
-          (TONURRadioButton(fparent.Components[i]).Skindata = Self) then
+        if (fparent.Components[i] is TONURRadioButton) and
+        (TONURRadioButton(fparent.Components[i]).Skindata = Self) then
         with (TONURRadioButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURProgressBar) and
-          (TONURProgressBar(fparent.Components[i]).Skindata = Self) then
+        (TONURProgressBar(fparent.Components[i]).Skindata = Self) then
         with (TONURProgressBar(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          calcsize;
         end;
 
         if (fparent.Components[i] is TONURTrackBar) and
-          (TONURTrackBar(fparent.Components[i]).Skindata = Self) then
+        (TONURTrackBar(fparent.Components[i]).Skindata = Self) then
         with (TONURTrackBar(fparent.Components[i])) do
         begin
          for a:=0 to Customcroplist.Count-1 do
-          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+         calcsize;
         end;
 
-        if ((fparent.Components[i] is TONURScrollBar) and
-          (TONURScrollBar(fparent.Components[i]).Skindata = Self))  then
-       // or ( fparent.Components[i] is ToNListBox) or (fparent.Components[i] is TOncolumlist) then
+        if (fparent.Components[i] is TONURScrollBar) and
+        (TONURScrollBar(fparent.Components[i]).Skindata = Self) then
         with (TONURScrollBar(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
-        if (fparent.Components[i] is TONURcolumlist) and
-          (TONURcolumlist(fparent.Components[i]).Skindata = Self) then
-        with (TONURcolumlist(fparent.Components[i])) do
+        if (fparent.Components[i] is TONURColumList) and
+        (TONURColumList(fparent.Components[i]).Skindata = Self) then
+        with (TONURColumList(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-         ReadSkinsComp(HorizontalScroll);
-         ReadSkinsComp(VertialScroll);
-        end;
 
+          if Assigned(HorizontalScroll) then
+          for a:=0 to HorizontalScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(HorizontalScroll.Customcroplist[a]),ReadString(HorizontalScroll.Skinname, TONURCustomCrop(HorizontalScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(VertialScroll) then
+          for a:=0 to VertialScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(VertialScroll.Customcroplist[a]),ReadString(VertialScroll.Skinname, TONURCustomCrop(VertialScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
 
         if (fparent.Components[i] is TONURListBox) and
-          (TONURListBox(fparent.Components[i]).Skindata = Self) then
+        (TONURListBox(fparent.Components[i]).Skindata = Self) then
         with (TONURListBox(fparent.Components[i])) do
         begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-           ReadSkinsComp(HorizontalScroll);
-           ReadSkinsComp(VertialScroll);
+          for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+          if Assigned(HorizontalScroll) then
+          for a:=0 to HorizontalScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(HorizontalScroll.Customcroplist[a]),ReadString(HorizontalScroll.Skinname, TONURCustomCrop(HorizontalScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+
+          if Assigned(VertialScroll) then
+          for a:=0 to VertialScroll.Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(VertialScroll.Customcroplist[a]),ReadString(VertialScroll.Skinname, TONURCustomCrop(VertialScroll.Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
 
         if (fparent.Components[i] is TONURHeaderPanel) and
-          (TONURHeaderPanel(fparent.Components[i]).Skindata = Self) then
-          with (TONURHeaderPanel(fparent.Components[i])) do
-          begin
-           for a:=0 to Customcroplist.Count-1 do
-            cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
-          end;
+        (TONURHeaderPanel(fparent.Components[i]).Skindata = Self) then
+        with (TONURHeaderPanel(fparent.Components[i])) do
+        begin
+         for a:=0 to Customcroplist.Count-1 do
+         cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
       end;
     end;
   finally
-    self.fparent.Invalidate;// Repaint;
+    self.fparent.Invalidate;
     FreeAndNil(skn);
   end;
 end;
@@ -2249,7 +2287,11 @@ procedure TONURImg.GetSkinInfo(const FileName: string; const Resource: boolean);
 var
   Unzipper: TUnZipper;
   Dir: string;
+ {$IFDEF XML}
+  skn: TXMLIni;
+  {$ELSE}
   skn: TIniFile;
+  {$ENDIF}
 begin
   Skinname := '';
   Version := '';
@@ -2262,7 +2304,7 @@ begin
   if FileName <> '' then
   begin
     if ExtractFileExt(FileName) = '' then
-      Dir := ExtractFilePath(Application.ExeName) + {$IFDEF UNIX} '\skins\' {$ELSE} '/skins/'{$ENDIF} + FileName + {$IFDEF UNIX} '\' {$ELSE} '/'{$ENDIF}
+      Dir := ExtractFilePath(Application.ExeName) + 'skins\' + FileName + '\'
     else
     begin
       Dir := GetTempDir;
@@ -2280,7 +2322,12 @@ begin
       end;
     end;
 
-    skn := TIniFile.Create(dir + 'skin.ini');
+
+    {$IFDEF XML}
+  skn:= TXMLIni.Create(dir + 'skin.xml');
+  {$ELSE}
+  skn:= TIniFile.Create(dir + 'skin.ini');
+  {$ENDIF}
     try
       with skn do
       begin
@@ -2304,14 +2351,24 @@ procedure TONURImg.Saveskin(filename: string);
 var
   Zipper: TZipper;
   i, a: integer;
-  skn: Tinifile;
+  {$IFDEF XML}
+  skn: TXMLIni;
+  {$ELSE}
+  skn: TIniFile;
+  {$ENDIF}
 
 begin
 
   if csDesigning in ComponentState then
     exit;
 
-  skn := TIniFile.Create(GetTempDir + {$IFDEF UNIX} 'tmp\skins.ini' {$ELSE} 'tmp/skins.ini'{$ENDIF} );
+
+  {$IFDEF XML}
+  skn:= TXMLIni.Create(GetTempDir + 'tmp/skins.xml');
+  {$ELSE}
+  skn:= TIniFile.Create(GetTempDir + 'tmp/skins.ini');
+  {$ENDIF}
+
 
   try
     with skn do
@@ -2326,7 +2383,7 @@ begin
       writeString('GENERAL', 'SCREENSHOT', screenshot);
       // skin info finish
 
-      Fimage.SaveToFile(GetTempDir + {$IFDEF UNIX} 'tmp\skins.png' {$ELSE} 'tmp/skins.png'{$ENDIF} );
+      Fimage.SaveToFile(GetTempDir + 'tmp/skins.png');
       writeString('FORM', 'IMAGE', 'skins.png');
       // Skin image ok
 
@@ -2356,132 +2413,142 @@ begin
         if fparent.Components[i] is TONURGraphicsButton then  // if component GraphicButton
         with (TONURGraphicsButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+           for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURCropButton then   // if component CropButton
         with (TONURCropButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+           for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURlabel then   // if component CropButton
         with (TONURlabel(fparent.Components[i])) do
         begin
-          writeString(Skinname, OCLIENT.cropname, croptostring(OCLIENT));
+           for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURSYSTEMButton then    // if component Panel
         with (TONURSYSTEMButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+           for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURKnob then   // if component CropButton
         with (TONURKnob(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
-
 
         if fparent.Components[i] is TONURLed then   // if component CropButton
         with (TONURLed(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
-
-
 
         if fparent.Components[i] is TONURPageControl then    // if component Panel
         with (TONURPageControl(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+
+          if PageCount>0 then
+          begin
+             with Pages[0] do
+             begin
+               for a:=0 to Customcroplist.Count-1 do
+               writeString(Pages[0].Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+
+               for a:=0 to Fbutton.Customcroplist.Count-1 do
+               writeString(Fbutton.Skinname, TONURCustomCrop(Fbutton.Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Fbutton.Customcroplist[a])));
+             end;
+          end;
+
+          for a:=0 to btnarea.Customcroplist.Count-1 do
+           writeString(btnarea.Skinname, TONURCustomCrop(btnarea.Customcroplist[a]).cropname, croptostring(TONURCustomCrop(btnarea.Customcroplist[a])));
+
         end;
 
         if fparent.Components[i] is TONURPage then    // if component Panel
         with (TONURPage(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURPageButton then    // if component Panel
         with (TONURPageButton(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURBUTtonareaCntrl then    // if component Panel
         with (TONURBUTtonareaCntrl(fparent.Components[i])) do
         begin
-         writeString(Skinname, OCLIENT.cropname, croptostring(OCLIENT));
+           for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
-
 
         if fparent.Components[i] is TONURPanel then    // if component Panel
         with (TONURPanel(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
-        if fparent.Components[i] is TONURCollapExpandPanel then
-          // if component CollapsedExpandedPanel
+        if fparent.Components[i] is TONURCollapExpandPanel then           // if component CollapsedExpandedPanel
         with (TONURCollapExpandPanel(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
-
 
         if fparent.Components[i] is TONUREdit then    // if component Edit
         with (TonUREdit(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TOnURSpinEdit then  // if component SpinEdit
         with (TOnURSpinEdit(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURMemo then  // if component Memo
         with (TONURMemo(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURcombobox then  // if component Combobox
         with (TONURcombobox(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
-
 
         if fparent.Components[i] is TOnURSwich then
         with (TOnURSwich(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
            writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
-
 
         if fparent.Components[i] is TOnURCheckbox then
         with (TOnURCheckbox(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
+          for a:=0 to Customcroplist.Count-1 do
            writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
@@ -2495,57 +2562,75 @@ begin
         if fparent.Components[i] is TONURProgressBar then
         with (TONURProgressBar(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
-
 
         if fparent.Components[i] is TONURTrackBar then
         with (TONURTrackBar(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
-
-
 
         if fparent.Components[i] is ToNURScrollBar then
         with (ToNURScrollBar(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
 
 
         if fparent.Components[i] is ToNURListBox then
         with (ToNURListBox(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+
+          if Assigned(VertialScroll) then
+          for a:=0 to VertialScroll.Customcroplist.Count-1 do
+          writeString(VertialScroll.Skinname, TONURCustomCrop(VertialScroll.Customcroplist[a]).cropname, croptostring(TONURCustomCrop(VertialScroll.Customcroplist[a])));
+
+          if Assigned(HorizontalScroll) then
+          for a:=0 to HorizontalScroll.Customcroplist.Count-1 do
+          writeString(HorizontalScroll.Skinname, TONURCustomCrop(HorizontalScroll.Customcroplist[a]).cropname, croptostring(TONURCustomCrop(HorizontalScroll.Customcroplist[a])));
+
         end;
 
         if fparent.Components[i] is TOnURcolumlist then
         with (TOnURcolumlist(fparent.Components[i])) do
         begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+
+          if Assigned(VertialScroll) then
+          for a:=0 to VertialScroll.Customcroplist.Count-1 do
+          writeString(VertialScroll.Skinname, TONURCustomCrop(VertialScroll.Customcroplist[a]).cropname, croptostring(TONURCustomCrop(VertialScroll.Customcroplist[a])));
+
+          if Assigned(HorizontalScroll) then
+          for a:=0 to HorizontalScroll.Customcroplist.Count-1 do
+          writeString(HorizontalScroll.Skinname, TONURCustomCrop(HorizontalScroll.Customcroplist[a]).cropname, croptostring(TONURCustomCrop(HorizontalScroll.Customcroplist[a])));
         end;
 
         if fparent.Components[i] is TONURHeaderPanel then
-        with (TONURHeaderPanel(fparent.Components[i])) do
-        begin
-         for a:=0 to Customcroplist.Count-1 do
-          writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
-        end;
+          with (TONURHeaderPanel(fparent.Components[i])) do
+          begin
+            for a:=0 to Customcroplist.Count-1 do
+             writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+          end;
       end;
     end;
-    //   end;
 
     Zipper := TZipper.Create;
     try
       Zipper.FileName := filename;
-      zipper.Entries.AddFileEntry(GetTempDir + {$IFDEF UNIX} 'tmp\skins.ini' {$ELSE} 'tmp/skins.ini'{$ENDIF} , 'skins.ini');
-      zipper.Entries.AddFileEntry(GetTempDir + {$IFDEF UNIX} 'tmp\skins.png' {$ELSE} 'tmp/skins.png'{$ENDIF} , 'skins.png');
+      {$IFDEF XML}
+       zipper.Entries.AddFileEntry(GetTempDir + 'tmp/skins.xml', 'skins.xml');
+      {$ELSE}
+       zipper.Entries.AddFileEntry(GetTempDir + 'tmp/skins.ini', 'skins.ini');
+      {$ENDIF}
+
+      zipper.Entries.AddFileEntry(GetTempDir + 'tmp/skins.png', 'skins.png');
       Zipper.ZipAllFiles;
     finally
       Zipper.Free;
@@ -2554,6 +2639,7 @@ begin
     FreeAndNil(skn);
   end;
 end;
+
 
 
 
@@ -2584,16 +2670,14 @@ end;
 
 destructor TonURgraphiccontrol.Destroy;
 begin
-  if Assigned(resim) then  FreeAndNil(resim);
+  if Assigned(resim) then FreeAndNil(resim);
   Customcroplist.free;
   inherited Destroy;
 end;
 
 
 // -----------------------------------------------------------------------------
-//procedure TonURgraphiccontrol.Wmerasebkgnd(var Message: Twmerasebkgnd);
-{$IFDEF UNIX} Procedure TonURgraphiccontrol.WMEraseBkgnd(var Message: TLMEraseBkgnd);
-{$ELSE} Procedure TonURgraphiccontrol.WMEraseBkgnd(var Message: TWMEraseBkgnd); {$ENDIF}
+procedure TonURgraphiccontrol.Wmerasebkgnd(var Message: Twmerasebkgnd);
 begin
   SetBkMode(Message.dc, 1);
   Message.Result := 1;
@@ -2603,7 +2687,7 @@ end;
 // -----------------------------------------------------------------------------
 procedure TonURgraphiccontrol.Createparams(var Params: Tcreateparams);
 begin
-  params.exstyle := params.exstyle or WS_EX_TRANSPARENT {$IFNDEF UNIX} or WS_EX_LAYERED {$ENDIF}  or
+  params.exstyle := params.exstyle or WS_EX_TRANSPARENT or WS_EX_LAYERED or
     WS_CLIPCHILDREN;
 end;
 
@@ -2757,7 +2841,7 @@ end;
 
 
 // -----------------------------------------------------------------------------
-procedure Tonurcustomcontrol.Wmerasebkgnd(var Message: {$IFDEF UNIX} TLMEraseBkgnd{$ELSE}Twmerasebkgnd {$ENDIF});
+procedure Tonurcustomcontrol.Wmerasebkgnd(var Message: Twmerasebkgnd);
 begin
   SetBkMode(Message.dc, TRANSPARENT);
   Message.Result := 1;
@@ -2770,7 +2854,7 @@ end;
 procedure Tonurcustomcontrol.Createparams(var Params: Tcreateparams);
 begin
   inherited CreateParams(Params);
-  params.exstyle := params.exstyle or WS_EX_TRANSPARENT or {$IFNDEF UNIX}WS_EX_LAYERED or {$ENDIF}
+  params.exstyle := params.exstyle or WS_EX_TRANSPARENT or WS_EX_LAYERED or
     WS_CLIPCHILDREN;
 end;
 
@@ -2838,19 +2922,16 @@ var
   x, y: integer;
   hdc1, SpanRgn: hdc;//integer;
 
- //  TrgtRect: Trect;
+   //TrgtRect: Trect;
    p: PBGRAPixel;
 begin
-
-    WindowRgn := CreateRectRgn(0, 0, buffer.Width, buffer.Height);
+  WindowRgn := CreateRectRgn(0, 0, buffer.Width, buffer.Height);
 
   for Y := 0 to buffer.Height-1 do
   begin
     p := buffer.Scanline[Y];
     for X := buffer.Width-1 downto 0 do
     begin
-     //  if x<10 then
-     //  WriteLn(Y,'  ',X,'  ',P^.alpha);
 
       if p^.Alpha =0 then//<255 then
       begin
@@ -2876,14 +2957,8 @@ begin
 
   SetWindowRgn(self.Handle, WindowRgn, True);
   ReleaseDC(self.Handle, hdc1);
-
-  {$IFDEF UNIX}
-  DeleteDC(WindowRgn);
-  DeleteDC(hdc1);
-  {$ELSE}
   DeleteObject(WindowRgn);
   DeleteObject(hdc1);
-  {$ENDIF}
 end;
 // -----------------------------------------------------------------------------
 procedure Tonurcustomcontrol.Paint;

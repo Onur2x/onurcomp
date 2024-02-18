@@ -6,9 +6,9 @@ unit onurlist;
 interface
 
 uses
-  {$IFDEF UNIX} linux {$ELSE} Windows{$ENDIF}, SysUtils, LMessages, Forms, LCLType, LCLIntf, Classes,
-  Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes,
-  Dialogs, types, LazUTF8, Zipper,onurctrl,onurbar,onuredit;
+  Windows, SysUtils, LMessages, Forms,  Classes,
+  Controls, Graphics, ExtCtrls,  BGRABitmap, BGRABitmapTypes,
+  Dialogs, onurctrl,onurbar,onuredit;
 
 type
 
@@ -16,46 +16,34 @@ type
 
   TONURListBox = class(TONURCustomControl)
   private
-    Flist: TStrings;//List;
+    Flist: TStrings;
     findex: integer;
     fmodusewhelll:boolean;
     vScrollBar, hScrollBar: TONURScrollBar;
     FItemsShown, FitemHeight, FItemVOffset,FItemHOffset: integer;
-  //  itempaintHeight: Trect;
     fchangelist:boolean;
     Fselectedcolor: Tcolor;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
     FTop, FBottom, FCenter, factiveitems, fitems: TONURCUSTOMCROP;
-
-    //FFocusedItem: integer;
-
-
-    function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): boolean; override;
-    function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): boolean; override;
-
     function GetItemAt(Pos: TPoint): integer;
     function getitemheight: integer;
     function GetItemIndex: integer;
     function ItemRect(Item: integer): TRect;
     procedure LinesChanged(Sender: TObject);
-    procedure MoveDown;
-    procedure MoveEnd;
-    procedure MoveHome;
-    procedure MoveUp;
     procedure Scrollscreen;
     procedure setitemheight(avalue: integer);
     procedure SetItemIndex(Avalue: integer);
-    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
-      X: integer; Y: integer); override;
     procedure VScrollchange(Sender: TObject);
     procedure HScrollchange(Sender: TObject);
-
+  protected
     procedure dblclick; override;
     procedure SetSkindata(Aimg: TONURImg); override;
-  protected
+    function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): boolean; override;
+    function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): boolean; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
     procedure KeyDown(var Key: word; Shift: TShiftState); virtual;
     procedure SetString(AValue: TStrings); virtual;
-    // procedure KeyDown(var Key: word; Shift: TShiftState); override;
   public
     constructor Create(Aowner: TComponent); override;
     destructor Destroy; override;
@@ -63,17 +51,10 @@ type
     procedure BeginUpdate;
     procedure EndUpdate;
     procedure Clear;
-    property OITEM           : TONURCUSTOMCROP read Fitems         write fitems;
-    property OLEFT           : TONURCUSTOMCROP read Fleft          write Fleft;
-    property ORIGHT          : TONURCUSTOMCROP read FRight         write FRight;
-    property OCENTER         : TONURCUSTOMCROP read FCenter        write FCenter;
-    property OBOTTOM         : TONURCUSTOMCROP read FBottom        write FBottom;
-    property OBOTTOMLEFT     : TONURCUSTOMCROP read FBottomleft    write FBottomleft;
-    property OBOTTOMRIGHT    : TONURCUSTOMCROP read FBottomRight   write FBottomRight;
-    property OTOP            : TONURCUSTOMCROP read FTop           write FTop;
-    property OTOPLEFT        : TONURCUSTOMCROP read FTopleft       write FTopleft;
-    property OTOPRIGHT       : TONURCUSTOMCROP read FTopRight      write FTopRight;
-    property OACTIVEITEM     : TONURCUSTOMCROP read factiveitems   write factiveitems;
+    procedure MoveDown;
+    procedure MoveEnd;
+    procedure MoveHome;
+    procedure MoveUp;
   published
     property Alpha;
     property Items            : TStrings       read Flist          write SetString;
@@ -124,7 +105,7 @@ type
 
   { TONURComboBox }
 
-  TONURComboBox = class(TONURCustomEdit)//(TonCustomcontrol)
+  TONURComboBox = class(TONURCustomEdit)
   private
     Fliste: TStrings;
     FOnCloseUp: TNotifyEvent;
@@ -132,9 +113,7 @@ type
     FOnGetItems: TNotifyEvent;
     FOnSelect: TNotifyEvent;
     Fitemindex: integer;
-
     fpopupopen: boolean;
-    //   FItemsShown    : integer;
     FitemHeight: integer;
     Fitemoffset: integer;
     Fselectedcolor: Tcolor;
@@ -148,65 +127,42 @@ type
     function Gettext: string;
     function GetItemIndex: integer;
     procedure LinesChanged(Sender: TObject);
-
     procedure setitemheight(avalue: integer);
     procedure SetItemIndex(Avalue: integer);
-    //   procedure SetText(AValue: string);
-
-
     procedure LstPopupReturndata(Sender: TObject; const Str: string; const indx: integer);
     procedure LstPopupShowHide(Sender: TObject);
-
+  protected
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF}); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
     procedure SetSkindata(Aimg: TONURImg); override;
-
-  protected
-
-    //    procedure Change; virtual;
     procedure Select; virtual;
     procedure DropDown; virtual;
     procedure GetItems; virtual;
     procedure CloseUp; virtual;
     procedure SetStrings(AValue: TStrings); virtual;
-    //    procedure KeyDown(var Key: word; Shift: TShiftState);  virtual;
     property OnCloseUp  : TNotifyEvent read FOnCloseUp  write FOnCloseUp;
     property OnDropDown : TNotifyEvent read FOnDropDown write FOnDropDown;
     property OnGetItems : TNotifyEvent read FOnGetItems write FOnGetItems;
     property OnSelect   : TNotifyEvent read FOnSelect   write FOnSelect;
-    public
-      fbutonarea: Trect;
-      property OLEFT         : TONURCUSTOMCROP read Fleft        write Fleft;
-      property ORIGHT        : TONURCUSTOMCROP read FRight       write FRight;
-      property OCENTER       : TONURCUSTOMCROP read FCenter      write FCenter;
-      property OBOTTOM       : TONURCUSTOMCROP read FBottom      write FBottom;
-      property OBOTTOMLEFT   : TONURCUSTOMCROP read FBottomleft  write FBottomleft;
-      property OBOTTOMRIGHT  : TONURCUSTOMCROP read FBottomRight write FBottomRight;
-      property OTOP          : TONURCUSTOMCROP read FTop         write FTop;
-      property OTOPLEFT      : TONURCUSTOMCROP read FTopleft     write FTopleft;
-      property OTOPRIGHT     : TONURCUSTOMCROP read FTopRight    write FTopRight;
-      property OBUTONNORMAL  : TONURCUSTOMCROP read FNormal      write FNormal;
-      property OBUTONPRESS   : TONURCUSTOMCROP read FPress       write FPress;
-      property OBUTONHOVER   : TONURCUSTOMCROP read FEnter       write FEnter;
-      property OBUTONDISABLE : TONURCUSTOMCROP read Fdisable     write Fdisable;
-
-      constructor Create(AOwner: TComponent); override;
-      destructor Destroy; override;
-      procedure Paint; override;
-      procedure BeginUpdate;
-      procedure Clear;
-      procedure EndUpdate;
+  public
+    fbutonarea: Trect;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Paint; override;
+    procedure BeginUpdate;
+    procedure Clear;
+    procedure EndUpdate;
   published
     property Alpha;
-    property Text;//          : string        read Gettext        write SetText;
+    property Text;
     property Items: TStrings read Fliste write SetStrings;
-    property OnChange;//      : TNotifyEvent  read FOnChange      write FOnChange;
-    property ReadOnly;//      : boolean       read freadonly      write freadonly;
+    property OnChange;
+    property ReadOnly;
     property ItemIndex     : integer read Getitemindex   write Setitemindex;
     property Selectedcolor : Tcolor  read Fselectedcolor write Fselectedcolor;
     property ItemHeight    : integer read FitemHeight    write SetItemHeight;
@@ -258,43 +214,24 @@ type
 
   Tpopupformcombobox = class(TcustomForm)
     procedure listboxDblClick(Sender: TObject);
-    //    procedure FormClose(Sender: TObject; var CloseAction: TCloseAction);
-    //    procedure FormCreate(Sender: TObject);
     procedure FormDeactivate(Sender: TObject);
   private
     FCaller: TONURComboBox;
     FClosed: boolean;
     oblist: TONURListBox;
     FOnReturnDate: TReturnStintEvent;
-    constructor Create(TheOwner: TComponent); override;
     procedure CMDeactivate(var Message: TLMessage); message CM_DEACTIVATE;
-    procedure DoClose(var CloseAction: TCloseAction); override;
-    procedure DoShow; override;
     procedure KeepInView(const PopupOrigin: TPoint);
     procedure ReturnstringAnditemindex;
-    // protected
-    // procedure Paint; override;
+  protected
+    procedure DoClose(var CloseAction: TCloseAction); override;
+    procedure DoShow; override;
+  public
+     constructor Create(TheOwner: TComponent); override;
   end;
 
   TONURColumList = class;
-  { TOlistItem }
-{  TOnurStrings = class
-  private
-    FCells: array of string;
-    FSize: integer;
-    function GetCell(X: integer): string;
-    function GetRowCount: integer;
-    procedure SetCell(X: integer; AValue: string);
-    procedure SetRowCount(AValue: integer);
-  public
-    constructor Create;
-    procedure Add(s: string);
-    procedure Clear;
-    function Arrayofstring(aranan: string): integer;
-    property Cells[Row: integer]: string read GetCell write SetCell;
-    property Count: integer read GetRowCount write SetRowCount;
-  end;
- }
+
   TONURlistItem = class(TCollectionItem)
   private
     FCells: array of string;
@@ -310,7 +247,7 @@ type
     constructor Create(Collectioni: TCollection); override;
     procedure Add(s: string);
     procedure Clear;
-    procedure Delete;//(Indexi: integer);
+    procedure Delete;
     function Arrayofstring(aranan: string): integer;
     property Cells[Col: integer]: string read GetCell write SetCell;
     property ColCount : integer read GetColCount write SetColCount;
@@ -405,9 +342,6 @@ type
 
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
     FTop, FBottom, FCenter, factiveitems, fheader, fitems: TONURCUSTOMCROP;
-
-
-    //itempaintHeight: Trect;
     fheaderfont: Tfont;
     FListItems: TONURlistItems;
     Fcolumns: TONURListColums;
@@ -434,8 +368,6 @@ type
     function Getcells(Acol, Arow: integer): string;
     function Itemrectcel(Item, Col: integer): Trect;
     procedure resizee;
-
-
     procedure Scrollscreen;
     procedure Setcells(Acol, Arow: integer; Avalue: string);
     procedure SetHeadervisible(AValue: boolean);
@@ -446,43 +378,27 @@ type
     function GetItemAt(Pos: TPoint): integer;
     procedure VScrollBarChange(Sender: TObject);
     procedure HScrollBarChange(Sender: TObject);
-    procedure CNKeyDown(var Message: {$IFDEF UNIX} TLMKeyDown {$ELSE} TWMKeyDown{$ENDIF} ); message CN_KEYDOWN;
+    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
+  protected
     procedure SetSkindata(Aimg: TONURImg); override;
-
-  public
-    wait: boolean;
     function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): boolean; override;
     function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): boolean; override;
-    property OHEADER      : TONURCUSTOMCROP  read fheader      write fheader;
-    property OLEFT        : TONURCUSTOMCROP  read Fleft        write Fleft;
-    property ORIGHT       : TONURCUSTOMCROP  read FRight       write FRight;
-    property OCENTER      : TONURCUSTOMCROP  read FCenter      write FCenter;
-    property OBOTTOM      : TONURCUSTOMCROP  read FBottom      write FBottom;
-    property OBOTTOMLEFT  : TONURCUSTOMCROP  read FBottomleft  write FBottomleft;
-    property OBOTTOMRIGHT : TONURCUSTOMCROP  read FBottomRight write FBottomRight;
-    property OTOP         : TONURCUSTOMCROP  read FTop         write FTop;
-    property OTOPLEFT     : TONURCUSTOMCROP  read FTopleft     write FTopleft;
-    property OTOPRIGHT    : TONURCUSTOMCROP  read FTopRight    write FTopRight;
-    property OACTIVEITEM  : TONURCUSTOMCROP  read factiveitems write factiveitems;
-    property OITEM        : TONURCUSTOMCROP  read fitems       write fitems;
 
-    constructor Create(Aowner: TComponent); override;
-    destructor Destroy; override;
-    procedure Paint; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer); override;
+  public
+    constructor Create(Aowner: TComponent); override;
+    destructor Destroy; override;
+    procedure Paint; override;
     procedure Clear;
     procedure MoveUp;
-
     procedure MoveDown;
     procedure MoveHome;
     procedure MoveEnd;
-    //    procedure FindItem(Texti: String);
     procedure Delete(indexi: integer);
     property Cells[ACol, ARow: integer]: string read GetCells write SetCells;
-
   published
     property Alpha;
     property OnCellClick       : TOnCellClick    read FOnCellclick       write FOnCellclick;
@@ -517,7 +433,6 @@ procedure Register;
 
 implementation
 
-uses BGRAPath, inifiles, clipbrd, strutils, LazUnicode,BGRAFreeType, LazFreeTypeFontCollection,BGRATransform;
 
 procedure Register;
 begin
@@ -553,8 +468,6 @@ End;
 
 Procedure TONURListColums.Update(Item: Tcollectionitem);
 Begin
- //   TONURColumList(GetOwner).Invalidate;//Paint;
-
  TONURColumList(GetOwner).Scrollscreen;
  // inherited Update(Item);
 End;
@@ -630,34 +543,9 @@ end;
 
 
 procedure TONURColumList.Setcells(Acol, Arow: integer; Avalue: string);
-
-var
-  i: integer;
 begin
- { if (FListItems.Count > -1) and (FListItems.Count <= Acol) then
-  begin
-    FListItems.Add;
-  end;
-  if (FListItems[Acol].Items.Count > -1) and (FListItems[Acol].Items.Count <= Arow) then
-  begin
-    FListItems[Acol].Items.BeginUpdate;
-    for i := FListItems[Acol].Items.Count + 1 to arow do
-      FListItems[Acol].Items.Add('');
-
-    FListItems[Acol].Items.Insert(Arow, Avalue);
-    FListItems[Acol].Items.EndUpdate;
-  end
-  else
-  begin
-    FListItems[Acol].Items.BeginUpdate;
-    FListItems[Acol].Items[Arow] := Avalue;
-    FListItems[Acol].Items.EndUpdate;
-  end;
- }
-  FListItems.Cells[acol,arow]:=avalue;// [Acol].Items[Arow] := Avalue;
- // Scrollscreen;
- // Invalidate;
-
+  FListItems.Cells[acol,arow]:=avalue;
+  FItemVOffset:=FListItems.Count - FItemsShown;
 end;
 
 procedure TONURColumList.SetHeadervisible(AValue: boolean);
@@ -673,6 +561,7 @@ begin
   FListItems.BeginUpdate;
   FListItems.Assign(Value);
   FListItems.EndUpdate;
+   FItemVOffset:=FListItems.Count - FItemsShown;
 //  Scrollscreen;
 //  Invalidate;
 end;
@@ -690,10 +579,10 @@ End;
 
 procedure TONURColumList.VScrollBarChange(Sender: TObject);
 begin
+
   if fmodusewhelll = False then
   begin
     FItemvOffset := VScrollBar.Position;
-  //  Paint;
     Invalidate;
   end;
 end;
@@ -708,7 +597,42 @@ begin
   end;
 end;
 
-procedure TONURColumList.CNKeyDown(var Message:{$IFDEF UNIX} TLMKeyDown {$ELSE} TWMKeyDown{$ENDIF});
+
+
+function TONURColumList.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint
+  ): boolean;
+begin
+   inherited;
+  if not VScrollBar.Visible then exit;
+  if FItemVOffset >= VScrollBar.max then exit;
+  fmodusewhelll := True;
+  VScrollBar.Position := VScrollBar.Position + Mouse.WheelScrollLines;
+  FItemVOffset := VScrollBar.Position;
+  Result := True;
+  Invalidate;
+  fmodusewhelll := False;
+end;
+
+function TONURColumList.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint
+  ): boolean;
+begin
+   inherited;
+  if not VScrollBar.Visible then exit;
+
+  if FItemVOffset <= 0 then exit;
+
+  fmodusewhelll := True;
+  VScrollBar.Position := VScrollBar.Position - Mouse.WheelScrollLines;
+
+  FItemVOffset := VScrollBar.Position;
+  Result := True;
+  Invalidate;
+  fmodusewhelll := False;
+end;
+
+
+
+procedure TONURColumList.CNKeyDown(var Message: TWMKeyDown);
 var
   x: integer;
 begin
@@ -766,33 +690,6 @@ end;
 
 
 
-function TONURColumList.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint
-  ): boolean;
-begin
-  inherited;
-  if not VScrollBar.Visible then exit;
-  if FItemVOffset >= VScrollBar.max then exit;
-  fmodusewhelll := True;
-  VScrollBar.Position := VScrollBar.Position + Mouse.WheelScrollLines;
-  FItemVOffset := VScrollBar.Position;
-  Result := True;
-  Invalidate;
-  fmodusewhelll := False;
-end;
-
-function TONURColumList.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint
-  ): boolean;
-begin
-  inherited;
-  if not VScrollBar.Visible then exit;
-  if FItemVOffset <= 0 then exit;
-  fmodusewhelll := True;
-  VScrollBar.Position := VScrollBar.Position - Mouse.WheelScrollLines;
-  FItemVOffset := VScrollBar.Position;
-  Result := True;
-  Invalidate;
-  fmodusewhelll := False;
-end;
 
 constructor TONURColumList.Create(Aowner: TComponent);
 begin
@@ -856,7 +753,7 @@ begin
   fheader.cropname := 'HEADER';
 
 
-
+  fmodusewhelll := False;
 
 
   Customcroplist.Add(FTopleft);
@@ -934,19 +831,6 @@ begin
   FreeAndNil(FListItems);
   FreeAndNil(Fcolumns);
 
-{  FreeAndNil(fheader);
-  FreeAndNil(FTop);
-  FreeAndNil(FBottom);
-  FreeAndNil(FCenter);
-  FreeAndNil(FRight);
-  FreeAndNil(Fleft);
-  FreeAndNil(FTopRight);
-  FreeAndNil(FBottomRight);
-  FreeAndNil(FTopleft);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(factiveitems);
-  FreeAndNil(fitems); }
-
   inherited Destroy;
 end;
 
@@ -971,11 +855,11 @@ begin
 
          if (Skindata <> nil) then
          begin
-           Width :=(self.Oleft.Width)+ (ONORMAL.Width);
+           Width :=(self.fleft.Width)+ (TONURCustomCrop(Customcroplist[0]).Width);// 0=customcrop id   FNormali.Width);
            left := Self.ClientWidth - ClientWidth;
-           Top := self.OTOP.Height;
+           Top := self.fTOP.Height;
 
-           Height := Self.ClientHeight - ((self.OBOTTOM.Height) + (self.OTOP.Height));
+           Height := Self.ClientHeight - ((self.fBOTTOM.Height) + (self.fTOP.Height));
            Max := (FListItems.Count - FItemsShown) ;//+ 1;
            Alpha := self.Alpha;
            if kind<>oVertical then Kind:=oVertical;
@@ -1021,7 +905,7 @@ begin
           left   := self.Fleft.Width;//(self.ONleft.Right - self.ONleft.Left);
           Width  := self.ClientWidth-(self.Fleft.Width+self.FRight.Width);//(self.ONRIGHT.Right - self.ONRIGHT.Left));
 
-          Height := self.FTop.Height+ONORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
+          Height := self.FTop.Height+(TONURCustomCrop(Customcroplist[0]).Height);//FNormali.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
           Top    := self.ClientHeight-Height;//(self.ONTOP.Bottom - self.ONTOP.Top);
 
          if (fark>0) and (fark>ClientWidth) then
@@ -1035,7 +919,6 @@ begin
       end;
     end;
 
-   // WriteLn(fark,'  ',self.ClientWidth);
 
 
   end else
@@ -1080,7 +963,7 @@ end;
 
 procedure TONURColumList.Paint;
 var
-  a, b, k, z, i: integer;
+  a, b, z, i: integer;
   x1, x2, x3, x4,fheaderh, fark,fark2: integer;
 begin
 
@@ -1108,7 +991,7 @@ begin
       x2 := 0;
       x3 := 0;
       x4 := 0;
-
+     // fark2:=0;
         if (fheadervisible = True)  then
         for z := 0+abs(FItemhOffset) to (Fcolumns.Count - 1) do  // columns
         begin
@@ -1215,26 +1098,7 @@ begin
      end;
 
 
-   {   with vScrollBar do
-      begin
-         if (Skindata = nil) then
-         Skindata := Self.Skindata;
-
-         if (Skindata <> nil) then
-         begin
-           Width :=(self.ONleft.Width)+ (ONNORMAL.Width);
-           left := Self.ClientWidth - ClientWidth;
-           Top := self.ONTOP.Height;
-
-           Height := Self.ClientHeight - ((self.ONBOTTOM.Height) + (self.ONTOP.Height));
-           Max := (FListItems.Count - FItemsShown) ;//+ 1;
-           Alpha := self.Alpha;
-           if kind<>oVertical then Kind:=oVertical;
-         End;
-      end;
-     }
-
-
+    // fark:=0;
      for z := 0 to Fcolumns.Count - 1 do
      begin
        if Fcolumns[z].Visible=true then
@@ -1249,8 +1113,7 @@ begin
      end;
 
 
-      //    Scrollscreen;
-   //  if hScrollBar.Max>0 then
+
      if  fark2>=self.ClientWidth then
      begin
       hScrollBar.Visible := True;
@@ -1488,8 +1351,6 @@ begin
 end;
 
 procedure TONURColumList.MoveHome;
-var
-  i: integer;
 begin
   if FListItems.Count > 0 then
   begin
@@ -1499,8 +1360,6 @@ begin
 end;
 
 procedure TONURColumList.MoveEnd;
-var
-  i: integer;
 begin
   if FListItems.Count > 0 then
   begin
@@ -1672,11 +1531,9 @@ end;
 
 procedure TONURlistItems.Setcells(Acol, Arow: integer; Avalue: string);
 var
-  i: integer;
   a:TONURlistItem;
 begin
   if Acol>=TONURColumList(GetOwner).Columns.Count then
-
   TONURColumList(GetOwner).Columns.Add;
 
   if (Count > 0) and (Count > Arow) then
@@ -1890,17 +1747,6 @@ begin
   if Assigned(hScrollBar) then
     FreeAndNil(hScrollBar);
   FreeAndNil(Flist);
-{  FreeAndNil(FTop);
-  FreeAndNil(FBottom);
-  FreeAndNil(FCenter);
-  FreeAndNil(FRight);
-  FreeAndNil(Fleft);
-  FreeAndNil(FTopRight);
-  FreeAndNil(FBottomRight);
-  FreeAndNil(FTopleft);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(factiveitems);
-  FreeAndNil(fitems);}
 
   inherited Destroy;
 end;
@@ -1955,10 +1801,10 @@ begin
       begin
         if (Skindata = nil) then
           Skindata := Self.Skindata;
-        Width   := ONORMAL.Width;
+        Width   := TONURCustomCrop(Customcroplist[0]).Width;//ONORMAL.Width;
         left    := Self.ClientWidth - ClientWidth;
         Top     := self.ftop.Height;
-        Height  := Self.ClientHeight - (self.OTOP.Height+self.OBOTTOM.Height);
+        Height  := Self.ClientHeight - (self.fTOP.Height+self.fBOTTOM.Height);
         Max     := Flist.Count - FItemsShown;
         Alpha   := self.Alpha;
         if Kind = oHorizontal then  Kind := oVertical;
@@ -1991,7 +1837,7 @@ begin
           left   := self.Fleft.Width;//(self.ONleft.Right - self.ONleft.Left);
           Width  := self.ClientWidth-(Left+self.FRight.Width);//(self.ONRIGHT.Right - self.ONRIGHT.Left));
 
-          Height := self.FTop.Height+ONORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
+          Height := self.FTop.Height+(TONURCustomCrop(Customcroplist[0]).Height);//ONORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
           Top    := self.ClientHeight-Height;//(self.ONTOP.Bottom - self.ONTOP.Top);
 
           if fark>0 then
@@ -2046,11 +1892,9 @@ end;
 
 procedure TONURListBox.paint;
 var
-  a, b, k, i: integer;
+  a, b, i: integer;
    Target: Trect;
 begin
-//  if csDesigning in ComponentState then
-//    Exit;
   if not Visible then Exit;
 
   if fchangelist=true then   // if items add or delete then calc to scrollbar
@@ -2062,18 +1906,15 @@ begin
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
-//  if (Skindata <> nil) then
+
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
+
    //ORTA CENTER
    DrawPartnormal(FCenter.Croprect, self, fcenter.Targetrect, alpha);
-
-
 
   if Flist.Count > 0 then
   begin
     FItemsShown := FCenter.Targetrect.Height div FitemHeight;
-
-
 
     a := Fleft.Width;
     b := FTop.Height;
@@ -2174,10 +2015,7 @@ var
   w: Integer;
 begin
   Result := -1;
-
   w := FTop.Height;
-
-  //if (Pos.Y >= 0) and (PtInRect(itempaintHeight,pos)) then
   if Pos.Y >= 0 then
   begin
     Result := FItemvOffset + ((Pos.Y - w) div FItemHeight);
@@ -2201,13 +2039,9 @@ end;
 
 
 procedure TONURListBox.MoveDown;
-//  var
-//    Shift: boolean;
 begin
   if flist.Count > 0 then
   begin
-    //     Shift := GetKeyState(VK_SHIFT) < 0;
-
     if (findex > (FItemvOffset + FItemsShown)) or (findex < (FItemvOffset)) then
     begin
       findex := FItemvOffset;
@@ -2223,8 +2057,6 @@ begin
 end;
 
 procedure TONURListBox.MoveEnd;
-var
-  i: integer;
 begin
   if flist.Count > 0 then
   begin
@@ -2238,8 +2070,6 @@ begin
 end;
 
 procedure TONURListBox.MoveHome;
-var
-  i: integer;
 begin
   if flist.Count > 0 then
   begin
@@ -2514,34 +2344,13 @@ begin
 end;
 
 procedure tpopupformcombobox.doshow;
-var
-  i: Integer;
 begin
   inherited doshow;
-  // if oblist.Skindata=nil then
-  // oblist.Skindata:=FCaller.Skindata;
-  //writeln('OK');
-//  oblist.Font := fCaller.Font;
-//  oblist.Skindata := fCaller.Skindata;
- // oblist.items := fCaller.items;
- // oblist.Alpha := fCaller.Alpha;
-
-
-//  oblist.items.Clear;
-
- // oblist.items.Assign(FCaller.Items);// :
- //writeln(FCaller.items.Count);
-// for i:=0 to fcaller.items.count-1 do
-// oblist.items.Add(FCaller.items[i]);
- //writeln(FCaller.items[i]);
-// oblist.items:= FCaller.items;
-//  writeln('OK2');
 end;
 
 procedure tpopupformcombobox.keepinview(const popuporigin: tpoint);
 var
   ABounds: TRect;
-  P: TPoint;
 begin
   ABounds := Screen.MonitorFromPoint(PopupOrigin).WorkAreaRect; // take care of taskbar
   if PopupOrigin.X + clientWidth > ABounds.Right then
@@ -2641,16 +2450,8 @@ end;
 procedure TONURComboBox.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
- { if button = mbLeft then
-  begin
-    if not (PtInRect(ClientRect,point(x, y))) then
-     begin
- //      kclick(self);
- //     Invalidate;
-     end;
-  end; }
   inherited MouseDown(Button, Shift, X, Y);
-  //  fvalue:=strtoint(text);
+
   if Button = mbLeft then
   begin
     if (PtInRect(fbutonarea, point(x, y))) then
@@ -2664,7 +2465,7 @@ begin
       kclick(self);
     end;
   end;
-  //   Text:=inttostr(fvalue);
+
   Invalidate;
 end;
 
@@ -2697,7 +2498,7 @@ begin
   end;
 end;
 
-procedure TONURComboBox.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURComboBox.CMonmouseenter(var Messages: Tmessage);
 var
   aPnt: TPoint;
 begin
@@ -2722,7 +2523,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURComboBox.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURComboBox.CMonmouseleave(var Messages: Tmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2760,11 +2561,6 @@ end;
 procedure TONURComboBox.LstPopupShowHide(Sender: TObject);
 begin
   fdropdown := (Sender as Tpopupformcombobox).Visible;
-  //  if fdropdown=true then
-  //   Fbutton.Caption :='▲'      //▲ ▼ ► ◄  // ALT+30 ALT+31 ALT+16 ALT+17
-  //  else
-  //   Fbutton.Caption :='▼';     //▲ ▼ ► ◄  // ALT+30 ALT+31 ALT+16 ALT+17
-
   Invalidate;
 end;
 
@@ -2917,20 +2713,7 @@ begin
   Customcroplist.Clear;
 
   if Assigned(Fliste) then FreeAndNil(Fliste);
-{  FreeAndNil(FNormal);
-  FreeAndNil(FPress);
-  FreeAndNil(FEnter);
-  FreeAndNil(Fdisable);
 
-  FreeAndNil(FBottom);
-  FreeAndNil(FTop);
-  FreeAndNil(FCenter);
-  FreeAndNil(FRight);
-  FreeAndNil(Fleft);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(FBottomRight);
-  FreeAndNil(FTopleft);
-  FreeAndNil(FTopRight);}
   inherited Destroy;
 
 end;
@@ -2953,15 +2736,13 @@ end;
 
 procedure TONURComboBox.Paint;
 var
-  TrgtRect, SrcRect: TRect;
+  TrgtRect: TRect;
 begin
-//   if csDesigning in ComponentState then
-//    exit;
+
   if not Visible then exit;
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     //TOPLEFT   //SOLÜST
@@ -2986,14 +2767,14 @@ begin
 
     if Enabled = False then
     begin
-      TrgtRect := Fdisable.Croprect;//Rect(Fdisable.FSLeft, Fdisable.FSTop, Fdisable.FSRight, Fdisable.FSBottom);
+      TrgtRect := Fdisable.Croprect;
     end
     else
     begin
       case Fstate of
-        obsnormal : TrgtRect := FNormal.Croprect;// Rect(FNormal.FSLeft, FNormal.FSTop, FNormal.FSRight, FNormal.FSBottom);
-        obshover  : TrgtRect := FEnter.Croprect;// Rect(FEnter.FSLeft, FEnter.FSTop, FEnter.FSRight, FEnter.FSBottom);
-        obspressed: TrgtRect := FPress.Croprect;// Rect(FPress.FSLeft, FPress.FSTop, FPress.FSRight, FPress.FSBottom);
+        obsnormal : TrgtRect := FNormal.Croprect;
+        obshover  : TrgtRect := FEnter.Croprect;
+        obspressed: TrgtRect := FPress.Croprect;
       end;
 
       DrawPartnormal(TrgtRect, self, fbutonarea, alpha);

@@ -6,37 +6,21 @@ unit onurpanel;
 interface
 
 uses
- {$IFDEF UNIX} UNIX,LMessages {$ELSE} Windows{$ENDIF}, SysUtils,  Forms, LCLType, LCLIntf, Classes,
-  Controls, Graphics, ExtCtrls, maskedit, BGRABitmap, BGRABitmapTypes,
-  Dialogs, types, LazUTF8, Zipper,onurctrl;
+  Windows, SysUtils, Classes, Controls, Graphics, BGRABitmap, BGRABitmapTypes, onurctrl;
 
 type
-
   { TONPanel }
-
   TONURPanel = class(TONURCustomControl)
   private
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
     FTop, FBottom, FCenter: TONURCUSTOMCROP;
+  protected
     procedure SetSkindata(Aimg: TONURImg); override;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
-
-
-    //Procedure Resizepanel;
-    property OLEFT        : TONURCUSTOMCROP read Fleft        write Fleft;
-    property ORIGHT       : TONURCUSTOMCROP read FRight       write FRight;
-    property OCENTER      : TONURCUSTOMCROP read FCenter      write FCenter;
-    property OBOTTOM      : TONURCUSTOMCROP read FBottom      write FBottom;
-    property OBOTTOMLEFT  : TONURCUSTOMCROP read FBottomleft  write FBottomleft;
-    property OBOTTOMRIGHT : TONURCUSTOMCROP read FBottomRight write FBottomRight;
-    property OTOP         : TONURCUSTOMCROP read FTop         write FTop;
-    property OTOPLEFT     : TONURCUSTOMCROP read FTopleft     write FTopleft;
-    property OTOPRIGHT    : TONURCUSTOMCROP read FTopRight    write FTopRight;
-    protected
   published
     property Alpha;
     property Skindata;
@@ -99,81 +83,10 @@ type
     property OnStartDrag;
     property OnUnDock;
   end;
-
-
-  { TONHeaderPanel }
-
-  TONURHeaderPanel = class(TONURPanel)
-  private
-  public
-    constructor Create(AOwner: TComponent); override;
-  published
-    property Alpha;
-    property Skindata;
-    property Align;
-    property Alignment;
-    property Anchors;
-    property AutoSize;
-    property BorderSpacing;
-    property BidiMode;
-    property Caption;
-    property ChildSizing;
-    property ClientHeight;
-    property ClientWidth;
-    property Crop;
-    property Color;
-    property Constraints;
-    property DockSite;
-    property DoubleBuffered;
-    property DragCursor;
-    property DragKind;
-    property DragMode;
-    property Enabled;
-    property Font;
-    property ParentBackground;
-    property ParentBidiMode;
-    property ParentColor;
-    property ParentDoubleBuffered;
-    property ParentFont;
-    property ParentShowHint;
-    property PopupMenu;
-    property ShowHint;
-    property TabOrder;
-    property TabStop;
-    property UseDockManager default True;
-    property Visible;
-    property OnClick;
-    property OnContextPopup;
-    property OnDockDrop;
-    property OnDockOver;
-    property OnDblClick;
-    property OnDragDrop;
-    property OnDragOver;
-    property OnEndDock;
-    property OnEndDrag;
-    property OnEnter;
-    property OnExit;
-    property OnGetSiteInfo;
-    property OnGetDockCaption;
-    property OnMouseDown;
-    property OnMouseEnter;
-    property OnMouseLeave;
-    property OnMouseMove;
-    property OnMouseUp;
-    property OnMouseWheel;
-    property OnMouseWheelDown;
-    property OnMouseWheelUp;
-    property OnPaint;
-    property OnResize;
-    property OnStartDock;
-    property OnStartDrag;
-    property OnUnDock;
-  end;
-
 
   { TONCollapExpandPanel }
 
-  TONURCollapExpandPanel = class(TonURCustomcontrol)
+  TONURCollapExpandPanel = class(TONURCustomcontrol)
   private
     FStatus          : TONURExpandStatus;
     FOnCollapse      : TNotifyEvent;
@@ -195,51 +108,31 @@ type
     FPress, FEnter   : TONURCUSTOMCROP;
     Fdisable         : TONURCUSTOMCROP;
     Fcaptionarea     : TONURCUSTOMCROP;
-    FexNormal        : TONURCUSTOMCROP;
+   { FexNormal        : TONURCUSTOMCROP;
     FexPress         : TONURCUSTOMCROP;
     FexEnter         : TONURCUSTOMCROP;
-    Fexdisable       : TONURCUSTOMCROP;
-    //Procedure Resizecollapsedpanel;
+    Fexdisable       : TONURCUSTOMCROP;}
     procedure Setheaderstate(AValue: TONURCapDirection);
     procedure SetStatus(const AValue: TONURExpandStatus);
     procedure SetAutoCollapse(const AValue: boolean);
     procedure SetOnCollapse(const AValue: TNotifyEvent);
     procedure SetOnExpand(const AValue: TNotifyEvent);
-    function GetMinheight: integer;
-    function GetNormalheight: integer;
+//    function GetMinheight: integer;
+//    function GetNormalheight: integer;
     procedure Setminheight(const Avalue: integer);
     procedure Setnormalheight(const Avalue: integer);
     procedure ResizePanel();
+    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+  protected
+    procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    procedure CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} ); message CM_MOUSELEAVE;
-    procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
     procedure SetSkindata(Aimg: TONURImg); override;
-  protected
     procedure DblClick; override;
-   public
-    property OLEFT         : TONURCUSTOMCROP      read Fleft           write Fleft;
-    property ORIGHT        : TONURCUSTOMCROP      read FRight          write FRight;
-    property OCENTER       : TONURCUSTOMCROP      read FCenter         write FCenter;
-    property OBOTTOM       : TONURCUSTOMCROP      read FBottom         write FBottom;
-    property OBOTTOMLEFT   : TONURCUSTOMCROP      read FBottomleft     write FBottomleft;
-    property OBOTTOMRIGHT  : TONURCUSTOMCROP      read FBottomRight    write FBottomRight;
-    property OTOP          : TONURCUSTOMCROP      read FTop            write FTop;
-    property OTOPLEFT      : TONURCUSTOMCROP      read FTopleft        write FTopleft;
-    property OTOPRIGHT     : TONURCUSTOMCROP      read FTopRight       write FTopRight;
-    property ONORMAL       : TONURCUSTOMCROP      read FNormal         write FNormal;
-    property OPRESSED      : TONURCUSTOMCROP      read FPress          write FPress;
-    property OHOVER        : TONURCUSTOMCROP      read FEnter          write FEnter;
-    property ODISABLE      : TONURCUSTOMCROP      read Fdisable        write Fdisable;
-    property OEXNORMAL     : TONURCUSTOMCROP      read FexNormal       write FexNormal;
-    property OEXPRESSED    : TONURCUSTOMCROP      read FexPress        write FexPress;
-    property OEXHOVER      : TONURCUSTOMCROP      read FexEnter        write FexEnter;
-    property OEXDISABLE    : TONURCUSTOMCROP      read Fexdisable      write Fexdisable;
-    property OCAPTION      : TONURCUSTOMCROP      read Fcaptionarea    write Fcaptionarea;
-
+  public
     constructor Create(Aowner: TComponent); override;
     destructor Destroy; override;
     procedure paint; override;
@@ -250,8 +143,8 @@ type
     property OnCollapse     : TNotifyEvent         read FOnCollapse     write SetOnCollapse;
     property AutoCollapse   : boolean              read FAutoCollapse   write SetAutoCollapse;
     property Status         : TONURExpandStatus    read FStatus         write SetStatus;
-    property Minheight      : integer              read GetMinheight    write Setminheight;
-    property Normalheight   : integer              read GetNormalheight write Setnormalheight;
+    property Minheight      : integer              read fminheight      write Setminheight;
+    property Normalheight   : integer              read fnormalheight   write Setnormalheight;
     property HeaderState    : TONURCapDirection    read Fheaderstate    write Setheaderstate;
     property ButtonPosition : TONURButtonDirection read fbutondirection write fbutondirection;
     property Skindata;
@@ -308,15 +201,6 @@ type
     procedure Paint; override;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
-    property OLEFT        : TONURCUSTOMCROP read Fleft        write Fleft;
-    property ORIGHT       : TONURCUSTOMCROP read FRight       write FRight;
-    property OCENTER      : TONURCUSTOMCROP read FCenter      write FCenter;
-    property OBOTTOM      : TONURCUSTOMCROP read FBottom      write FBottom;
-    property OBOTTOMLEFT  : TONURCUSTOMCROP read FBottomleft  write FBottomleft;
-    property OBOTTOMRIGHT : TONURCUSTOMCROP read FBottomRight write FBottomRight;
-    property OTOP         : TONURCUSTOMCROP read FTop         write FTop;
-    property OTOPLEFT     : TONURCUSTOMCROP read FTopleft     write FTopleft;
-    property OTOPRIGHT    : TONURCUSTOMCROP read FTopRight    write FTopRight;
   published
     property Alpha;
     property Skindata;
@@ -366,15 +250,89 @@ type
     //    property OnUnDock;
   end;
 
+  { TONURHeaderPanel }
+
+  TONURHeaderPanel = class(TONURPanel)
+  private
+    FMousePoint : TPoint;
+    FFormPoint  : TPoint;
+    fmoveable   : Boolean;
+    function GetMovable: Boolean;
+    procedure SetMovable(AValue: Boolean);
+  protected
+    procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X, Y: integer); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+  published
+    property Movable : Boolean read GetMovable write SetMovable;
+    property Alpha;
+    property Skindata;
+    property Align;
+    property Alignment;
+    property Anchors;
+    property AutoSize;
+    property BorderSpacing;
+    property BidiMode;
+    property Caption;
+    property ChildSizing;
+    property ClientHeight;
+    property ClientWidth;
+    property Crop;
+    property Color;
+    property Constraints;
+    property DockSite;
+    property DoubleBuffered;
+    property DragCursor;
+    property DragKind;
+    property DragMode;
+    property Enabled;
+    property Font;
+    property ParentBackground;
+    property ParentBidiMode;
+    property ParentColor;
+    property ParentDoubleBuffered;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
+    property ShowHint;
+    property TabOrder;
+    property TabStop;
+    property UseDockManager default True;
+    property Visible;
+    property OnClick;
+    property OnContextPopup;
+    property OnDockDrop;
+    property OnDockOver;
+    property OnDblClick;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnEndDock;
+    property OnEndDrag;
+    property OnEnter;
+    property OnExit;
+    property OnGetSiteInfo;
+    property OnGetDockCaption;
+    property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
+    property OnPaint;
+    property OnResize;
+    property OnStartDock;
+    property OnStartDrag;
+    property OnUnDock;
+  end;
 
 
 procedure Register;
 
-
-
 implementation
-
-uses BGRAPath, inifiles, clipbrd, strutils, LazUnicode,BGRAFreeType, LazFreeTypeFontCollection,BGRATransform;
 
 procedure Register;
 begin
@@ -418,17 +376,18 @@ begin
   if FOnExpand = AValue then Exit;
   FOnExpand := AValue;
 end;
-
+{
 function TONURCollapExpandPanel.GetMinheight: integer;
 begin
   Result := fminheight;
 end;
 
+
 function TONURCollapExpandPanel.GetNormalheight: integer;
 begin
   Result := fnormalheight;
 end;
-
+}
 procedure TONURCollapExpandPanel.Setminheight(const Avalue: integer);
 begin
   if fminheight = AValue then Exit;
@@ -487,7 +446,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURCollapExpandPanel.CMonmouseenter(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
+procedure TONURCollapExpandPanel.CMonmouseenter(var Messages: Tmessage);
 var
   aPnt: TPoint;
 begin
@@ -499,30 +458,15 @@ begin
   begin
     Fstate := obshover;
     Invalidate;
- { end
-  else
-  begin
-    if Fstate=obshover then
-    begin
-      Fstate := obsnormal;
-      Invalidate;
-    end;  }
   end;
 end;
 
-procedure TONURCollapExpandPanel.CMonmouseleave(var Messages: {$IFDEF UNIX} TLmessage {$ELSE} Tmessage{$ENDIF} );
-// var
-//   aPnt: TPoint;
+procedure TONURCollapExpandPanel.CMonmouseleave(var Messages: Tmessage);
 begin
-  //   GetCursorPos(aPnt);
-  //   aPnt := ScreenToClient(aPnt);
-  //  if PtInRect(fbutonarea, aPnt) then
-  //   begin
   if Fstate=obsnormal then exit;
   if Enabled=false then exit;
   Fstate := obsnormal;
   Invalidate;
-  //   end;
 end;
 
 procedure TONURCollapExpandPanel.MouseMove(Shift: TShiftState; X, Y: integer);
@@ -531,22 +475,12 @@ begin
   if enabled=false then exit;
   if fstate=obsnormal then exit;
 
- { if not PtInRect(fbutonarea, Point(X, Y)) then
+  if PtInRect(fbutonarea, Point(X, Y)) then
   begin
-    Fstate := obsnormal;
-    Invalidate;
-  end else
-  begin    }
-   if PtInRect(fbutonarea, Point(X, Y)) then
-   begin
     Fstate := obshover;
     Invalidate;
-   end;
-//  end;
+  end;
 end;
-
-
-
 
 
 procedure TONURCollapExpandPanel.DblClick;
@@ -651,20 +585,6 @@ begin
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
-{begin
-  FreeAndNil(Fleft);
-  FreeAndNil(FTop);
-  FreeAndNil(FRight);
-  FreeAndNil(FBottom);
-  FreeAndNil(FTopleft);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(FTopRight);
-  FreeAndNil(FCenter);
-  FreeAndNil(FNormal);
-  FreeAndNil(FPress);
-  FreeAndNil(FEnter);
-  FreeAndNil(Fdisable);
-  FreeAndNil(Fcaptionarea);  }
   inherited Destroy;
 end;
 
@@ -689,15 +609,12 @@ end;
 
 procedure TONURCollapExpandPanel.paint;
 var
-SrcRect,captionrect: TRect;
+SrcRect: TRect;
 
 begin
-//   if csDesigning in ComponentState then
-//    exit;
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
@@ -731,21 +648,21 @@ begin
         case Fstate of
           obsNormal:
           begin
-            SrcRect := FNormal.Croprect;// Rect(FNormal.FSLeft, FNormal.FSTop,FNormal.FSRight, FNormal.FSBottom);
+            SrcRect := FNormal.Croprect;
           end;
           obspressed:
           begin
-            SrcRect := FPress.Croprect;//Rect(FPress.FSLeft, FPress.FSTop,FPress.FSRight, FPress.FSBottom);
+            SrcRect := FPress.Croprect;
           end;
           obshover:
           begin
-            SrcRect := FEnter.Croprect;//Rect(FEnter.FSLeft, FEnter.FSTop,FEnter.FSRight, FEnter.FSBottom);
+            SrcRect := FEnter.Croprect;
           end;
         end;
       end
       else
       begin
-        SrcRect := Fdisable.Croprect;//Rect(Fdisable.FSLeft, Fdisable.FSTop, Fdisable.FSRight,Fdisable.FSBottom);
+        SrcRect := Fdisable.Croprect;
       end;
 
 
@@ -757,36 +674,17 @@ begin
       fbutonarea := Rect(Fleft.Width, FTop.Height,SrcRect.Width, FTop.Height+SrcRect.Height);//FTop.Height);
 
 
-
-
       DrawPartnormal(SrcRect, self, fbutonarea, alpha);
 
       if Length(Caption) > 0 then
       begin
-        //          canvas.Font.Color := self.Fontcolor;
-      //  textx := (self.Width div 2) - (self.canvas.TextWidth(Caption) div 2);
-      //  Texty := ((FTop.FSBottom - FTop.FSTop) div 2) -
-      //    (self.canvas.TextHeight(Caption) div 2);
-
-     //   WriteLn(captionrect.Width,'  ');
-
-       // captionrect.Width:=captionrect.Width-fbutonarea.Width;
-
-      //  if fbutondirection=obleft then
-     //   captionrect.Left:=captionrect.Left+fbutonarea.Width;
-
-     //   captionrect.Height:=fbutonarea.Height;
-
-      //  captionrect:=rect((Fleft.FSright - Fleft.FSLeft),(FTop.FSBottom - FTop.FSTop),Self.Width-(FRight.FSright - FRight.FSLeft),fbutonarea.Height);
-        if fbutondirection=obleft then      // captionrect.Left:=captionrect.Left+fbutonarea.Width;
+        if fbutondirection=obleft then
         Fcaptionarea.Targetrect.left +=fbutonarea.Width;
 
-        resim.TextRect(captionrect,Caption,taCenter,tlCenter,ColorToBGRA(self.font.color,alpha));
-
-        //Fresim.CanvasBGRA.Brush.Style := bsClear;
-        //Fresim.TextOut(textx,texty,Caption,ColorToBGRA(self.font.color));// CanvasBGRA.TextOut(Textx, Texty, (Caption));
+        resim.TextRect(Fcaptionarea.Targetrect{captionrect},Caption,taCenter,tlCenter,ColorToBGRA(self.font.color,alpha));
       end;
-       //WriteLn(captionrect.Left,'  ',captionrect.Width,'  ',self.Width);
+
+
 
       if Crop then
         CropToimg(resim);
@@ -804,13 +702,7 @@ end;
 
 
 
-{ TONURHeaderPanel }
 
-constructor TONURHeaderPanel.Create(AOwner: TComponent);
-begin
-  inherited Create(AOwner);
-  skinname := 'headerpanel';
-end;
 
 
 { TONPanel }
@@ -1055,5 +947,56 @@ begin
     resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
   inherited Paint;
+end;
+
+
+
+
+{ TONURHeaderPanel }
+
+function TONURHeaderPanel.getMovable: Boolean;
+begin
+  Result:=fmoveable;
+end;
+
+procedure TONURHeaderPanel.SetMovable(AValue: Boolean);
+begin
+  if AValue<> fmoveable then
+  fmoveable := AValue;
+end;
+
+procedure TONURHeaderPanel.MouseMove(Shift: TShiftState; X, Y: integer);
+begin
+  inherited MouseMove(Shift, X, Y);
+
+  if (GetKeyState(VK_LBUTTON) < 0) and (fmoveable = true) then
+  begin
+    self.Parent.left := Mouse.CursorPos.X - (FMousePoint.X - FFormPoint.X);
+    self.Parent.top  := Mouse.CursorPos.Y - (FMousePoint.Y - FFormPoint.Y);
+  end;
+end;
+
+procedure TONURHeaderPanel.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: integer);
+begin
+  inherited MouseDown(Button, Shift, X, Y);
+  if (GetKeyState(VK_LBUTTON) < 0) and (fmoveable = true) then
+  begin
+    FMousePoint := Mouse.CursorPos;
+    FFormPoint  := Point(self.Parent.Left, self.Parent.Top);
+  end;
+end;
+
+constructor TONURHeaderPanel.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  skinname  := 'headerpanel';
+  fmoveable := true;
+  Height := 32;
+  Align := alTop;
+  ChildSizing.HorizontalSpacing := 3;
+  ChildSizing.LeftRightSpacing := 4;
+  ChildSizing.TopBottomSpacing := 4;
+
 end;
 end.
