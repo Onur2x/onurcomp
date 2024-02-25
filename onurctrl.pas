@@ -128,8 +128,9 @@ type
     Fskinname   : string;
     falpha      : byte;
 
-    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
-    procedure CreateParams(var Params: TCreateParams);
+    function GetSkindata: TONURImg;
+//    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+//    procedure CreateParams(var Params: TCreateParams);
     procedure SetAlignment(const Value: TAlignment);
     function GetTransparent: boolean;
     procedure SetTransparent(NewTransparent: boolean);
@@ -142,22 +143,23 @@ type
     { Public declarations }
     Captionvisible     : boolean;
     resim: TBGRABitmap;
-    Customcroplist:TList;
+    Customcroplist:TFPList;//TList;
     Backgroundbitmaped : boolean;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
   protected
+    procedure Resize; override;
     procedure SetKind(AValue: TONURkindstate); virtual;
     procedure SetSkindata(Aimg: TONURImg); virtual;
     property Kind        : TONURkindstate read Getkind        write Setkind default oHorizontal;
   published
     property Align;
-    property Alignment   : TAlignment   read FAlignment     write SetAlignment default taCenter;
-    property Alpha       : Byte         read falpha         write setalpha default 255;
-    property Transparent : Boolean      read GetTransparent write SetTransparent default True;
-    property Skindata    : TONURImg       read FSkindata      write SetSkindata;
-    property Skinname    : string       read fskinname      write Setskinname;
+    property Alignment   : TAlignment   read FAlignment      write SetAlignment default taCenter;
+    property Alpha       : Byte         read falpha          write setalpha default 255;
+    property Transparent : Boolean      read GetTransparent  write SetTransparent default True;
+    property Skindata    : TONURImg     read GetSkindata     write SetSkindata;
+    property Skinname    : string       read fskinname       write Setskinname;
     property Anchors;
     property AutoSize;
     property BorderSpacing;
@@ -207,6 +209,8 @@ type
     Fkind      : TonURkindstate;
     fskinname  : String;
     falpha     : Byte;
+    function GetSkindata: TONURImg;
+    function Getskinname: String;
     procedure SetCrop(Value: boolean);
     function Getkind: TonURkindstate;
     procedure SetKind(AValue: TonURkindstate);
@@ -222,21 +226,22 @@ type
     WindowRgn  : HRGN;
     Captionvisible     : boolean;
     Backgroundbitmaped : boolean;
-    Customcroplist:TList;
+    Customcroplist:TFPList;//TList;
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Paint; override;
   protected
+    procedure Resize; override;
     procedure CropToimg(Buffer: TBGRABitmap); virtual;
     procedure SetSkindata(Aimg: TONURImg); virtual;
     property Kind      : TonURkindstate read Getkind    write Setkind default oHorizontal;
   published
     property Align;
-    property Alignment : TAlignment   read FAlignment write SetAlignment default taCenter;
-    property Alpha     : Byte         read falpha     write setalpha default 255;
-    property Skindata  : TONURImg       read FSkindata  write SetSkindata;
-    property Skinname  : String       read fskinname  write Setskinname;
-    property Crop      : Boolean      read Fcrop      write SetCrop default False;
+    property Alignment : TAlignment   read FAlignment  write SetAlignment default taCenter;
+    property Alpha     : Byte         read falpha      write setalpha default 255;
+    property Skindata  : TONURImg     read GetSkindata write SetSkindata;
+    property Skinname  : String       read Getskinname   write Setskinname;
+    property Crop      : Boolean      read Fcrop       write SetCrop default False;
     property Anchors;
     property AutoSize;
     property BidiMode;
@@ -346,7 +351,7 @@ implementation
 
 //{$DEFINE XML}
 
-uses onuredit,onurbar,onurpage,onurlist,onurpanel,onurbutton,
+uses onuredit,onurbar,onurbutton,onurpage,onurlist,onurpanel,
   {$IFDEF XML}uXMLIni{$ELSE}inifiles{$ENDIF};
 
 
@@ -887,26 +892,26 @@ end;
 constructor TONURImg.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  fparent := TForm(AOwner);
-  FTop := TONURCUSTOMCROP.Create;
-  FTop.cropname := 'TOP';
-  FBottom := TONURCUSTOMCROP.Create;
-  FBottom.cropname := 'BOTTOM';
-  FCenter := TONURCUSTOMCROP.Create;
-  FCenter.cropname := 'CENTER';
-  FRight := TONURCUSTOMCROP.Create;
-  FRight.cropname := 'RIGHT';
-  FTopRight := TONURCUSTOMCROP.Create;
-  FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONURCUSTOMCROP.Create;
+  fparent               := TForm(AOwner);
+  FTop                  := TONURCUSTOMCROP.Create;
+  FTop.cropname         := 'TOP';
+  FBottom               := TONURCUSTOMCROP.Create;
+  FBottom.cropname      := 'BOTTOM';
+  FCenter               := TONURCUSTOMCROP.Create;
+  FCenter.cropname      := 'CENTER';
+  FRight                := TONURCUSTOMCROP.Create;
+  FRight.cropname       := 'RIGHT';
+  FTopRight             := TONURCUSTOMCROP.Create;
+  FTopRight.cropname    := 'TOPRIGHT';
+  FBottomRight          := TONURCUSTOMCROP.Create;
   FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONURCUSTOMCROP.Create;
-  Fleft.cropname := 'LEFT';
-  FTopleft := TONURCUSTOMCROP.Create;
-  FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname := 'BOTTOMLEFT';
-  Customcroplist:=TList.Create;
+  Fleft                 := TONURCUSTOMCROP.Create;
+  Fleft.cropname        := 'LEFT';
+  FTopleft              := TONURCUSTOMCROP.Create;
+  FTopleft.cropname     := 'TOPLEFT';
+  FBottomleft           := TONURCUSTOMCROP.Create;
+  FBottomleft.cropname  := 'BOTTOMLEFT';
+  Customcroplist        := TList.Create;
 
   Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
@@ -918,22 +923,17 @@ begin
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
 
-  Fimage := TBGRABitmap.Create();
-  FRes := TPicture.Create;
+  Fimage        := TBGRABitmap.Create();
+  FRes          := TPicture.Create;
   Fres.OnChange := @ImageSet;
-  clrr := 'clnone';
-  Fopacity:=255;
-
-  frmain     := TBGRABitmap.Create(self.fparent.clientWidth, self.fparent.clientHeight);
-  tempbitmap := TBGRABitmap.Create(self.fparent.clientWidth, self.fparent.clientHeight);
-
-
-  List := TStringList.Create;
+  clrr          := 'clnone';
+  Fopacity      := 255;
+  frmain        := TBGRABitmap.Create(self.fparent.clientWidth, self.fparent.clientHeight);
+  tempbitmap    := TBGRABitmap.Create(self.fparent.clientWidth, self.fparent.clientHeight);
+  List          := TStringList.Create;
 
   if not (csDesigning in ComponentState) then
   //  exit;
-
-
 
     if ffilename<>'' then
      Loadskin(ffilename,false)
@@ -955,12 +955,13 @@ begin
   Customcroplist.Clear;
   FreeAndNil(Customcroplist);
 
+  FreeAndNil(List);
   FreeAndNil(Frmain);
   FreeAndNil(tempbitmap);
   FreeAndNil(FImage);
   FreeAndNil(FRes);
-  FreeAndNil(List);
-  inherited;
+  inherited Destroy;
+
 end;
 
 procedure TONURImg.ImageSet(Sender: TObject);
@@ -1259,10 +1260,21 @@ begin
       end;
      end;
 
+      if (com is TONURCustomControl) and (TONURCustomControl(com).Skindata=Self) then
+      begin
+        with (TONURCustomControl(com)) do
+        for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+      end;
 
+      if (com is TONURGraphicControl) and (TONURGraphicControl(com).Skindata=Self) then
+      begin
+        with (TONURGraphicControl(com)) do
+        for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+      end;
 
-
-
+      {
       if (Com is TONURPageControl) and (TONURPageControl(com).Skindata = Self) then
       begin
         with (TONURPageControl(Com)) do
@@ -1521,6 +1533,7 @@ begin
           cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
       end;
+      }
     end;
 
   finally
@@ -1620,7 +1633,22 @@ begin
       // Tform component reading
       for i := 0 to fparent.ComponentCount - 1 do
       begin
+      if (fparent.Components[i] is TONURCustomControl) and (TONURCustomControl(fparent.Components[i]).Skindata=Self) then
+      begin
+        with (TONURCustomControl(fparent.Components[i])) do
+        for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+      end;
 
+      if (fparent.Components[i] is TONURGraphicControl) and (TONURGraphicControl(fparent.Components[i]).Skindata=Self) then
+      begin
+        with (TONURGraphicControl(fparent.Components[i])) do
+        for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+      end;
+
+
+       {
         if (fparent.Components[i] is TONURPageControl) and
             (TONURPageControl(fparent.Components[i]).Skindata = Self) then    // if component PageControl
         with (TONURPageControl(fparent.Components[i])) do
@@ -1643,8 +1671,6 @@ begin
 
           //ReadSkinsComp(btnarea);
         end;
-
-
 
         if (fparent.Components[i] is TONURPage) and
           (TONURPage(fparent.Components[i]).Skindata = Self) then
@@ -1857,6 +1883,8 @@ begin
          for a:=0 to Customcroplist.Count-1 do
          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
+
+        }
       end;
     end;
     //   end;
@@ -2037,6 +2065,26 @@ begin
       // Tform component reading
       for i := 0 to fparent.ComponentCount - 1 do
       begin
+
+
+
+       if (fparent.Components[i] is TONURCustomControl) and (TONURCustomControl(fparent.Components[i]).Skindata=Self) then
+      begin
+        with (TONURCustomControl(fparent.Components[i])) do
+        for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+      end;
+
+      if (fparent.Components[i] is TONURGraphicControl) and (TONURGraphicControl(fparent.Components[i]).Skindata=Self) then
+      begin
+        with (TONURGraphicControl(fparent.Components[i])) do
+        for a:=0 to Customcroplist.Count-1 do
+          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+      end;
+
+
+       {
+
         if (fparent.Components[i] is TONURPageControl) and
             (TONURPageControl(fparent.Components[i]).Skindata = Self) then    // if component PageControl
         with (TONURPageControl(fparent.Components[i])) do
@@ -2059,7 +2107,6 @@ begin
 
           //ReadSkinsComp(btnarea);
         end;
-
 
 
         if (fparent.Components[i] is TONURPage) and
@@ -2273,7 +2320,7 @@ begin
          for a:=0 to Customcroplist.Count-1 do
          cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
         end;
-
+       }
       end;
     end;
   finally
@@ -2410,6 +2457,25 @@ begin
       // Tform component reading
       for i := 0 to fparent.ComponentCount - 1 do
       begin
+
+        if (fparent.Components[i] is TONURCustomControl) then
+        begin
+          with (TONURCustomControl(fparent.Components[i])) do
+          for a:=0 to Customcroplist.Count-1 do
+            writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+        //    cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+        if (fparent.Components[i] is TONURGraphicControl) then
+        begin
+         with (TONURGraphicControl(fparent.Components[i])) do
+          for a:=0 to Customcroplist.Count-1 do
+           writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
+       //     cropparse(TONURCustomCrop(Customcroplist[a]),ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+        end;
+
+       {
+
         if fparent.Components[i] is TONURGraphicsButton then  // if component GraphicButton
         with (TONURGraphicsButton(fparent.Components[i])) do
         begin
@@ -2613,11 +2679,12 @@ begin
         end;
 
         if fparent.Components[i] is TONURHeaderPanel then
-          with (TONURHeaderPanel(fparent.Components[i])) do
-          begin
+        with (TONURHeaderPanel(fparent.Components[i])) do
+        begin
             for a:=0 to Customcroplist.Count-1 do
              writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, croptostring(TONURCustomCrop(Customcroplist[a])));
           end;
+       }
       end;
     end;
 
@@ -2649,51 +2716,60 @@ end;
 // -----------------------------------------------------------------------------
 
 
-constructor TonURgraphiccontrol.Create(Aowner: TComponent);
+constructor TONURGraphicControl.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  parent := TWinControl(Aowner);
-  ControlStyle := ControlStyle + [csClickEvents, csCaptureMouse,
+  parent             := TWinControl(Aowner);
+  ControlStyle       := ControlStyle + [csClickEvents, csCaptureMouse,
     csDoubleClicks, csParentBackground];
-  Width := 100;
-  Height := 30;
-  Fkind := oHorizontal;
-  Transparent := True;
+  Width              := 100;
+  Height             := 30;
+  Fkind              := oHorizontal;
+  Transparent        := True;
   Backgroundbitmaped := True;
-  ParentColor := True;
-  FAlignment := taCenter;
-  resim := TBGRABitmap.Create;
-  Captionvisible := True;
-  falpha := 255;
-  Customcroplist:=TList.Create;
+  ParentColor        := True;
+  FAlignment         := taCenter;
+  resim              := TBGRABitmap.Create;
+  Captionvisible     := True;
+  falpha             := 255;
+  Customcroplist     := TFPList.Create;// TList.Create;
 end;
 
-destructor TonURgraphiccontrol.Destroy;
+destructor TONURGraphicControl.Destroy;
 begin
-  if Assigned(resim) then FreeAndNil(resim);
+ if Assigned(resim) then FreeAndNil(resim);
+
   Customcroplist.free;
+
   inherited Destroy;
 end;
 
 
 // -----------------------------------------------------------------------------
-procedure TonURgraphiccontrol.Wmerasebkgnd(var Message: Twmerasebkgnd);
+{procedure TONURGraphicControl.WMEraseBkgnd(var Message: TWMEraseBkgnd);
 begin
   SetBkMode(Message.dc, 1);
   Message.Result := 1;
 end;
+}
+
+function TONURGraphicControl.GetSkindata: TONURImg;
+begin
+  Result:=FSkindata;
+end;
+
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-procedure TonURgraphiccontrol.Createparams(var Params: Tcreateparams);
+{procedure TONURGraphicControl.CreateParams(var Params: TCreateParams);
 begin
   params.exstyle := params.exstyle or WS_EX_TRANSPARENT or WS_EX_LAYERED or
     WS_CLIPCHILDREN;
 end;
-
+}
 
 // -----------------------------------------------------------------------------
-procedure TONURGRAPHICCONTROL.Setalignment(const Value: Talignment);
+procedure TONURGraphicControl.SetAlignment(const Value: TAlignment);
 begin
   if FAlignment <> Value then
   begin
@@ -2703,12 +2779,12 @@ end;
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-function TONURGRAPHICCONTROL.Gettransparent: boolean;
+function TONURGraphicControl.GetTransparent: boolean;
 begin
   Result := Color = clNone;
 end;
 
-procedure TONURGRAPHICCONTROL.Settransparent(Newtransparent: boolean);
+procedure TONURGraphicControl.SetTransparent(NewTransparent: boolean);
 begin
   if Transparent = NewTransparent then
     exit;
@@ -2719,19 +2795,19 @@ begin
     Color := clBackground;
 end;
 
-function TONURGRAPHICCONTROL.Getkind: TonURkindstate;
+function TONURGraphicControl.Getkind: Tonurkindstate;
 begin
   Result := Fkind;
 end;
 
-procedure TONURGRAPHICCONTROL.Setkind(Avalue: TonURkindstate);
+procedure TONURGraphicControl.SetKind(AValue: TONURkindstate);
 begin
   if avalue = Fkind then exit;
   Fkind := avalue;
   Invalidate;
 end;
 
-procedure TONURGRAPHICCONTROL.Setskindata(Aimg: TonURimg);
+procedure TONURGraphicControl.SetSkindata(Aimg: TONURImg);
 begin
   if (Aimg <> nil) then
   begin
@@ -2746,13 +2822,13 @@ begin
   end;
 end;
 
-procedure TONURGRAPHICCONTROL.Setskinname(Avalue: string);
+procedure TONURGraphicControl.Setskinname(avalue: string);
 begin
   if Fskinname <> avalue then
     Fskinname := avalue;
 end;
 
-procedure TONURGRAPHICCONTROL.Setalpha(Val: byte);
+procedure TONURGraphicControl.setalpha(val: byte);
 begin
   if falpha = val then exit;
   falpha := val;
@@ -2761,7 +2837,7 @@ end;
 
 
 // -----------------------------------------------------------------------------
-procedure TONURGRAPHICCONTROL.Paint;
+procedure TONURGraphicControl.Paint;
 var
    a: TBGRABitmap;
 begin
@@ -2801,6 +2877,13 @@ begin
     yaziyaz(self.Canvas, self.Font, self.ClientRect, Caption, Alignment);
 
 end;
+
+procedure TONURGraphicControl.Resize;
+begin
+  inherited Resize;
+  if Skindata<>nil then SetSkindata(Skindata);
+end;
+
 // -----------------------------------------------------------------------------
 
 
@@ -2811,37 +2894,40 @@ end;
 // -----------------------------------------------------------------------------
 
 
-constructor Tonurcustomcontrol.Create(Aowner: TComponent);
+constructor TONURCustomControl.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  parent := TWinControl(Aowner);
-  ControlStyle := ControlStyle + [csParentBackground, csAcceptsControls,
+  parent             := TWinControl(Aowner);
+  ControlStyle       := ControlStyle + [csParentBackground, csAcceptsControls,
     csClickEvents, csCaptureMouse, csDoubleClicks];
-  FAlignment := taCenter;
-  DoubleBuffered := True;
-  ParentBackground := True;
-  Fkind := oHorizontal;
+  FAlignment         := taCenter;
+  DoubleBuffered     := True;
+  ParentBackground   := True;
+  Fkind              := oHorizontal;
   Backgroundbitmaped := True;
-  Width := 100;
-  Height := 30;
-  resim := TBGRABitmap.Create;
-  WindowRgn := CreateRectRgn(0, 0, self.Width, self.Height);
-  Captionvisible := True;
-  falpha := 255;
-  Customcroplist:=TList.Create;
+  Width              := 100;
+  Height             := 30;
+  resim              := TBGRABitmap.Create;
+  WindowRgn          := CreateRectRgn(0, 0, self.Width, self.Height);
+  Captionvisible     := True;
+  falpha             := 255;
+  Customcroplist     := TFPList.Create;//TList.Create;
 end;
 
-destructor Tonurcustomcontrol.Destroy;
+destructor TONURCustomControl.Destroy;
 begin
   if Assigned(resim) then  FreeAndNil(resim);
   DeleteObject(WindowRgn);
-  Customcroplist.free;
+
+//  Customcroplist.free;
+ FreeAndNil(Customcroplist);
+
   inherited Destroy;
 end;
 
 
 // -----------------------------------------------------------------------------
-procedure Tonurcustomcontrol.Wmerasebkgnd(var Message: Twmerasebkgnd);
+procedure TONURCustomControl.WMEraseBkgnd(var Message: TWMEraseBkgnd);
 begin
   SetBkMode(Message.dc, TRANSPARENT);
   Message.Result := 1;
@@ -2851,7 +2937,7 @@ end;
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-procedure Tonurcustomcontrol.Createparams(var Params: Tcreateparams);
+procedure TONURCustomControl.CreateParams(var Params: TCreateParams);
 begin
   inherited CreateParams(Params);
   params.exstyle := params.exstyle or WS_EX_TRANSPARENT or WS_EX_LAYERED or
@@ -2860,7 +2946,7 @@ end;
 
 
 // -----------------------------------------------------------------------------
-procedure Tonurcustomcontrol.Setalignment(const Value: Talignment);
+procedure TONURCustomControl.SetAlignment(const Value: TAlignment);
 begin
   if FAlignment <> Value then
   begin
@@ -2868,7 +2954,7 @@ begin
   end;
 end;
 
-procedure Tonurcustomcontrol.Setskindata(Aimg: TonURimg);
+procedure TONURCustomControl.SetSkindata(Aimg: TONURImg);
 begin
   if Aimg <> nil then
   begin
@@ -2881,7 +2967,7 @@ begin
   end;
 end;
 
-procedure Tonurcustomcontrol.Setalpha(Val: byte);
+procedure TONURCustomControl.setalpha(val: byte);
 begin
   if falpha = val then exit;
   falpha := val;
@@ -2889,7 +2975,7 @@ begin
 end;
 
 // -----------------------------------------------------------------------------
-procedure Tonurcustomcontrol.Setcrop(Value: boolean);
+procedure TONURCustomControl.SetCrop(Value: boolean);
 begin
   if Fcrop <> Value then
   begin
@@ -2897,19 +2983,29 @@ begin
   end;
 end;
 
-function Tonurcustomcontrol.Getkind: TonURkindstate;
+function TONURCustomControl.GetSkindata: TONURImg;
+begin
+  Result:=FSkindata;
+end;
+
+function TONURCustomControl.Getskinname: String;
+begin
+ result:=fskinname;
+end;
+
+function TONURCustomControl.Getkind: TonURkindstate;
 begin
   Result := Fkind;
 end;
 
-procedure Tonurcustomcontrol.Setkind(Avalue: TonURkindstate);
+procedure TONURCustomControl.SetKind(AValue: TonURkindstate);
 begin
   if avalue = Fkind then exit;
   Fkind := avalue;
   Invalidate;
 end;
 
-procedure Tonurcustomcontrol.Setskinname(Avalue: string);
+procedure TONURCustomControl.Setskinname(avalue: string);
 begin
   if Fskinname <> avalue then
     Fskinname := avalue;
@@ -2917,7 +3013,7 @@ end;
 
 // --------------------:=---------------------------------------------------------
 
-procedure Tonurcustomcontrol.Croptoimg(Buffer: Tbgrabitmap);
+procedure TONURCustomControl.CropToimg(Buffer: TBGRABitmap);
 var
   x, y: integer;
   hdc1, SpanRgn: hdc;//integer;
@@ -2961,7 +3057,7 @@ begin
   DeleteObject(hdc1);
 end;
 // -----------------------------------------------------------------------------
-procedure Tonurcustomcontrol.Paint;
+procedure TONURCustomControl.Paint;
 var
   a: TBGRABitmap;
 begin
@@ -2997,6 +3093,13 @@ begin
     yaziyaz(self.Canvas, self.Font, self.ClientRect, Caption, Alignment);
 
 end;
+
+procedure TONURCustomControl.Resize;
+begin
+  inherited Resize;
+  if Skindata<>nil then SetSkindata(Skindata);
+end;
+
 // -----------------------------------------------------------------------------
 
 

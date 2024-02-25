@@ -8,7 +8,7 @@ interface
 uses
   Windows, SysUtils, LMessages, Forms,  Classes,
   Controls, Graphics, ExtCtrls,  BGRABitmap, BGRABitmapTypes,
-  Dialogs, onurctrl,onurbar,onuredit;
+  Dialogs, onurctrl,onurbar,onuredit,StdCtrls;
 
 type
 
@@ -425,6 +425,145 @@ type
     property Visible;
   end;
 
+  { TOnurCellStrings }
+
+  TOnurCellStrings = class
+  private
+    FCells: array of array of string;
+    FSize: TPoint;
+    function GetCell(X, Y: integer): string;
+    function GetColCount: integer;
+    function GetRowCount: integer;
+    procedure SetCell(X, Y: integer; AValue: string);
+    procedure SetColCount(AValue: integer);
+    procedure SetRowCount(AValue: integer);
+    procedure SetSize(AValue: TPoint);
+    procedure Savetofile(s: string);
+    procedure Loadfromfile(s: string);
+  public
+    procedure Clear;
+    function arrayofstring(col: integer; aranan: string): integer;
+    property Cells[Col, Row: integer]: string read GetCell write SetCell;
+    property ColCount: integer read GetColCount write SetColCount;
+    property RowCount: integer read GetRowCount write SetRowCount;
+    property Size: TPoint read FSize write SetSize;
+  end;
+
+
+
+  { Tonurstringgrid }
+  TOnCellClickSG = procedure(Sender: TObject;Col,Row:integer;Celvalue:string) of object;
+
+  TONURStringGrid= class(TONURCustomControl)
+  private
+    FItemHeight            : integer;
+    FItemhOffset           : Integer;
+    FItemvOffset           : Integer;
+    fcolwidth              : integer;
+    fcolvisible            : integer;
+    FeditorEdit            : TEdit;     // Edit cell
+    FeditorCom             : TComboBox; // Edit cell
+    FeditorChe             : TCheckbox; // Edit cell
+    Fcellposition          : TPoint;     // For editing cell
+    Fcelleditwidth         : integer;    // editing cell width
+    Fcellvalue             : string;     // Cell value
+    fscroll                : TONURScrollBar;
+    yscroll                : TONURScrollBar;
+    FOnCellclick           : TOnCellClickSG;
+    fItemscount            : integer;
+    FItemsvShown           : integer;
+    FItemsHShown           : integer;
+    FFocusedItem           : Integer;
+    FheaderHeight          : integer;
+    fmodusewhelll          : Boolean;
+    fcolumindex            : integer;
+    freadonly              : Boolean;
+    frowselect             : Boolean;
+    FCells                 : array of array of string;
+    FcolwitdhA             : array of integer;
+    FSize                  : TPoint;
+    Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
+    FTop, FBottom, FCenter, factiveitems, fitems: TONURCUSTOMCROP;
+    procedure editchange(sender: TObject);
+    function GetCellval: string;
+    function GetColWidths(aCol: Integer): Integer;
+    function GetItemAt(Pos: TPoint): Integer;
+    procedure resizee;
+    procedure Scrollscreen;
+    procedure SetColWidths(aCol: Integer; AValue: Integer);
+    procedure VscrollBarChange(Sender: Tobject);
+    procedure HScrollBarChange(Sender: TObject);
+    function GetCell(X, Y: integer): string;
+    function GetColCount: integer;
+    function GetRowCount: integer;
+    procedure SetCell(X, Y: integer; AValue: string);
+    procedure SetColCount(AValue: integer);
+    procedure SetRowCount(AValue: integer);
+    procedure SetSize(AValue: TPoint);
+  public
+    constructor Create(Aowner: TComponent); override;
+    destructor Destroy; override;
+    procedure paint; override;
+    procedure SaveToFile(s: string);
+    procedure LoadFromFile(s: string);
+    procedure Clear;
+    function Searchstring(col: integer; Search: string): integer;
+    procedure MouseDown(Button : TMouseButton; Shift : TShiftState; X,Y : Integer); override;
+    procedure MouseUp(Button   : TMouseButton; Shift : TShiftState; X,Y : Integer); override;
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    property Cells[Col, Row: integer]: string read GetCell write SetCell;
+    property ColCount         : integer read GetColCount write SetColCount;
+    property RowCount         : integer read GetRowCount write SetRowCount;
+    property Size             : TPoint read FSize write SetSize;
+    property Itemindex        : integer         read FFocusedItem    write FFocusedItem;
+    property ColWidths[aCol: Integer]: Integer       read GetColWidths    write SetColWidths;
+    Property SelectedCelltext : string read GetCellval;
+  protected
+    procedure SetSkindata(Aimg: TONURImg);override;
+    function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): boolean; override;
+    function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): boolean; override;
+    procedure DblClick; override;
+  published
+    property RowSelect             : Boolean         read frowselect      write frowselect;
+    property ItemHeight            : integer         read FItemHeight     write FItemHeight;
+    Property VScrollbar            : TONURScrollBar  read fscroll         write fscroll;
+    Property HScrollbar            : TONURScrollBar  read yscroll         write yscroll;
+    property OnCellClick           : TOnCellClickSG  read FOnCellclick    write FOnCellclick;
+    property ReadOnly              : Boolean         read freadonly       write freadonly;
+    property Action;
+    property Align;
+    property Anchors;
+    property AutoSize;
+    property BidiMode;
+    property Constraints;
+    property Enabled;
+    property Font;
+    property ParentBidiMode;
+    property OnChangeBounds;
+    property OnClick;
+    property OnContextPopup;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnEndDrag;
+    property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
+    property OnResize;
+    property OnStartDrag;
+    property ParentFont;
+    property ParentShowHint;
+    property ParentColor;
+    property PopupMenu;
+    property ShowHint;
+    property Visible;
+  end;
+
+
 
 
 procedure Register;
@@ -439,6 +578,7 @@ begin
   RegisterComponents('ONUR', [TONURListBox]);
   RegisterComponents('ONUR', [TONURColumList]);
   RegisterComponents('ONUR', [TONURComboBox]);
+  RegisterComponents('ONUR', [TONURStringGrid]);
 end;
 
 
@@ -1373,6 +1513,961 @@ begin
 
 end;
 
+{ TOnurCellStrings }
+
+function TOnurCellStrings.GetCell(X, Y: integer): string;
+begin
+  Result := FCells[Y, X];
+end;
+
+
+function TOnurCellStrings.GetColCount: integer;
+begin
+  Result := Size.x;
+end;
+
+function TOnurCellStrings.GetRowCount: integer;
+begin
+  Result := Size.Y;
+end;
+
+procedure TOnurCellStrings.SetCell(X, Y: integer; AValue: string);
+var
+  i, p: integer;
+begin
+  i := FSize.X;
+  p := FSize.y;
+  if x >= i then
+    Inc(i);
+  if y >= p then
+    Inc(p);
+
+  SetSize(point(i, p));
+
+  FCells[Y, X] := AValue;
+
+end;
+
+procedure TOnurCellStrings.SetColCount(AValue: integer);
+begin
+  Size := Point(AValue, RowCount);
+end;
+
+procedure TOnurCellStrings.SetRowCount(AValue: integer);
+begin
+  Size := Point(ColCount, AValue);
+end;
+
+procedure TOnurCellStrings.SetSize(AValue: TPoint);
+begin
+  if (FSize.X = AValue.X) and (FSize.Y = AValue.Y) then Exit;
+  FSize := AValue;
+  SetLength(FCells, FSize.Y, FSize.X);
+end;
+
+procedure TOnurCellStrings.Savetofile(s: string);
+var
+  f: TextFile;
+  i, k: integer;
+begin
+  AssignFile(f, s);
+  Rewrite(f);
+  Writeln(f, ColCount);
+  Writeln(f, RowCount);
+  for i := 0 to ColCount - 1 do
+    for k := 0 to RowCount - 1 do
+      Writeln(F, Cells[i, k]);
+  //    end;
+  CloseFile(F);
+end;
+
+procedure TOnurCellStrings.Loadfromfile(s: string);
+var
+  f: TextFile;
+  iTmp, i, k: integer;
+  strTemp: string;
+begin
+  AssignFile(f, s);
+  Reset(f);
+
+  // Get number of columns
+  Readln(f, iTmp);
+  ColCount := iTmp;
+  // Get number of rows
+  Readln(f, iTmp);
+  RowCount := iTmp;
+  // loop through cells & fill in values
+  for i := 0 to ColCount - 1 do
+    for k := 0 to RowCount - 1 do
+    begin
+      Readln(f, strTemp);
+      Cells[i, k] := strTemp;
+    end;
+
+  CloseFile(f);
+end;
+
+
+procedure TOnurCellStrings.Clear;
+begin
+  FSize.x := 0;
+  FSize.y := 0;
+
+  SetLength(FCells, 0);
+  Finalize(fsize);
+end;
+
+function TOnurCellStrings.arrayofstring(col: integer; aranan: string): integer;
+var
+  i: integer;
+begin
+  Result := -1;
+  for i := 0 to FSize.y - 1 do
+  begin
+    if FCells[i, col] = aranan then
+    begin
+      Result := i;
+      break;
+    end;
+  end;
+end;
+
+{ TONURStringGrid }
+
+procedure TONURStringGrid.editchange(sender: TObject);
+begin
+   if Assigned(FeditorEdit) then
+  begin
+   SetCell(fcolumindex,FFocusedItem,FeditorEdit.Text);
+   Invalidate;
+  end;
+end;
+
+
+
+function TONURStringGrid.GetCellval: string;
+begin
+ if (FFocusedItem>-1) and (fcolumindex>-1)  then
+  Result:= FCells[FFocusedItem,FItemhOffset+fcolumindex];//GetCell(FFocusedItem,fcolumindex);
+end;
+
+function TONURStringGrid.GetColWidths(aCol: Integer): Integer;
+begin
+  result:=FcolwitdhA[acol];
+end;
+
+function TONURStringGrid.GetItemAt(Pos: TPoint): Integer;
+var                                                sarı
+  i,m,w,p,o: Integer;
+begin
+  Result := -1;
+  if Pos.Y >= 0 then
+    Result := FItemvOffset + (Pos.Y div FItemHeight);
+
+  // FOR EDITING
+  if result>0 then
+  begin
+
+    Fcellposition  := Point(0,0);
+    Fcellvalue     := '';
+    Fcelleditwidth := 0;
+
+    m:=0;
+    fcolumindex:=-1;
+    w:=0;
+    if (pos.X>=0) then
+    for i:=0 to fsize.x-1 do
+    begin
+       w:=w+FcolwitdhA[i];
+      if (m<=Pos.x) and (w>=pos.x)then
+      begin
+       fcolumindex:=i;
+       break;
+      end;
+      m:=w;
+    end;
+
+    p:=0;
+
+    o:=0;
+    if (pos.y>=0) then
+    for i:=0 to fsize.y-1 do
+    begin
+      o:=o+FItemHeight;
+      if (p<=Pos.y) and (o>=pos.y)then
+       break;
+      p:=o;
+    end;
+
+
+
+
+   Fcellposition  := Point(m,p);
+
+   if fcolumindex<0 then exit;
+   Fcellvalue     := FCells[Result,FItemhOffset+fcolumindex];
+   Fcelleditwidth := FcolwitdhA[fcolumindex];
+
+  end;
+end;
+
+procedure TONURStringGrid.SetColWidths(aCol: Integer; AValue: Integer);
+begin
+  if Length(FcolwitdhA)>0 then
+ begin
+  FcolwitdhA[acol]:=AValue;
+  Invalidate;
+ end;
+end;
+
+procedure TONURStringGrid.VscrollBarChange(Sender: Tobject);
+begin
+ if fmodusewhelll=false then
+   begin
+     FItemvOffset := vScrollBar.Position;
+     Invalidate;
+   end;
+end;
+
+procedure TONURStringGrid.HScrollBarChange(Sender: TObject);
+begin
+    if fmodusewhelll=false then
+ begin
+   FItemhOffset := hScrollBar.Position;
+   Invalidate;
+ end;
+end;
+
+function TONURStringGrid.GetCell(X, Y: integer): string;
+begin
+  Result := FCells[Y, X];
+end;
+
+function TONURStringGrid.GetColCount: integer;
+begin
+ Result := fSize.x;
+end;
+
+function TONURStringGrid.GetRowCount: integer;
+begin
+ Result := fSize.Y;
+end;
+
+procedure TONURStringGrid.SetCell(X, Y: integer; AValue: string);
+ var
+  i, p: integer;
+begin
+
+  i := FSize.X;
+  p := FSize.y;
+  if x >= i then
+    Inc(i);
+  if y >= p then
+    Inc(p);
+
+  SetSize(point(i, p));
+
+  FCells[Y, X] := AValue;
+
+  if Length(FcolwitdhA)-1<X then
+  begin
+    SetLength(FcolwitdhA,fsize.x); // For colwidth
+    FcolwitdhA[x]:=fcolwidth;  // default colwidth
+  end;
+
+  Invalidate;
+end;
+
+procedure TONURStringGrid.SetColCount(AValue: integer);
+begin
+  SetSize(Point(AValue, RowCount));
+end;
+
+procedure TONURStringGrid.SetRowCount(AValue: integer);
+begin
+  SetSize(Point(ColCount, AValue));
+end;
+
+procedure TONURStringGrid.SetSize(AValue: TPoint);
+begin
+ if (FSize.X = AValue.X) and (FSize.Y = AValue.Y) then Exit;
+   FSize := AValue;
+   SetLength(FCells, FSize.Y, FSize.X);
+end;
+
+constructor TONURStringGrid.Create(Aowner: TComponent);
+begin
+  inherited Create(Aowner);
+  ControlStyle            := ControlStyle + [csOpaque];
+  Width                   := 150;
+  Height                  := 150;
+  Parent                  := TWinControl(AOwner); // Remover!?
+  FItemvOffset            := 0;
+  FItemhOffset            := 0;
+  fItemscount             := 0;
+  FItemHeight             := 24;
+  FheaderHeight           := 24;
+  FFocusedItem            := -1;
+  Font.Name               := 'Calibri';
+  Font.Size               := 9;
+  Font.Style              := [];
+  fcolwidth               := 80;
+  TabStop                 := True;
+  frowselect              := False;
+  FItemsvShown            := 10;
+  FItemshShown            := 5;
+  freadonly               := true;
+  fcolumindex             := 0;
+  Fcellposition           := Point(0,0);
+  Fcellvalue              := '';
+  Fcelleditwidth          := 0;
+  Captionvisible          := False;
+  skinname                := 'columlist';
+  FTop                    := TONURCUSTOMCROP.Create;
+  FTop.cropname           := 'TOP';
+  FBottom                 := TONURCUSTOMCROP.Create;
+  FBottom.cropname        := 'BOTTOM';
+  FCenter                 := TONURCUSTOMCROP.Create;
+  FCenter.cropname        := 'CENTER';
+  FRight                  := TONURCUSTOMCROP.Create;
+  FRight.cropname         := 'RIGHT';
+  FTopRight               := TONURCUSTOMCROP.Create;
+  FTopRight.cropname      := 'TOPRIGHT';
+  FBottomRight            := TONURCUSTOMCROP.Create;
+  FBottomRight.cropname   := 'BOTTOMRIGHT';
+  Fleft                   := TONURCUSTOMCROP.Create;
+  Fleft.cropname          := 'LEFT';
+  FTopleft                := TONURCUSTOMCROP.Create;
+  FTopleft.cropname       := 'TOPLEFT';
+  FBottomleft             := TONURCUSTOMCROP.Create;
+  FBottomleft.cropname    := 'BOTTOMLEFT';
+  factiveitems            := TONURCUSTOMCROP.Create;
+  factiveitems.cropname   := 'ACTIVEITEM';
+  fitems                  := TONURCUSTOMCROP.Create;
+  fitems.cropname         := 'ITEM';
+
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(factiveitems);
+  Customcroplist.Add(fitems);
+
+  vScrollBar := TONURScrollBar.Create(self);
+  with vScrollBar do
+  begin
+    AutoSize  := false;
+    Parent    := self;
+    Enabled   := False;
+    Skinname  := 'scrollbarv';
+    Skindata  := nil;//Self.Skindata;
+    Kind       := oVertical;
+    Width     := 25;
+    left      := Self.ClientWidth - (25);// + Background.Border);
+    Top       := 0;//Background.Border;
+    Height    := Self.ClientHeight;// - (Background.Border * 2);
+    Max       := 1;//Flist.Count;
+    Min       := 0;
+    OnChange  := @vScrollbarchange;
+    Position  := 0;
+    Align     := alRight;
+  end;
+
+  HScrollBar := TONURScrollBar.Create(self);
+  with HScrollBar do
+  begin
+    AutoSize  := false;
+    Parent     := self;
+    Enabled    := False;
+    Skinname   := 'scrollbarh';
+    Skindata   := nil;
+    Kind       := oHorizontal;
+    Height     := 25;
+    left       := 0;
+    Top        := self.ClientHeight-25;
+    Width      := self.ClientWidth;
+    Max        := 1;
+    Min        := 0;
+    OnChange   := @hScrollBarChange;
+    Position   := 0;
+    Align      := alBottom;
+  end;
+end;
+
+destructor TONURStringGrid.Destroy;
+ var
+   i:byte;
+ begin
+   for i:=0 to Customcroplist.Count-1 do
+   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+
+   Customcroplist.Clear;
+
+  //if Assigned(VScrollbar) then FreeAndNil(VScrollbar);
+  //if Assigned(HScrollbar) then FreeAndNil(HScrollbar);
+
+  inherited Destroy;
+end;
+
+procedure TONURStringGrid.SaveToFile(s: string);
+ var
+   f: TextFile;
+   i, k: integer;
+ begin
+   AssignFile(f, s);
+   Rewrite(f);
+   Writeln(f, ColCount);
+   Writeln(f, RowCount);
+   for i := 0 to ColCount - 1 do
+     for k := 0 to RowCount - 1 do
+       Writeln(F, Cells[i, k]);
+   //    end;
+   CloseFile(F);
+end;
+
+procedure TONURStringGrid.LoadFromFile(s: string);
+ var
+   f: TextFile;
+   iTmp, i, k: integer;
+   strTemp: string;
+ begin
+   AssignFile(f, s);
+   Reset(f);
+
+   // Get number of columns
+   Readln(f, iTmp);
+   ColCount := iTmp;
+   // Get number of rows
+   Readln(f, iTmp);
+   RowCount := iTmp;
+   // loop through cells & fill in values
+   for i := 0 to ColCount - 1 do
+     for k := 0 to RowCount - 1 do
+     begin
+       Readln(f, strTemp);
+       Cells[i, k] := strTemp;
+     end;
+   CloseFile(f);
+  // Scrollscreen;
+   Invalidate;
+end;
+
+procedure TONURStringGrid.Clear;
+begin
+  FSize.x := 0;
+ FSize.y := 0;
+
+ SetLength(FCells, 0);
+ Finalize(fsize);
+ Invalidate;
+end;
+
+function TONURStringGrid.Searchstring(col: integer; Search: string): integer;
+ var
+  i: integer;
+begin
+  Result := -1;
+  for i := 0 to FSize.y - 1 do
+  begin
+    if FCells[i, col] = search then
+    begin
+      Result := i;
+      break;
+    end;
+  end;
+end;
+
+procedure TONURStringGrid.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+ Var
+  Clickeditem: Integer;
+begin
+  if Assigned(FeditorEdit) then FreeAndNil(FeditorEdit);
+
+
+
+  if fsize.x>0 then
+  begin
+
+    if button = mbLeft then
+    begin
+     FFocusedItem:= -1;
+     Clickeditem := -1;
+
+      ClickedItem := GetItemAt(Point(X, Y));
+
+
+      if (ClickedItem>-1) and (fcolumindex>-1) then
+      begin
+       if (Clickeditem<=RowCount-1) then FFocusedItem:=ClickedItem;
+
+       if Assigned(FOnCellclick) then  FOnCellclick(self,fcolumindex,Clickeditem,Fcellvalue);
+       Invalidate;
+      end;
+      SetFocus;
+    End;
+  end;
+  inherited MouseDown(Button, Shift, X, Y);
+end;
+
+procedure TONURStringGrid.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
+begin
+  inherited MouseUp(Button, Shift, X, Y);
+end;
+
+procedure TONURStringGrid.MouseMove(Shift: TShiftState; X, Y: Integer);
+begin
+  inherited MouseMove(Shift, X, Y);
+end;
+
+
+procedure TONURStringGrid.SetSkindata(Aimg: TONURImg);
+Begin
+  Inherited Setskindata(Aimg);
+  if (Aimg <> nil) then
+  begin
+   vScrollBar.Skindata:=Aimg;
+   hScrollBar.Skindata:=Aimg;
+  end else
+  begin
+   Skindata:=nil;
+   vScrollBar.Skindata:=nil;
+   hScrollBar.Skindata:=nil;
+  end;
+  resizee;
+ End;
+
+procedure TONURStringGrid.resizee;
+begin
+  if Skindata<> nil then
+  begin
+   FTopleft.Targetrect     := Rect(0, 0,FTopleft.Width,FTopleft.Height);
+   FTopRight.Targetrect    := Rect(self.ClientWidth - FTopRight.Width,0, self.ClientWidth, FTopRight.Height);
+   FTop.Targetrect         := Rect(FTopleft.Width, 0,self.ClientWidth - FTopRight.Width,FTop.Height);
+   FBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Height,FBottomleft.Width, self.ClientHeight);
+   FBottomRight.Targetrect := Rect(self.ClientWidth - FBottomRight.Width,self.ClientHeight - FBottomRight.Height, self.ClientWidth, self.ClientHeight);
+   FBottom.Targetrect      := Rect(FBottomleft.Width,self.ClientHeight - FBottom.Height, self.ClientWidth - FBottomRight.Width, self.ClientHeight);
+   Fleft.Targetrect        := Rect(0, FTopleft.Height,Fleft.Width, self.ClientHeight - FBottomleft.Height);
+   FRight.Targetrect       := Rect(self.ClientWidth - FRight.Width, FTopRight.Height, self.ClientWidth, self.ClientHeight - FBottomRight.Height);
+   FCenter.Targetrect      := Rect(Fleft.Width, FTop.Height, self.ClientWidth - FRight.Width, self.ClientHeight -(FBottom.Height+FTop.Height));
+   resim.FontQuality       := fqSystemClearType;
+   resim.FontName          := self.Font.Name;
+   resim.FontStyle         := self.Font.Style;
+   resim.FontHeight        := self.Font.Height;
+   Scrollscreen;
+  end;
+
+end;
+
+
+
+procedure TONURStringGrid.Scrollscreen;
+var
+    fark,farki,z: Integer;
+begin
+  { hScrollBar.Height:=0;
+   vScrollBar.Width:=0;
+
+
+
+ // if FSize.X > 0 then
+ // begin
+     FItemsvShown := self.ClientHeight div FItemHeight;
+
+    fark:=0;
+
+    for z := 0 to FSize.x - 1 do
+    fark+= FcolwitdhA[z];
+
+    farki:=0;
+    FItemsHShown:=0;
+
+    for z := 0 to fsize.x - 1 do
+    begin
+      farki+=FcolwitdhA[z];
+      if farki>=self.ClientWidth then
+      begin
+        FItemshShown:=z;
+        Break;
+      end;
+    end;
+
+ //   if FAutoHideScrollBar then
+ //   begin
+      if fark > self.ClientWidth then
+        hScrollBar.Enabled := True
+      else
+        hScrollBar.Enabled := False;
+
+     if (FSize.y * FItemHeight)>self.ClientHeight then
+       vScrollbar.Enabled := True
+      else
+       vScrollbar.Enabled := False;
+     //   end;
+
+
+
+
+  //  else
+  //    ScrollBar.Visible := True;
+
+      if Columns[0].Items.Count-FItemsShown+1 > 0 then
+      begin
+       if vScrollbar.Visible then
+       with vScrollBar do
+       begin
+         if (Skindata = nil) then
+         Skindata := Self.Skindata;
+
+         if (Skindata <> nil) then
+         begin
+         //  Width :=(self.fleft.Width)+ (TONURCustomCrop(Customcroplist[0]).Width);// 0=customcrop id   FNormali.Width);
+         //  left := Self.ClientWidth - ClientWidth;
+         //  Top := self.fTOP.Height;
+
+       //    Height := Self.ClientHeight - ((self.fBOTTOM.Height) + (self.fTOP.Height));
+           Max:=((fsize.y)-FItemsvShown);
+           Alpha := self.Alpha;
+           if kind<>oVertical then Kind:=oVertical;
+
+         End;
+
+       end;
+
+      if hScrollbar.Visible then
+      with hScrollbar do
+      begin
+         if (Skindata = nil) then
+         Skindata := Self.Skindata;
+
+        if (Skindata <> nil) then
+        begin
+        //  left   := self.Fleft.Width;//(self.ONleft.Right - self.ONleft.Left);
+       //   Width  := self.ClientWidth-(self.Fleft.Width+self.FRight.Width);//(self.ONRIGHT.Right - self.ONRIGHT.Left));
+
+        //  Height := self.FTop.Height+(TONURCustomCrop(Customcroplist[0]).Height);//FNormali.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
+        //  Top    := self.ClientHeight-Height;//(self.ONTOP.Bottom - self.ONTOP.Top);
+
+         if (fark>0) and (fark>ClientWidth) then
+        //  Max :=((Fcolumns.Count) div (fark div ClientWidth))+1//((fark-self.ClientWidth) div Fcolumns.Count);
+          Max :=(fsize.x-FItemsHShown)// Max :=(Columns.Count-FItemshShown)-1
+          else
+          max:=0;
+          Alpha := self.Alpha;
+        end;
+
+      end;
+
+
+   // z:=0;
+
+    if hScrollbar.Visible then
+    vScrollbar.Max:=((fsize.y)-FItemsvShown)+1;
+    }
+
+
+
+ // end else
+ // begin
+ //   vScrollBar.Visible := False;
+ //   hScrollBar.Visible := False;
+//  end;
+
+end;
+
+
+
+procedure TONURStringGrid.paint;
+ var
+  i, z   : Integer;
+  x1, x2,x3,x4,xx : SmallInt;
+  a,b, fark,farki,fark2:integer;
+  gt:integer;
+
+
+begin
+  if (not Visible) then Exit;
+
+   resim.SetSize(0, 0);
+   resim.SetSize(self.ClientWidth, self.ClientHeight);
+
+
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+  begin
+         DrawPartnormal(FCenter.Croprect, self, FCenter.Targetrect, alpha);
+        //SOL ÜST TOPLEFT
+        DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
+        //SAĞ ÜST TOPRIGHT
+        DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
+        //UST TOP
+        DrawPartnormal(ftop.Croprect, self, ftop.Targetrect, alpha);
+        // SOL ALT BOTTOMLEFT
+        DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
+        //SAĞ ALT BOTTOMRIGHT
+        DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
+        //ALT BOTTOM
+        DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
+        // SOL ORTA CENTERLEFT
+        DrawPartnormal(Fleft.Croprect, self, fleft.Targetrect, alpha);
+        // SAĞ ORTA CENTERRIGHT
+        DrawPartnormal(FRight.Croprect, self,FRight.Targetrect, alpha);
+
+
+
+
+
+    if FSize.X>0 then
+    begin
+       try
+        a := Fleft.Width;
+        x1 := 0;
+        x2 := 0;
+        x3 := 0;
+        x4 := 0;
+        b := a+FItemHeight;
+        xx:=0;
+        fark2:=0;
+        fark :=0;
+
+        FItemsvShown := FCenter.Targetrect.Height div FitemHeight;
+        FItemshShown := 0;
+
+         { a := Fleft.Width;
+          b := a+FItemHeight;
+          x1:=0;
+          x2:=0;
+          x3:=0;
+          x4:=0;
+          xx:=0;}
+         // FItemshShown:=0;
+
+          for z:=0+FItemhOffset to Fsize.x-1 do  // columns
+          begin
+            a  := Fleft.Width;
+            b  := a;
+            x1 := x3;
+            x2 := a;
+            x3 := x1+FcolwitdhA[z];
+            x4 := a+ FheaderHeight;
+            //if hScrollbar.Visible then
+              gt:=(FItemvOffset + ((self.ClientHeight-hScrollbar.Height) div FItemHeight));
+           // else
+           //   gt:=FItemvOffset + (self.ClientHeight div FItemHeight);
+
+
+
+            for i := FItemvOffset to gt  do
+            begin
+              //fark2+=FcolwitdhA[i];
+              if (i < Fsize.y) and (i>-1) then
+              begin
+                 if Fsize.x>=z then
+                  begin
+                    if FCells[i,z]<>'' then
+                    begin
+                       if i = FFocusedItem then
+                       begin
+                         if vScrollBar.Visible then
+                           DrawPartnormali(factiveitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Font.Color, alpha))
+                         else
+                          DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Font.Color, alpha));
+                      //  DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Fselectcolor, alpha))
+                       end else
+                       begin
+                          if vScrollBar.Visible then
+                           DrawPartnormali(fitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Font.Color, alpha))
+                         else
+                          DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Font.Color, alpha));
+
+                    //       DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Font.Color, alpha));
+
+                       end;
+                    end else
+                    begin
+                        if i = FFocusedItem then
+                        begin
+                       // DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha)
+
+                        if vScrollBar.Visible then
+                           DrawPartnormali(factiveitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha)
+                         else
+                          DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
+
+                         //DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Fselectcolor, alpha));
+
+
+                        end else
+                        begin
+                           if vScrollBar.Visible then
+                           DrawPartnormali(fitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha)
+                          else
+                           DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
+                          //DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
+
+                        end;
+                    end;
+                  end;
+              end;
+              b +=FItemHeight;
+              if b >= (FCenter.Targetrect.Height-HScrollBar.Height) then Break;
+            end;
+
+           FItemshShown +=1;
+            if x3>=(FCenter.Targetrect.Width-vScrollBar.Width) then Break;
+
+          end;
+
+       vScrollbar.Max := (fsize.y - FItemsvShown);
+       hScrollBar.Max := (fsize.x - FItemshShown);
+    //   hScrollBar.Enabled := True;
+    //   vScrollBar.Enabled := True;
+
+    //   if FAutoHideScrollBar then
+   //    begin
+          if hScrollBar.Max>0 then
+          hScrollBar.Enabled := True
+         else
+          hScrollBar.Enabled := False;
+
+       // if (FSize.y * FItemHeight)>self.ClientHeight then
+       if vScrollBar.Max>0 then
+        vScrollbar.Enabled := True
+        else
+         vScrollbar.Enabled := False;
+      // end;
+
+
+
+       { if FSize.y>0 then
+
+
+         if hScrollbar.Visible then
+           gt:=(FItemvOffset + ((self.ClientHeight-hScrollbar.Height) div FItemHeight))
+         else
+           gt:=FItemvOffset + (self.ClientHeight div FItemHeight);
+
+
+         for i := FItemvOffset to gt  do
+         begin
+           if i>Fsize.y-1 then break;
+
+           if (i <= Fsize.y-1) and (i > -1)  then
+           begin
+             x1:=0;
+             x3:=a;
+
+             for z := 0+abs(FItemvOffset) to (Fsize.x-1) do  // columns
+             begin
+                 x1:=x3;
+                 x3:=x1+FcolwitdhA[z];
+
+                if x3>self.ClientWidth then break;
+                if z = Fsize.x-1 then    // son item scrollbarı geçmesin
+                begin
+                  if vScrollBar.Visible then
+                  x3:= x3+FItemvOffset - vScrollBar.Width;
+                end;
+
+                if Fsize.x>=z then
+                begin
+                  if FCells[i,z]<>'' then
+                  begin
+                     if i = FFocusedItem then
+                      DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Fselectcolor, alpha))
+                     else
+                      DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FCells[i,z],taLeftJustify,ColorToBGRA(Font.Color, alpha));
+                  end else
+                  begin
+                      if i = FFocusedItem then
+                      DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha)
+                     else
+                      DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
+                  end;
+                end;
+             end;
+           end;
+          b +=FItemHeight;
+          if (b >= FCenter.Targetrect.Height-(HScrollBar.Height)) then Break;
+         end; }
+       finally
+
+       end;
+    end;
+
+    if Crop then
+     CropToimg(resim);
+  end else
+  begin
+    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    FCenter.Targetrect.Height := self.Height;
+  end;
+  inherited paint;
+end;
+
+function TONURStringGrid.DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint
+  ): boolean;
+begin
+  Result:=inherited DoMouseWheelDown(Shift, MousePos);
+  fmodusewhelll:=True;
+  if not vscrollBar.visible then exit;
+  vscrollBar.Position := vscrollBar.Position+Mouse.WheelScrollLines;
+  FItemvOffset := vscrollBar.Position;
+  Result := True;
+  Invalidate;
+  fmodusewhelll:=false;
+end;
+
+function TONURStringGrid.DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint
+  ): boolean;
+begin
+   Result:=inherited DoMouseWheelUp(Shift, MousePos);
+
+   fmodusewhelll:=True;
+   if not vscrollBar.visible then exit;
+   vscrollBar.Position :=vscrollBar.Position-Mouse.WheelScrollLines;
+   FItemvOffset := vscrollBar.Position;
+   Result := True;
+   Invalidate;
+   fmodusewhelll:=false;
+end;
+
+procedure TONURStringGrid.DblClick;
+  begin
+  Inherited DblClick;
+
+ if RowCount<1 then exit;
+
+ if Assigned(FeditorEdit) then FreeAndNil(FeditorEdit);
+
+ if freadonly then exit;
+
+  FeditorEdit:=TEdit.Create(nil);
+  with FeditorEdit do
+  begin
+     //Parent     := nil;
+     name       := 'XYZeditOnurstringGridZYX';
+     Visible    := false;
+     AutoSize   := false;
+     Left       := Fcellposition.x; //fcolumindex*FcolwitdhA[fcolumindex];
+     top        := Fcellposition.y;//FItemHeight*FFocusedItem;
+     Width      := Fcelleditwidth;
+     Height     := FItemHeight;
+     Color      := self.resim.Colors[1,1].ToColor;// self.Background.Startcolor;
+     Font.Color := self.Font.color;
+     BorderStyle:=bsNone;
+     text       := Fcellvalue;
+     OnChange   := @editchange;
+     Parent     := self;
+     Visible    := True;
+     SetFocus;
+  end;
+end;
 
 
 

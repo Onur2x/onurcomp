@@ -513,12 +513,13 @@ end;
 procedure TONURScrollBar.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
-  inherited MouseDown(Button, Shift, X, Y);
+
   if csDesigning in ComponentState then
     Exit;
 
-  if not Enabled then
-    Exit;
+  if not Enabled then   Exit;
+
+  inherited MouseDown(Button, Shift, X, Y);
 
  // FIsPressed := true;
 
@@ -592,6 +593,8 @@ end;
 procedure TONURScrollBar.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
+  if not Enabled then   Exit;
+
   inherited MouseUp(Button, Shift, X, Y);
   FIsPressed := False;
   flbutons := obsnormal;
@@ -602,6 +605,9 @@ end;
 
 procedure TONURScrollBar.MouseMove(Shift: TShiftState; X, Y: integer);
 begin
+
+  if not Enabled then   Exit;
+
   inherited MouseMove(Shift, X, Y);
   if csDesigning in ComponentState then
     Exit;

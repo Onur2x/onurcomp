@@ -957,7 +957,7 @@ begin
   Self.Width := 190;
   Visible := False;
 
-  //Align := alClient;
+  Align := alClient;
 
   skinname := 'pagecontrol';
   FTop := TONURCUSTOMCROP.Create;

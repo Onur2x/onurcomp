@@ -333,7 +333,7 @@ type
 procedure Register;
 
 implementation
-
+uses forms;
 procedure Register;
 begin
   RegisterComponents('ONUR', [TONURPANEL]);
@@ -736,7 +736,7 @@ begin
   Customcroplist.Add(FBottomleft);
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
-   Customcroplist.Add(Fleft);
+  Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
 
@@ -754,16 +754,7 @@ begin
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
 
   Customcroplist.Clear;
-{begin
-  FreeAndNil(FBottom);
-  FreeAndNil(FTop);
-  FreeAndNil(FCenter);
-  FreeAndNil(FRight);
-  FreeAndNil(FBottomRight);
-  FreeAndNil(FTopRight);
-  FreeAndNil(Fleft);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(FTopleft);}
+
   inherited Destroy;
 end;
 // -----------------------------------------------------------------------------
@@ -971,8 +962,10 @@ begin
 
   if (GetKeyState(VK_LBUTTON) < 0) and (fmoveable = true) then
   begin
-    self.Parent.left := Mouse.CursorPos.X - (FMousePoint.X - FFormPoint.X);
-    self.Parent.top  := Mouse.CursorPos.Y - (FMousePoint.Y - FFormPoint.Y);
+    //self.Parent.left
+    GetParentForm(self).left:= Mouse.CursorPos.X - (FMousePoint.X - FFormPoint.X);
+    //self.Parent.top
+    GetParentForm(self).top:= Mouse.CursorPos.Y - (FMousePoint.Y - FFormPoint.Y);
   end;
 end;
 
@@ -983,7 +976,8 @@ begin
   if (GetKeyState(VK_LBUTTON) < 0) and (fmoveable = true) then
   begin
     FMousePoint := Mouse.CursorPos;
-    FFormPoint  := Point(self.Parent.Left, self.Parent.Top);
+    FFormPoint  := Point(GetParentForm(self).Left, GetParentForm(self).Top);
+    //Point(self.Parent.Left, self.Parent.Top);
   end;
 end;
 

@@ -877,6 +877,7 @@ end;
 procedure tonURcustomedit.settext(avalue: string);
 begin
   Lines.Text := aValue;
+  Invalidate;
 end;
 
 procedure tonURcustomedit.setpasswordchar(avalue: char);
