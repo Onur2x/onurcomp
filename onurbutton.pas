@@ -3321,6 +3321,7 @@ procedure TONURSwich.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
 
+
 end;
 
 procedure TONURSwich.Paint;

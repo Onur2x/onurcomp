@@ -1657,7 +1657,7 @@ begin
 end;
 
 function TONURStringGrid.GetItemAt(Pos: TPoint): Integer;
-var                                                sarı
+var
   i,m,w,p,o: Integer;
 begin
   Result := -1;
@@ -1960,7 +1960,7 @@ end;
 procedure TONURStringGrid.Clear;
 begin
   FSize.x := 0;
- FSize.y := 0;
+  FSize.y := 0;
 
  SetLength(FCells, 0);
  Finalize(fsize);
@@ -3018,30 +3018,30 @@ begin
     resim.FontStyle  := self.Font.Style;
 
    if hScrollBar.Visible then
-    for i := FItemvOffset to  (FItemvOffset + (FCenter.Targetrect.Height-HScrollBar.Height) div FItemHeight) - 1 do
+      for i := FItemvOffset to  (FItemvOffset + (FCenter.Targetrect.Height-HScrollBar.Height) div FItemHeight) - 1 do
    else
-    for i := FItemvOffset to  (FItemvOffset + (FCenter.Targetrect.Height) div FItemHeight) - 1 do
+      for i := FItemvOffset to  (FItemvOffset + (FCenter.Targetrect.Height) div FItemHeight) - 1 do
 
-    begin
-      if i>FList.Count then break;
-
-      if (i < Flist.Count) and (i > -1)  then
       begin
-       Target := Rect(a, b, self.ClientWidth - a, b + FitemHeight);
+        if i>FList.Count then break;
 
-        if (vScrollBar.Visible) then
-          Target.Right := self.ClientWidth - (vScrollBar.ClientWidth);// + FRight.Width);
+        if (i < Flist.Count) and (i > -1)  then
+        begin
+         Target := Rect(a, b, self.ClientWidth - a, b + FitemHeight);
 
-        if i = findex then
-          DrawPartnormaltext(factiveitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(Fselectedcolor, alpha))
-        else
-         DrawPartnormaltext(fitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(self.Font.Color, alpha));
+          if (vScrollBar.Visible) then
+            Target.Right := self.ClientWidth - (vScrollBar.ClientWidth);// + FRight.Width);
+
+          if i = findex then
+            DrawPartnormaltext(factiveitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(Fselectedcolor, alpha))
+          else
+           DrawPartnormaltext(fitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(self.Font.Color, alpha));
+
+        end;
+        b := b + FitemHeight;
+        if (b >= FCenter.Targetrect.Height) then Break;
 
       end;
-      b := b + FitemHeight;
-      if (b >= FCenter.Targetrect.Height) then Break;
-
-    end;
 
   end;
 //  if (Skindata <> nil) then

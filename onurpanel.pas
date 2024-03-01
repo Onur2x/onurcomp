@@ -88,26 +88,26 @@ type
 
   TONURCollapExpandPanel = class(TONURCustomcontrol)
   private
-    FStatus          : TONURExpandStatus;
-    FOnCollapse      : TNotifyEvent;
-    FOnExpand        : TNotifyEvent;
-    fbutonarea       : TRect;
-    FAutoCollapse    : boolean;
-    fminheight       : integer;
-    fnormalheight    : integer;
-    Fstate           : TONURButtonState;
-    Fheaderstate     : TONURCapDirection;
-    fbutondirection  : TONURButtonDirection;
-    Fleft, FTopleft  : TONURCUSTOMCROP;
-    FBottomleft      : TONURCUSTOMCROP;
-    FRight           : TONURCUSTOMCROP;
-    FTopRight        : TONURCUSTOMCROP;
-    FBottomRight     : TONURCUSTOMCROP;
-    FTop, FBottom    : TONURCUSTOMCROP;
-    FCenter, FNormal : TONURCUSTOMCROP;
-    FPress, FEnter   : TONURCUSTOMCROP;
-    Fdisable         : TONURCUSTOMCROP;
-    Fcaptionarea     : TONURCUSTOMCROP;
+    FStatus: TONURExpandStatus;
+    FOnCollapse: TNotifyEvent;
+    FOnExpand: TNotifyEvent;
+    fbutonarea: TRect;
+    FAutoCollapse: boolean;
+    fminheight: integer;
+    fnormalheight: integer;
+    Fstate: TONURButtonState;
+    Fheaderstate: TONURCapDirection;
+    fbutondirection: TONURButtonDirection;
+    Fleft, FTopleft: TONURCUSTOMCROP;
+    FBottomleft: TONURCUSTOMCROP;
+    FRight: TONURCUSTOMCROP;
+    FTopRight: TONURCUSTOMCROP;
+    FBottomRight: TONURCUSTOMCROP;
+    FTop, FBottom: TONURCUSTOMCROP;
+    FCenter, FNormal: TONURCUSTOMCROP;
+    FPress, FEnter: TONURCUSTOMCROP;
+    Fdisable: TONURCUSTOMCROP;
+    Fcaptionarea: TONURCUSTOMCROP;
    { FexNormal        : TONURCUSTOMCROP;
     FexPress         : TONURCUSTOMCROP;
     FexEnter         : TONURCUSTOMCROP;
@@ -117,8 +117,8 @@ type
     procedure SetAutoCollapse(const AValue: boolean);
     procedure SetOnCollapse(const AValue: TNotifyEvent);
     procedure SetOnExpand(const AValue: TNotifyEvent);
-//    function GetMinheight: integer;
-//    function GetNormalheight: integer;
+    //    function GetMinheight: integer;
+    //    function GetNormalheight: integer;
     procedure Setminheight(const Avalue: integer);
     procedure Setnormalheight(const Avalue: integer);
     procedure ResizePanel();
@@ -139,14 +139,21 @@ type
   published
     property Alpha;
     property Caption;
-    property OnExpand       : TNotifyEvent         read FOnExpand       write SetOnExpand;
-    property OnCollapse     : TNotifyEvent         read FOnCollapse     write SetOnCollapse;
-    property AutoCollapse   : boolean              read FAutoCollapse   write SetAutoCollapse;
-    property Status         : TONURExpandStatus    read FStatus         write SetStatus;
-    property Minheight      : integer              read fminheight      write Setminheight;
-    property Normalheight   : integer              read fnormalheight   write Setnormalheight;
-    property HeaderState    : TONURCapDirection    read Fheaderstate    write Setheaderstate;
-    property ButtonPosition : TONURButtonDirection read fbutondirection write fbutondirection;
+    property OnExpand: TNotifyEvent
+      read FOnExpand write SetOnExpand;
+    property OnCollapse: TNotifyEvent
+      read FOnCollapse write SetOnCollapse;
+    property AutoCollapse: boolean
+      read FAutoCollapse write SetAutoCollapse;
+    property Status: TONURExpandStatus read FStatus write SetStatus;
+    property Minheight: integer
+      read fminheight write Setminheight;
+    property Normalheight: integer
+      read fnormalheight write Setnormalheight;
+    property HeaderState: TONURCapDirection
+      read Fheaderstate write Setheaderstate;
+    property ButtonPosition: TONURButtonDirection
+      read fbutondirection write fbutondirection;
     property Skindata;
     property Action;
     property Align;
@@ -190,10 +197,10 @@ type
 
   TONURGraphicPanel = class(TONURGraphicControl)
   private
-    Fleft, FTopleft         : TONURCUSTOMCROP;
-    FBottomleft, FRight     : TONURCUSTOMCROP;
-    FTopRight, FBottomRight : TONURCUSTOMCROP;
-    FTop, FBottom, FCenter  : TONURCUSTOMCROP;
+    Fleft, FTopleft: TONURCUSTOMCROP;
+    FBottomleft, FRight: TONURCUSTOMCROP;
+    FTopRight, FBottomRight: TONURCUSTOMCROP;
+    FTop, FBottom, FCenter: TONURCUSTOMCROP;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -254,11 +261,11 @@ type
 
   TONURHeaderPanel = class(TONURPanel)
   private
-    FMousePoint : TPoint;
-    FFormPoint  : TPoint;
-    fmoveable   : Boolean;
-    function GetMovable: Boolean;
-    procedure SetMovable(AValue: Boolean);
+    FMousePoint: TPoint;
+    FFormPoint: TPoint;
+    fmoveable: boolean;
+    function GetMovable: boolean;
+    procedure SetMovable(AValue: boolean);
   protected
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -266,7 +273,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property Movable : Boolean read GetMovable write SetMovable;
+    property Movable: boolean read GetMovable write SetMovable;
     property Alpha;
     property Skindata;
     property Align;
@@ -333,7 +340,9 @@ type
 procedure Register;
 
 implementation
-uses forms;
+
+uses Forms;
+
 procedure Register;
 begin
   RegisterComponents('ONUR', [TONURPANEL]);
@@ -417,7 +426,7 @@ end;
 procedure TONURCollapExpandPanel.MouseDown(Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
-  if Enabled=false then exit;
+  if Enabled = False then exit;
   inherited mousedown(button, shift, x, y);
   if PtInRect(fbutonarea, Point(X, Y)) then
   begin
@@ -450,8 +459,8 @@ procedure TONURCollapExpandPanel.CMonmouseenter(var Messages: Tmessage);
 var
   aPnt: TPoint;
 begin
-  if Enabled=false then exit;
-  if Fstate=obshover then exit;
+  if Enabled = False then exit;
+  if Fstate = obshover then exit;
   GetCursorPos(aPnt);
   aPnt := ScreenToClient(aPnt);
   if PtInRect(fbutonarea, aPnt) then
@@ -463,8 +472,8 @@ end;
 
 procedure TONURCollapExpandPanel.CMonmouseleave(var Messages: Tmessage);
 begin
-  if Fstate=obsnormal then exit;
-  if Enabled=false then exit;
+  if Fstate = obsnormal then exit;
+  if Enabled = False then exit;
   Fstate := obsnormal;
   Invalidate;
 end;
@@ -472,8 +481,8 @@ end;
 procedure TONURCollapExpandPanel.MouseMove(Shift: TShiftState; X, Y: integer);
 begin
   inherited mousemove(shift, x, y);
-  if enabled=false then exit;
-  if fstate=obsnormal then exit;
+  if Enabled = False then exit;
+  if fstate = obsnormal then exit;
 
   if PtInRect(fbutonarea, Point(X, Y)) then
   begin
@@ -551,7 +560,7 @@ begin
   Fdisable := TONURCUSTOMCROP.Create;
   Fdisable.cropname := 'DISABLE';
 
-  Fcaptionarea:= TONURCUSTOMCROP.Create;
+  Fcaptionarea := TONURCUSTOMCROP.Create;
   Fcaptionarea.cropname := 'CAPTION';
 
   Customcroplist.Add(FTopleft);
@@ -579,10 +588,10 @@ end;
 
 destructor TONURCollapExpandPanel.Destroy;
 var
-  i:byte;
+  i: byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
   inherited Destroy;
@@ -591,29 +600,41 @@ end;
 procedure TONURCollapExpandPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  FTopleft.Targetrect       := Rect(0, 0, FTopleft.Width,FTopleft.Height);
-  FTopRight.Targetrect      := Rect(self.clientWidth - FTopRight.Width, 0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect           := Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect    := Rect(0, self.clientHeight - FBottomleft.Height, FBottomleft.Width, self.clientHeight);
-  FBottomRight.Targetrect   := Rect(self.clientWidth - FBottomRight.Width,  self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect        := Rect(FBottomleft.Width,self.clientHeight - FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect          := Rect(0, FTopleft.Height,Fleft.Width, self.clientHeight - FBottomleft.Height);
-  FRight.Targetrect         := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.ClientWidth, self.ClientHeight - FBottomRight.Height);
-  FCenter.Targetrect        := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
-  Fcaptionarea.Targetrect   := Rect(FTopleft.Width, FTop.Height,self.ClientWidth - FRight.Width,fminheight);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  FTopRight.Targetrect :=
+    Rect(self.clientWidth - FTopRight.Width, 0, self.clientWidth, FTopRight.Height);
+  ftop.Targetrect :=
+    Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width, FTop.Height);
+  FBottomleft.Targetrect :=
+    Rect(0, self.clientHeight - FBottomleft.Height, FBottomleft.Width, self.clientHeight);
+  FBottomRight.Targetrect :=
+    Rect(self.clientWidth - FBottomRight.Width, self.clientHeight -
+    FBottomRight.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect :=
+    Rect(FBottomleft.Width, self.clientHeight - FBottom.Height, self.clientWidth -
+    FBottomRight.Width, self.clientHeight);
+  Fleft.Targetrect :=
+    Rect(0, FTopleft.Height, Fleft.Width, self.clientHeight - FBottomleft.Height);
+  FRight.Targetrect :=
+    Rect(self.clientWidth - FRight.Width, FTopRight.Height, self.ClientWidth,
+    self.ClientHeight - FBottomRight.Height);
+  FCenter.Targetrect :=
+    Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width,
+    self.clientHeight - FBottom.Height);
+  Fcaptionarea.Targetrect :=
+    Rect(FTopleft.Width, FTop.Height, self.ClientWidth - FRight.Width, fminheight);
 
-  self.ChildSizing.LeftRightSpacing:=Fleft.Width;
-  self.ChildSizing.TopBottomSpacing:=FTop.Height;
+  self.ChildSizing.LeftRightSpacing := Fleft.Width;
+  self.ChildSizing.TopBottomSpacing := FTop.Height;
 
 end;
 
 procedure TONURCollapExpandPanel.paint;
 var
-SrcRect: TRect;
-
+  SrcRect: TRect;
 begin
   if not Visible then exit;
-  resim.SetSize(0,0);
+  resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
@@ -668,20 +689,23 @@ begin
 
 
       if fbutondirection = obright then
-        fbutonarea := Rect(Self.ClientWidth - (FRight.Width+SrcRect.Width), FTop.Height,
-          Self.ClientWidth -FRight.Width, FTop.Height+SrcRect.Height{FTop.Height})
+        fbutonarea := Rect(Self.ClientWidth - (FRight.Width + SrcRect.Width),
+          FTop.Height, Self.ClientWidth - FRight.Width,
+          FTop.Height + SrcRect.Height{FTop.Height})
       else
-      fbutonarea := Rect(Fleft.Width, FTop.Height,SrcRect.Width, FTop.Height+SrcRect.Height);//FTop.Height);
+        fbutonarea := Rect(Fleft.Width, FTop.Height, SrcRect.Width,
+          FTop.Height + SrcRect.Height);//FTop.Height);
 
 
       DrawPartnormal(SrcRect, self, fbutonarea, alpha);
 
       if Length(Caption) > 0 then
       begin
-        if fbutondirection=obleft then
-        Fcaptionarea.Targetrect.left +=fbutonarea.Width;
+        if fbutondirection = obleft then
+          Fcaptionarea.Targetrect.left += fbutonarea.Width;
 
-        resim.TextRect(Fcaptionarea.Targetrect{captionrect},Caption,taCenter,tlCenter,ColorToBGRA(self.font.color,alpha));
+        resim.TextRect(Fcaptionarea.Targetrect{captionrect}, Caption,
+          taCenter, tlCenter, ColorToBGRA(self.font.color, alpha));
       end;
 
 
@@ -694,13 +718,11 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
   inherited Paint;
 
 end;
-
-
 
 
 
@@ -748,10 +770,10 @@ end;
 // -----------------------------------------------------------------------------
 destructor TONURPanel.Destroy;
 var
-  i:byte;
+  i: byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
 
@@ -762,32 +784,32 @@ end;
 procedure TONURPanel.Paint;
 begin
   if not Visible then exit;
-//  if csDesigning in ComponentState then
-//    exit;
-  resim.SetSize(0,0);
+  //  if csDesigning in ComponentState then
+  //    exit;
+  resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
-//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  //  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
-       //TOPLEFT   //SOLÜST
-       DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
+      //TOPLEFT   //SOLÜST
+      DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
       //TOPRIGHT //SAĞÜST
-       DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
-       //TOP  //ÜST
-       DrawPartnormal(ftop.Croprect, self, FTop.Targetrect, alpha);
-       //BOTTOMLEFT // SOLALT
-       DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
-       //BOTTOMRIGHT  //SAĞALT
-       DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
-       //BOTTOM  //ALT
-       DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
-       //LEFT CENTERLEFT // SOLORTA
-       DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
-       //CENTERRIGHT // SAĞORTA
-       DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
-       //CENTER //ORTA
-        DrawPartnormal(Fcenter.Croprect, self, FCenter.Targetrect, alpha);
+      DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
+      //TOP  //ÜST
+      DrawPartnormal(ftop.Croprect, self, FTop.Targetrect, alpha);
+      //BOTTOMLEFT // SOLALT
+      DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
+      //BOTTOMRIGHT  //SAĞALT
+      DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
+      //BOTTOM  //ALT
+      DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
+      //LEFT CENTERLEFT // SOLORTA
+      DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
+      //CENTERRIGHT // SAĞORTA
+      DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
+      //CENTER //ORTA
+      DrawPartnormal(Fcenter.Croprect, self, FCenter.Targetrect, alpha);
 
       if Crop then
         CropToimg(resim);
@@ -797,27 +819,35 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
   inherited Paint;
 end;
 
 procedure TONURPanel.SetSkindata(Aimg: TONURImg);
-Begin
+begin
   inherited SetSkindata(Aimg);
-  FTopleft.Targetrect  := Rect(0, 0, FTopleft.Width,FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width, 0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect:= Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height, FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,  self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width,self.clientHeight - FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height,Fleft.Width, self.clientHeight - FBottomleft.Height);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
+    0, self.clientWidth, FTopRight.Height);
+  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
+    FTopRight.Width, FTop.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
+    FBottomleft.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
+    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
+    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width, self.clientHeight -
+    FBottomleft.Height);
 
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
-  self.ChildSizing.LeftRightSpacing:=Fleft.Width;
-  self.ChildSizing.TopBottomSpacing:=FTop.Height;
-End;
+  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
+    self.clientWidth, self.clientHeight - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
+    FRight.Width, self.clientHeight - FBottom.Height);
+  self.ChildSizing.LeftRightSpacing := Fleft.Width;
+  self.ChildSizing.TopBottomSpacing := FTop.Height;
+end;
 
 //-----------------------------------------------------------------------------
 
@@ -827,16 +857,23 @@ End;
 procedure TONURGraphicPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  FTopleft.Targetrect  := Rect(0, 0, FTopleft.Width,FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width, 0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect:= Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height, FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,  self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width,self.clientHeight - FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height,Fleft.Width, self.clientHeight - FBottomleft.Height);
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
-
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
+    0, self.clientWidth, FTopRight.Height);
+  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
+    FTopRight.Width, FTop.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
+    FBottomleft.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
+    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
+    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width, self.clientHeight -
+    FBottomleft.Height);
+  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
+    self.clientWidth, self.clientHeight - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
+    FRight.Width, self.clientHeight - FBottom.Height);
 
 end;
 
@@ -869,7 +906,7 @@ begin
   Customcroplist.Add(FBottomleft);
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
-   Customcroplist.Add(Fleft);
+  Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
 
@@ -881,10 +918,10 @@ end;
 // -----------------------------------------------------------------------------
 destructor TONURGraphicPanel.Destroy;
 var
-  i:byte;
+  i: byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
 {begin
@@ -902,40 +939,40 @@ end;
 
 procedure TONURGraphicPanel.Paint;
 begin
-//  if csDesigning in ComponentState then
-//    exit;
+  //  if csDesigning in ComponentState then
+  //    exit;
   if not Visible then exit;
-  resim.SetSize(0,0);
+  resim.SetSize(0, 0);
   resim.SetSize(self.Width, self.Height);
-//  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
+  //  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
-     //TOPLEFT   //SOLÜST
-     DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
-     //TOPRIGHT //SAĞÜST
-     DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
-     //TOP  //ÜST
-     DrawPartnormal(ftop.Croprect, self, FTop.Targetrect,alpha);
-     //BOTTOMLEFT // SOLALT
-     DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
-     //BOTTOMRIGHT  //SAĞALT
-     DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
-     //BOTTOM  //ALT
-     DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
-     //LEFT CENTERLEFT // SOLORTA
-     DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
-     //CENTERRIGHT // SAĞORTA
-     DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
-     //CENTER //ORTA
-     DrawPartnormal(Fcenter.Croprect, self, FCenter.Targetrect, alpha);
+      //TOPLEFT   //SOLÜST
+      DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
+      //TOPRIGHT //SAĞÜST
+      DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
+      //TOP  //ÜST
+      DrawPartnormal(ftop.Croprect, self, FTop.Targetrect, alpha);
+      //BOTTOMLEFT // SOLALT
+      DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
+      //BOTTOMRIGHT  //SAĞALT
+      DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
+      //BOTTOM  //ALT
+      DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
+      //LEFT CENTERLEFT // SOLORTA
+      DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
+      //CENTERRIGHT // SAĞORTA
+      DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
+      //CENTER //ORTA
+      DrawPartnormal(Fcenter.Croprect, self, FCenter.Targetrect, alpha);
     finally
       //  FreeAndNil(img);
     end;
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
   inherited Paint;
 end;
@@ -945,27 +982,27 @@ end;
 
 { TONURHeaderPanel }
 
-function TONURHeaderPanel.getMovable: Boolean;
+function TONURHeaderPanel.getMovable: boolean;
 begin
-  Result:=fmoveable;
+  Result := fmoveable;
 end;
 
-procedure TONURHeaderPanel.SetMovable(AValue: Boolean);
+procedure TONURHeaderPanel.SetMovable(AValue: boolean);
 begin
-  if AValue<> fmoveable then
-  fmoveable := AValue;
+  if AValue <> fmoveable then
+    fmoveable := AValue;
 end;
 
 procedure TONURHeaderPanel.MouseMove(Shift: TShiftState; X, Y: integer);
 begin
   inherited MouseMove(Shift, X, Y);
 
-  if (GetKeyState(VK_LBUTTON) < 0) and (fmoveable = true) then
+  if (GetKeyState(VK_LBUTTON) < 0) and (fmoveable = True) then
   begin
     //self.Parent.left
-    GetParentForm(self).left:= Mouse.CursorPos.X - (FMousePoint.X - FFormPoint.X);
+    GetParentForm(self).left := Mouse.CursorPos.X - (FMousePoint.X - FFormPoint.X);
     //self.Parent.top
-    GetParentForm(self).top:= Mouse.CursorPos.Y - (FMousePoint.Y - FFormPoint.Y);
+    GetParentForm(self).top := Mouse.CursorPos.Y - (FMousePoint.Y - FFormPoint.Y);
   end;
 end;
 
@@ -973,10 +1010,10 @@ procedure TONURHeaderPanel.MouseDown(Button: TMouseButton; Shift: TShiftState;
   X, Y: integer);
 begin
   inherited MouseDown(Button, Shift, X, Y);
-  if (GetKeyState(VK_LBUTTON) < 0) and (fmoveable = true) then
+  if (GetKeyState(VK_LBUTTON) < 0) and (fmoveable = True) then
   begin
     FMousePoint := Mouse.CursorPos;
-    FFormPoint  := Point(GetParentForm(self).Left, GetParentForm(self).Top);
+    FFormPoint := Point(GetParentForm(self).Left, GetParentForm(self).Top);
     //Point(self.Parent.Left, self.Parent.Top);
   end;
 end;
@@ -984,8 +1021,8 @@ end;
 constructor TONURHeaderPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  skinname  := 'headerpanel';
-  fmoveable := true;
+  skinname := 'headerpanel';
+  fmoveable := True;
   Height := 32;
   Align := alTop;
   ChildSizing.HorizontalSpacing := 3;
@@ -993,4 +1030,5 @@ begin
   ChildSizing.TopBottomSpacing := 4;
 
 end;
+
 end.

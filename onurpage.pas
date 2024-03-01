@@ -7,10 +7,11 @@ interface
 
 uses
   SysUtils, Classes,
-  Controls, Graphics, BGRABitmap, BGRABitmapTypes,
+  Controls, Graphics, extctrls, BGRABitmap, BGRABitmapTypes,onurbutton,
   onurctrl, ComponentEditors, PropEdits;
 
 type
+  TFade =(fadein, fadeout);
   TONURPageControl = class;
 
   { TONURPageButton }
@@ -301,7 +302,57 @@ type
     procedure SetValue(const Value: string); override;
   end;
 
+  { TONURcontentsliderbutton }
+  TONURContentSlider = class;
+  TONURcontentsliderbutton = class(TONURGraphicControl)
+  private
+    FNormal,FPress, FEnter,Fdisable: TONURCUSTOMCROP;
+    Fstate: TONURButtonState;
+    Ftimer : TTimer;
+    fd     : TFade;
+    alp    : integer;
+    procedure Onurtimer(sender:TObject);
+  protected
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
+  public
+   prnt   : TONURContentSlider;
+   constructor Create(AOwner: TComponent); override;
+   destructor Destroy; override;
+   procedure Fade(duration: integer; f: TFade);
+   procedure Paint; override;
+  end;
 
+  TONURContentSlider = class(TONURCustomControl)
+  private
+   Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
+   FTop, FBottom, FCenter: TONURCUSTOMCROP;
+   Fbuttonleft,Fbuttonright:TONURcontentsliderbutton;
+   Fcontent:TStrings;
+   indx:integer;
+   // to do --> animaiton
+   procedure leftbuttonclick(sender:TObject);
+   procedure rightbuttonclick(sender:TObject);
+   procedure SetString(AValue: TStrings); virtual;
+
+  protected
+   procedure SetSkindata(Aimg: TONURImg); override;
+   procedure Resize; override;
+   procedure MouseLeave; override;
+   procedure MouseEnter; override;
+  public
+   { Public declarations }
+   constructor Create(AOwner: TComponent); override;
+   destructor Destroy; override;
+   procedure Paint; override;
+  published
+   property Items :TStrings read Fcontent write SetString;
+  end;
 
 procedure Register;
 
@@ -319,6 +370,7 @@ const
 procedure Register;
 begin
   RegisterComponents('ONUR', [TONURPageControl]);
+  RegisterComponents('ONUR', [TONURContentSlider]);
   RegisterClasses([TONURPageControl, TONURPage]);
   RegisterNoIcon([TONURPage]);
   RegisterPropertyEditor(TypeInfo(TONURPage), TONURPageControl, 'ActivePage',
@@ -327,6 +379,7 @@ begin
   RegisterComponentEditor(TONURPageControl, TONURPageControlEditor);
 
   RegisterPropertyEditor(TypeInfo(string), TONURImg, 'Loadskins', TonimgPropertyEditor);
+
 end;
 
 { TOnStringProperty }
@@ -394,6 +447,357 @@ procedure TonimgPropertyEditor.SetValue(const Value: string);
 begin
   //inherited
   SetValue(Value);
+end;
+
+{ TONURcontentsliderbutton }
+
+procedure TONURcontentsliderbutton.Onurtimer(sender: TObject);
+begin
+  if fd=fadein then
+    alp-=20
+  else
+    alp+=20;
+
+
+  if (alp<=0) then begin  alp:=0; ftimer.Enabled:=false;end;
+  if (alp>=255)then begin alp:=255; ftimer.Enabled:=false; end;
+  Alpha:=alp;
+
+end;
+
+procedure TONURcontentsliderbutton.MouseEnter;
+begin
+  inherited MouseEnter;
+
+  fstate := obshover;
+  prnt.MouseEnter;
+  Invalidate;
+end;
+
+procedure TONURcontentsliderbutton.MouseLeave;
+begin
+  inherited MouseLeave;
+  fstate := obsnormal;
+  prnt.MouseLeave;
+  Invalidate;
+end;
+
+procedure TONURcontentsliderbutton.MouseDown(Button: TMouseButton;
+  Shift: TShiftState; X: integer; Y: integer);
+begin
+  inherited MouseDown(Button, Shift, X, Y);
+  if Button = mbLeft then
+  begin
+    fState := obspressed;
+    Invalidate;
+  end;
+end;
+
+procedure TONURcontentsliderbutton.MouseUp(Button: TMouseButton;
+  Shift: TShiftState; X: integer; Y: integer);
+begin
+  inherited MouseUp(Button, Shift, X, Y);
+  fstate := obshover;
+  Invalidate;
+end;
+
+procedure TONURcontentsliderbutton.SetSkindata(Aimg: TONURImg);
+begin
+  inherited SetSkindata(Aimg);
+  FNormal.Targetrect      := Rect(0, 0, ClientWidth,ClientWidth);
+
+end;
+
+procedure TONURcontentsliderbutton.Paint;
+  var
+  DR: TRect;
+begin
+  if not Visible then Exit;
+  resim.SetSize(0, 0);
+  resim.SetSize(self.ClientWidth, Self.ClientHeight);
+
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+  begin
+
+    if Enabled = True then
+    begin
+        case Fstate of
+          obsNormal:
+          begin
+            DR := FNormal.Croprect;
+            Self.Font.Color := FNormal.Fontcolor;
+          end;
+          obshover:
+          begin
+            DR := FEnter.Croprect;
+            Self.Font.Color := FEnter.Fontcolor;
+          end;
+          obspressed:
+          begin
+            DR := FPress.Croprect;
+            Self.Font.Color := FPress.Fontcolor;
+          end;
+        end;
+    end
+    else
+    begin
+      DR := Fdisable.Croprect;
+      Self.Font.Color := Fdisable.Fontcolor;
+    end;
+  end
+  else
+  begin
+   resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+  end;
+
+   DrawPartnormal(DR, Self, FNormal.Targetrect, Alpha);
+
+  inherited Paint;
+
+end;
+
+constructor TONURcontentsliderbutton.Create(AOwner: TComponent);
+begin
+  inherited Create(AOwner);
+  Skinname          := 'contentSliderbutton';
+  FNormal           := TONURCUSTOMCROP.Create;
+  FNormal.cropname  := 'NORMAL';
+  FPress            := TONURCUSTOMCROP.Create;
+  FPress.cropname   := 'PRESSED';
+  FEnter            := TONURCUSTOMCROP.Create;
+  FEnter.cropname   := 'ENTER';
+  Fdisable          := TONURCUSTOMCROP.Create;
+  Fdisable.cropname := 'DISABLE';
+  Customcroplist.Add(FNormal);
+  Customcroplist.Add(FEnter);
+  Customcroplist.Add(FPress);
+  Customcroplist.Add(Fdisable);
+  Fstate            := obsnormal;
+  Width             := 30;
+  Height            := 30;
+  Resim.SetSize(Width, Height);
+  Captionvisible    := False;
+  alp               := 0;
+  alpha             := 0;
+  Ftimer            := TTimer.create(nil);
+  Ftimer.Enabled    := False;
+  Ftimer.Ontimer    := @Onurtimer;
+end;
+
+destructor TONURcontentsliderbutton.Destroy;
+var
+  i: Integer;
+begin
+  if Assigned(Ftimer) then FreeAndNil(Ftimer);
+
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
+
+  Customcroplist.Clear;
+
+  inherited Destroy;
+end;
+
+procedure TONURcontentsliderbutton.Fade(duration: integer;f:TFade);
+begin
+  if duration>0 then
+  begin
+   fd := f;
+   Ftimer.Interval := duration;
+   Ftimer.Enabled  := true;
+  end;
+end;
+
+
+
+procedure TONURContentSlider.leftbuttonclick(sender: TObject);
+begin
+  if indx<=0 then
+  begin
+    indx:=0;
+    exit;
+  end;
+  indx-=1;
+  Invalidate;
+end;
+
+procedure TONURContentSlider.rightbuttonclick(sender: TObject);
+begin
+  if indx>=Fcontent.Count-1 then
+  begin
+    indx:=Fcontent.Count-1;
+    exit;
+  end;
+  indx+=1;
+  Invalidate;
+end;
+
+procedure TONURContentSlider.SetString(AValue: TStrings);
+begin
+    if Fcontent = AValue then Exit;
+  Fcontent.Assign(AValue);
+end;
+
+procedure TONURContentSlider.SetSkindata(Aimg: TONURImg);
+begin
+  inherited SetSkindata(Aimg);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
+    0, self.clientWidth, FTopRight.Height);
+  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
+    FTopRight.Width, FTop.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
+    FBottomleft.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
+    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
+    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width, self.clientHeight -
+    FBottomleft.Height);
+
+  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
+    self.clientWidth, self.clientHeight - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
+    FRight.Width, self.clientHeight - FBottom.Height);
+
+  //self.ChildSizing.LeftRightSpacing := Fleft.Width;
+  //self.ChildSizing.TopBottomSpacing := FTop.Height;
+
+  if not Assigned(Fbuttonleft) then Fbuttonleft.Skindata  := self.Skindata;
+  if not Assigned(Fbuttonright) then Fbuttonright.Skindata := self.Skindata;
+end;
+
+procedure TONURContentSlider.Resize;
+begin
+  inherited Resize;
+  if not Assigned(Fbuttonleft) then exit;
+
+  Fbuttonleft.Left := 10;
+  Fbuttonleft.top  := (self.ClientHeight div 2)- (Fbuttonleft.Height div 2);
+
+  if not Assigned(Fbuttonright) then exit;
+  Fbuttonright.Left :=  Self.ClientWidth-(Fbuttonright.Width+10);
+  Fbuttonright.top  := (self.ClientHeight div 2)- (Fbuttonright.Height div 2);
+
+end;
+
+
+
+procedure TONURContentSlider.MouseLeave;
+begin
+  inherited MouseLeave;
+  if not Assigned(Fbuttonleft) then Fbuttonleft.Fade(40,fadein);
+  if not Assigned(Fbuttonright) then Fbuttonright.Fade(40,fadein);
+end;
+
+procedure TONURContentSlider.MouseEnter;
+begin
+  inherited MouseEnter;
+  if not Assigned(Fbuttonleft) then Fbuttonleft.Fade(40,fadeout);
+  if not Assigned(Fbuttonright) then Fbuttonright.Fade(40,fadeout);
+end;
+
+constructor TONURContentSlider.Create(AOwner: TComponent);
+begin
+  inherited Create(aowner);
+  skinname              := 'contentslider';
+  FTop                  := TONURCUSTOMCROP.Create;
+  FTop.cropname         := 'TOP';
+  FBottom               := TONURCUSTOMCROP.Create;
+  FBottom.cropname      := 'BOTTOM';
+  FCenter               := TONURCUSTOMCROP.Create;
+  FCenter.cropname      := 'CENTER';
+  FRight                := TONURCUSTOMCROP.Create;
+  FRight.cropname       := 'RIGHT';
+  FTopRight             := TONURCUSTOMCROP.Create;
+  FTopRight.cropname    := 'TOPRIGHT';
+  FBottomRight          := TONURCUSTOMCROP.Create;
+  FBottomRight.cropname := 'BOTTOMRIGHT';
+  Fleft                 := TONURCUSTOMCROP.Create;
+  Fleft.cropname        := 'LEFT';
+  FTopleft              := TONURCUSTOMCROP.Create;
+  FTopleft.cropname     := 'TOPLEFT';
+  FBottomleft           := TONURCUSTOMCROP.Create;
+  FBottomleft.cropname  := 'BOTTOMLEFT';
+  indx                  := 0;
+  Fcontent              := TStringList.Create;
+  Captionvisible        := false;
+  Caption               := '';
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FCenter);
+  Customcroplist.Add(FRight);
+
+  Self.Height           := 190;
+  Self.Width            := 190;
+  resim.SetSize(Width, Height);
+
+  Fbuttonleft       := TONURcontentsliderbutton.Create(self);
+  with Fbuttonleft do
+  begin
+    parent          := self;
+    prnt           := Self;
+    left            := 20;
+    top             := 85;
+    Width           := 30;
+    Height          := 30;
+    Caption         := '';
+    Captionvisible  := false;
+    Skinname        := 'contentSliderbuttonl';
+    OnClick         := @leftbuttonclick;
+  end;
+  
+  Fbuttonright      := TONURcontentsliderbutton.Create(self);
+
+  with Fbuttonright do
+  begin
+    parent         := self;
+    prnt           := Self;
+    left           := 120;
+    top            := 85;
+    Width          := 30;
+    Height         := 30;
+    Caption        := '';
+    Captionvisible := false;
+    Skinname       := 'contentSliderbuttonr';
+    OnClick        := @rightbuttonclick;
+
+  end;
+
+end;
+
+destructor TONURContentSlider.Destroy;
+var
+  i: byte;
+begin
+  if Assigned(Fbuttonleft) then FreeAndNil(Fbuttonleft);
+  if Assigned(Fbuttonright) then FreeAndNil(Fbuttonright);
+  if Assigned(Fcontent) then FreeAndNil(Fcontent);
+
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
+
+  Customcroplist.Clear;
+
+  inherited Destroy;
+end;
+
+procedure TONURContentSlider.Paint;
+begin
+  if not Visible then exit;
+
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+  begin
+   if Fcontent.count>0 then
+    yaziyaz(self.Canvas, self.Font, FCenter.Targetrect, Fcontent[indx], taCenter);
+  end;
+
+  inherited Paint;
 end;
 
 

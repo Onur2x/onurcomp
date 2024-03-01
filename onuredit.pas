@@ -6,10 +6,10 @@ unit onuredit;
 interface
 
 uses
-  LCLType,Windows, SysUtils, LMessages, Forms ,Classes,
-  Controls, Graphics, ExtCtrls, BGRABitmap, BGRABitmapTypes, onurctrl,Types;
+  LCLType, Windows, SysUtils, LMessages, Forms, Classes,
+  Controls, Graphics, ExtCtrls, BGRABitmap, BGRABitmapTypes, onurctrl, Types;
 
- type
+type
   TONURCustomEdit = class;
 
   { Toncaret }
@@ -34,11 +34,11 @@ uses
     constructor Create(aowner: TPersistent);
     destructor Destroy; override;
   published
-    property Visible    : boolean read Getvisible   write Setvisible;
-    property Blinktime  : integer read Getblinktime write Setblinktime;
-    property Height     : integer read FHeight      write FHeight;
-    property Width      : integer read FWidth       write FWidth;
-    property Color      : Tcolor  read fblinkcolor  write fblinkcolor;
+    property Visible: boolean read Getvisible write Setvisible;
+    property Blinktime: integer read Getblinktime write Setblinktime;
+    property Height: integer read FHeight write FHeight;
+    property Width: integer read FWidth write FWidth;
+    property Color: Tcolor read fblinkcolor write fblinkcolor;
   end;
 
   ToCharCase = (ecNormal, ecUppercase, ecLowerCase);
@@ -256,7 +256,7 @@ uses
     destructor Destroy; override;
     procedure paint; override;
   protected
-     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure SetSkindata(Aimg: TONURImg); override;
   published
     property Alpha;
     property Lines;
@@ -309,21 +309,21 @@ uses
 
   TONURSpinEdit = class(TONURCustomEdit)
   private
-    fvalue                  : integer;
-    fmin, Fmax              : integer;
-    Fbuttonwidth            : integer;
-    Fbuttonheight           : integer;
-    Fubuttonarea            : Trect;
-    Fdbuttonarea            : Trect;
-    FuNormal, FuPress       : TONURCUSTOMCROP;
-    FuEnter, Fudisable      : TONURCUSTOMCROP;   // up button picture
-    FdNormal, FdPress       : TONURCUSTOMCROP;
-    FdEnter, Fddisable      : TONURCUSTOMCROP;   // down button state
-    Fustate, Fdstate        : TONURButtonState; // up buttonstate, down buttonstate
-    Fleft, FTopleft         : TONURCUSTOMCROP;
-    FBottomleft, FRight     : TONURCUSTOMCROP;
-    FTopRight, FBottomRight : TONURCUSTOMCROP;
-    FTop, FBottom, FCenter  : TONURCUSTOMCROP;
+    fvalue: integer;
+    fmin, Fmax: integer;
+    Fbuttonwidth: integer;
+    Fbuttonheight: integer;
+    Fubuttonarea: Trect;
+    Fdbuttonarea: Trect;
+    FuNormal, FuPress: TONURCUSTOMCROP;
+    FuEnter, Fudisable: TONURCUSTOMCROP;   // up button picture
+    FdNormal, FdPress: TONURCUSTOMCROP;
+    FdEnter, Fddisable: TONURCUSTOMCROP;   // down button state
+    Fustate, Fdstate: TONURButtonState; // up buttonstate, down buttonstate
+    Fleft, FTopleft: TONURCUSTOMCROP;
+    FBottomleft, FRight: TONURCUSTOMCROP;
+    FTopRight, FBottomRight: TONURCUSTOMCROP;
+    FTop, FBottom, FCenter: TONURCUSTOMCROP;
     //   procedure feditchange(sender: tobject);   protected
     function getbuttonheight: integer;
     function getbuttonwidth: integer;
@@ -351,11 +351,11 @@ uses
     procedure SetSkindata(Aimg: TONURImg); override;
   published
     property Alpha;
-    property Value              : integer       read fvalue        write fvalue;
-    property MaxValue           : integer       read fmin          write Setmin;
-    property MinValue           : integer       read Fmax          write Setmax;
-    property Buttonwidth        : integer       read Fbuttonwidth  write setbuttonwidth;
-    property Buttonheight       : integer       read Fbuttonheight write setbuttonheight;
+    property Value: integer read fvalue write fvalue;
+    property MaxValue: integer read fmin write Setmin;
+    property MinValue: integer read Fmax write Setmax;
+    property Buttonwidth: integer read Fbuttonwidth write setbuttonwidth;
+    property Buttonheight: integer read Fbuttonheight write setbuttonheight;
     property Text;
     property Selstart;
     property PasswordChar;
@@ -407,11 +407,11 @@ procedure Register;
 
 implementation
 
-uses  BGRAPath,LazUTF8,onurlist,Clipbrd,StrUtils;
+uses  BGRAPath, LazUTF8, onurlist, Clipbrd, StrUtils;
 
 procedure Register;
 begin
-  RegisterComponents('ONUR', [TONUREdit,TONURMemo,TONURSpinEdit]);
+  RegisterComponents('ONUR', [TONUREdit, TONURMemo, TONURSpinEdit]);
 end;
 
 { Toncaret }
@@ -555,39 +555,47 @@ var
 begin
 
   if csDesigning in ComponentState then
-   Exit;
+    Exit;
   if not Visible then Exit;
 
   if self is TONURSpinEdit then
   begin
-    lTextTopSpacing := TONURSpinEdit(self).fTOP.Height{fsBottom - TONURSpinEdit(self).OTOP.fsTop};
-    lTextBottomSpacing := TONURSpinEdit(self).fBOTTOM.Height; //fsBottom - TONURSpinEdit(self).OBOTTOM.fsTop; // 3;//GetMeasures(TCDEDIT_BOTTOM_TEXT_SPACING);
+    lTextTopSpacing := TONURSpinEdit(
+      self).fTOP.Height{fsBottom - TONURSpinEdit(self).OTOP.fsTop};
+    lTextBottomSpacing := TONURSpinEdit(self).fBOTTOM.Height;
+    //fsBottom - TONURSpinEdit(self).OBOTTOM.fsTop; // 3;//GetMeasures(TCDEDIT_BOTTOM_TEXT_SPACING);
   end
   else
   if self is TONUREdit then
   begin
-    lTextTopSpacing := TONUREdit(self).fTOP.Height;//fsBottom - TONUREdit(self).OTOP.fsTop;
+    lTextTopSpacing := TONUREdit(self).fTOP.Height;
+    //fsBottom - TONUREdit(self).OTOP.fsTop;
     //3;//GetMeasures(TCDEDIT_TOP_TEXT_SPACING);
-    lTextBottomSpacing := TONUREdit(self).fBOTTOM.Height;//fsBottom - TONUREdit(self).OBOTTOM.fsTop;
+    lTextBottomSpacing := TONUREdit(self).fBOTTOM.Height;
+    //fsBottom - TONUREdit(self).OBOTTOM.fsTop;
     // 3;//GetMeasures(TCDEDIT_BOTTOM_TEXT_SPACING);
   end
   else
   if self is TONURMemo then
   begin
-    lTextTopSpacing := TONURMemo(self).fTOP.Height;//fsBottom - TONURMemo(self).OTOP.fsTop;
-    lTextBottomSpacing := TONURMemo(self).fBOTTOM.Height;//fsBottom - TONURMemo(self).OBOTTOM.fsTop;
+    lTextTopSpacing := TONURMemo(self).fTOP.Height;
+    //fsBottom - TONURMemo(self).OTOP.fsTop;
+    lTextBottomSpacing := TONURMemo(self).fBOTTOM.Height;
+    //fsBottom - TONURMemo(self).OBOTTOM.fsTop;
   end
   else
   if self is TONURComboBox then
   begin
-    lTextTopSpacing := TONURCustomCrop(TONURComboBox(self).Customcroplist[1]).height;// 1 =ftop crop OTOP.Height;
-    lTextBottomSpacing := TONURCustomCrop(TONURComboBox(self).Customcroplist[4]).height;//4 fbottom crop OBOTTOM.Height;
+    lTextTopSpacing := TONURCustomCrop(TONURComboBox(self).Customcroplist[1]).Height;
+    // 1 =ftop crop OTOP.Height;
+    lTextBottomSpacing := TONURCustomCrop(TONURComboBox(self).Customcroplist[4]).Height;
+    //4 fbottom crop OBOTTOM.Height;
   end;
 
   lLineHeight := self.canvas.TextHeight('ŹÇ');
-  lSize       := Size(self.Width, self.Height);
+  lSize := Size(self.Width, self.Height);
   lLineHeight := Min(lSize.cy - lTextBottomSpacing, lLineHeight);
-  lLineTop    := lTextTopSpacing + Fcarets.CaretPos.Y * lLineHeight;
+  lLineTop := lTextTopSpacing + Fcarets.CaretPos.Y * lLineHeight;
 
 
 
@@ -603,16 +611,17 @@ begin
   if Text = '' then
   begin
     if self is TONURSpinEdit then
-      lCaretPixelPos := TONURSpinEdit(self).fLEFT.Width+ fLeftTextMargin
+      lCaretPixelPos := TONURSpinEdit(self).fLEFT.Width + fLeftTextMargin
     else
     if self is TONUREdit then
-      lCaretPixelPos := TONUREdit(self).fLEFT.Width+ fLeftTextMargin
+      lCaretPixelPos := TONUREdit(self).fLEFT.Width + fLeftTextMargin
     else
     if self is TONURMemo then
-      lCaretPixelPos := TONURMemo(self).fLEFT.Width +fLeftTextMargin
+      lCaretPixelPos := TONURMemo(self).fLEFT.Width + fLeftTextMargin
     else
     if self is TONURComboBox then
-      lCaretPixelPos := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).width+ fLeftTextMargin;
+      lCaretPixelPos := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width +
+        fLeftTextMargin;
 
 
     lCaptionHeight := lLineHeight;
@@ -622,16 +631,20 @@ begin
     lCaptionHeight := self.canvas.TextHeight(self.Text);
 
     if self is TONURSpinEdit then
-      lCaretPixelPos := TONURSpinEdit(self).fLEFT.Width + (self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
+      lCaretPixelPos := TONURSpinEdit(self).fLEFT.Width +
+        (self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
     else
     if self is TONUREdit then
-      lCaretPixelPos := TONUREdit(self).fLEFT.Width +(self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
+      lCaretPixelPos := TONUREdit(self).fLEFT.Width +
+        (self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
     else
     if self is TONURMemo then
-      lCaretPixelPos := TONURMemo(self).fLEFT.Width+(self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
+      lCaretPixelPos := TONURMemo(self).fLEFT.Width +
+        (self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
     else
     if self is TONURComboBox then
-      lCaretPixelPos := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width + (self.canvas.TextWidth(lTmpText) + fLeftTextMargin);
+      lCaretPixelPos := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width +
+        (self.canvas.TextWidth(lTmpText) + fLeftTextMargin);
   end;
 
 
@@ -660,7 +673,7 @@ var
   lTextLeftSpacing, lTextTopSpacing, lTextRightSpacing, lTextBottomSpacing: integer;
   lTextColor: TColor;
   i, lVisibleLinesCount: integer;
-  cmp:TONURCustomControl;
+  cmp: TONURCustomControl;
   ASize: TSize;
 begin
 
@@ -669,39 +682,39 @@ begin
 
 
   if self is TONURSpinEdit then
-  cmp:=TONURSpinEdit(self);
+    cmp := TONURSpinEdit(self);
 
-   if self is TONURSpinEdit then
+  if self is TONURSpinEdit then
   begin
-    lTextLeftSpacing   := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[6]).Width;
-    lTextRightSpacing  := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[8]).Width;
-    lTextTopSpacing    := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[1]).Height;
+    lTextLeftSpacing := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[6]).Width;
+    lTextRightSpacing := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[8]).Width;
+    lTextTopSpacing := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[1]).Height;
     lTextBottomSpacing := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[4]).Height;
   end
   else
   if self is TONUREdit then
   begin
-    lTextLeftSpacing   := TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width;
-    lTextRightSpacing  := TONURCustomCrop(TONUREdit(self).Customcroplist[8]).Width;
-    lTextTopSpacing    := TONURCustomCrop(TONUREdit(self).Customcroplist[1]).Height;
+    lTextLeftSpacing := TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width;
+    lTextRightSpacing := TONURCustomCrop(TONUREdit(self).Customcroplist[8]).Width;
+    lTextTopSpacing := TONURCustomCrop(TONUREdit(self).Customcroplist[1]).Height;
     lTextBottomSpacing := TONURCustomCrop(TONUREdit(self).Customcroplist[4]).Height;
 
   end
   else
   if self is TONURMemo then
   begin
-    lTextLeftSpacing   := TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width;
-    lTextRightSpacing  := TONURCustomCrop(TONURMemo(self).Customcroplist[8]).Width;
-    lTextTopSpacing    := TONURCustomCrop(TONURMemo(self).Customcroplist[1]).Height;
+    lTextLeftSpacing := TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width;
+    lTextRightSpacing := TONURCustomCrop(TONURMemo(self).Customcroplist[8]).Width;
+    lTextTopSpacing := TONURCustomCrop(TONURMemo(self).Customcroplist[1]).Height;
     lTextBottomSpacing := TONURCustomCrop(TONURMemo(self).Customcroplist[4]).Height;
 
   end
   else
   if self is TONURcombobox then
   begin
-    lTextLeftSpacing   := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width;
-    lTextRightSpacing  := TONURCustomCrop(TONURcombobox(self).Customcroplist[8]).Width;
-    lTextTopSpacing    := TONURCustomCrop(TONURcombobox(self).Customcroplist[1]).Height;
+    lTextLeftSpacing := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width;
+    lTextRightSpacing := TONURCustomCrop(TONURcombobox(self).Customcroplist[8]).Width;
+    lTextTopSpacing := TONURCustomCrop(TONURcombobox(self).Customcroplist[1]).Height;
     lTextBottomSpacing := TONURCustomCrop(TONURcombobox(self).Customcroplist[4]).Height;
   end;
 
@@ -1007,31 +1020,39 @@ begin
   lVisibleText := UTF8Copy(lLineText, FVisibleTextStart.X, Length(lLineText));
   // lAvailableWidth := Width - (Fleft.FSright-Fleft.FSLeft)- (FRight.FSright-FRight.FSLeft);
   if self is TOnURSpinEdit then
-    lAvailableWidth := self.Width - (TONURCustomCrop(TOnURSpinEdit(self).Customcroplist[6]).Width+TONURCustomCrop(TOnURSpinEdit(self).Customcroplist[8]).Width+
+    lAvailableWidth := self.Width -
+      (TONURCustomCrop(TOnURSpinEdit(self).Customcroplist[6]).Width +
+      TONURCustomCrop(TOnURSpinEdit(self).Customcroplist[8]).Width +
       (TOnURSpinEdit(self).Fdbuttonarea.Width))
   else
   if self is TonUREdit then
-    lAvailableWidth := self.Width - (TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width+TONURCustomCrop(TONUREdit(self).Customcroplist[8]).Width)
+    lAvailableWidth := self.Width -
+      (TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width + TONURCustomCrop(
+      TONUREdit(self).Customcroplist[8]).Width)
   else
   if self is TONURMemo then
-    lAvailableWidth := self.Width - (TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width+TONURCustomCrop(TONURMemo(self).Customcroplist[8]).Width)
+    lAvailableWidth := self.Width -
+      (TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width + TONURCustomCrop(
+      TONURMemo(self).Customcroplist[8]).Width)
   else
   if self is TONURcombobox then
-    lAvailableWidth := self.Width - (TONURCustomCrop(TONURcombobox(self).Customcroplist[6]).Width+TONURCustomCrop(TONURcombobox(self).Customcroplist[8]).Width+
-   (TONURcombobox(self).fbutonarea.Width));
+    lAvailableWidth := self.Width -
+      (TONURCustomCrop(TONURcombobox(self).Customcroplist[6]).Width +
+      TONURCustomCrop(TONURcombobox(self).Customcroplist[8]).Width +
+      (TONURcombobox(self).fbutonarea.Width));
 
 
 
   lVisibleTextCharCount := Canvas.TextFitInfo(lVisibleText, lAvailableWidth);
-  FVisibleTextStart.X := Max(FCarets.CaretPos.X -
-    lVisibleTextCharCount + 1, FVisibleTextStart.X);
+  FVisibleTextStart.X := Max(FCarets.CaretPos.X - lVisibleTextCharCount +
+    1, FVisibleTextStart.X);
 
   // Moved upwards and we need to adjust the text start
   FVisibleTextStart.Y := Min(FCarets.CaretPos.Y, FVisibleTextStart.Y);
 
   // Moved downwards and we need to adjust the text start
-  FVisibleTextStart.Y := Max(FCarets.CaretPos.Y -
-    FFullyVisibleLinesCount, FVisibleTextStart.Y);
+  FVisibleTextStart.Y := Max(FCarets.CaretPos.Y - FFullyVisibleLinesCount,
+    FVisibleTextStart.Y);
 
   // Impose limits in the caret too
   FCarets.CaretPos.X := Min(FCarets.CaretPos.X, UTF8Length(lLineText));
@@ -1467,7 +1488,8 @@ begin
         clipboard.astext := midstr(lOldText, fselstart.x + 1, fSelLength);
         lLeftText := UTF8Copy(lOldText, 1, fselstart.x);
         //+' - '+inttostr(fselstart.x)+' - '
-        lRightText := UTF8Copy(lOldText, fselstart.x + 1 + fSelLength, UTF8Length(lOldText));
+        lRightText := UTF8Copy(lOldText, fselstart.x + 1 + fSelLength,
+          UTF8Length(lOldText));
         SetCurrentLine(lLeftText + '' + lRightText);
 
         //   FCarets.CaretPos.X:=0;
@@ -1709,10 +1731,10 @@ end;
 
 destructor TonUREdit.Destroy;
 var
-  i:byte;
+  i: byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
 
@@ -1723,20 +1745,27 @@ procedure TonUREdit.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
 
-  FTopleft.Targetrect     := Rect(0, 0, FTopleft.Width,FTopleft.Height);
-  FTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Width, 0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect         := Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Height, FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,  self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect      := Rect(FBottomleft.Width,self.clientHeight - FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect        := Rect(0, FTopleft.Height,Fleft.Width, self.clientHeight - FBottomleft.Height);
-  FRight.Targetrect       := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect      := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
+    0, self.clientWidth, FTopRight.Height);
+  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
+    FTopRight.Width, FTop.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
+    FBottomleft.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
+    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
+    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width,
+    self.clientHeight - FBottomleft.Height);
+  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
+    self.clientWidth, self.clientHeight - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
+    FRight.Width, self.clientHeight - FBottom.Height);
 
 end;
 
 procedure TonUREdit.paint;
-
 begin
 
   if not Visible then Exit;
@@ -1745,28 +1774,28 @@ begin
   resim.SetSize(self.ClientWidth, self.ClientHeight);
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-      //TOPLEFT   //SOLÜST
-      DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
-      //TOPRIGHT //SAĞÜST
-      DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
-      //TOP  //ÜST
-      DrawPartnormal(ftop.Croprect, self, ftop.Targetrect, alpha);
-      //BOTTOMLEFT // SOLALT
-      DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
-      //BOTTOMRIGHT  //SAĞALT
-      DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
-      //BOTTOM  //ALT
-      DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
-      //CENTERLEFT // SOLORTA
-      DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
-      //CENTERRIGHT // SAĞORTA
-      DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
-      //CENTER //ORTA
-      DrawPartnormal(FCenter.Croprect, self, fcenter.Targetrect, alpha);
+    //TOPLEFT   //SOLÜST
+    DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
+    //TOPRIGHT //SAĞÜST
+    DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
+    //TOP  //ÜST
+    DrawPartnormal(ftop.Croprect, self, ftop.Targetrect, alpha);
+    //BOTTOMLEFT // SOLALT
+    DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
+    //BOTTOMRIGHT  //SAĞALT
+    DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
+    //BOTTOM  //ALT
+    DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
+    //CENTERLEFT // SOLORTA
+    DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
+    //CENTERRIGHT // SAĞORTA
+    DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
+    //CENTER //ORTA
+    DrawPartnormal(FCenter.Croprect, self, fcenter.Targetrect, alpha);
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
   inherited paint;
 end;
@@ -1779,15 +1808,23 @@ procedure TONURMemo.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
 
-  FTopleft.Targetrect     := Rect(0, 0, FTopleft.Width,FTopleft.Height);
-  FTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Width, 0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect         := Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Height, FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,  self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect      := Rect(FBottomleft.Width,self.clientHeight - FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect        := Rect(0, FTopleft.Height,Fleft.Width, self.clientHeight - FBottomleft.Height);
-  FRight.Targetrect       := Rect(self.clientWidth - FRight.Width,FTopRight.Height, self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect      := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width, self.clientHeight -FBottom.Height);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
+    0, self.clientWidth, FTopRight.Height);
+  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
+    FTopRight.Width, FTop.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
+    FBottomleft.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
+    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
+    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width,
+    self.clientHeight - FBottomleft.Height);
+  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
+    self.clientWidth, self.clientHeight - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
+    FRight.Width, self.clientHeight - FBottom.Height);
 
 end;
 
@@ -1834,10 +1871,10 @@ end;
 
 destructor TONURMemo.Destroy;
 var
-  i:byte;
+  i: byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
   inherited Destroy;
@@ -1853,28 +1890,28 @@ begin
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-      DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
-      //TOPRIGHT //SAĞÜST
-      DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
-      //TOP  //ÜST
-      DrawPartnormal(ftop.Croprect, self, ftop.Targetrect, alpha);
-      //BOTTOMLEFT // SOLALT
-      DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
-      //BOTTOMRIGHT  //SAĞALT
-      DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
-      //BOTTOM  //ALT
-      DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
-      //CENTERLEFT // SOLORTA
-      DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
-      //CENTERRIGHT // SAĞORTA
-      DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
-      //CENTER //ORTA
-      DrawPartnormal(FCenter.Croprect, self, fcenter.Targetrect, alpha);
+    DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
+    //TOPRIGHT //SAĞÜST
+    DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
+    //TOP  //ÜST
+    DrawPartnormal(ftop.Croprect, self, ftop.Targetrect, alpha);
+    //BOTTOMLEFT // SOLALT
+    DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
+    //BOTTOMRIGHT  //SAĞALT
+    DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
+    //BOTTOM  //ALT
+    DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
+    //CENTERLEFT // SOLORTA
+    DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
+    //CENTERRIGHT // SAĞORTA
+    DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
+    //CENTER //ORTA
+    DrawPartnormal(FCenter.Croprect, self, fcenter.Targetrect, alpha);
 
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
   inherited paint;
 end;
@@ -1984,9 +2021,9 @@ procedure TOnURSpinEdit.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
-    Fustate := obsnormal;
-    Fdstate := obsnormal;
-    Invalidate;
+  Fustate := obsnormal;
+  Fdstate := obsnormal;
+  Invalidate;
 end;
 
 procedure TOnURSpinEdit.MouseMove(Shift: TShiftState; X, Y: integer);
@@ -2089,7 +2126,7 @@ begin
   FBottomleft.cropname := 'BOTTOMLEFT';
 
   Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FTop);  
+  Customcroplist.Add(FTop);
   Customcroplist.Add(FTopRight);
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
@@ -2097,7 +2134,6 @@ begin
   Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
-
 
 
 
@@ -2142,11 +2178,11 @@ begin
   Fddisable.cropname := 'DOWNBUTONDISABLE';
   Fdstate := obsNormal;
 
-  Customcroplist.Add(FuNormal); 
+  Customcroplist.Add(FuNormal);
   Customcroplist.Add(FuEnter);
   Customcroplist.Add(FuPress);
   Customcroplist.Add(Fudisable);
-  Customcroplist.Add(FdNormal); 
+  Customcroplist.Add(FdNormal);
   Customcroplist.Add(FdEnter);
   Customcroplist.Add(FdPress);
   Customcroplist.Add(Fddisable);
@@ -2163,10 +2199,10 @@ end;
 
 destructor TOnURSpinEdit.Destroy;
 var
-  i:byte;
+  i: byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
 
@@ -2176,17 +2212,30 @@ end;
 procedure TOnURSpinEdit.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  Fubuttonarea            := Rect(Self.ClientWidth - self.ClientHeight div 2, 0, self.ClientWidth, self.ClientHeight div 2);
-  Fdbuttonarea            := Rect(Self.ClientWidth - self.ClientHeight div 2, self.ClientHeight div 2, self.ClientWidth, self.ClientHeight);
-  FTopleft.Targetrect     := Rect(0, 0, FTopleft.Width,FTopleft.Height);
-  FTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Width+Fubuttonarea.Width, 0, self.clientWidth-Fubuttonarea.Width, FTopRight.Height);
-  ftop.Targetrect         := Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width+Fubuttonarea.Width, FTop.Height);
-  FBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Height, FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width+Fubuttonarea.Width,  self.clientHeight - FBottomRight.Height, self.clientWidth-Fubuttonarea.Width, self.clientHeight);
-  FBottom.Targetrect      := Rect(FBottomleft.Width,self.clientHeight - FBottom.Height, self.clientWidth - FBottomRight.Width+Fubuttonarea.Width, self.clientHeight);
-  Fleft.Targetrect        := Rect(0, FTopleft.Height,Fleft.Width, self.clientHeight - FBottomleft.Height);
-  FRight.Targetrect       := Rect(self.clientWidth - FRight.Width+Fubuttonarea.Width,FTopRight.Height, self.clientWidth-Fubuttonarea.Width, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect      := Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width+Fubuttonarea.Width, self.clientHeight -FBottom.Height);
+  Fubuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2,
+    0, self.ClientWidth, self.ClientHeight div 2);
+  Fdbuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2,
+    self.ClientHeight div 2, self.ClientWidth, self.ClientHeight);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width + Fubuttonarea.Width,
+    0, self.clientWidth - Fubuttonarea.Width, FTopRight.Height);
+  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
+    FTopRight.Width + Fubuttonarea.Width, FTop.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
+    FBottomleft.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth -
+    FBottomRight.Width + Fubuttonarea.Width, self.clientHeight -
+    FBottomRight.Height, self.clientWidth - Fubuttonarea.Width, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
+    FBottom.Height, self.clientWidth - FBottomRight.Width + Fubuttonarea.Width,
+    self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width,
+    self.clientHeight - FBottomleft.Height);
+  FRight.Targetrect := Rect(self.clientWidth -
+    FRight.Width + Fubuttonarea.Width, FTopRight.Height, self.clientWidth - Fubuttonarea.Width,
+    self.clientHeight - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
+    FRight.Width + Fubuttonarea.Width, self.clientHeight - FBottom.Height);
 
 end;
 
@@ -2230,20 +2279,20 @@ begin
 
     if Enabled = False then
     begin
-      SrcRect                 := Fudisable.Croprect;
-      TrgtRect                := Fddisable.Croprect;
+      SrcRect := Fudisable.Croprect;
+      TrgtRect := Fddisable.Croprect;
     end
     else
     begin
       case Fustate of
-        obsnormal  : SrcRect  := FuNormal.Croprect;
-        obshover   : SrcRect  := FuEnter.Croprect;
-        obspressed : SrcRect  := FuPress.Croprect;
+        obsnormal: SrcRect := FuNormal.Croprect;
+        obshover: SrcRect := FuEnter.Croprect;
+        obspressed: SrcRect := FuPress.Croprect;
       end;
       case Fdstate of
-        obsnormal  : TrgtRect := FdNormal.Croprect;
-        obshover   : TrgtRect :=  FdEnter.Croprect;
-        obspressed : TrgtRect := FdPress.Croprect;
+        obsnormal: TrgtRect := FdNormal.Croprect;
+        obshover: TrgtRect := FdEnter.Croprect;
+        obspressed: TrgtRect := FdPress.Croprect;
       end;
       DrawPartnormal(SrcRect, self, Fubuttonarea, alpha);
       DrawPartnormal(TrgtRect, self, Fdbuttonarea, alpha);
@@ -2252,7 +2301,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
 
   inherited paint;
