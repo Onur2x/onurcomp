@@ -1,0 +1,9 @@
+
+              LICENSE AGREEMENT FOR ALMEDIADEV SKINS
+          ===============================================
+
+- Skins was created for use only with Almediadev products.
+- Skins may not be converted, imported, or read by any application without components from Almediadev.
+- Only registered users can edit and use skins in their applications. 
+- Registered users can distribute skins from their site.
+

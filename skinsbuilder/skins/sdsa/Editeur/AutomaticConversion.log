@@ -1,0 +1,63 @@
+SkinEdit.lpi Note: Eklenen -dBorland -dVer150 -dDelphi7 -dCompiler6_Up -dPUREPASCAL, özel seçenekler
+ Progress: Bulunan tüm birim dosyalar
+SkinEdit.lpr(1,18) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+ : 
+ : *** Proje/pakete ait birim dosyalarının dönüştürülmesi ***
+main.pas Note: cp1254 'den UTF-8'e kodlama değiştirildi
+main.pas Note: Uses bölümünde "Windows" birimi "LCLIntf, LCLType, LMessages" ile değiştirildi.
+main.pas(1,11) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+test.pas Note: Uses bölümünde "Windows" birimi "LCLIntf, LCLType, LMessages" ile değiştirildi.
+test.pas(1,11) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+ : 
+ : *** Dönüştürme sırasında bulunan birim dosyalarını dönüştürme ***
+Skin.pas Note: cp1254 'den UTF-8'e kodlama değiştirildi
+Skin.pas(1,11) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+SkinButton.pas Note: Uses bölümünde "WinProcs" birimi "LCLIntf, LCLType, LMessages" ile değiştirildi.
+SkinButton.pas Note: USES  bölümünden "WinTypes" birimi kaldırıldı.
+SkinButton.pas(1,17) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+SkinChargeur.pas Note: cp1254 'den UTF-8'e kodlama değiştirildi
+SkinChargeur.pas Note: Uses bölümünde "WinProcs" birimi "LCLIntf, LCLType, LMessages" ile değiştirildi.
+SkinChargeur.pas Note: USES  bölümünden "WinTypes" birimi kaldırıldı.
+SkinChargeur.pas(2,19) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+SkinCheck.pas Note: cp1254 'den UTF-8'e kodlama değiştirildi
+SkinCheck.pas Note: Uses bölümünde "WinProcs" birimi "LCLIntf, LCLType, LMessages" ile değiştirildi.
+SkinCheck.pas Note: USES  bölümünden "WinTypes" birimi kaldırıldı.
+SkinCheck.pas(1,16) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+SkinLabel.pas Note: Uses bölümünde "WinProcs" birimi "LCLIntf, LCLType, LMessages" ile değiştirildi.
+SkinLabel.pas Note: USES  bölümünden "WinTypes" birimi kaldırıldı.
+SkinLabel.pas(1,16) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+SkinObjet.pas(1,16) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+SkinPanel.pas Note: cp1254 'den UTF-8'e kodlama değiştirildi
+SkinPanel.pas Note: Uses bölümünde "WinProcs" birimi "LCLIntf, LCLType, LMessages" ile değiştirildi.
+SkinPanel.pas Note: USES  bölümünden "WinTypes" birimi kaldırıldı.
+SkinPanel.pas(1,16) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+SkinType.pas(1,15) Note: Birim adından sonra MODE Delphi sözdizimi değiştiricisi eklendi.
+ : 
+ : *** Kullanılmış birimleri düzeltme ve form dosyalarını onarma ***
+main.pas Note: "Strings.Strings" özelliği kaldırıldı.
+main.pas Note: "Items.Data" özelliği kaldırıldı.
+main.pas Note: Top, TImage "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TImage "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Top, TPanel "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TPanel "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Top, TBitBtn "84" den "82" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TBitBtn "40" den "38" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Top, TBitBtn "12" den "10" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TBitBtn "40" den "38" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Top, TBitBtn "48" den "46" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TBitBtn "40" den "38" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Top, TPanel "440" den "438" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TPanel "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Top, TValueListEditor "194" den "192" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TValueListEditor "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Top, TTreeView "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TTreeView "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Top, TSplitter "192" den "190" ye TPanel içindeki koordinatını değiştirildi.
+main.pas Note: Left, TSplitter "0" den "0" ye TPanel içindeki koordinatını değiştirildi.
+test.pas Note: "Top" özelliği kaldırıldı.
+test.pas Note: "Left" özelliği kaldırıldı.
+test.pas Note: "DefaultSkin.Data" özelliği kaldırıldı.
+test.pas Note: "TextHeight" özelliği kaldırıldı.
+test.pas Note: "OldCreateOrder" özelliği kaldırıldı.
+ Progress: Dönüşüm alındı: 00:00:08
+ : Dönüşüm Hazır.

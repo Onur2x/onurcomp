@@ -60,7 +60,7 @@ type
     List: TStringList;
     // fparent     : TForm;
 
-    skinread: boolean;
+    skinread,fformactive: boolean;
     Frmain, tempbitmap: TBGRABitmap;
     clrr: string;
     ffilename: TFileName;
@@ -74,6 +74,7 @@ type
     procedure Setloadskin(AValue: string);
     procedure Setopacity(Avalue: byte);
     procedure Setcolor(colr: string);
+    procedure resize(Sender: TObject);
   public
     Fimage: TBGRABitmap;
     Blend, ThemeStyle, Skinname, Version, Author, Email,
@@ -91,6 +92,7 @@ type
     procedure GetSkinInfo(const FileName: string; const Resource: boolean = False);
     procedure Saveskin(filename: string);
     procedure Refresh;
+    procedure formactive(xx:boolean);
   published
 
     property MColor: string read clrr write Setcolor;
@@ -471,7 +473,12 @@ begin
   stl.Wordbreak := True;
   stl.Layout := tlCenter;
   stl.SingleLine := False;
-  TT.TextRect(RE, 0, 0, Fcap, stl);
+
+  {fcap:= maxlengthstring(fcap,RE.Width;  }
+  TT.TextRect(RE, 0, 0, fcap, stl);
+
+
+
 end;
 
 
@@ -881,7 +888,9 @@ end;
 constructor TONURImg.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  fparent := TForm(AOwner);
+  fparent           := TForm(AOwner);
+  Fparent.OnResize  := @Resize;
+  fformactive       := true;
   FTop := TONURCUSTOMCROP.Create;
   FTop.cropname := 'TOP';
   FBottom := TONURCUSTOMCROP.Create;
@@ -980,6 +989,12 @@ begin
     Colorbgrabitmap;
 
   end;
+end;
+
+procedure TONURImg.resize(Sender: TObject);
+begin
+
+//  CropToimg(Fimage);
 end;
 
 
@@ -1105,8 +1120,8 @@ begin
   DrawPart(FCenter.Croprect, TrgtRect);
 
 
-  self.fparent.ChildSizing.LeftRightSpacing := Fleft.Width;
-  self.fparent.ChildSizing.TopBottomSpacing := FTop.Height;
+  self.fparent.ChildSizing.LeftRightSpacing := Fleft.Width;//+FRight.Width;
+  self.fparent.ChildSizing.TopBottomSpacing := FTop.Height;//+FBottom.Height;
 
 
   if ThemeStyle = 'modern' then        // if Theme style modern region corner
@@ -1891,6 +1906,11 @@ begin
 
 end;
 
+procedure TONURImg.formactive(xx: boolean);
+begin
+ fformactive:=xx;
+end;
+
 
 
 
@@ -2047,11 +2067,12 @@ begin
         self.fparent.BorderStyle := bsNone;
         self.fparent.OnMouseDown := @mousedwn;
 
-
+        if fformactive then
+        begin
         CropToimg(Fimage); // for crop Tform
 
         Self.fparent.OnPaint := @pant;
-
+        end;
       end;
       // Tform ok
 

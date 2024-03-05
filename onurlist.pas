@@ -38,6 +38,8 @@ type
   protected
     procedure dblclick; override;
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure resizing;
     function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): boolean; override;
     function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): boolean; override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -127,6 +129,7 @@ type
     function Gettext: string;
     function GetItemIndex: integer;
     procedure LinesChanged(Sender: TObject);
+
     procedure setitemheight(avalue: integer);
     procedure SetItemIndex(Avalue: integer);
     procedure LstPopupReturndata(Sender: TObject; const Str: string; const indx: integer);
@@ -140,6 +143,8 @@ type
     procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
     procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
     procedure Select; virtual;
     procedure DropDown; virtual;
     procedure GetItems; virtual;
@@ -367,7 +372,6 @@ type
     FOnCellclick: TOnCellClick;
     function Getcells(Acol, Arow: integer): string;
     function Itemrectcel(Item, Col: integer): Trect;
-    procedure resizee;
     procedure Scrollscreen;
     procedure Setcells(Acol, Arow: integer; Avalue: string);
     procedure SetHeadervisible(AValue: boolean);
@@ -381,6 +385,8 @@ type
     procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure resizing;
     function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): boolean; override;
     function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): boolean; override;
 
@@ -488,7 +494,6 @@ type
     function GetCellval: string;
     function GetColWidths(aCol: Integer): Integer;
     function GetItemAt(Pos: TPoint): Integer;
-    procedure resizee;
     procedure Scrollscreen;
     procedure SetColWidths(aCol: Integer; AValue: Integer);
     procedure VscrollBarChange(Sender: Tobject);
@@ -520,6 +525,8 @@ type
     Property SelectedCelltext : string read GetCellval;
   protected
     procedure SetSkindata(Aimg: TONURImg);override;
+    procedure Resize; override;
+    procedure Resizing;
     function DoMouseWheelDown(Shift: TShiftState; MousePos: TPoint): boolean; override;
     function DoMouseWheelUp(Shift: TShiftState; MousePos: TPoint): boolean; override;
     procedure DblClick; override;
@@ -1074,16 +1081,23 @@ end;
 procedure TONURColumList.SetSkindata(Aimg: TONURImg);
 Begin
   Inherited Setskindata(Aimg);
-  if (Aimg <> nil) then
-  begin
-   vScrollBar.Skindata:=Aimg;
-   hScrollBar.Skindata:=Aimg;
-  end;
-  resizee;
+  resizing;
  End;
 
-procedure TONURColumList.resizee;
+procedure TONURColumList.Resize;
 begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  resizing;
+end;
+
+procedure TONURColumList.resizing;
+begin
+  if Assigned(Skindata) then
+  begin
+   vScrollBar.Skindata:=Skindata;
+   hScrollBar.Skindata:=Skindata;
+  end;
    FTopleft.Targetrect     := Rect(0, 0,FTopleft.Width,FTopleft.Height);
    FTopRight.Targetrect    := Rect(self.ClientWidth - FTopRight.Width,0, self.ClientWidth, FTopRight.Height);
    FTop.Targetrect         := Rect(FTopleft.Width, 0,self.ClientWidth - FTopRight.Width,FTop.Height);
@@ -1822,7 +1836,7 @@ begin
   Fcellvalue              := '';
   Fcelleditwidth          := 0;
   Captionvisible          := False;
-  skinname                := 'columlist';
+  skinname                := 'stringrid';
   FTop                    := TONURCUSTOMCROP.Create;
   FTop.cropname           := 'TOP';
   FBottom                 := TONURCUSTOMCROP.Create;
@@ -2030,23 +2044,28 @@ end;
 procedure TONURStringGrid.SetSkindata(Aimg: TONURImg);
 Begin
   Inherited Setskindata(Aimg);
-  if (Aimg <> nil) then
+  Resizing;
+ End;
+
+procedure TONURStringGrid.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  resizing;
+end;
+
+procedure TONURStringGrid.Resizing;
+begin
+  if Assigned(Skindata) then
   begin
-   vScrollBar.Skindata:=Aimg;
-   hScrollBar.Skindata:=Aimg;
+   vScrollBar.Skindata:=Skindata;
+   hScrollBar.Skindata:=Skindata;
   end else
   begin
    Skindata:=nil;
    vScrollBar.Skindata:=nil;
    hScrollBar.Skindata:=nil;
   end;
-  resizee;
- End;
-
-procedure TONURStringGrid.resizee;
-begin
-  if Skindata<> nil then
-  begin
    FTopleft.Targetrect     := Rect(0, 0,FTopleft.Width,FTopleft.Height);
    FTopRight.Targetrect    := Rect(self.ClientWidth - FTopRight.Width,0, self.ClientWidth, FTopRight.Height);
    FTop.Targetrect         := Rect(FTopleft.Width, 0,self.ClientWidth - FTopRight.Width,FTop.Height);
@@ -2061,8 +2080,6 @@ begin
    resim.FontStyle         := self.Font.Style;
    resim.FontHeight        := self.Font.Height;
    Scrollscreen;
-  end;
-
 end;
 
 
@@ -2652,7 +2669,7 @@ procedure TONURlistItems.Update(Item: TCollectionItem);
 begin
   Inherited Update(Item);
 
-   TONURColumList(GetOwner).resizee;
+   TONURColumList(GetOwner).resizing;
    TONURColumList(GetOwner).Invalidate;
 end;
 
@@ -2965,10 +2982,22 @@ end;
 procedure TONURListBox.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  if (Aimg <> nil) then
+  resizing;
+end;
+
+procedure TONURListBox.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  resizing;
+end;
+
+procedure TONURListBox.resizing;
+begin
+  if Assigned(Skindata) then
   begin
-   vScrollBar.Skindata:=Aimg;
-   hScrollBar.Skindata:=Aimg;
+   vScrollBar.Skindata:=Skindata;
+   hScrollBar.Skindata:=Skindata;
   end;
 
   FTopleft.Targetrect     := Rect(0, 0, FTopleft.Width, FTopleft.Height);
@@ -2982,7 +3011,6 @@ begin
   FCenter.Targetrect      := Rect(Fleft.Width,FTop.Height, self.ClientWidth - FRight.Width, self.ClientHeight - FBottom.Height);
   if Flist.Count>0 then
   Scrollscreen;
-
 end;
 
 procedure TONURListBox.paint;
@@ -3817,6 +3845,17 @@ end;
 procedure TONURComboBox.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
+  resizing;
+end;
+
+procedure TONURComboBox.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  resizing;
+end;
+procedure TONURComboBox.Resizing;
+begin
   fbutonarea              := Rect(Self.ClientWidth - self.ClientHeight, 0, self.ClientWidth, self.ClientHeight);
   FTopleft.Targetrect     := Rect(0, 0, FTopleft.Croprect.Width{FTopleft.FSRight - FTopleft.FSLeft}, FTopleft.Croprect.Height{FTopleft.FSBottom - FTopleft.FSTop});
   FTopRight.Targetrect    := Rect(Self.ClientWidth - ((FTopRight.FSRight - FTopRight.FSLeft) + fbutonarea.Width), 0, Self.ClientWidth - (fbutonarea.Width), (FTopRight.FSBottom - FTopRight.FSTop));
@@ -3827,6 +3866,7 @@ begin
   Fleft.Targetrect        := Rect(0, FTopleft.FSBottom - FTopleft.FSTop,(Fleft.FSRight - Fleft.FSLeft), self.ClientHeight - (FBottomleft.FSBottom - FBottomleft.FSTop));
   FRight.Targetrect       := Rect(Self.ClientWidth - ((FRight.FSRight - FRight.FSLeft) + fbutonarea.Width),(FTopRight.FSBottom - FTopRight.FSTop), Self.ClientWidth - fbutonarea.Width, self.ClientHeight - (FBottomRight.FSBottom - FBottomRight.FSTop));
   FCenter.Targetrect      := Rect((Fleft.FSRight - Fleft.FSLeft), (FTop.FSBottom - FTop.FSTop), Self.ClientWidth - ((FRight.FSRight - FRight.FSLeft) + fbutonarea.Width), self.ClientHeight - (FBottom.FSBottom - FBottom.FSTop));
+
 end;
 
 procedure TONURComboBox.Paint;

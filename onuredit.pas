@@ -190,6 +190,8 @@ type
     FTop, FBottom, FCenter: TONURCUSTOMCROP;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -257,6 +259,8 @@ type
     procedure paint; override;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
   published
     property Alpha;
     property Lines;
@@ -349,6 +353,8 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
   published
     property Alpha;
     property Value: integer read fvalue write fvalue;
@@ -1689,7 +1695,7 @@ end;
 
 
 
-constructor TonUREdit.Create(AOwner: TComponent);
+constructor TONUREdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname := 'edit';
@@ -1729,7 +1735,7 @@ begin
 
 end;
 
-destructor TonUREdit.Destroy;
+destructor TONUREdit.Destroy;
 var
   i: byte;
 begin
@@ -1741,10 +1747,22 @@ begin
   inherited Destroy;
 end;
 
-procedure TonUREdit.SetSkindata(Aimg: TONURImg);
+procedure TONUREdit.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
+  Resizing;
+end;
 
+procedure TONUREdit.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  Resizing;
+end;
+
+procedure TONUREdit.Resizing;
+begin
+ 
   FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
     0, self.clientWidth, FTopRight.Height);
@@ -1765,7 +1783,7 @@ begin
 
 end;
 
-procedure TonUREdit.paint;
+procedure TONUREdit.paint;
 begin
 
   if not Visible then Exit;
@@ -1807,7 +1825,19 @@ end;
 procedure TONURMemo.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
+  Resizing;
+end;
 
+procedure TONURMemo.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  Resizing;
+end;
+
+procedure TONURMemo.Resizing;
+begin
+ 
   FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
     0, self.clientWidth, FTopRight.Height);
@@ -1921,48 +1951,48 @@ end;
 { TOnURSpinEdit }
 
 
-function TOnURSpinEdit.getbuttonheight: integer;
+function TONURSpinEdit.getbuttonheight: integer;
 begin
   Result := Fbuttonheight;
 end;
 
-function TOnURSpinEdit.getbuttonwidth: integer;
+function TONURSpinEdit.getbuttonwidth: integer;
 begin
   Result := Fbuttonwidth;
 end;
 
-function TOnURSpinEdit.Getmax: integer;
+function TONURSpinEdit.Getmax: integer;
 begin
   Result := Fmax;
 end;
 
-function TOnURSpinEdit.Getmin: integer;
+function TONURSpinEdit.Getmin: integer;
 begin
   Result := Fmin;
 end;
 
 
-procedure TOnURSpinEdit.setbuttonheight(avalue: integer);
+procedure TONURSpinEdit.setbuttonheight(avalue: integer);
 begin
   if Fbuttonheight <> AValue then Fbuttonheight := AValue;
 end;
 
-procedure TOnURSpinEdit.setbuttonwidth(avalue: integer);
+procedure TONURSpinEdit.setbuttonwidth(avalue: integer);
 begin
   if Fbuttonwidth <> AValue then Fbuttonwidth := AValue;
 end;
 
-procedure TOnURSpinEdit.Setmax(AValue: integer);
+procedure TONURSpinEdit.Setmax(AValue: integer);
 begin
   if Fmax <> AValue then Fmax := AValue;
 end;
 
-procedure TOnURSpinEdit.Setmin(AValue: integer);
+procedure TONURSpinEdit.Setmin(AValue: integer);
 begin
   if Fmin <> AValue then Fmin := AValue;
 end;
 
-procedure TOnURSpinEdit.SetText(AValue: string);
+procedure TONURSpinEdit.SetText(AValue: string);
 begin
   inherited SetText(Avalue);
   fvalue := StrToIntDef(Avalue, 0);
@@ -1970,7 +2000,8 @@ end;
 
 
 
-procedure TOnURSpinEdit.KeyDown(Sender: TObject; var Key: word; Shift: TShiftState);
+procedure TONURSpinEdit.KeyDown(Sender: TObject; var Key: word;
+  Shift: TShiftState);
 begin
   inherited KeyDown(Key, Shift);
   fvalue := StrToInt(Text);
@@ -1984,8 +2015,8 @@ begin
 end;
 
 
-procedure TOnURSpinEdit.MouseDown(Button: TMouseButton; Shift: TShiftState;
-  X, Y: integer);
+procedure TONURSpinEdit.MouseDown(Button: TMouseButton; Shift: TShiftState; X,
+  Y: integer);
 begin
   inherited MouseDown(Button, Shift, X, Y);
 
@@ -2017,7 +2048,7 @@ begin
   end;
 end;
 
-procedure TOnURSpinEdit.MouseUp(Button: TMouseButton; Shift: TShiftState;
+procedure TONURSpinEdit.MouseUp(Button: TMouseButton; Shift: TShiftState;
   X: integer; Y: integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
@@ -2026,7 +2057,7 @@ begin
   Invalidate;
 end;
 
-procedure TOnURSpinEdit.MouseMove(Shift: TShiftState; X, Y: integer);
+procedure TONURSpinEdit.MouseMove(Shift: TShiftState; X, Y: integer);
 begin
   inherited MouseMove(Shift, X, Y);
   if csDesigning in ComponentState then  Exit;
@@ -2054,7 +2085,7 @@ begin
   Invalidate;
 end;
 
-procedure TOnURSpinEdit.CMonmouseenter(var Messages: Tmessage);
+procedure TONURSpinEdit.CMonmouseenter(var Messages: Tmessage);
 var
   aPnt: TPoint;
 begin
@@ -2090,7 +2121,7 @@ begin
   Invalidate;
 end;
 
-procedure TOnURSpinEdit.CMonmouseleave(var Messages: Tmessage);
+procedure TONURSpinEdit.CMonmouseleave(var Messages: Tmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -2102,7 +2133,7 @@ begin
   Invalidate;
 end;
 
-constructor TOnURSpinEdit.Create(AOwner: TComponent);
+constructor TONURSpinEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname := 'spinedit';
@@ -2197,7 +2228,7 @@ begin
 
 end;
 
-destructor TOnURSpinEdit.Destroy;
+destructor TONURSpinEdit.Destroy;
 var
   i: byte;
 begin
@@ -2209,10 +2240,22 @@ begin
   inherited Destroy;
 end;
 
-procedure TOnURSpinEdit.SetSkindata(Aimg: TONURImg);
+procedure TONURSpinEdit.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  Fubuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2,
+  Resizing;
+end;
+
+procedure TONURSpinEdit.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  resizing;
+end;
+
+procedure TONURSpinEdit.Resizing;
+begin
+   Fubuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2,
     0, self.ClientWidth, self.ClientHeight div 2);
   Fdbuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2,
     self.ClientHeight div 2, self.ClientWidth, self.ClientHeight);
@@ -2239,7 +2282,7 @@ begin
 
 end;
 
-procedure TOnURSpinEdit.Paint;
+procedure TONURSpinEdit.Paint;
 var
   TrgtRect, SrcRect: TRect;
 begin

@@ -90,6 +90,8 @@ type
     procedure SetPageOrderIndex(Value: integer);
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
     procedure ReadState(Reader: TReader); override;
     procedure Loaded; override;
   public
@@ -171,6 +173,8 @@ type
     procedure SetButtonDirection(val: TONURButtonDirection);
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
     procedure GetChildren(Proc: TGetChildProc; Root: TComponent); override;
     procedure SetChildOrder(Child: TComponent; Order: integer); override;
     procedure ShowControl(AControl: TControl); override;
@@ -320,6 +324,8 @@ type
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
   public
    prnt   : TONURContentSlider;
    constructor Create(AOwner: TComponent); override;
@@ -331,7 +337,7 @@ type
   TONURContentSlider = class(TONURCustomControl)
   private
    Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-   FTop, FBottom, FCenter: TONURCUSTOMCROP;
+   FTop, FBottom, FCenter, Fleftbutton,Frightbutton: TONURCUSTOMCROP;
    Fbuttonleft,Fbuttonright:TONURcontentsliderbutton;
    Fcontent:TStrings;
    indx:integer;
@@ -343,6 +349,7 @@ type
   protected
    procedure SetSkindata(Aimg: TONURImg); override;
    procedure Resize; override;
+   procedure Resizing;
    procedure MouseLeave; override;
    procedure MouseEnter; override;
   public
@@ -504,8 +511,19 @@ end;
 procedure TONURcontentsliderbutton.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  FNormal.Targetrect      := Rect(0, 0, ClientWidth,ClientWidth);
+  Resizing;
+end;
 
+procedure TONURcontentsliderbutton.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  Resizing;
+end;
+
+procedure TONURcontentsliderbutton.Resizing;
+begin
+  FNormal.Targetrect      := Rect(0, 0, ClientWidth,ClientWidth);
 end;
 
 procedure TONURcontentsliderbutton.Paint;
@@ -513,6 +531,7 @@ procedure TONURcontentsliderbutton.Paint;
   DR: TRect;
 begin
   if not Visible then Exit;
+
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
 
@@ -544,13 +563,14 @@ begin
       DR := Fdisable.Croprect;
       Self.Font.Color := Fdisable.Fontcolor;
     end;
+
+   DrawPartnormal(DR, Self, self.ClientRect, Alpha);
+
   end
   else
   begin
    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
-
-   DrawPartnormal(DR, Self, FNormal.Targetrect, Alpha);
 
   inherited Paint;
 
@@ -577,8 +597,8 @@ begin
   Height            := 30;
   Resim.SetSize(Width, Height);
   Captionvisible    := False;
-  alp               := 0;
-  alpha             := 0;
+  alp               := 255;
+  alpha             := 255;
   Ftimer            := TTimer.create(nil);
   Ftimer.Enabled    := False;
   Ftimer.Ontimer    := @Onurtimer;
@@ -638,10 +658,9 @@ begin
   Fcontent.Assign(AValue);
 end;
 
-procedure TONURContentSlider.SetSkindata(Aimg: TONURImg);
+procedure TONURContentSlider.resizing;
 begin
-  inherited SetSkindata(Aimg);
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+ FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
     0, self.clientWidth, FTopRight.Height);
   ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
@@ -660,11 +679,15 @@ begin
   FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
     FRight.Width, self.clientHeight - FBottom.Height);
 
-  //self.ChildSizing.LeftRightSpacing := Fleft.Width;
-  //self.ChildSizing.TopBottomSpacing := FTop.Height;
 
-  if not Assigned(Fbuttonleft) then Fbuttonleft.Skindata  := self.Skindata;
-  if not Assigned(Fbuttonright) then Fbuttonright.Skindata := self.Skindata;
+  if Assigned(Fbuttonleft) then Fbuttonleft.Skindata  := self.Skindata;
+  if Assigned(Fbuttonright) then Fbuttonright.Skindata := self.Skindata;
+end;
+
+procedure TONURContentSlider.SetSkindata(Aimg: TONURImg);
+begin
+  inherited SetSkindata(Aimg);
+  resizing;
 end;
 
 procedure TONURContentSlider.Resize;
@@ -679,6 +702,7 @@ begin
   Fbuttonright.Left :=  Self.ClientWidth-(Fbuttonright.Width+10);
   Fbuttonright.top  := (self.ClientHeight div 2)- (Fbuttonright.Height div 2);
 
+  resizing;
 end;
 
 
@@ -686,15 +710,15 @@ end;
 procedure TONURContentSlider.MouseLeave;
 begin
   inherited MouseLeave;
-  if not Assigned(Fbuttonleft) then Fbuttonleft.Fade(40,fadein);
-  if not Assigned(Fbuttonright) then Fbuttonright.Fade(40,fadein);
+  if Assigned(Fbuttonleft) then Fbuttonleft.Fade(40,fadein);
+  if Assigned(Fbuttonright) then Fbuttonright.Fade(40,fadein);
 end;
 
 procedure TONURContentSlider.MouseEnter;
 begin
   inherited MouseEnter;
-  if not Assigned(Fbuttonleft) then Fbuttonleft.Fade(40,fadeout);
-  if not Assigned(Fbuttonright) then Fbuttonright.Fade(40,fadeout);
+  if Assigned(Fbuttonleft) then Fbuttonleft.Fade(40,fadeout);
+  if Assigned(Fbuttonright) then Fbuttonright.Fade(40,fadeout);
 end;
 
 constructor TONURContentSlider.Create(AOwner: TComponent);
@@ -719,6 +743,11 @@ begin
   FTopleft.cropname     := 'TOPLEFT';
   FBottomleft           := TONURCUSTOMCROP.Create;
   FBottomleft.cropname  := 'BOTTOMLEFT';
+  Fleftbutton           := TONURCUSTOMCROP.Create;
+  Fleftbutton.cropname  := 'LEFTBUTTON';
+  Frightbutton          := TONURCUSTOMCROP.Create;
+  Frightbutton.cropname := 'RIGHTBUTTON';
+
   indx                  := 0;
   Fcontent              := TStringList.Create;
   Captionvisible        := false;
@@ -732,6 +761,10 @@ begin
   Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
+  Customcroplist.Add(Fleftbutton);
+  Customcroplist.Add(Frightbutton);
+
+
 
   Self.Height           := 190;
   Self.Width            := 190;
@@ -741,14 +774,18 @@ begin
   with Fbuttonleft do
   begin
     parent          := self;
-    prnt           := Self;
+    prnt            := Self;
     left            := 20;
     top             := 85;
     Width           := 30;
     Height          := 30;
     Caption         := '';
     Captionvisible  := false;
-    Skinname        := 'contentSliderbuttonl';
+    Skinname        := 'contentslider';
+    Fnormal.cropname := 'LEFTBUTTON';
+    FEnter.cropname := 'LEFTBUTTON';
+    FPress.cropname := 'LEFTBUTTON';
+    Fdisable.cropname := 'LEFTBUTTON';
     OnClick         := @leftbuttonclick;
   end;
   
@@ -764,9 +801,13 @@ begin
     Height         := 30;
     Caption        := '';
     Captionvisible := false;
-    Skinname       := 'contentSliderbuttonr';
-    OnClick        := @rightbuttonclick;
+    Skinname       := 'contentslider';
+    Fnormal.cropname := 'RIGHTBUTTON';
+    FEnter.cropname := 'RIGHTBUTTON';
+    FPress.cropname := 'RIGHTBUTTON';
+    Fdisable.cropname := 'RIGHTBUTTON';
 
+    OnClick        := @rightbuttonclick;
   end;
 
 end;
@@ -788,13 +829,51 @@ begin
 end;
 
 procedure TONURContentSlider.Paint;
+var
+  DR:TRect;
 begin
   if not Visible then exit;
+  resim.SetSize(0, 0);
+  resim.SetSize(self.ClientWidth, self.ClientHeight);
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
+    //TOPLEFT   //SOLÜST
+      DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
+      //TOPRIGHT //SAĞÜST
+      DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
+      //TOP  //ÜST
+      DrawPartnormal(ftop.Croprect, self, FTop.Targetrect, alpha);
+      //BOTTOMLEFT // SOLALT
+      DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
+      //BOTTOMRIGHT  //SAĞALT
+      DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
+      //BOTTOM  //ALT
+      DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
+      //LEFT CENTERLEFT // SOLORTA
+      DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
+      //CENTERRIGHT // SAĞORTA
+      DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
+      //CENTER //ORTA
+      DrawPartnormal(Fcenter.Croprect, self, FCenter.Targetrect, alpha);
+
+      if Crop then
+        CropToimg(resim);
+
+
+      DR.Left:=FCenter.Targetrect.left+Fleft.Croprect.Width;
+      DR.Right:=FCenter.Targetrect.Right-FRight.Croprect.Width;
+
+      DR.top:=FCenter.Targetrect.top+Ftop.Croprect.Height;
+      DR.bottom:=FCenter.Targetrect.bottom-FBottom.Croprect.Height;
+
+
    if Fcontent.count>0 then
-    yaziyaz(self.Canvas, self.Font, FCenter.Targetrect, Fcontent[indx], taCenter);
+    yaziyaz(resim.Canvas, self.Font,  DR, Fcontent[indx], taCenter);
+  end
+  else
+  begin
+   resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
   end;
 
   inherited Paint;
@@ -1076,11 +1155,23 @@ begin
 end;
 
 procedure TONURPageControl.SetSkindata(Aimg: TONURImg);
+begin
+ inherited SetSkindata(Aimg);
+ resizing;
+end;
+
+procedure TONURPageControl.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  resizing;
+end;
+
+procedure TONURPageControl.Resizing;
 var
   i: integer;
 begin
-  inherited SetSkindata(Aimg);
-
+  
   FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
     0, self.clientWidth, FTopRight.Height);
@@ -1109,7 +1200,6 @@ begin
       if self.Skindata <> nil then
         Pages[i].Skindata := self.Skindata;// Paint;
     end;
-
 end;
 
 
@@ -1574,7 +1664,19 @@ end;
 procedure TONURPage.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  FTopleft.Targetrect :=
+  Resizing;
+end;
+
+procedure TONURPage.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  Resizing;
+end;
+
+procedure TONURPage.Resizing;
+begin
+ FTopleft.Targetrect :=
     Rect(0, 0, FPageControl.FTopleft.Width, FPageControl.FTopleft.Height);
   FTopRight.Targetrect :=
     Rect(self.clientWidth - (FTopRight.Width), 0, self.clientWidth,
@@ -1606,7 +1708,7 @@ begin
     self.clientWidth - FPageControl.FRight.Width, self.clientHeight -
     FPageControl.FBottom.Height);
 
-  Fbutton.Skindata := Aimg;
+  Fbutton.Skindata := Skindata;
 end;
 
 

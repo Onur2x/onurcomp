@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <Compiler Value="D:\Onur_Yedek\mailler\lazarus2\fpc\3.2.2\bin\i386-win32\fpc.exe" Date="1429737572"/>
+  <Params Value=" -Mdelphi -Scghi -O1 -gw2 -godwarfsets -gl -WG -l -vewnhibq -FiD:\Onur_Yedek\mailler\lazarus\components\paketler\Onur\skinsbuilder\skins\sdsa -FuD:\Onur_Yedek\mailler\lazarus\components\paketler\Onur\skinsbuilder\skins\sdsa -FuD:\Onur_Yedek\mailler\lazarus2\lcl\units\i386-win32\win32 -FuD:\Onur_Yedek\mailler\lazarus2\lcl\units\i386-win32 -FuD:\Onur_Yedek\mailler\lazarus2\components\freetype\lib\i386-win32 -FuD:\Onur_Yedek\mailler\lazarus2\components\lazutils\lib\i386-win32 -FuD:\Onur_Yedek\mailler\lazarus2\packager\units\i386-win32 -FuD:\Onur_Yedek\mailler\lazarus\components\paketler\Onur\skinsbuilder\skins\sdsa\Editeur\ -FED:\Onur_Yedek\mailler\lazarus\components\paketler\Onur\skinsbuilder\skins\sdsa\Editeur\lib\i386-win32\ -oD:\Onur_Yedek\mailler\lazarus\components\paketler\Onur\skinsbuilder\skins\sdsa\Editeur\lib\i386-win32\SkinEdit.exe -dLCL -dLCLwin32 -dBorland -dVer150 -dDelphi7 -dCompiler6_Up -dPUREPASCAL SkinEdit.lpr"/>
+</CONFIG>

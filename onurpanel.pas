@@ -10,12 +10,17 @@ uses
 
 type
   { TONPanel }
+
+  { TONURPanel }
+
   TONURPanel = class(TONURCustomControl)
   private
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
     FTop, FBottom, FCenter: TONURCUSTOMCROP;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
   public
     { Public declarations }
     constructor Create(AOwner: TComponent); override;
@@ -208,6 +213,8 @@ type
     procedure Paint; override;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
+    procedure Resize; override;
+    procedure Resizing;
   published
     property Alpha;
     property Skindata;
@@ -827,7 +834,19 @@ end;
 procedure TONURPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  Resizing;
+end;
+
+procedure TONURPanel.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  Resizing;
+end;
+
+procedure TONURPanel.Resizing;
+begin
+    FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
     0, self.clientWidth, FTopRight.Height);
   ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
@@ -857,7 +876,19 @@ end;
 procedure TONURGraphicPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
+  Resizing;
+end;
+
+procedure TONURGraphicPanel.Resize;
+begin
+  inherited Resize;
+  if Assigned(Skindata) then
+  Resizing;
+end;
+
+procedure TONURGraphicPanel.Resizing;
+begin
+    FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
   FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
     0, self.clientWidth, FTopRight.Height);
   ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
@@ -874,7 +905,6 @@ begin
     self.clientWidth, self.clientHeight - FBottomRight.Height);
   FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
     FRight.Width, self.clientHeight - FBottom.Height);
-
 end;
 
 constructor TONURGraphicPanel.Create(AOwner: TComponent);
