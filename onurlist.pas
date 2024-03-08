@@ -46,6 +46,8 @@ type
       X: integer; Y: integer); override;
     procedure KeyDown(var Key: word; Shift: TShiftState); virtual;
     procedure SetString(AValue: TStrings); virtual;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
   public
     constructor Create(Aowner: TComponent); override;
     destructor Destroy; override;
@@ -237,12 +239,20 @@ type
 
   TONURColumList = class;
 
+  { TONURlistItem }
+
   TONURlistItem = class(TCollectionItem)
   private
-    FCells: array of string;
-    FSize: integer;
-    Ftextalign : TAlignment;
-    ffont      : TFont;
+    FCells      : array of string;
+    FSize       : integer;
+    Ftextalign  : TAlignment;
+    ffont       : TFont;
+    fvisible    : Boolean;
+    FCurrent    : Boolean;
+    FSelected   : Boolean;
+    fwidth      : integer;
+    FCaption    : String;
+
     function GetCell(X: integer): string;
     function GetColCount: integer;
     procedure SetCell(X: integer; AValue: string);virtual;
@@ -250,6 +260,7 @@ type
     function Insert(Indexi: integer; avalue: string): TONURlistItem;
   public
     constructor Create(Collectioni: TCollection); override;
+    destructor Destroy; override;
     procedure Add(s: string);
     procedure Clear;
     procedure Delete;
@@ -257,9 +268,12 @@ type
     property Cells[Col: integer]: string read GetCell write SetCell;
     property ColCount : integer read GetColCount write SetColCount;
   published
-    property Font      : TFont       read ffont write ffont;
-    property Textalign : TAlignment  read Ftextalign write Ftextalign;
     property ID;
+    property Font      : TFont       read ffont      write ffont;
+    property Textalign : TAlignment  read Ftextalign write Ftextalign;
+    property Caption   : String      read FCaption   write FCaption;
+    property Visible   : Boolean     read fvisible   write fvisible default true;
+    property Width     : integer     read fwidth     write fwidth;
   end;
 
   { TONURlistItems }
@@ -288,7 +302,7 @@ type
 
   { TONURColumn }
 
-  TONURColumn = class(TCollectionItem)
+  {TONURColumn = class(TCollectionItem)
   private
     FCaption: string;
     fvisible: boolean;
@@ -312,11 +326,11 @@ type
     property Font: TFont read ffont write ffont;
     property Textalign :TAlignment read Ftextalign write Ftextalign;
   end;
-
+  }
 
 
   { TONURListColums }
-
+ {
   TONURListColums = class(TOwnedCollection)
   private
 
@@ -336,7 +350,7 @@ type
     property Items[Indexi: integer]: TONURColumn read GetItem write SetItem; default;
     property Cells[ACol, ARow: integer]: string read GetCells write SetCells;
   end;
-
+   }
   TOnDeleteItem = procedure(Sender: TObject) of object;
   TOnCellClick = procedure(Sender: TObject; Column: TONURlistItem) of object;
 
@@ -349,11 +363,13 @@ type
     FTop, FBottom, FCenter, factiveitems, fheader, fitems: TONURCUSTOMCROP;
     fheaderfont: Tfont;
     FListItems: TONURlistItems;
-    Fcolumns: TONURListColums;
+    fItemscount  : integer;
+   // Fcolumns: TONURListColums;
 
     FItemvOffset: integer;
     FItemHOffset: integer;
     FItemsShown: smallint;
+    FItemsvShown:SmallInt;
     FItemshShown: SmallInt;
     FFocusedItem: integer;
     FItemHeight: integer;
@@ -376,7 +392,7 @@ type
     procedure Setcells(Acol, Arow: integer; Avalue: string);
     procedure SetHeadervisible(AValue: boolean);
     procedure SetItems(Value: TONURlistItems);
-    procedure Setcolums(Value: TONURListColums);
+   // procedure Setcolums(Value: TONURListColums);
 
     function ItemRect(Item: integer): TRect;
     function GetItemAt(Pos: TPoint): integer;
@@ -394,6 +410,8 @@ type
       X, Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X, Y: integer); override;
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
   public
     constructor Create(Aowner: TComponent); override;
     destructor Destroy; override;
@@ -408,9 +426,10 @@ type
   published
     property Alpha;
     property OnCellClick       : TOnCellClick    read FOnCellclick       write FOnCellclick;
-    property Columns           : TONURListColums read Fcolumns           write Setcolums;
-    property Items             : TONURlistItems  read FListItems         write SetItems;
+   // property Columns           : TONURListColums read Fcolumns           write Setcolums;
+    property Columns           : TONURlistItems  read FListItems         write SetItems;
     property ItemIndex         : integer         read FFocusedItem       write FFocusedItem;
+    property Itemscount        : Integer        read FItemscount;
     property Columindex        : integer         read fcolumindex        write fcolumindex;
     property ItemHeight        : integer         read FItemHeight        write FItemHeight;
     property HeaderHeight      : integer         read FheaderHeight      write FheaderHeight;
@@ -590,7 +609,7 @@ end;
 
 
 { TONURListColums }
-
+{
 Function TONURListColums.Getitem(Indexi: Integer): TONURColumn;
 Begin
    if Indexi <> -1 then
@@ -667,7 +686,7 @@ Function TONURListColums.Indexof(Value: TONURColumn): Integer;
         Result := i;
 End;
 
-
+  }
 
 { TONURColumList }
 
@@ -679,11 +698,11 @@ begin
     Result := ''
   else
   begin
-    if (Items.Count>-1) and (items.Count<=Arow) then
+    if (columns[Acol].FSize>-1) and (columns[Acol].FSize<=Arow) then
    // if (Columns[Acol].Items.Count > -1) and (Columns[Acol].Items.Count <= Arow) then
       Result := ''
     else
-      Result :=Items[Arow].Cells[Acol];//acol].Cells[Arow];// Columns[Acol];//.Items[Arow];
+      Result :=Columns[acol].Cells[Acol];//acol].Cells[Arow];// Columns[Acol];//.Items[Arow];
   end;
 end;
 
@@ -692,7 +711,7 @@ end;
 procedure TONURColumList.Setcells(Acol, Arow: integer; Avalue: string);
 begin
   FListItems.Cells[acol,arow]:=avalue;
-  FItemVOffset:=FListItems.Count - FItemsShown;
+//  FItemVOffset:=FListItems.Count - FItemsShown;
 end;
 
 procedure TONURColumList.SetHeadervisible(AValue: boolean);
@@ -708,19 +727,12 @@ begin
   FListItems.BeginUpdate;
   FListItems.Assign(Value);
   FListItems.EndUpdate;
-   FItemVOffset:=FListItems.Count - FItemsShown;
+//  FItemVOffset:=FListItems.Count - FItemsShown;
 //  Scrollscreen;
 //  Invalidate;
 end;
 
-procedure TONURColumList.Setcolums(Value: TONURListColums);
-Begin
-  Fcolumns.BeginUpdate;
-  Fcolumns.Assign(Value);
-  Fcolumns.EndUpdate;
-  Scrollscreen;
-  Invalidate;
-End;
+
 
 
 
@@ -851,7 +863,7 @@ begin
 
 
   FListItems := TONURlistItems.Create(Self, TONURlistItem);
-  Fcolumns   := TONURListColums.Create(Self, TONURColumn);
+  //Fcolumns   := TONURListColums.Create(Self, TONURColumn);
   fselectcolor := Clblue;
   FItemVOffset := 0;
   FItemHOffset := 0;
@@ -976,17 +988,18 @@ begin
     FreeAndNil(HScrollBar);
 
   FreeAndNil(FListItems);
-  FreeAndNil(Fcolumns);
+ // FreeAndNil(Fcolumns);
 
   inherited Destroy;
 end;
 
 procedure TONURColumList.Scrollscreen;
 var
-    fark,z: Integer;
+    fark,fark2,z: Integer;
 begin
    hScrollBar.Height:=0;
    vScrollBar.Width:=0;
+
   if FListItems.Count > 0 then
   begin
     FItemsShown := FCenter.Targetrect.Height div FitemHeight;
@@ -1002,7 +1015,7 @@ begin
 
          if (Skindata <> nil) then
          begin
-           Width :=(self.fleft.Width)+ (TONURCustomCrop(Customcroplist[0]).Width);// 0=customcrop id   FNormali.Width);
+           Width :=(self.fleft.Width)+20;// (TONURCustomCrop(Customcroplist[0]).Width);// 0=customcrop id   FNormali.Width);
            left := Self.ClientWidth - ClientWidth;
            Top := self.fTOP.Height;
 
@@ -1019,7 +1032,7 @@ begin
     //hheig:=0;
     fark:=0;
 
-    if Fcolumns.Count>0 then
+   { if Fcolumns.Count>0 then
     begin
       for z := 0 to Fcolumns.Count - 1 do
       begin
@@ -1039,7 +1052,29 @@ begin
         if Fcolumns[z].Visible=true then
         fark+=Fcolumns[z].Width; //:= fark+Fcolumns[z].Width;
       end;
+     }
 
+      for z := 0 to Columns.Count - 1 do
+      begin
+        if Columns[z].Visible=true then
+        fark+=Columns[z].Width; //:= fark+Fcolumns[z].Width;
+      end;
+
+   //   inc(fItemscount);
+   //   writeln(FItemhOffset,'  ',fItemscount);
+
+     // FItemshShown:=0;
+      fark2:=0;
+      //if FItemshShown<=0 then
+      for z := 0 to Columns.Count - 1 do
+      begin
+        fark2+=Columns[z].Width;
+        if fark2>=self.ClientWidth then
+        begin
+          FItemshShown:=z;
+          Break;
+        end;
+      end;
 
       if fark>0 then
       with hScrollBar do
@@ -1052,7 +1087,7 @@ begin
           left   := self.Fleft.Width;//(self.ONleft.Right - self.ONleft.Left);
           Width  := self.ClientWidth-(self.Fleft.Width+self.FRight.Width);//(self.ONRIGHT.Right - self.ONRIGHT.Left));
 
-          Height := self.FTop.Height+(TONURCustomCrop(Customcroplist[0]).Height);//FNormali.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
+          Height := self.FTop.Height+20;//(TONURCustomCrop(Customcroplist[0]).Height);//FNormali.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
           Top    := self.ClientHeight-Height;//(self.ONTOP.Bottom - self.ONTOP.Top);
 
          if (fark>0) and (fark>ClientWidth) then
@@ -1064,7 +1099,7 @@ begin
          Alpha := self.Alpha;
         end;
       end;
-    end;
+
 
 
 
@@ -1117,7 +1152,7 @@ end;
 
 procedure TONURColumList.Paint;
 var
-  a, b, z, i: integer;
+  a, b, z, i,gt: integer;
   x1, x2, x3, x4,fheaderh, fark,fark2: integer;
 begin
 
@@ -1132,164 +1167,7 @@ begin
    if (Skindata <> nil) and not (csDesigning in ComponentState) then
    begin
 
-    //ORTA CENTER
-     DrawPartnormal(FCenter.Croprect, self, FCenter.Targetrect, alpha);
-
-     if Fcolumns.Count > 0 then
-     begin
-
-
-
-      a := Fleft.Width;
-      x1 := 0;
-      x2 := 0;
-      x3 := 0;
-      x4 := 0;
-     // fark2:=0;
-        if (fheadervisible = True)  then
-        for z := 0+abs(FItemhOffset) to (Fcolumns.Count - 1) do  // columns
-        begin
-          if Fcolumns[z].Visible = True then
-          begin
-           fark2+=Fcolumns[z].Width;
-            if fheadervisible = True then
-              b := a + FItemHeight
-            else
-              b := a;
-
-            if z > 0 then
-              x1 := x3
-            else
-              x1 := a;
-
-            x2 := a;
-            x3 := x1 + (Fcolumns[z].Width);
-            x4 := a + FheaderHeight;
-
-            if x3>self.ClientWidth then break;
-
-            if (fheadervisible = True)  then
-            begin
-              if Fcolumns[z].Caption<>'' then
-              begin
-                resim.FontName   := Fheaderfont.Name;
-                resim.FontHeight := Fheaderfont.Height;
-                resim.FontStyle  := Fheaderfont.Style;
-                DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha,Fcolumns[z].Caption,Fcolumns[z].Textalign,ColorToBGRA(Fheaderfont.Color, alpha));
-              end else
-              begin
-                DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha);
-              end;
-            end;
-          end;
-        end;
-
-
-
-      if fHeadervisible then
-      begin
-       b:=fHeaderHeight+FTop.Height;
-       fheaderh:=FheaderHeight;
-      end
-      else
-      begin
-       fheaderh:=0;
-       b:=FTop.Height;
-      end;
-
-      FItemsShown := FCenter.Targetrect.Height div FitemHeight;
-
-
-       if FListItems.Count>0 then
-         for i := FItemvOffset to  (FItemvOffset + (self.ClientHeight-(fheaderh+HScrollBar.Height)) div FItemHeight) - 1 do
-         begin
-           if i>FListItems.Count-1 then break;
-
-           resim.FontName   := FListItems[i].font.Name;
-           resim.FontHeight := FListItems[i].Font.Height;
-           resim.FontStyle  := FListItems[i].Font.Style;
-
-
-           if (i <= FListItems.Count-1) and (i > -1)  then
-           begin
-
-             x1:=0;
-             x3:=a;
-             for z := 0+abs(FItemhOffset) to (Fcolumns.Count - 1) do  // columns
-             begin
-                 x1:=x3;
-                 x3 +=Fcolumns[z].Width;
-
-                 if x3>self.ClientWidth then break;
-
-                  if z = Fcolumns.Count - 1 then    // son item scrollbarı geçmesin
-                  begin
-                    if vScrollBar.Visible then
-                    x3:= x3+FItemhOffset - vScrollBar.Width;
-                  end;
-
-                if FListItems[i].colCount>=z then
-                begin
-                  if FListItems[i].Cells[z]<>'' then
-                  begin
-                     if i = FFocusedItem then
-                      DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FListItems[i].Cells[z],Fcolumns[z].Textalign,ColorToBGRA(Fselectcolor, alpha))
-                     else
-                      DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,FListItems[i].Cells[z],Fcolumns[z].Textalign,ColorToBGRA(FListItems[i].Font.Color, alpha));
-                  end else
-                  begin
-                      if i = FFocusedItem then
-                      DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha)
-                     else
-                      DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
-                  end;
-                end;
-             end;
-           end;
-          b +=FItemHeight;
-          if (b >= FCenter.Targetrect.Height-(HScrollBar.Height)) then Break;
-         End;
-     end;
-
-
-    // fark:=0;
-     for z := 0 to Fcolumns.Count - 1 do
-     begin
-       if Fcolumns[z].Visible=true then
-       begin
-         fark+=Fcolumns[z].Width; //:= fark+Fcolumns[z].Width;
-         if  fark>=self.ClientWidth then
-         begin
-           FItemshShown:=z;
-           break;
-         end;
-       end;
-     end;
-
-
-
-     if  fark2>=self.ClientWidth then
-     begin
-      hScrollBar.Visible := True;
-      hScrollBar.Max :=(FColumns.Count-FItemshShown);
-     end
-     else
-      hScrollBar.Visible := False;
-
-
-     if FListItems.Count * FItemHeight > (FCenter.Targetrect.Height-HScrollBar.Height) then
-      begin
-       vScrollBar.Visible := True;
-       vScrollBar.Max := (FListItems.Count - FItemsShown)+ 1;
-     end
-     else
-       vScrollBar.Visible := False;
-
-
-
-      if (Skindata <> nil) then
-      begin
-
+       DrawPartnormal(FCenter.Croprect, self, FCenter.Targetrect, alpha);
         //SOL ÜST TOPLEFT
         DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
         //SAĞ ÜST TOPRIGHT
@@ -1307,11 +1185,189 @@ begin
         // SAĞ ORTA CENTERRIGHT
         DrawPartnormal(FRight.Croprect, self,FRight.Targetrect, alpha);
 
-        if Crop then
-          CropToimg(resim);
+
+    //ORTA CENTER
+    // DrawPartnormal(FCenter.Croprect, self, FCenter.Targetrect, alpha);
+
+     if FListItems.Count > 0 then
+     begin
+
+
+
+      a := Fleft.Width;
+      x1 := 0;
+      x2 := 0;
+      x3 := 0;
+      x4 := 0;
+
+      FItemsvShown := FCenter.Targetrect.Height div FitemHeight;
+      FItemshShown := 0;
+
+        if (fheadervisible = True)  then
+        for z := 0+abs(FItemhOffset) to (FListItems.Count - 1) do  // columns
+        begin
+          if FListItems[z].Visible = True then
+          begin
+            fark2+=FListItems[z].Width;
+
+            if fheadervisible = True then
+              b := a + FItemHeight
+            else
+              b := a;
+
+            if z > 0 then
+              x1 := x3
+            else
+              x1 := a;
+
+            x2 := a;
+            x3 := x1 + (FListItems[z].Width);
+            x4 := a + FheaderHeight;
+
+            if x3>self.ClientWidth then break;
+
+            if (fheadervisible = True)  then
+            begin
+              if FListItems[z].Caption<>'' then
+              begin
+                resim.FontName   := Fheaderfont.Name;
+                resim.FontHeight := Fheaderfont.Height;
+                resim.FontStyle  := Fheaderfont.Style;
+                DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha,FListItems[z].Caption,FListItems[z].Textalign,ColorToBGRA(Fheaderfont.Color, alpha));
+              end else
+              begin
+                DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha);
+              end;
+            end;
+          end;
+        end;
+
+
+
+    {  if fHeadervisible then
+      begin
+       b:=fHeaderHeight+FTop.Height;
+       fheaderh:=FheaderHeight;
+      end
+      else
+      begin
+       fheaderh:=0;
+       b:=FTop.Height;
       end;
+       }
+      a  := Fleft.Width;
+     // b  := a;
+      x1:=0;
+      x2:=0;
+      x3:=0;
+      x4:=0;
+
+       for z := 0+abs(FItemhOffset) to (FListItems.Count - 1) do  // columns
+       begin
+         // a  := Fleft.Width;
+         // b  := a;
+        {  x1 := x3;
+          x2 := a;
+          x3 := x1+FListItems[z].Width;
+          x4 := a+ FheaderHeight;
+         }
+            if fheadervisible = True then
+              b := a + FItemHeight
+            else
+              b := a;
+
+            if z > 0 then
+              x1 := x3
+            else
+              x1 := a;
+
+            x2 := a;
+            x3 := x1 + (FListItems[z].Width);
+            x4 := a + FheaderHeight;
 
 
+          if hScrollbar.Visible then
+           gt:=(FItemvOffset + ((self.ClientHeight-hScrollbar.Height) div FItemHeight))
+          else
+           gt:=FItemvOffset + (self.ClientHeight div FItemHeight);
+
+
+          resim.FontName   := FListItems[z].font.Name;
+          resim.FontHeight := FListItems[z].Font.Height;
+          resim.FontStyle  := FListItems[z].Font.Style;
+
+          for i := FItemvOffset to gt  do   // items
+          begin
+            // writeln(i,'  ',FItemvOffset,'  ',z,'   ',FListItems[z].FSize,' -- ',FListItems[z].Caption,'  ++  ',FListItems[i].Caption,'  //   ',FListItems[z].Cells[i]);
+              if (i < FListItems[z].FSize-1) and (i>-1) then
+              begin
+              //   if FListItems[z].FSize-1>=z then
+                  begin
+
+                    if Cells[i,z]<>'' then // FListItems[z].FCells[i]<>'' then
+                    begin
+                       if i = FFocusedItem then
+                       begin
+                         if vScrollBar.Visible then
+                           DrawPartnormali(factiveitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha))
+                         else
+                           DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha));
+                       end else
+                       begin
+                         if vScrollBar.Visible then
+                           DrawPartnormali(fitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha))
+                         else
+                           DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha));
+                       end;
+                    end else
+                    begin
+                        if i = FFocusedItem then
+                        begin
+                           if vScrollBar.Visible then
+                             DrawPartnormali(factiveitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha)
+                           else
+                            DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
+                        end else
+                        begin
+                           if vScrollBar.Visible then
+                            DrawPartnormali(fitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha)
+                           else
+                            DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
+                        end;
+                    end;
+                  end;
+              end;
+              b +=FItemHeight;
+              if b >= (FCenter.Targetrect.Height-HScrollBar.Height) then Break;
+          end; // items end
+
+         FItemshShown +=1;
+         if x3>=(FCenter.Targetrect.Width-vScrollBar.Width) then Break;
+       end;  // columns end
+
+
+
+
+           vScrollbar.Max := FListItems[0].FSize;//(FListItems.Count - fark2);
+           hScrollBar.Max := (FListItems.Count - FItemshShown);
+
+           if hScrollBar.Max>0 then
+            hScrollBar.Enabled := True
+           else
+            hScrollBar.Enabled := False;
+
+
+           if vScrollBar.Max>0 then
+            vScrollbar.Enabled := True
+           else
+            vScrollbar.Enabled := False;
+
+           hScrollBar.Enabled := True;
+           vScrollBar.Enabled := True;
+     end;
+
+    if Crop then
+     CropToimg(resim);
 
   end
   else
@@ -1343,7 +1399,7 @@ begin
     if vScrollBar.Visible then
       r.Right := vScrollBar.Left
     else
-      r.Right := Fcolumns[col].Width - (Fleft.FSright - Fleft.FSLeft);
+      r.Right := columns[col].Width - (Fleft.FSright - Fleft.FSLeft);
   end;
 
   Result := r;
@@ -1397,7 +1453,7 @@ begin
   if (pos.X >= 0) then
     for i := 0 to Columns.Count - 1 do
     begin
-      w := w + Fcolumns[i].Width;
+      w := w + columns[i].Width;
       if (m <= Pos.x) and (w >= pos.x) then
       begin
         fcolumindex := i;
@@ -1448,6 +1504,21 @@ begin
   else if (Button = mbRight) and Assigned(PopupMenu) and (not PopupMenu.AutoPopup) then
     PopupMenu.Popup(Mouse.CursorPos.X, Mouse.CursorPos.Y);
 
+end;
+
+procedure TONURColumList.MouseEnter;
+begin
+  inherited MouseEnter;
+ // Scrollscreen;
+end;
+
+procedure TONURColumList.MouseLeave;
+begin
+  inherited MouseLeave;
+ { if HScrollBar.Visible=true then
+  HScrollBar.Visible:=false;
+   if vScrollBar.Visible=true then
+  vScrollBar.Visible:=false; }
 end;
 
 procedure TONURColumList.Delete(indexi: integer);
@@ -2489,7 +2560,7 @@ end;
 
 
 { TONURColumn }
-
+{
 Constructor TONURColumn.Create(Collectioni: Tcollection);
 Begin
   FCaption := '';
@@ -2534,7 +2605,7 @@ Begin
 
 End;
 
-
+}
 function TONURlistItem.GetCell(X: integer): string;
 begin
   if x<=Length(FCells) then
@@ -2577,13 +2648,38 @@ constructor TONURlistItem.Create(Collectioni: TCollection);
 var
   a:integer;
 begin
-  inherited Create(Collectioni);
-  a:= TONURColumList(TOwnedCollection(GetOwner).Owner).Columns.Count;
-  SetLength(FCells,a);
-  FSize:=a;
-  ffont:=Tfont.Create;
-  ffont.Assign(TONURColumList(TOwnedCollection(GetOwner).Owner).Font);
+   FCaption       := '';
+   fwidth         := 80;
+   fvisible       := true;
 
+   ffont          := TFont.Create;
+   fFont.Name     := 'Calibri';
+   fFont.Size     := 9;
+   fFont.Style    := [];
+
+
+ // a:= TONURColumList(TOwnedCollection(GetOwner).Owner).Columns.Count;
+ // SetLength(FCells,a);
+  FSize:=0;//a;
+ // ffont:=Tfont.Create;
+ // ffont.Assign(TONURColumList(TOwnedCollection(GetOwner).Owner).Font);
+  inherited Create(Collectioni);
+
+end;
+
+destructor TONURlistItem.Destroy;
+begin
+  with TONURColumList(TOwnedCollection(GetOwner).Owner) do
+      if not (csDestroying in ComponentState) then
+        if Assigned(FOnDeleteItem) then
+        begin
+          FOnDeleteItem(Self);
+        end;
+ SetLength(FCells,0);
+ Finalize(FCells);
+ if Assigned(ffont) then
+ FreeAndNil(ffont);
+  inherited Destroy;
 end;
 
 
@@ -2604,7 +2700,7 @@ begin
  Finalize(FCells);
 end;
 
-function TONURlistItem.arrayofstring(aranan: string): integer;
+function TONURlistItem.Arrayofstring(aranan: string): integer;
  var
  i:integer;
 begin
@@ -2913,7 +3009,7 @@ begin
       begin
         if (Skindata = nil) then
           Skindata := Self.Skindata;
-        Width   := TONURCustomCrop(Customcroplist[0]).Width;//ONORMAL.Width;
+        Width   := 20;//TONURCustomCrop(Customcroplist[0]).Width;//ONORMAL.Width;
         left    := Self.ClientWidth - ClientWidth;
         Top     := self.ftop.Height;
         Height  := Self.ClientHeight - (self.fTOP.Height+self.fBOTTOM.Height);
@@ -2949,7 +3045,7 @@ begin
           left   := self.Fleft.Width;//(self.ONleft.Right - self.ONleft.Left);
           Width  := self.ClientWidth-(Left+self.FRight.Width);//(self.ONRIGHT.Right - self.ONRIGHT.Left));
 
-          Height := self.FTop.Height+(TONURCustomCrop(Customcroplist[0]).Height);//ONORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
+          Height := self.FTop.Height+20;//(TONURCustomCrop(Customcroplist[0]).Height);//ONORMAL.Height;//self.FTop.Height+self.FBottom.Height;// (self.ONTOP.Bottom - self.ONTOP.Top);
           Top    := self.ClientHeight-Height;//(self.ONTOP.Bottom - self.ONTOP.Top);
 
           if fark>0 then
@@ -3374,6 +3470,24 @@ procedure TONURListBox.SetString(AValue: TStrings);
 begin
   if Flist = AValue then Exit;
   Flist.Assign(AValue);
+end;
+
+procedure TONURListBox.MouseEnter;
+begin
+  inherited MouseEnter;
+ { if Assigned(vScrollBar) and (vScrollBar.Visible=true) then
+  vScrollBar.OnMouseEnter(vScrollBar);
+  if Assigned(hScrollBar) and (hScrollBar.Visible=true) then
+  hScrollBar.OnMouseEnter(hScrollBar);  }
+end;
+
+procedure TONURListBox.MouseLeave;
+begin
+  inherited MouseLeave;
+ { if Assigned(vScrollBar) and (vScrollBar.Visible=true) then
+  vScrollBar.OnMouseLeave(vScrollBar);
+  if Assigned(hScrollBar)and (hScrollBar.Visible=true) then
+  hScrollBar.OnMouseLeave(hScrollBar); }
 end;
 
 

@@ -663,7 +663,7 @@ begin
     for a := 0 to 200 do
     begin
     //  Oncolumlist1.Items.Add;
-   //   Oncolumlist1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);//Items[a].Cells[i] := 'TEST ' + i.ToString + ' X ' + a.ToString;
+      Oncolumlist1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);//Items[a].Cells[i] := 'TEST ' + i.ToString + ' X ' + a.ToString;
       ONURStringGrid1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);
     end;
 

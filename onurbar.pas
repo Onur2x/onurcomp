@@ -47,8 +47,8 @@ type
       procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
         X: integer; Y: integer); override;
       procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
-      procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-      procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+      procedure MouseLeave; override;
+      procedure MouseEnter; override;
     public
       constructor Create(Aowner: TComponent); override;
       destructor Destroy; override;
@@ -687,10 +687,30 @@ begin
 
 end;
 
-procedure TONURScrollBar.CMonmouseenter(var Messages: Tmessage);
-var
+procedure TONURScrollBar.MouseLeave;
+begin
+
+   if csDesigning in ComponentState then
+    Exit;
+  if not Enabled then
+    Exit;
+  inherited MouseLeave;
+
+  if (fcbutons <> obsnormal) or (flbutons <> obsnormal) or (frbutons <> obsnormal) or (fCenterstate <> obsnormal) then
+  begin
+    flbutons := obsnormal;
+    frbutons := obsnormal;
+    fcbutons := obsnormal;
+    fCenterstate := obsnormal;
+    Invalidate;
+  end;
+end;
+
+procedure TONURScrollBar.MouseEnter;
+  var
   Cursorpos: TPoint;
 begin
+
   if csDesigning in ComponentState then
     Exit;
   if not Enabled then
@@ -711,7 +731,7 @@ begin
     frbutons := obsnormal;
     fcbutons := obsnormal;
     fCenterstate:=obshover;
-     Invalidate;
+    Invalidate;
   end
   else
   begin
@@ -731,7 +751,7 @@ begin
         frbutons := obsnormal;
         fcbutons := obshover;
         fCenterstate:=obshover;
-         Invalidate;
+        Invalidate;
       end
       else
       begin
@@ -743,28 +763,19 @@ begin
           fCenterstate:=obshover;
           Invalidate;
         end;
+        if fCenterstate<>obshover then
+        begin
+         fCenterstate:=obshover;
+          Invalidate;
+        end;
       end;
     end;
   end;
-
 end;
 
-procedure TONURScrollBar.CMonmouseleave(var Messages: Tmessage);
-begin
-  if csDesigning in ComponentState then
-    Exit;
-  if not Enabled then
-    Exit;
-  inherited MouseLeave;
-  fCenterstate := obsnormal;
-  if (fcbutons <> obsnormal) or (flbutons <> obsnormal) or (frbutons <> obsnormal) then
-  begin
-    flbutons := obsnormal;
-    frbutons := obsnormal;
-    fcbutons := obsnormal;
-    Invalidate;
-  end;
-end;
+
+
+
 
 
 constructor TONURScrollBar.Create(Aowner: TComponent);
@@ -891,6 +902,9 @@ begin
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
+
+
+  if (fCenterstate = obshover) then
   centerbuttonareaset;
 
 
@@ -921,50 +935,50 @@ begin
 
     /////////// DRAW TO BUTTON ///////////
 
-
-
-    if Enabled = True then  // LEFT OR TOP BUTTON
+    if (fCenterstate = obshover) then
     begin
-      case flbutons of
-        obsnormal  : DR := FbuttonNL.Croprect;
-        obshover   : DR := FbuttonUL.Croprect;
-        obspressed : DR := FbuttonBL.Croprect;
+      if Enabled = True then  // LEFT OR TOP BUTTON
+      begin
+        case flbutons of
+          obsnormal  : DR := FbuttonNL.Croprect;
+          obshover   : DR := FbuttonUL.Croprect;
+          obspressed : DR := FbuttonBL.Croprect;
+        end;
+      end
+      else
+      begin
+        DR := FbuttonDL.Croprect;
       end;
-    end
-    else
-    begin
-      DR := FbuttonDL.Croprect;
-    end;
-    DrawPartnormal(DR, self, flbuttonrect, alpha);  {left} {top}
+      DrawPartnormal(DR, self, flbuttonrect, alpha);  {left} {top}
 
-    if Enabled = True then   // RIGHT OR BOTTOM BUTTON
-    begin
-      case frbutons of
-        obsnormal  : DR := FbuttonNR.Croprect;
-        obshover   : DR := FbuttonUR.Croprect;
-        obspressed : DR := FbuttonBR.Croprect;
+      if Enabled = True then   // RIGHT OR BOTTOM BUTTON
+      begin
+        case frbutons of
+          obsnormal  : DR := FbuttonNR.Croprect;
+          obshover   : DR := FbuttonUR.Croprect;
+          obspressed : DR := FbuttonBR.Croprect;
+        end;
+      end
+      else
+      begin
+        DR := FbuttonDR.Croprect;
       end;
-    end
-    else
-    begin
-      DR := FbuttonDR.Croprect;
-    end;
-    DrawPartnormal(DR, self, frbuttonrect, alpha);
+      DrawPartnormal(DR, self, frbuttonrect, alpha);
 
 
-    if Enabled = True then   // CENTER BUTTON
-    begin
-      case fcbutons of
-        obsnormal  : DR := FbuttonCN.Croprect;
-        obshover   : DR := FbuttonCU.Croprect;
-        obspressed : DR := FbuttonCB.Croprect;
+      if Enabled = True then   // CENTER BUTTON
+      begin
+        case fcbutons of
+          obsnormal  : DR := FbuttonCN.Croprect;
+          obshover   : DR := FbuttonCU.Croprect;
+          obspressed : DR := FbuttonCB.Croprect;
+        end;
+      end
+      else
+      begin
+        DR := FbuttonCD.Croprect;
       end;
-    end
-    else
-    begin
-      DR := FbuttonCD.Croprect;
     end;
-
     DrawPartnormal(DR, self, fcenterbuttonarea, alpha);  {center}
   end
   else
@@ -986,17 +1000,17 @@ begin
     begin
       case fcbutons of
         obsnormal: DR :=
-            Rect(FbuttonCN.FSLeft, FbuttonCN.FSTop, FbuttonCN.FSRight, FbuttonCN.FSBottom);
+            Rect(FbuttonCN.Left, FbuttonCN.Top, FbuttonCN.Right, FbuttonCN.Bottom);
         obshover: DR :=
-            Rect(FbuttonCU.FSLeft, FbuttonCU.FSTop, FbuttonCU.FSRight, FbuttonCU.FSBottom);
+            Rect(FbuttonCU.Left, FbuttonCU.Top, FbuttonCU.Right, FbuttonCU.Bottom);
         obspressed: DR :=
-            Rect(FbuttonCB.FSLeft, FbuttonCB.FSTop, FbuttonCB.FSRight, FbuttonCB.FSBottom);
+            Rect(FbuttonCB.Left, FbuttonCB.Top, FbuttonCB.Right, FbuttonCB.Bottom);
       end;
     end
     else
     begin
-      DR := Rect(FbuttonCD.FSLeft, FbuttonCD.FSTop, FbuttonCD.FSRight,
-        FbuttonCD.FSBottom);
+      DR := Rect(FbuttonCD.Left, FbuttonCD.Top, FbuttonCD.Right,
+        FbuttonCD.Bottom);
     end;
 
 
@@ -1010,7 +1024,7 @@ begin
     Ftrackarea := Rect(flbuttonrect.Right, flbuttonrect.top, frbuttonrect.Left,
       frbuttonrect.Bottom);
 
-    buttonh :=DR.Width;
+    buttonh :=abs(self.ClientWidth-max); //DR.Width; Max:=Max-self.Width;
     fcenterbuttonarea := Rect(FPosition+Flbuttonrect.Width {+ buttonh}, borderwh,
         FPosition +Frbuttonrect.Width{+ buttonh} + buttonh, self.clientHeight - borderwh);
   end
@@ -1027,6 +1041,7 @@ begin
     buttonh :=DR.Height;
     fcenterbuttonarea := Rect(borderwh, FPosition+Flbuttonrect.Height {+ buttonh}, self.ClientWidth -
         borderwh, FPosition +Frbuttonrect.Height+ {buttonh +} buttonh);
+
   end;
 end;
 

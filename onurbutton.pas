@@ -2171,7 +2171,7 @@ begin
   end;
   FActive := False;
   //Activate;
-  Flist.add('ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZXW');
+  Flist.add('ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZQXW');
   Flist.add('0123456789:.,<> ');
 
   Skindata := nil;
