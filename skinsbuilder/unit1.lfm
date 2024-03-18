@@ -480,18 +480,17 @@ object skinsbuildier: Tskinsbuildier
       end
       object Oncolumlist1: TONURColumList
         Left = 10
-        Height = 408
-        Top = 35
+        Height = 358
+        Top = 85
         Width = 306
         Align = alClient
         Skindata = ONImg1
         Skinname = 'columlist'
-        Caption = 'Oncolumlist1'
-        ClientHeight = 408
+        ClientHeight = 358
         ClientWidth = 306
         DoubleBuffered = True
         Font.Color = clBlack
-        Font.Height = -15
+        Font.Height = -13
         Font.Name = 'Calibri'
         ParentBackground = True
         ParentDoubleBuffered = False
@@ -502,35 +501,30 @@ object skinsbuildier: Tskinsbuildier
         Visible = False
         Columns = <        
           item
-            Caption = 'TEST 1'
+            Caption = 'ABC'
             Width = 80
-            Font.Height = -12
+            Font.Height = -15
             Font.Name = 'Calibri'
             Textalign = taLeftJustify
           end        
           item
-            Caption = 'TEST 2'
+            Caption = 'DEF'
             Width = 80
-            Font.Height = -12
-            Font.Name = 'Calibri'
-            Textalign = taCenter
-          end        
-          item
-            Caption = 'TEST 3'
-            Width = 80
-            Font.Height = -12
-            Font.Name = 'Calibri'
-            Textalign = taRightJustify
-          end        
-          item
-            Width = 80
-            Font.Height = -12
+            Font.Height = -15
             Font.Name = 'Calibri'
             Textalign = taLeftJustify
           end        
           item
+            Caption = 'GHI'
             Width = 80
-            Font.Height = -12
+            Font.Height = -15
+            Font.Name = 'Calibri'
+            Textalign = taLeftJustify
+          end        
+          item
+            Caption = 'JKL'
+            Width = 80
+            Font.Height = -15
             Font.Name = 'Calibri'
             Textalign = taLeftJustify
           end>
@@ -547,8 +541,8 @@ object skinsbuildier: Tskinsbuildier
       end
       object ONPanel1: TONURPanel
         Left = 10
-        Height = 408
-        Top = 35
+        Height = 358
+        Top = 85
         Width = 306
         Align = alClient
         Skindata = ONImg1
@@ -570,8 +564,8 @@ object skinsbuildier: Tskinsbuildier
       end
       object ONGraphicPanel1: TONURGraphicPanel
         Left = 10
-        Height = 408
-        Top = 35
+        Height = 358
+        Top = 85
         Width = 306
         Align = alClient
         Transparent = False
@@ -614,8 +608,8 @@ object skinsbuildier: Tskinsbuildier
       object ONMemo1: TONURMemo
         Cursor = crIBeam
         Left = 10
-        Height = 408
-        Top = 35
+        Height = 358
+        Top = 85
         Width = 306
         Align = alClient
         Skindata = ONImg1
@@ -707,14 +701,14 @@ object skinsbuildier: Tskinsbuildier
       end
       object oNListBox1: TONURListBox
         Left = 10
-        Height = 408
-        Top = 35
+        Height = 358
+        Top = 85
         Width = 306
         Align = alClient
         Skindata = ONImg1
         Skinname = 'listbox'
         Crop = True
-        ClientHeight = 408
+        ClientHeight = 358
         ClientWidth = 306
         DoubleBuffered = True
         Font.Color = clBlack
@@ -778,7 +772,7 @@ object skinsbuildier: Tskinsbuildier
       object ONHeaderPanel1: TONURHeaderPanel
         Left = 10
         Height = 25
-        Top = 10
+        Top = 60
         Width = 306
         Align = alTop
         Skindata = ONImg1
@@ -836,14 +830,14 @@ object skinsbuildier: Tskinsbuildier
       end
       object ONPageControl1: TONURPageControl
         Left = 10
-        Height = 408
-        Top = 35
+        Height = 358
+        Top = 85
         Width = 306
         Align = alClient
         Skindata = ONImg1
         Skinname = 'pagecontrol'
         Caption = 'ONPageControl1'
-        ClientHeight = 408
+        ClientHeight = 358
         ClientWidth = 306
         DoubleBuffered = True
         Font.Color = clBlack
@@ -861,14 +855,14 @@ object skinsbuildier: Tskinsbuildier
         ButtonDirection = obup
         object ONPage2: TONURPage
           Left = 0
-          Height = 378
+          Height = 328
           Top = 30
           Width = 306
           Align = alClient
           Skindata = ONImg1
           Skinname = 'pagecontrol'
           Caption = 'ONPage2'
-          ClientHeight = 378
+          ClientHeight = 328
           ClientWidth = 306
           DoubleBuffered = True
           ParentBackground = True
@@ -888,14 +882,14 @@ object skinsbuildier: Tskinsbuildier
         end
         object ONPage1: TONURPage
           Left = 0
-          Height = 378
+          Height = 328
           Top = 30
           Width = 306
           Align = alClient
           Skindata = ONImg1
           Skinname = 'pagecontrol'
           Caption = 'ONPage1'
-          ClientHeight = 378
+          ClientHeight = 328
           ClientWidth = 306
           DoubleBuffered = True
           ParentBackground = True
@@ -1007,6 +1001,59 @@ object skinsbuildier: Tskinsbuildier
         ItemHeight = 24
         ReadOnly = True
       end
+      object ONURNavMenuButton1: TONURNavMenuButton
+        Left = 10
+        Height = 50
+        Top = 10
+        Width = 306
+        Align = alTop
+        Skindata = ONImg1
+        Skinname = 'Navmenu'
+        ChildSizing.LeftRightSpacing = 26
+        ChildSizing.TopBottomSpacing = 12
+        ClientHeight = 50
+        ClientWidth = 306
+        DoubleBuffered = True
+        Font.Color = clBlack
+        Font.Height = -13
+        Font.Name = 'Calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 13
+        TabStop = True
+        UseDockManager = False
+        Visible = False
+        Movable = True
+        ActiveButton = ONURNavButton2
+        object ONURNavButton1: TONURNavButton
+          Left = 26
+          Height = 26
+          Top = 12
+          Width = 100
+          Align = alLeft
+          Skindata = ONImg1
+          Skinname = 'navbutton'
+          Caption = 'NavButton1'
+          Color = clNone
+          ParentColor = False
+          AutoWidth = False
+        end
+        object ONURNavButton2: TONURNavButton
+          Left = 126
+          Height = 26
+          Top = 12
+          Width = 100
+          Align = alLeft
+          Skindata = ONImg1
+          Skinname = 'navbutton'
+          Caption = 'NavButton2'
+          Color = clNone
+          ParentColor = False
+          AutoWidth = False
+        end
+      end
     end
   end
   object Panel8: TPanel
@@ -1051,12 +1098,12 @@ object skinsbuildier: Tskinsbuildier
       OnTopLeftChanged = PropEditTopLeftChanged
       DropDownRows = 6
       Strings.Strings = (
-        'SKINNAME='
-        'LEFT='
-        'TOP='
-        'RIGHT='
-        'BOTTOM='
-        'FONTCOLOR='
+        ''
+        ''
+        ''
+        ''
+        ''
+        ''
       )
       TitleCaptions.Strings = (
         'PROPERTY'
@@ -1135,14 +1182,14 @@ object skinsbuildier: Tskinsbuildier
       OnTopLeftChanged = infoeditTopLeftChanged
       DropDownRows = 6
       Strings.Strings = (
-        'SKINNAME='
-        'AUTHOR='
-        'EMAIL='
-        'HOMAPAGE='
-        'COMMENT='
-        'VERSION='
-        'COLOR='
-        'OPACITY='
+        ''
+        ''
+        ''
+        ''
+        ''
+        ''
+        ''
+        ''
       )
       TitleCaptions.Strings = (
         'SKIN INFO'
@@ -1295,8 +1342,6 @@ object skinsbuildier: Tskinsbuildier
       07544269746D617000000000
     }
     Opacity = 255
-    Left = 690
-    Top = 120
   end
   object opd: TOpenPictureDialog
     Left = 310

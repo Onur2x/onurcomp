@@ -7,13 +7,10 @@ interface
 uses
   Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
   StdCtrls, ExtDlgs, BGRAVirtualScreen, onurctrl, onurbutton, onurbar,
-  onuredit, onurpanel, onurlist, onurpage, BGRABitmap,
-  BGRABitmapTypes, ColorBox, ComCtrls, Spin, ValEdit, inifiles, Types, Grids;
+  onuredit, onurpanel, onurlist, onurpage, BGRABitmap, BGRABitmapTypes,
+  ColorBox, ComCtrls,  Spin, ValEdit, inifiles, Types, Grids;
 
 type
-
-  // ToInspectorExpande = (oleft, oright, otop, obottom, otopleft, otopright, obottomleft, obottomright, onormal, ohover, opress, odisable);
-  //  ToInspectorExpanded = set of ToInspectorExpande;
 
   { Tskinsbuildier }
 
@@ -23,6 +20,9 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    ONURNavButton1: TONURNavButton;
+    ONURNavButton2: TONURNavButton;
+    ONURNavMenuButton1: TONURNavMenuButton;
     PropEdit: TValueListEditor;
     ONURContentSlider1: TONURContentSlider;
     ONURStringGrid1: TONURStringGrid;
@@ -594,25 +594,43 @@ begin
       TONURCUSTOMCROP(OnSpinEdit1.Customcroplist[i]).cropname);
 
   rootNode := TreeView1.Items.Add(nil, 'PAGECONTROL');
-  for i := 0 to ONPageControl1.Customcroplist.Count - 1 do
-    subnode := TreeView1.Items.AddChild(rootNode,
-      TONURCUSTOMCROP(ONPageControl1.Customcroplist[i]).cropname);
+  begin
+    for i := 0 to ONPageControl1.Customcroplist.Count - 1 do
+      subnode := TreeView1.Items.AddChild(rootNode,
+        TONURCUSTOMCROP(ONPageControl1.Customcroplist[i]).cropname);
 
-  rootNode := TreeView1.Items.Add(nil, 'PAGECONTROL BUTTONAREA');
-  for i := 0 to ONPageControl1.btnarea.Customcroplist.Count - 1 do
-    subnode := TreeView1.Items.AddChild(rootNode,
-      TONURCUSTOMCROP(ONPageControl1.btnarea.Customcroplist[i]).cropname);
+  {  rootNode := TreeView1.Items.Add(nil, 'PAGECONTROL BUTTONAREA');
+    for i := 0 to ONPageControl1.btnarea.Customcroplist.Count - 1 do
+      subnode := TreeView1.Items.AddChild(rootNode,
+        TONURCUSTOMCROP(ONPageControl1.btnarea.Customcroplist[i]).cropname);
 
-  rootNode := TreeView1.Items.Add(nil, 'PAGE');
-  for i := 0 to ONPageControl1.Pages[1].Customcroplist.Count - 1 do
-    subnode := TreeView1.Items.AddChild(rootNode,
-      TONURCUSTOMCROP(ONPageControl1.Pages[1].Customcroplist[i]).cropname);
+    rootNode := TreeView1.Items.Add(nil, 'PAGE');
+    for i := 0 to ONPageControl1.Pages[0].Customcroplist.Count - 1 do
+      subnode := TreeView1.Items.AddChild(rootNode,
+        TONURCUSTOMCROP(ONPageControl1.Pages[1].Customcroplist[i]).cropname);
 
-  rootNode := TreeView1.Items.Add(nil, 'PAGE BUTTON');
-  for i := 0 to ONPageControl1.Pages[1].Fbutton.Customcroplist.Count - 1 do
-    subnode := TreeView1.Items.AddChild(rootNode,
-      TONURCUSTOMCROP(ONPageControl1.Pages[1].Fbutton.Customcroplist[i]).cropname);
+    rootNode := TreeView1.Items.Add(nil, 'PAGE BUTTON');
+    for i := 0 to ONPageControl1.Pages[0].Fbutton.Customcroplist.Count - 1 do
+      subnode := TreeView1.Items.AddChild(rootNode,
+        TONURCUSTOMCROP(ONPageControl1.Pages[1].Fbutton.Customcroplist[i]).cropname);
+  }
+  end;
+  rootNode := TreeView1.Items.Add(nil, 'NAV MENU');
+  for i := 0 to ONURNavMenuButton1.Customcroplist.Count - 1 do
+     subnode := TreeView1.Items.AddChild(rootNode,
+      TONURCUSTOMCROP(ONURNavMenuButton1.Customcroplist[i]).cropname);
 
+{ rootNode := TreeView1.Items.Add(nil, 'NAV BUTTON');
+  for i := 0 to ONURNavMenuButton1.Buttons[0].Customcroplist.count-1 do//ONURNavButton1.Customcroplist.Count - 1 do
+    subnode := TreeView1.Items.AddChild(rootNode,
+      TONURCUSTOMCROP(ONURNavMenuButton1.Buttons[0].Customcroplist[i]).cropname);
+  }
+  rootNode := TreeView1.Items.Add(nil, ' ');
+  rootNode := TreeView1.Items.Add(nil, ' ');
+  rootNode := TreeView1.Items.Add(nil, ' ');
+  rootNode := TreeView1.Items.Add(nil, ' ');
+  rootNode := TreeView1.Items.Add(nil, ' ');
+  rootNode := TreeView1.Items.Add(nil, ' ');
 
 
   objlist := TList.Create;
@@ -653,9 +671,16 @@ begin
   objlist.add(OnSpinEdit1);
 
   objlist.add(ONPageControl1);
-  objlist.add(ONPageControl1.btnarea);
-  objlist.add(ONPageControl1.Pages[1]);
-  objlist.add(ONPageControl1.Pages[1].Fbutton);
+//  objlist.add(ONPageControl1.btnarea);
+//  objlist.add(ONPageControl1.Pages[1]);
+//  objlist.add(ONPageControl1.Pages[1].Fbutton);
+
+  objlist.add(ONURNavMenuButton1);
+//  objlist.add(ONURNavMenuButton1.Buttons[0]);
+
+
+
+
 
 
 
@@ -707,12 +732,12 @@ begin
 
   if PtInRect(fmrRect, curPos) then
   begin
-    oo := trackbar1.Position;
+    oo      := trackbar1.Position;
     srcRect := Rect(curPos.x - oo, curPos.y - oo, curPos.x + oo, curPos.y + oo);
 
     cropimg.SetSize(zoomx.Width, zoomx.Height);
 
-    img := temp.GetPart(srcRect);
+    img     := temp.GetPart(srcRect);
     if img <> nil then
     begin
       img.ResampleFilter := rfBestQuality;
@@ -740,6 +765,7 @@ begin
   begin
     gg := nil;
     PropEdit.Clear;
+
     for i:=0 to ComponentCount-1 do
     begin
      if (Components[i] is TONURCustomControl) or (Components[i] is TONURGraphicControl) then
@@ -791,6 +817,9 @@ begin
       end
       else
       begin
+
+
+
         if gg is TONURGraphicControl then
         begin
           oncrop := TONURCUSTOMCROP(TONURGraphicControl(
@@ -803,37 +832,42 @@ begin
           oncrop := TONURCUSTOMCROP(TONURCustomControl(gg).Customcroplist[TreeView1.Selected.Index]);
           s := TONURCustomControl(gg).Skinname;
         end;
+
+
+        if gg is TONURNavMenuButton then
+        begin
+          ONURNavButton1.Visible:=true;
+          ONURNavButton2.Visible:=true;
+        end;
+        if gg is TONURPageControl then
+        begin
+          ONPage1.Visible:=true;
+          ONPage2.Visible:=true;
+        end;
       end;
 
-      notwriting:=true;
-      PropEdit.Keys[1] := 'SKINNAME';
+
+
+      notwriting           := true;
+      PropEdit.Keys[1]     := 'SKINNAME';
       // PropEdit.Keys[2]:='NAME';
-      PropEdit.Keys[2] := 'LEFT';
-      PropEdit.Keys[3] := 'TOP';
-      PropEdit.Keys[4] := 'RIGHT';
-      PropEdit.Keys[5] := 'BOTTOM';
-      PropEdit.Keys[6] := 'FONTCOLOR';
+      PropEdit.Keys[2]     := 'LEFT';
+      PropEdit.Keys[3]     := 'TOP';
+      PropEdit.Keys[4]     := 'RIGHT';
+      PropEdit.Keys[5]     := 'BOTTOM';
+      PropEdit.Keys[6]     := 'FONTCOLOR';
       PropEdit.Cells[1, 1] := s;
       PropEdit.Cells[1, 2] := IntToStr(oncrop.Left);
       PropEdit.Cells[1, 3] := IntToStr(oncrop.top);
       PropEdit.Cells[1, 4] := IntToStr(oncrop.Right);
       PropEdit.Cells[1, 5] := IntToStr(oncrop.Bottom);
-
-   { with PropEdit.ItemProps['FONTCOLOR'] do
-    begin
-      PickList.Clear;
-      KeyDesc := 'Select Color';
-      EditStyle := esPickList;
-      ReadOnly := True;
-      PickList.Assign(ColorBox2.Items);
-    end;  }
       PropEdit.Cells[1, 6] := ColorToString(oncrop.Fontcolor);
-      rectlange.left := oncrop.Left;
-      rectlange.Right := oncrop.Right;
-      rectlange.top := oncrop.top;
-      rectlange.bottom := oncrop.bottom;
+      rectlange.left       := oncrop.Left;
+      rectlange.Right      := oncrop.Right;
+      rectlange.top        := oncrop.top;
+      rectlange.bottom     := oncrop.bottom;
       mainpicture.RedrawBitmap;
-      notwriting:=false;
+      notwriting           := false;
     end;
   end;
 end;
@@ -844,9 +878,9 @@ begin
   temp.SetSize(mainimg.Width, mainimg.Height);
   temp.PutImage(0, 0, mainimg, dmSet);
   temp.Canvas.Brush.Style := bsClear;
-  temp.Canvas.Pen.Style := psDash;
-  temp.Canvas.Pen.Color := clRed;
-  temp.Canvas.Pen.Width := 1;
+  temp.Canvas.Pen.Style   := psDash;
+  temp.Canvas.Pen.Color   := clRed;
+  temp.Canvas.Pen.Width   := 1;
   temp.Canvas.Rectangle(rectlange);
   bitmap.PutImage(0, 0, temp, dmLinearBlend, 200);
 end;
@@ -921,14 +955,12 @@ var
   Xshift, Yshift: integer;
   c: TBGRAPixel;
 begin
-  Xshift := (zoomx.Width) div 2;
-  Yshift := (zoomx.Height) div 2;
-  c := ColorToBGRA(ColorToRGB(ColorBox1.Selected));
-
-
+  Xshift            := (zoomx.Width) div 2;
+  Yshift            := (zoomx.Height) div 2;
+  c                 := ColorToBGRA(ColorToRGB(ColorBox1.Selected));
   cropimg.JoinStyle := pjsBevel;
-  cropimg.LineCap := pecSquare;
-  cropimg.PenStyle := psSolid;//psdot;
+  cropimg.LineCap   := pecSquare;
+  cropimg.PenStyle  := psSolid;//psdot;
   cropimg.DrawPolyLineAntialias(
     [PointF(Xshift, Yshift - 20), PointF(Xshift, Yshift + 20),
     PointF(Xshift, Yshift), PointF(Xshift - 20, Yshift),
@@ -943,20 +975,20 @@ begin
   if (button = mbleft) then
   begin
     rectlange.left := x;
-    rectlange.Top := y;
-    aktif := True;
+    rectlange.Top  := y;
+    aktif          := True;
   end;
 end;
 
 procedure Tskinsbuildier.mainpicturemousemove(Sender: TObject;
   shift: tshiftstate; x, y: integer);
 begin
-  curPos := Point(x, y);
+  curPos         := Point(x, y);
   label6.Caption := 'X= ' + IntToStr(x) + ' --  Y=' + IntToStr(y);
 
   if (aktif) then
   begin
-    rectlange.Right := x;
+    rectlange.Right  := x;
     rectlange.Bottom := y;
     mainpicture.RedrawBitmap;
   end;
@@ -966,10 +998,30 @@ end;
 
 procedure Tskinsbuildier.mainpicturemouseup(Sender: TObject;
   button: tmousebutton; shift: tshiftstate; x, y: integer);
+//var
+//  i:integer;
 begin
   aktif := False;
   rectlange.Right := x;
   rectlange.Bottom := y;
+
+  if x<rectlange.left then
+  begin
+   rectlange:= Rect(x,rectlange.top,rectlange.left,rectlange.bottom);
+   //i:=rectlange.left;
+  // rectlange.left:=rectlange.Right;
+  // rectlange.Right:=i;
+  end;
+  if y<rectlange.top then
+  begin
+   rectlange:= Rect(rectlange.left,y,rectlange.Right,rectlange.top);
+   //i:=rectlange.left;
+  // rectlange.left:=rectlange.Right;
+  // rectlange.Right:=i;
+  end;
+
+
+
   mainpicture.RedrawBitmap;
   PropEdit.Cells[1, 2] := IntToStr(rectlange.Left);
   PropEdit.Cells[1, 3] := IntToStr(rectlange.top);
