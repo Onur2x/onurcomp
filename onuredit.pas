@@ -1736,7 +1736,7 @@ begin
   FhBottom              := TONURCUSTOMCROP.Create;
   FhBottom.cropname     := 'BOVERBOTTOM';
   FhCenter              := TONURCUSTOMCROP.Create;
-  FhCenter.cropname     := 'GOVERCENTER';
+  FhCenter.cropname     := 'HOVERCENTER';
   FhRight               := TONURCUSTOMCROP.Create;
   FhRight.cropname      := 'HOVERRIGHT';
   FhTopRight            := TONURCUSTOMCROP.Create;
@@ -2000,7 +2000,7 @@ begin
   FhBottom              := TONURCUSTOMCROP.Create;
   FhBottom.cropname     := 'BOVERBOTTOM';
   FhCenter              := TONURCUSTOMCROP.Create;
-  FhCenter.cropname     := 'GOVERCENTER';
+  FhCenter.cropname     := 'HOVERCENTER';
   FhRight               := TONURCUSTOMCROP.Create;
   FhRight.cropname      := 'HOVERRIGHT';
   FhTopRight            := TONURCUSTOMCROP.Create;
@@ -2337,7 +2337,7 @@ begin
   FhBottom              := TONURCUSTOMCROP.Create;
   FhBottom.cropname     := 'BOVERBOTTOM';
   FhCenter              := TONURCUSTOMCROP.Create;
-  FhCenter.cropname     := 'GOVERCENTER';
+  FhCenter.cropname     := 'HOVERCENTER';
   FhRight               := TONURCUSTOMCROP.Create;
   FhRight.cropname      := 'HOVERRIGHT';
   FhTopRight            := TONURCUSTOMCROP.Create;

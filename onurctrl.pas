@@ -122,8 +122,6 @@ type
     procedure SetTransparent(NewTransparent: boolean);
     function Getkind: Tonurkindstate;
 
-
-    procedure Setskinname(avalue: string);
     procedure setalpha(val: byte);
   public
     { Public declarations }
@@ -138,6 +136,7 @@ type
     procedure Resize; override;
     procedure SetKind(AValue: TONURkindstate); virtual;
     procedure SetSkindata(Aimg: TONURImg); virtual;
+    procedure Setskinname(Avalue: string); virtual;
     property Kind: TONURkindstate read Getkind
       write Setkind default oHorizontal;
   published
@@ -203,7 +202,7 @@ type
     procedure SetCrop(Value: boolean);
     function Getkind: TonURkindstate;
     procedure SetKind(AValue: TonURkindstate);
-    procedure Setskinname(avalue: string);
+
     procedure SetAlignment(const Value: TAlignment);
 
     procedure setalpha(val: byte);
@@ -223,6 +222,7 @@ type
     procedure Resize; override;
     procedure CropToimg(Buffer: TBGRABitmap); virtual;
     procedure SetSkindata(Aimg: TONURImg); virtual;
+    procedure Setskinname(Avalue: string); virtual;
     property Kind: TonURkindstate read Getkind write Setkind default
       oHorizontal;
   published
@@ -335,6 +335,8 @@ function ValueRange(const Value, Min, Max: integer): integer;
 function maxlengthstring(s: string; len: integer): string;
 
 procedure yaziyaz(TT: TCanvas; TF: TFont; re: TRect; Fcap: string; asd: TAlignment);
+
+procedure replacepixel(BMP, Bmp2: TBGRABitmap; clr: TBGRAPixel);
 
 procedure Register;
 
@@ -1276,6 +1278,14 @@ begin
       if (com is TONURGraphicControl) and (TONURGraphicControl(com).Skindata = Self) then
       begin
         with (TONURGraphicControl(com)) do
+          for a := 0 to Customcroplist.Count - 1 do
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,
+              TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+      end;
+
+      if (com is TOnurStringGridD) and (TOnurStringGridD(com).Skindata = Self) then
+      begin
+        with (TOnurStringGridD(com)) do
           for a := 0 to Customcroplist.Count - 1 do
             cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,
               TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
@@ -2842,7 +2852,7 @@ end;
 
 procedure TONURGraphicControl.Setskinname(avalue: string);
 begin
-  if Fskinname <> avalue then
+  if Fskinname = avalue then exit;
     Fskinname := avalue;
 end;
 
@@ -2869,7 +2879,7 @@ begin
 
       a := Tbgrabitmap.Create;
       try
-        a.SetSize(resim.Width, resim.Height);
+        a.SetSize(self.ClientWidth,self.ClientHeight);//resim.Width, resim.Height);
         replacepixel(resim, a, ColorToBGRA(StringToColor(self.Skindata.mcolor),
           self.Skindata.opacity));
         a.InvalidateBitmap;
@@ -2879,9 +2889,9 @@ begin
       end;
     end;
 
-    Canvas.Lock;
+  //  Canvas.Lock;
     resim.Draw(self.canvas, 0, 0, False);
-    canvas.Unlock;
+ //   canvas.Unlock;
 
   end
   else
@@ -2898,7 +2908,7 @@ end;
 procedure TONURGraphicControl.Resize;
 begin
   inherited Resize;
-  if Skindata <> nil then SetSkindata(Skindata);
+ // if Skindata <> nil then SetSkindata(Skindata);
 end;
 
 // -----------------------------------------------------------------------------
@@ -3024,7 +3034,7 @@ end;
 
 procedure TONURCustomControl.Setskinname(avalue: string);
 begin
-  if Fskinname <> avalue then
+  if Fskinname = avalue then exit;
     Fskinname := avalue;
 end;
 

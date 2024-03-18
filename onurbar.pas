@@ -600,25 +600,23 @@ begin
   if not Enabled then   Exit;
   FIsPressed := False;
 
- {
-
   inherited MouseUp(Button, Shift, X, Y);
-
+{
   fCenterstate := obsnormal;
   flbutons := obsnormal;
   frbutons := obsnormal;
-  fcbutons := obsnormal;
-  Invalidate;   }
+  fcbutons := obsnormal;  }
+  Invalidate;
 end;
 
 procedure TONURScrollBar.MouseMove(Shift: TShiftState; X, Y: integer);
 begin
 
   if not Enabled then   Exit;
-
-  inherited MouseMove(Shift, X, Y);
   if csDesigning in ComponentState then
     Exit;
+
+  inherited MouseMove(Shift, X, Y);
 
 //  if FIsPressed = False then exit;
   fCenterstate:=obshover;
@@ -715,7 +713,8 @@ begin
     Exit;
   if not Enabled then
     Exit;
-  if (fcbutons = obshover) or (flbutons = obshover) or (frbutons = obshover) then
+  if (fcbutons = obshover) or (flbutons = obshover) or (frbutons = obshover) or (
+    fCenterstate = obshover) then
     Exit;
 
   inherited MouseEnter;
@@ -781,57 +780,59 @@ end;
 constructor TONURScrollBar.Create(Aowner: TComponent);
 begin
   inherited Create(aowner);
-  Parent := AOwner as TWinControl;
-  Flbuttonrect := Rect(1, 1, 20, 21);
-  Frbuttonrect := Rect(179, 1, 199, 21);
-  Ftrackarea := Rect(21, 1, 178, 21);
-  kind := oHorizontal;
-  Width := 200;
-  Height := 22;
-  fmax := 100;
-  fmin := 0;
-  fposition := 0;
-  skinname := 'scrollbarh';
-  flbutons := obsNormal;
-  frbutons := obsNormal;
-  fcbutons := obsNormal;
-  fCenterstate := obsnormal;
-  Fstep := 1;
-  FNormali := TONURCUSTOMCROP.Create;
-  FNormali.cropname := 'NORMAL';
-  FTop := TONURCUSTOMCROP.Create;
-  FTop.cropname := 'TOP';
-  FBottom := TONURCUSTOMCROP.Create;
-  FBottom.cropname := 'BOTTOM';
-  Fhover := TONURCUSTOMCROP.Create;
-  Fhover.cropname := 'HOVER';
+  Parent             := AOwner as TWinControl;
+  Flbuttonrect       := Rect(1, 1, 20, 21);
+  Frbuttonrect       := Rect(179, 1, 199, 21);
+  Ftrackarea         := Rect(21, 1, 178, 21);
+  kind               := oHorizontal;
+  Width              := 200;
+  Height             := 22;
+  fmax               := 100;
+  fmin               := 0;
+  fposition          := 0;
+  skinname           := 'scrollbarh';
+  flbutons           := obsNormal;
+  frbutons           := obsNormal;
+  fcbutons           := obsNormal;
+  fCenterstate       := obsnormal;
+  Fstep              := 1;
+  Captionvisible     := False;
 
-  FbuttonNL := TONURCUSTOMCROP.Create;
+  FNormali           := TONURCUSTOMCROP.Create;
+  FNormali.cropname  := 'NORMAL';
+  FTop               := TONURCUSTOMCROP.Create;
+  FTop.cropname      := 'TOP';
+  FBottom            := TONURCUSTOMCROP.Create;
+  FBottom.cropname   := 'BOTTOM';
+  Fhover             := TONURCUSTOMCROP.Create;
+  Fhover.cropname    := 'HOVER';
+
+  FbuttonNL          := TONURCUSTOMCROP.Create;
   FbuttonNL.cropname := 'LEFTBUTTONNORMAL';
-  FbuttonUL := TONURCUSTOMCROP.Create;
+  FbuttonUL          := TONURCUSTOMCROP.Create;
   FbuttonUL.cropname := 'LEFTBUTTONHOVER';
-  FbuttonBL := TONURCUSTOMCROP.Create;
+  FbuttonBL          := TONURCUSTOMCROP.Create;
   FbuttonBL.cropname := 'LEFTBUTTONPRESSED';
-  FbuttonDL := TONURCUSTOMCROP.Create;
+  FbuttonDL          := TONURCUSTOMCROP.Create;
   FbuttonDL.cropname := 'LEFTBUTTONDISABLE';
 
-  FbuttonNR := TONURCUSTOMCROP.Create;
+  FbuttonNR          := TONURCUSTOMCROP.Create;
   FbuttonNR.cropname := 'RIGHTBUTTONNORMAL';
-  FbuttonUR := TONURCUSTOMCROP.Create;
+  FbuttonUR          := TONURCUSTOMCROP.Create;
   FbuttonUR.cropname := 'RIGHTBUTTONHOVER';
-  FbuttonBR := TONURCUSTOMCROP.Create;
+  FbuttonBR          := TONURCUSTOMCROP.Create;
   FbuttonBR.cropname := 'RIGHTBUTTONPRESSED';
-  FbuttonDR := TONURCUSTOMCROP.Create;
+  FbuttonDR          := TONURCUSTOMCROP.Create;
   FbuttonDR.cropname := 'RIGHTBUTTONDISABLE';
 
 
-  FbuttonCN := TONURCUSTOMCROP.Create;
+  FbuttonCN          := TONURCUSTOMCROP.Create;
   FbuttonCN.cropname := 'CENTERBUTTONNORMAL';
-  FbuttonCU := TONURCUSTOMCROP.Create;
+  FbuttonCU          := TONURCUSTOMCROP.Create;
   FbuttonCU.cropname := 'CENTERBUTTONHOVER';
-  FbuttonCB := TONURCUSTOMCROP.Create;
+  FbuttonCB          := TONURCUSTOMCROP.Create;
   FbuttonCB.cropname := 'CENTERBUTTONPRESSED';
-  FbuttonCD := TONURCUSTOMCROP.Create;
+  FbuttonCD          := TONURCUSTOMCROP.Create;
   FbuttonCD.cropname := 'CENTERBUTTONDISABLE';
 
 
@@ -852,7 +853,6 @@ begin
   Customcroplist.Add(FbuttonCB);
   Customcroplist.Add(FbuttonCD);
 
-  Captionvisible := False;
 
   if Parent is TONURCustomControl then
   Skindata:= TONURCustomControl(parent).Skindata
@@ -917,9 +917,9 @@ begin
      DrawPartstrechRegion(FTop.Croprect, self,FTop.Croprect.Width, self.ClientHeight, flbuttonrect, alpha);
      DrawPartstrechRegion(FBottom.Croprect, self,FBottom.Croprect.Width, self.ClientHeight, frbuttonrect, alpha);
      if (fCenterstate = obshover) and (fhover.croprect.width>0) then
-     DrawPartstrechRegion(Fhover.Croprect, self, self.ClientWidth -(FTop.Croprect.Width+FBottom.Croprect.Width),self.ClientHeight, Ftrackarea, alpha)
+      DrawPartstrechRegion(Fhover.Croprect, self, self.ClientWidth -(FTop.Croprect.Width+FBottom.Croprect.Width),self.ClientHeight, Ftrackarea, alpha)
      else
-     DrawPartstrechRegion(FNormali.Croprect, self, self.ClientWidth -(FTop.Croprect.Width+FBottom.Croprect.Width),self.ClientHeight, Ftrackarea, alpha);
+      DrawPartstrechRegion(FNormali.Croprect, self, self.ClientWidth -(FTop.Croprect.Width+FBottom.Croprect.Width),self.ClientHeight, Ftrackarea, alpha);
 
     end
     else
@@ -927,15 +927,15 @@ begin
      DrawPartstrechRegion(FTop.Croprect, self, self.ClientWidth,FTop.Croprect.Height, flbuttonrect, alpha);
      DrawPartstrechRegion(FBottom.Croprect, self, self.ClientWidth, FTop.Croprect.Height, frbuttonrect, alpha);
      if (fCenterstate = obshover) and (fhover.croprect.width>0) then
-     DrawPartstrechRegion(Fhover.Croprect, self, self.ClientWidth, self.ClientHeight -(ftop.Croprect.Height+FBottom.Croprect.Height), Ftrackarea, alpha)
+      DrawPartstrechRegion(Fhover.Croprect, self, self.ClientWidth, self.ClientHeight -(ftop.Croprect.Height+FBottom.Croprect.Height), Ftrackarea, alpha)
      else
-     DrawPartstrechRegion(FNormali.Croprect, self, self.ClientWidth, self.ClientHeight -(ftop.Croprect.Height+FBottom.Croprect.Height), Ftrackarea, alpha);
+      DrawPartstrechRegion(FNormali.Croprect, self, self.ClientWidth, self.ClientHeight -(ftop.Croprect.Height+FBottom.Croprect.Height), Ftrackarea, alpha);
     end;
 
 
     /////////// DRAW TO BUTTON ///////////
 
-    if (fCenterstate = obshover) then
+    if (fCenterstate = obshover){ and (FAutoHideScrollBar)} then
     begin
       if Enabled = True then  // LEFT OR TOP BUTTON
       begin
@@ -950,6 +950,7 @@ begin
         DR := FbuttonDL.Croprect;
       end;
       DrawPartnormal(DR, self, flbuttonrect, alpha);  {left} {top}
+
 
       if Enabled = True then   // RIGHT OR BOTTOM BUTTON
       begin
@@ -978,8 +979,10 @@ begin
       begin
         DR := FbuttonCD.Croprect;
       end;
+
+      DrawPartnormal(DR, self, fcenterbuttonarea, alpha);  {center}
     end;
-    DrawPartnormal(DR, self, fcenterbuttonarea, alpha);  {center}
+
   end
   else
   begin
@@ -1015,6 +1018,7 @@ begin
 
 
   borderwh := 2;
+
   if self.Kind = oHorizontal then
   begin
     buttonh := self.ClientHeight - (borderwh);  // button Width and Height;
@@ -1024,7 +1028,7 @@ begin
     Ftrackarea := Rect(flbuttonrect.Right, flbuttonrect.top, frbuttonrect.Left,
       frbuttonrect.Bottom);
 
-    buttonh :=abs(self.ClientWidth-max); //DR.Width; Max:=Max-self.Width;
+    buttonh := DR.Width;// Max:=Max-self.Width;
     fcenterbuttonarea := Rect(FPosition+Flbuttonrect.Width {+ buttonh}, borderwh,
         FPosition +Frbuttonrect.Width{+ buttonh} + buttonh, self.clientHeight - borderwh);
   end
@@ -1038,7 +1042,7 @@ begin
     Ftrackarea := Rect(flbuttonrect.left, flbuttonrect.bottom,
       frbuttonrect.Right, frbuttonrect.top);
 
-    buttonh :=DR.Height;
+    buttonh := DR.Height;
     fcenterbuttonarea := Rect(borderwh, FPosition+Flbuttonrect.Height {+ buttonh}, self.ClientWidth -
         borderwh, FPosition +Frbuttonrect.Height+ {buttonh +} buttonh);
 
