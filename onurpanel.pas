@@ -506,7 +506,7 @@ begin
   inherited dblclick;
   GetCursorPos(aPnt);
   aPnt := ScreenToClient(aPnt);
-  if PtInRect(Rect(Fleft.fsLeft, FTop.fsTop, FRight.fsLeft, FTop.fsBottom), aPnt) then
+  if PtInRect(Rect(Fleft.Croprect.Left, FTop.Croprect.Top, FRight.Croprect.Left, FTop.Croprect.Bottom), aPnt) then
   begin
     if (FStatus = oExpanded) then
     begin
@@ -540,45 +540,49 @@ begin
   fbutondirection := obright;
   Alpha := 255;
   Skinname := 'expandpanel';
-  FTop := TONURCUSTOMCROP.Create;
-  FTop.cropname := 'TOP';
-  FBottom := TONURCUSTOMCROP.Create;
-  FBottom.cropname := 'BOTTOM';
-  FCenter := TONURCUSTOMCROP.Create;
-  FCenter.cropname := 'CENTER';
-  FRight := TONURCUSTOMCROP.Create;
-  FRight.cropname := 'RIGHT';
-  FTopRight := TONURCUSTOMCROP.Create;
-  FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONURCUSTOMCROP.Create;
-  FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONURCUSTOMCROP.Create;
-  Fleft.cropname := 'LEFT';
-  FTopleft := TONURCUSTOMCROP.Create;
-  FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname := 'BOTTOMLEFT';
-  FNormal := TONURCUSTOMCROP.Create;
-  FNormal.cropname := 'NORMAL';
-  FPress := TONURCUSTOMCROP.Create;
-  FPress.cropname := 'PRESS';
-  FEnter := TONURCUSTOMCROP.Create;
-  FEnter.cropname := 'HOVER';
-  Fdisable := TONURCUSTOMCROP.Create;
-  Fdisable.cropname := 'DISABLE';
+   FTop                  := TONURCUSTOMCROP.Create('TOP');
+//  FTop.cropname         := 'TOP';
+  FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+//  FBottom.cropname      := 'BOTTOM';
+  FCenter               := TONURCUSTOMCROP.Create('CENTER');
+//  FCenter.cropname      := 'CENTER';
+  FRight                := TONURCUSTOMCROP.Create('RIGHT');
+//  FRight.cropname       := 'RIGHT';
+  FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+//  FTopRight.cropname    := 'TOPRIGHT';
+  FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+//  FBottomRight.cropname := 'BOTTOMRIGHT';
+  Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+//  Fleft.cropname        := 'LEFT';
+  FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+//  FTopleft.cropname     := 'TOPLEFT';
+  FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+//  FBottomleft.cropname  := 'BOTTOMLEFT';
 
-  Fcaptionarea := TONURCUSTOMCROP.Create;
-  Fcaptionarea.cropname := 'CAPTION';
 
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FTop);
-  Customcroplist.Add(FTopRight);
-  Customcroplist.Add(FBottomleft);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FBottomRight);
-  Customcroplist.Add(Fleft);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
+// for button
+FNormal               := TONURCUSTOMCROP.Create('BUTTONNORMAL');
+//  FNormal.cropname      := 'BUTTONNORMAL';
+FPress                := TONURCUSTOMCROP.Create('BUTTONDOWN');
+//  FPress.cropname       := 'BUTTONDOWN';
+FEnter                := TONURCUSTOMCROP.Create('BUTTONHOVER');
+//  FEnter.cropname       := 'BUTTONHOVER';
+Fdisable              := TONURCUSTOMCROP.Create('BUTTONDISABLE');
+//  Fdisable.cropname     := 'BUTTONDISABLE';
+
+  Fcaptionarea := TONURCUSTOMCROP.Create('CAPTION');
+  //Fcaptionarea.cropname := 'CAPTION';
+
+ Customcroplist.Add(FTopleft);
+ Customcroplist.Add(FTop);
+ Customcroplist.Add(FTopRight);
+ Customcroplist.Add(FBottomleft);
+ Customcroplist.Add(FBottom);
+ Customcroplist.Add(FBottomRight);
+ Customcroplist.Add(Fleft);
+ Customcroplist.Add(FRight);
+ Customcroplist.Add(FCenter);
+
   Customcroplist.Add(FNormal);
   Customcroplist.Add(FEnter);
   Customcroplist.Add(FPress);
@@ -607,32 +611,31 @@ end;
 procedure TONURCollapExpandPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
-  FTopRight.Targetrect :=
-    Rect(self.clientWidth - FTopRight.Width, 0, self.clientWidth, FTopRight.Height);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Croprect.Width, 0, self.clientWidth, FTopRight.Croprect.Height);
   ftop.Targetrect :=
-    Rect(FTopleft.Width, 0, self.clientWidth - FTopRight.Width, FTop.Height);
+    Rect(FTopleft.Croprect.Width, 0, self.clientWidth - FTopRight.Croprect.Width, FTop.Croprect.Height);
   FBottomleft.Targetrect :=
-    Rect(0, self.clientHeight - FBottomleft.Height, FBottomleft.Width, self.clientHeight);
+    Rect(0, self.clientHeight - FBottomleft.Croprect.Height, FBottomleft.Croprect.Width, self.clientHeight);
   FBottomRight.Targetrect :=
-    Rect(self.clientWidth - FBottomRight.Width, self.clientHeight -
-    FBottomRight.Height, self.clientWidth, self.clientHeight);
+    Rect(self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight -
+    FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
   FBottom.Targetrect :=
-    Rect(FBottomleft.Width, self.clientHeight - FBottom.Height, self.clientWidth -
-    FBottomRight.Width, self.clientHeight);
+    Rect(FBottomleft.Croprect.Width, self.clientHeight - FBottom.Croprect.Height, self.clientWidth -
+    FBottomRight.Croprect.Width, self.clientHeight);
   Fleft.Targetrect :=
-    Rect(0, FTopleft.Height, Fleft.Width, self.clientHeight - FBottomleft.Height);
+    Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width, self.clientHeight - FBottomleft.Croprect.Height);
   FRight.Targetrect :=
-    Rect(self.clientWidth - FRight.Width, FTopRight.Height, self.ClientWidth,
-    self.ClientHeight - FBottomRight.Height);
+    Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height, self.ClientWidth,
+    self.ClientHeight - FBottomRight.Croprect.Height);
   FCenter.Targetrect :=
-    Rect(Fleft.Width, FTop.Height, self.clientWidth - FRight.Width,
-    self.clientHeight - FBottom.Height);
+    Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth - FRight.Croprect.Width,
+    self.clientHeight - FBottom.Croprect.Height);
   Fcaptionarea.Targetrect :=
-    Rect(FTopleft.Width, FTop.Height, self.ClientWidth - FRight.Width, fminheight);
+    Rect(FTopleft.Croprect.Width, FTop.Croprect.Height, self.ClientWidth - FRight.Croprect.Width, fminheight);
 
-  self.ChildSizing.LeftRightSpacing := Fleft.Width;
-  self.ChildSizing.TopBottomSpacing := FTop.Height;
+  self.ChildSizing.LeftRightSpacing := Fleft.Croprect.Width;
+  self.ChildSizing.TopBottomSpacing := FTop.Croprect.Height;
 
 end;
 
@@ -696,12 +699,12 @@ begin
 
 
       if fbutondirection = obright then
-        fbutonarea := Rect(Self.ClientWidth - (FRight.Width + SrcRect.Width),
-          FTop.Height, Self.ClientWidth - FRight.Width,
-          FTop.Height + SrcRect.Height{FTop.Height})
+        fbutonarea := Rect(Self.ClientWidth - (FRight.Croprect.Width + SrcRect.Width),
+          FTop.Croprect.Height, Self.ClientWidth - FRight.Croprect.Width,
+          FTop.Croprect.Height + SrcRect.Height{FTop.Height})
       else
-        fbutonarea := Rect(Fleft.Width, FTop.Height, SrcRect.Width,
-          FTop.Height + SrcRect.Height);//FTop.Height);
+        fbutonarea := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, SrcRect.Width,
+          FTop.Croprect.Height + SrcRect.Height);//FTop.Height);
 
 
       DrawPartnormal(SrcRect, self, fbutonarea, alpha);
@@ -739,39 +742,54 @@ end;
 constructor TONURPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  skinname := 'panel';
-  FTop := TONURCUSTOMCROP.Create;
-  FTop.cropname := 'TOP';
-  FBottom := TONURCUSTOMCROP.Create;
-  FBottom.cropname := 'BOTTOM';
-  FCenter := TONURCUSTOMCROP.Create;
-  FCenter.cropname := 'CENTER';
-  FRight := TONURCUSTOMCROP.Create;
-  FRight.cropname := 'RIGHT';
-  FTopRight := TONURCUSTOMCROP.Create;
-  FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONURCUSTOMCROP.Create;
-  FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONURCUSTOMCROP.Create;
-  Fleft.cropname := 'LEFT';
-  FTopleft := TONURCUSTOMCROP.Create;
-  FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname := 'BOTTOMLEFT';
+  skinname              := 'panel';
+   FTop                  := TONURCUSTOMCROP.Create('TOP');
+//  FTop.cropname         := 'TOP';
+  FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+//  FBottom.cropname      := 'BOTTOM';
+  FCenter               := TONURCUSTOMCROP.Create('CENTER');
+//  FCenter.cropname      := 'CENTER';
+  FRight                := TONURCUSTOMCROP.Create('RIGHT');
+//  FRight.cropname       := 'RIGHT';
+  FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+//  FTopRight.cropname    := 'TOPRIGHT';
+  FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+//  FBottomRight.cropname := 'BOTTOMRIGHT';
+  Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+//  Fleft.cropname        := 'LEFT';
+  FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+//  FTopleft.cropname     := 'TOPLEFT';
+  FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+//  FBottomleft.cropname  := 'BOTTOMLEFT';
 
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FTop);
-  Customcroplist.Add(FTopRight);
-  Customcroplist.Add(FBottomleft);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FBottomRight);
-  Customcroplist.Add(Fleft);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
+
+
+
+   Customcroplist.Add(FTopleft);
+   Customcroplist.Add(FTop);
+   Customcroplist.Add(FTopRight);
+   Customcroplist.Add(FBottomleft);
+   Customcroplist.Add(FBottom);
+   Customcroplist.Add(FBottomRight);
+   Customcroplist.Add(Fleft);
+   Customcroplist.Add(FRight);
+   Customcroplist.Add(FCenter);
 
   Self.Height := 190;
-  Self.Width := 190;
-  resim.SetSize(Width, Height);
+  Self.Width  := 190;
+
+ { resim.SetSize(ClientWidth, ClientHeight);
+  FTopleft.Targetrect     := Rect(0, 0, 19, 19);
+  FTopRight.Targetrect    := Rect(self.clientWidth - 19, 0, self.clientWidth, 19);
+  FTop.Targetrect         := Rect(19, 0, self.clientWidth -  19, 19);
+  FBottomleft.Targetrect  := Rect(0, self.ClientHeight - 19, 19, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - 19, self.clientHeight - 19, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect      := Rect(19, self.clientHeight - 19, self.clientWidth - 19, self.clientHeight);
+  Fleft.Targetrect        := Rect(0, 19, 19, self.clientHeight - 19);
+  FRight.Targetrect       := Rect(self.clientWidth - 19, 19,  self.clientWidth, self.clientHeight - 19);
+  FCenter.Targetrect      := Rect(19, 19, self.clientWidth - 19, self.clientHeight - 19);
+}
+
 end;
 
 // -----------------------------------------------------------------------------
@@ -795,6 +813,11 @@ begin
   //    exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
+ // resim.SetSize(FTopleft.Width+ftop.Width+FTopRight.Width,FTopleft.Height+Fleft.Height+FBottomleft.Height);
+//  if resim.Width<1 then resim.SetSize(1,resim.Height);
+//  if resim.Height<1 then resim.SetSize(resim.Width,1);
+//  Resizing;
+
   //  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
@@ -818,8 +841,9 @@ begin
       //CENTER //ORTA
       DrawPartnormal(Fcenter.Croprect, self, FCenter.Targetrect, alpha);
 
-      if Crop then
-        CropToimg(resim);
+    //  if Crop then
+    //    CropToimg(resim);
+
     finally
 
     end;
@@ -834,6 +858,7 @@ end;
 procedure TONURPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
+  if Assigned(Skindata) then
   Resizing;
 end;
 
@@ -846,26 +871,36 @@ end;
 
 procedure TONURPanel.Resizing;
 begin
-    FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
-    0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
-    FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
-    FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
-    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
-    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width, self.clientHeight -
-    FBottomleft.Height);
+  if not Assigned(Skindata) then exit;
 
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
-    self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
-    FRight.Width, self.clientHeight - FBottom.Height);
-  self.ChildSizing.LeftRightSpacing := Fleft.Width;
-  self.ChildSizing.TopBottomSpacing := FTop.Height;
+ { FTopleft.Targetrect:=Rect(0,0,FTopleft.Width,Ftopleft.Height);
+  FTopRight.Targetrect := Rect(resim.Width - FTopRight.Width, 0, resim.Width, FTopRight.Height);
+  ftop.Targetrect := Rect(FTopleft.Width, 0, resim.Width - FTopRight.Width, FTop.Height);
+
+  fBottomleft.Targetrect := Rect(0, resim.Height - FBottomleft.Height,
+    FBottomleft.Width, resim.Height);
+  FBottomRight.Targetrect := Rect(resim.Width - FBottomRight.Width,
+    resim.Height - FBottomRight.Height, resim.Width, resim.Height);
+  FBottom.Targetrect := Rect(FBottomleft.Width, resim.Height -
+    FBottom.Height, resim.Width - FBottomRight.Width, resim.Height);
+  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width, resim.Height -
+    FBottomleft.Height);
+  FRight.Targetrect := Rect(resim.Width - FRight.Width, FTopRight.Height,
+    resim.Width, resim.Height - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, resim.Width -
+    FRight.Width, resim.Height - FBottom.Height);
+} FTopleft.Targetrect     := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Croprect.Width, 0, self.clientWidth, FTopRight.Croprect.Height);
+  FTop.Targetrect         := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -  FTopRight.Croprect.Width, FTop.Croprect.Height);
+  FBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height, FBottomleft.Croprect.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect      := Rect(FBottomleft.Croprect.Width, self.clientHeight - FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+  Fleft.Targetrect        := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width, self.clientHeight - FBottomleft.Croprect.Height);
+  FRight.Targetrect       := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height,  self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+  FCenter.Targetrect      := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth - FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
+
+//  self.ChildSizing.LeftRightSpacing := Fleft.Width;
+//  self.ChildSizing.TopBottomSpacing := FTop.Height;
 end;
 
 //-----------------------------------------------------------------------------
@@ -876,6 +911,7 @@ end;
 procedure TONURGraphicPanel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
+  if Assigned(Skindata) then
   Resizing;
 end;
 
@@ -888,57 +924,72 @@ end;
 
 procedure TONURGraphicPanel.Resizing;
 begin
-    FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
-    0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
-    FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
-    FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
-    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
-    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width, self.clientHeight -
+  if not Assigned(Skindata) then exit;
+{  FTopleft.Targetrect:=Rect(0,0,FTopleft.Width,Ftopleft.Height);
+  FTopRight.Targetrect := Rect(resim.Width - FTopRight.Width, 0, resim.Width, FTopRight.Height);
+  ftop.Targetrect := Rect(FTopleft.Width, 0, resim.Width - FTopRight.Width, FTop.Height);
+
+  fBottomleft.Targetrect := Rect(0, resim.Height - FBottomleft.Height,
+    FBottomleft.Width, resim.Height);
+  FBottomRight.Targetrect := Rect(resim.Width - FBottomRight.Width,
+    resim.Height - FBottomRight.Height, resim.Width, resim.Height);
+  FBottom.Targetrect := Rect(FBottomleft.Width, resim.Height -
+    FBottom.Height, resim.Width - FBottomRight.Width, resim.Height);
+  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width, resim.Height -
     FBottomleft.Height);
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
-    self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
-    FRight.Width, self.clientHeight - FBottom.Height);
+  FRight.Targetrect := Rect(resim.Width - FRight.Width, FTopRight.Height,
+    resim.Width, resim.Height - FBottomRight.Height);
+  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, resim.Width -
+    FRight.Width, resim.Height - FBottom.Height);
+}
+  FTopleft.Targetrect     := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Croprect.Width, 0, self.clientWidth, FTopRight.Croprect.Height);
+  FTop.Targetrect         := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -  FTopRight.Croprect.Width, FTop.Croprect.Height);
+  FBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height, FBottomleft.Croprect.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect      := Rect(FBottomleft.Croprect.Width, self.clientHeight - FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+  Fleft.Targetrect        := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width, self.clientHeight - FBottomleft.Croprect.Height);
+  FRight.Targetrect       := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height,  self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+  FCenter.Targetrect      := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth - FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
+
+
 end;
 
 constructor TONURGraphicPanel.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
-  skinname := 'graphicpanel';
-  FTop := TONURCUSTOMCROP.Create;
-  FTop.cropname := 'TOP';
-  FBottom := TONURCUSTOMCROP.Create;
-  FBottom.cropname := 'BOTTOM';
-  FCenter := TONURCUSTOMCROP.Create;
-  FCenter.cropname := 'CENTER';
-  FRight := TONURCUSTOMCROP.Create;
-  FRight.cropname := 'RIGHT';
-  FTopRight := TONURCUSTOMCROP.Create;
-  FTopRight.cropname := 'TOPRIGHT';
-  FBottomRight := TONURCUSTOMCROP.Create;
-  FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft := TONURCUSTOMCROP.Create;
-  Fleft.cropname := 'LEFT';
-  FTopleft := TONURCUSTOMCROP.Create;
-  FTopleft.cropname := 'TOPLEFT';
-  FBottomleft := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname := 'BOTTOMLEFT';
+  skinname  := 'graphicpanel';
+  FTop                  := TONURCUSTOMCROP.Create('TOP');
+//  FTop.cropname         := 'TOP';
+  FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+//  FBottom.cropname      := 'BOTTOM';
+  FCenter               := TONURCUSTOMCROP.Create('CENTER');
+//  FCenter.cropname      := 'CENTER';
+  FRight                := TONURCUSTOMCROP.Create('RIGHT');
+//  FRight.cropname       := 'RIGHT';
+  FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+//  FTopRight.cropname    := 'TOPRIGHT';
+  FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+//  FBottomRight.cropname := 'BOTTOMRIGHT';
+  Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+//  Fleft.cropname        := 'LEFT';
+  FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+//  FTopleft.cropname     := 'TOPLEFT';
+  FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+//  FBottomleft.cropname  := 'BOTTOMLEFT';
 
-  Customcroplist.Add(FTopleft);
-  Customcroplist.Add(FTop);
-  Customcroplist.Add(FTopRight);
-  Customcroplist.Add(FBottomleft);
-  Customcroplist.Add(FBottom);
-  Customcroplist.Add(FBottomRight);
-  Customcroplist.Add(Fleft);
-  Customcroplist.Add(FCenter);
-  Customcroplist.Add(FRight);
+
+
+
+ Customcroplist.Add(FTopleft);
+ Customcroplist.Add(FTop);
+ Customcroplist.Add(FTopRight);
+ Customcroplist.Add(FBottomleft);
+ Customcroplist.Add(FBottom);
+ Customcroplist.Add(FBottomRight);
+ Customcroplist.Add(Fleft);
+ Customcroplist.Add(FRight);
+ Customcroplist.Add(FCenter);
 
   Self.Height := 190;
   Self.Width := 190;
@@ -954,16 +1005,7 @@ begin
     TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
-{begin
-  FreeAndNil(FBottom);
-  FreeAndNil(FTop);
-  FreeAndNil(FCenter);
-  FreeAndNil(FRight);
-  FreeAndNil(FBottomRight);
-  FreeAndNil(FTopRight);
-  FreeAndNil(Fleft);
-  FreeAndNil(FBottomleft);
-  FreeAndNil(FTopleft); }
+
   inherited Destroy;
 end;
 
@@ -974,6 +1016,12 @@ begin
   if not Visible then exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.Width, self.Height);
+
+//  resim.SetSize(FTopleft.Width+ftop.Width+FTopRight.Width,FTopleft.Height+Fleft.Height+FBottomleft.Height);
+//  if resim.Width<1 then resim.SetSize(1,resim.Height);
+//  if resim.Height<1 then resim.SetSize(resim.Width,1);
+//  Resizing;
+
   //  if (Skindata <> nil){ or (FSkindata.Fimage <> nil)} then
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin

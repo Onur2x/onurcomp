@@ -345,7 +345,8 @@ type
   TONURContentSlider = class(TONURCustomControl)
   private
    Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
-   FTop, FBottom, FCenter, Fleftbutton,Frightbutton: TONURCUSTOMCROP;
+   FTop, FBottom, FCenter, FleftbuttonN,Fleftbuttonh,Fleftbuttonp,
+   FrightbuttonN,Frightbuttonh,Frightbuttonp: TONURCUSTOMCROP;
    Fbuttonleft,Fbuttonright:TONURcontentsliderbutton;
    Fcontent:TStrings;
    indx:integer;
@@ -474,10 +475,12 @@ begin
     alp+=20;
 
 
-  if (alp<=0) then begin  alp:=0; ftimer.Enabled:=false;end;
-  if (alp>=255)then begin alp:=255; ftimer.Enabled:=false; end;
+  if (alp<=0) then begin  alp:=0;   ftimer.Enabled := false; end;
+  if (alp>=255)then begin alp:=255; ftimer.Enabled := false; end;
+
   Alpha:=alp;
 
+  //WriteLn(alp);
 end;
 
 procedure TONURcontentsliderbutton.MouseEnter;
@@ -525,13 +528,13 @@ end;
 procedure TONURcontentsliderbutton.Resize;
 begin
   inherited Resize;
-  if Assigned(Skindata) then
-  Resizing;
+//  if Assigned(Skindata) then
+//  Resizing;
 end;
 
 procedure TONURcontentsliderbutton.Resizing;
 begin
-  FNormal.Targetrect      := Rect(0, 0, ClientWidth,ClientWidth);
+//  FNormal.Targetrect      := Rect(0, 0, self.ClientWidth, self.ClientWidth);
 end;
 
 procedure TONURcontentsliderbutton.Paint;
@@ -588,25 +591,26 @@ constructor TONURcontentsliderbutton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   Skinname          := 'contentSliderbutton';
-  FNormal           := TONURCUSTOMCROP.Create;
-  FNormal.cropname  := 'NORMAL';
-  FPress            := TONURCUSTOMCROP.Create;
-  FPress.cropname   := 'PRESSED';
-  FEnter            := TONURCUSTOMCROP.Create;
-  FEnter.cropname   := 'ENTER';
-  Fdisable          := TONURCUSTOMCROP.Create;
-  Fdisable.cropname := 'DISABLE';
+  FNormal           := TONURCUSTOMCROP.Create('NORMAL');
+//  FNormal.cropname  := 'NORMAL';
+  FPress            := TONURCUSTOMCROP.Create('PRESSED');
+//  FPress.cropname   := 'PRESSED';
+  FEnter            := TONURCUSTOMCROP.Create('ENTER');
+//  FEnter.cropname   := 'ENTER';
+  Fdisable          := TONURCUSTOMCROP.Create('DISABLE');
+//  Fdisable.cropname := 'DISABLE';
   Customcroplist.Add(FNormal);
   Customcroplist.Add(FEnter);
   Customcroplist.Add(FPress);
   Customcroplist.Add(Fdisable);
+
   Fstate            := obsnormal;
   Width             := 30;
   Height            := 30;
   Resim.SetSize(Width, Height);
   Captionvisible    := False;
   alp               := 255;
-  alpha             := 255;
+ // alpha             := 255;
   Ftimer            := TTimer.create(nil);
   Ftimer.Enabled    := False;
   Ftimer.Ontimer    := @Onurtimer;
@@ -617,10 +621,10 @@ var
   i: Integer;
 begin
   if Assigned(Ftimer) then FreeAndNil(Ftimer);
-
+{
   for i := 0 to Customcroplist.Count - 1 do
     TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
-
+  }
   Customcroplist.Clear;
 
   inherited Destroy;
@@ -668,28 +672,33 @@ end;
 
 procedure TONURContentSlider.resizing;
 begin
- FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
-    0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
-    FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
-    FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
-    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
-    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width, self.clientHeight -
-    FBottomleft.Height);
+ FTopleft.Targetrect := Rect(0, 0, FTopleft.croprect.Width, FTopleft.croprect.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.croprect.Width,
+    0, self.clientWidth, FTopRight.croprect.Height);
+  ftop.Targetrect := Rect(FTopleft.croprect.Width, 0, self.clientWidth -
+    FTopRight.croprect.Width, FTop.croprect.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.croprect.Height,
+    FBottomleft.croprect.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.croprect.Width,
+    self.clientHeight - FBottomRight.croprect.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.croprect.Width, self.clientHeight -
+    FBottom.croprect.Height, self.clientWidth - FBottomRight.croprect.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.croprect.Height, Fleft.croprect.Width, self.clientHeight -
+    FBottomleft.croprect.Height);
 
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
-    self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
-    FRight.Width, self.clientHeight - FBottom.Height);
+  FRight.Targetrect := Rect(self.clientWidth - FRight.croprect.Width, FTopRight.croprect.Height,
+    self.clientWidth, self.clientHeight - FBottomRight.croprect.Height);
+  FCenter.Targetrect := Rect(Fleft.croprect.Width, FTop.croprect.Height, self.clientWidth -
+    FRight.croprect.Width, self.clientHeight - FBottom.croprect.Height);
 
 
-  if Assigned(Fbuttonleft) then Fbuttonleft.Skindata  := self.Skindata;
-  if Assigned(Fbuttonright) then Fbuttonright.Skindata := self.Skindata;
+  if Assigned(Fbuttonleft) and (Fbuttonleft.Skindata=nil) then Fbuttonleft.Skindata  := self.Skindata;
+  if Assigned(Fbuttonright) and (Fbuttonright.Skindata=nil) then Fbuttonright.Skindata := self.Skindata;
+
+  resim.FontAntialias := true;
+  resim.FontName      := self.Font.Name;
+  resim.FontHeight    := self.Font.Size;
+  resim.FontStyle     := self.font.Style;
 end;
 
 procedure TONURContentSlider.SetSkindata(Aimg: TONURImg);
@@ -702,7 +711,6 @@ procedure TONURContentSlider.Resize;
 begin
   inherited Resize;
   if not Assigned(Fbuttonleft) then exit;
-
   Fbuttonleft.Left := 10;
   Fbuttonleft.top  := (self.ClientHeight div 2)- (Fbuttonleft.Height div 2);
 
@@ -711,6 +719,7 @@ begin
   Fbuttonright.top  := (self.ClientHeight div 2)- (Fbuttonright.Height div 2);
 
   resizing;
+//  WriteLn('RESIZE');
 end;
 
 
@@ -733,33 +742,44 @@ constructor TONURContentSlider.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
   skinname              := 'contentslider';
-  FTop                  := TONURCUSTOMCROP.Create;
-  FTop.cropname         := 'TOP';
-  FBottom               := TONURCUSTOMCROP.Create;
-  FBottom.cropname      := 'BOTTOM';
-  FCenter               := TONURCUSTOMCROP.Create;
-  FCenter.cropname      := 'CENTER';
-  FRight                := TONURCUSTOMCROP.Create;
-  FRight.cropname       := 'RIGHT';
-  FTopRight             := TONURCUSTOMCROP.Create;
-  FTopRight.cropname    := 'TOPRIGHT';
-  FBottomRight          := TONURCUSTOMCROP.Create;
-  FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft                 := TONURCUSTOMCROP.Create;
-  Fleft.cropname        := 'LEFT';
-  FTopleft              := TONURCUSTOMCROP.Create;
-  FTopleft.cropname     := 'TOPLEFT';
-  FBottomleft           := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname  := 'BOTTOMLEFT';
-  Fleftbutton           := TONURCUSTOMCROP.Create;
-  Fleftbutton.cropname  := 'LEFTBUTTON';
-  Frightbutton          := TONURCUSTOMCROP.Create;
-  Frightbutton.cropname := 'RIGHTBUTTON';
+    FTop                  := TONURCUSTOMCROP.Create('TOP');
+//  FTop.cropname         := 'TOP';
+  FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+//  FBottom.cropname      := 'BOTTOM';
+  FCenter               := TONURCUSTOMCROP.Create('CENTER');
+//  FCenter.cropname      := 'CENTER';
+  FRight                := TONURCUSTOMCROP.Create('RIGHT');
+//  FRight.cropname       := 'RIGHT';
+  FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+//  FTopRight.cropname    := 'TOPRIGHT';
+  FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+//  FBottomRight.cropname := 'BOTTOMRIGHT';
+  Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+//  Fleft.cropname        := 'LEFT';
+  FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+//  FTopleft.cropname     := 'TOPLEFT';
+  FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+//  FBottomleft.cropname  := 'BOTTOMLEFT';
+
+  FleftbuttonN          := TONURCUSTOMCROP.Create('LEFTBUTTONNORMAL');
+//  Fleftbuttonn.cropname := 'LEFTBUTTONNORMAL';
+  Fleftbuttonh          := TONURCUSTOMCROP.Create('LEFTBUTTONHOVER');
+//  Fleftbuttonh.cropname := 'LEFTBUTTONHOVER';
+  Fleftbuttonp          := TONURCUSTOMCROP.Create('LEFTBUTTONPRESS');
+//  Fleftbuttonp.cropname := 'LEFTBUTTONPRESS';
+
+  Frightbuttonn         := TONURCUSTOMCROP.Create('RIGHTBUTTONNORMAL');
+//  Frightbuttonn.cropname:= 'RIGHTBUTTONNORMAL';
+  Frightbuttonh         := TONURCUSTOMCROP.Create('RIGHTBUTTONHOVER');
+//  Frightbuttonh.cropname:= 'RIGHTBUTTONHOVER';
+  Frightbuttonp         := TONURCUSTOMCROP.Create('RIGHTBUTTONPRESS');
+//  Frightbuttonp.cropname:= 'RIGHTBUTTONPRESS';
 
   indx                  := 0;
   Fcontent              := TStringList.Create;
   Captionvisible        := false;
   Caption               := '';
+
   Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
   Customcroplist.Add(FTopRight);
@@ -767,11 +787,16 @@ begin
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
-  Customcroplist.Add(Fleftbutton);
-  Customcroplist.Add(Frightbutton);
+  Customcroplist.Add(FCenter);
 
+  Customcroplist.Add(Fleftbuttonn);
+  Customcroplist.Add(Fleftbuttonh);
+  Customcroplist.Add(Fleftbuttonp);
+
+  Customcroplist.Add(Frightbuttonn);
+  Customcroplist.Add(Frightbuttonh);
+  Customcroplist.Add(Frightbuttonp);
 
 
   Self.Height           := 190;
@@ -790,10 +815,10 @@ begin
     Caption         := '';
     Captionvisible  := false;
     Skinname        := 'contentslider';
-    Fnormal.cropname := 'LEFTBUTTON';
-    FEnter.cropname := 'LEFTBUTTON';
-    FPress.cropname := 'LEFTBUTTON';
-    Fdisable.cropname := 'LEFTBUTTON';
+    Fnormal.cropname := 'LEFTBUTTONNORMAL';
+    FEnter.cropname := 'LEFTBUTTONHOVER';
+    FPress.cropname := 'LEFTBUTTONPRESS';
+    Fdisable.cropname := 'LEFTBUTTONPRESS';
     OnClick         := @leftbuttonclick;
   end;
   
@@ -810,10 +835,10 @@ begin
     Caption        := '';
     Captionvisible := false;
     Skinname       := 'contentslider';
-    Fnormal.cropname := 'RIGHTBUTTON';
-    FEnter.cropname := 'RIGHTBUTTON';
-    FPress.cropname := 'RIGHTBUTTON';
-    Fdisable.cropname := 'RIGHTBUTTON';
+    Fnormal.cropname := 'RIGHTBUTTONNORMAL';
+    FEnter.cropname := 'RIGHTBUTTONHOVER';
+    FPress.cropname := 'RIGHTBUTTONPRESS';
+    Fdisable.cropname := 'RIGHTBUTTONPRESS';
 
     OnClick        := @rightbuttonclick;
   end;
@@ -828,9 +853,9 @@ begin
   if Assigned(Fbuttonright) then FreeAndNil(Fbuttonright);
   if Assigned(Fcontent) then FreeAndNil(Fcontent);
 
-  for i := 0 to Customcroplist.Count - 1 do
+{  for i := 0 to Customcroplist.Count - 1 do
     TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
-
+}
   Customcroplist.Clear;
 
   inherited Destroy;
@@ -839,6 +864,7 @@ end;
 procedure TONURContentSlider.Paint;
 var
   DR:TRect;
+  stl: TTextStyle;
 begin
   if not Visible then exit;
   resim.SetSize(0, 0);
@@ -869,15 +895,26 @@ begin
         CropToimg(resim);
 
 
-      DR.Left:=FCenter.Targetrect.left+Fleft.Croprect.Width;
-      DR.Right:=FCenter.Targetrect.Right-FRight.Croprect.Width;
+      DR.Left    := FCenter.Targetrect.left+Fleft.Croprect.Width;
+      DR.Right   := FCenter.Targetrect.Right-FRight.Croprect.Width;
+      DR.top     := FCenter.Targetrect.top+Ftop.Croprect.Height;
+      DR.bottom  := FCenter.Targetrect.bottom-FBottom.Croprect.Height;
 
-      DR.top:=FCenter.Targetrect.top+Ftop.Croprect.Height;
-      DR.bottom:=FCenter.Targetrect.bottom-FBottom.Croprect.Height;
-
+  // WriteLn('PAIMT');
 
    if Fcontent.count>0 then
-    yaziyaz(resim.Canvas, self.Font,  DR, Fcontent[indx], taCenter);
+   begin
+    stl.Alignment := taCenter;
+    stl.Wordbreak := True;
+    stl.Layout := tlCenter;
+    stl.SingleLine := False;
+
+
+
+    resim.TextRect(DR, 0, 0, Fcontent[indx], stl,ColorToBGRA(self.font.color));
+
+   end;
+  //  yaziyaz(resim.Canvas, self.Font,  DR, Fcontent[indx], taCenter);
   end
   else
   begin
@@ -1059,58 +1096,58 @@ begin
 
 
   skinname                  := 'pagecontrol';
-  FTop                      := TONURCUSTOMCROP.Create;
-  FTop.cropname             := 'TOP';
-  FBottom                   := TONURCUSTOMCROP.Create;
-  FBottom.cropname          := 'BOTTOM';
-  FCenter                   := TONURCUSTOMCROP.Create;
-  FCenter.cropname          := 'CENTER';
-  FRight                    := TONURCUSTOMCROP.Create;
-  FRight.cropname           := 'RIGHT';
-  FTopRight                 := TONURCUSTOMCROP.Create;
-  FTopRight.cropname        := 'TOPRIGHT';
-  FBottomRight              := TONURCUSTOMCROP.Create;
-  FBottomRight.cropname     := 'BOTTOMRIGHT';
-  Fleft                     := TONURCUSTOMCROP.Create;
-  Fleft.cropname            := 'LEFT';
-  FTopleft                  := TONURCUSTOMCROP.Create;
-  FTopleft.cropname         := 'TOPLEFT';
-  FBottomleft               := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname      := 'BOTTOMLEFT';
+  FTop                  := TONURCUSTOMCROP.Create('TOP');
+//  FTop.cropname         := 'TOP';
+  FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+//  FBottom.cropname      := 'BOTTOM';
+  FCenter               := TONURCUSTOMCROP.Create('CENTER');
+//  FCenter.cropname      := 'CENTER';
+  FRight                := TONURCUSTOMCROP.Create('RIGHT');
+//  FRight.cropname       := 'RIGHT';
+  FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+//  FTopRight.cropname    := 'TOPRIGHT';
+  FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+//  FBottomRight.cropname := 'BOTTOMRIGHT';
+  Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+//  Fleft.cropname        := 'LEFT';
+  FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+//  FTopleft.cropname     := 'TOPLEFT';
+  FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+//  FBottomleft.cropname  := 'BOTTOMLEFT';
 
   // for button area
-  Fbuttonarea               := TONURCUSTOMCROP.Create;
-  Fbuttonarea.cropname      := 'BUTTONAREA';
+  Fbuttonarea               := TONURCUSTOMCROP.Create('BUTTONAREA');
+//  Fbuttonarea.cropname      := 'BUTTONAREA';
 
   // for page(s)
-  FPageTop                  := TONURCUSTOMCROP.Create;
-  FPageTop.cropname         := 'PAGETOP';
-  FPageBottom               := TONURCUSTOMCROP.Create;
-  FPageBottom.cropname      := 'PAGEBOTTOM';
-  FPageCenter               := TONURCUSTOMCROP.Create;
-  FPageCenter.cropname      := 'PAGECENTER';
-  FPageRight                := TONURCUSTOMCROP.Create;
-  FPageRight.cropname       := 'PAGERIGHT';
-  FPageTopRight             := TONURCUSTOMCROP.Create;
-  FPageTopRight.cropname    := 'PAGETOPRIGHT';
-  FPageBottomRight          := TONURCUSTOMCROP.Create;
-  FPageBottomRight.cropname := 'PAGEBOTTOMRIGHT';
-  FPageleft                 := TONURCUSTOMCROP.Create;
-  FPageleft.cropname        := 'PAGELEFT';
-  FPageTopleft              := TONURCUSTOMCROP.Create;
-  FPageTopleft.cropname     := 'PAGETOPLEFT';
-  FPageBottomleft           := TONURCUSTOMCROP.Create;
-  FPageBottomleft.cropname  := 'PAGEBOTTOMLEFT';
+  FPageTop                  := TONURCUSTOMCROP.Create('PAGETOP');
+//  FPageTop.cropname         := 'PAGETOP';
+  FPageBottom               := TONURCUSTOMCROP.Create('PAGEBOTTOM');
+//  FPageBottom.cropname      := 'PAGEBOTTOM';
+  FPageCenter               := TONURCUSTOMCROP.Create('PAGECENTER');
+//  FPageCenter.cropname      := 'PAGECENTER';
+  FPageRight                := TONURCUSTOMCROP.Create('PAGERIGHT');
+//  FPageRight.cropname       := 'PAGERIGHT';
+  FPageTopRight             := TONURCUSTOMCROP.Create('PAGETOPRIGHT');
+//  FPageTopRight.cropname    := 'PAGETOPRIGHT';
+  FPageBottomRight          := TONURCUSTOMCROP.Create('PAGEBOTTOMRIGHT');
+//  FPageBottomRight.cropname := 'PAGEBOTTOMRIGHT';
+  FPageleft                 := TONURCUSTOMCROP.Create('PAGELEFT');
+//  FPageleft.cropname        := 'PAGELEFT';
+  FPageTopleft              := TONURCUSTOMCROP.Create('PAGETOPLEFT');
+//  FPageTopleft.cropname     := 'PAGETOPLEFT';
+  FPageBottomleft           := TONURCUSTOMCROP.Create('PAGEBOTTOMLEFT');
+//  FPageBottomleft.cropname  := 'PAGEBOTTOMLEFT';
 
-  // for page button
-  FNormal                   := TONURCUSTOMCROP.Create;
-  FNormal.cropname          := 'BUTTONNORMAL';
-  FPress                    := TONURCUSTOMCROP.Create;
-  FPress.cropname           := 'BUTTONDOWN';
-  FEnter                    := TONURCUSTOMCROP.Create;
-  FEnter.cropname           := 'BUTTONHOVER';
-  Fdisable                  := TONURCUSTOMCROP.Create;
-  Fdisable.cropname         := 'BUTTONDISABLE';
+  // for button
+  FNormal               := TONURCUSTOMCROP.Create('BUTTONNORMAL');
+//  FNormal.cropname      := 'BUTTONNORMAL';
+  FPress                := TONURCUSTOMCROP.Create('BUTTONDOWN');
+//  FPress.cropname       := 'BUTTONDOWN';
+  FEnter                := TONURCUSTOMCROP.Create('BUTTONHOVER');
+//  FEnter.cropname       := 'BUTTONHOVER';
+  Fdisable              := TONURCUSTOMCROP.Create('BUTTONDISABLE');
+//  Fdisable.cropname     := 'BUTTONDISABLE';
 
   Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
@@ -1119,8 +1156,8 @@ begin
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
+  Customcroplist.Add(FCenter);
 
   Customcroplist.Add(Fbuttonarea);
 
@@ -1131,8 +1168,8 @@ begin
   Customcroplist.Add(FPageBottom);
   Customcroplist.Add(FPageBottomRight);
   Customcroplist.Add(FPageleft);
-  Customcroplist.Add(FPageCenter);
   Customcroplist.Add(FPageRight);
+  Customcroplist.Add(FPageCenter);
 
   Customcroplist.Add(Fnormal);
   Customcroplist.Add(FEnter);
@@ -1158,10 +1195,10 @@ var
 begin
   for A := FPages.Count - 1 downto 0 do
     Pages[A].Free;
-
+ {
    for A:=0 to Customcroplist.Count-1 do
   TONURCUSTOMCROP(Customcroplist.Items[A]).free;
-
+ }
   Customcroplist.Clear;
   FPages.Free;
   btnarea.Free;
@@ -1234,23 +1271,23 @@ var
   i: integer;
 begin
   
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
-    0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
-    FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
-    FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
-    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
-    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width,
-    self.clientHeight - FBottomleft.Height);
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
-    self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
-    FRight.Width, self.clientHeight - FBottom.Height);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Croprect.Width,
+    0, self.clientWidth, FTopRight.Croprect.Height);
+  ftop.Targetrect := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -
+    FTopRight.Croprect.Width, FTop.Croprect.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,
+    FBottomleft.Croprect.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width,
+    self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Croprect.Width, self.clientHeight -
+    FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width,
+    self.clientHeight - FBottomleft.Croprect.Height);
+  FRight.Targetrect := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height,
+    self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+  FCenter.Targetrect := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth -
+    FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
 
 
 
@@ -1578,24 +1615,24 @@ begin
       Fbutton.Align := alLeft;
       Fbutton.Width := 100;
       Fbutton.Font.Orientation := 0;
-      left := FPageControl.Fleft.Width;
-      top := FPageControl.FTop.Height + FPageControl.btnarea.Height;
-      Width := FPageControl.Width - (FPageControl.Fleft.Width +
-        FPageControl.FRight.Width);
-      Height := FPageControl.Height - (FPageControl.FTop.Height +
-        FPageControl.FBottom.Height + FPageControl.btnarea.Height);
+      left := FPageControl.Fleft.Croprect.Width;
+      top := FPageControl.FTop.Croprect.Height + FPageControl.btnarea.Height;
+      Width := FPageControl.Width - (FPageControl.Fleft.Croprect.Width +
+        FPageControl.FRight.Croprect.Width);
+      Height := FPageControl.Height - (FPageControl.FTop.Croprect.Height +
+        FPageControl.FBottom.Croprect.Height + FPageControl.btnarea.Height);
     end;
     obdown:
     begin
       Fbutton.Align := alLeft;
       Fbutton.Width := 100;
       Fbutton.Font.Orientation := 0;
-      left := FPageControl.Fleft.Width;
-      top := FPageControl.FTop.Height;
-      Width := FPageControl.Width - (FPageControl.Fleft.Width +
-        FPageControl.FRight.Width);
-      Height := FPageControl.Height - (FPageControl.FTop.Height +
-        FPageControl.FBottom.Height + FPageControl.btnarea.Height);
+      left := FPageControl.Fleft.Croprect.Width;
+      top := FPageControl.FTop.Croprect.Height;
+      Width := FPageControl.Width - (FPageControl.Fleft.Croprect.Width +
+        FPageControl.FRight.Croprect.Width);
+      Height := FPageControl.Height - (FPageControl.FTop.Croprect.Height +
+        FPageControl.FBottom.Croprect.Height + FPageControl.btnarea.Height);
     end;
     obleft:
     begin
@@ -1603,12 +1640,12 @@ begin
       Fbutton.Height := 100;              //  Fbutton.Width:=FPageControl.btnarea.Width;
 
       Fbutton.Align := altop;
-      left := FPageControl.Fleft.Width + FPageControl.btnarea.Width;
-      top := FPageControl.FTop.Height;
-      Width := FPageControl.Width - (FPageControl.Fleft.Width +
-        FPageControl.FRight.Width + FPageControl.btnarea.Width);
-      Height := FPageControl.Height - (FPageControl.FTop.Height +
-        FPageControl.FBottom.Height);
+      left := FPageControl.Fleft.Croprect.Width + FPageControl.btnarea.Width;
+      top := FPageControl.FTop.Croprect.Height;
+      Width := FPageControl.Width - (FPageControl.Fleft.Croprect.Width +
+        FPageControl.FRight.Croprect.Width + FPageControl.btnarea.Width);
+      Height := FPageControl.Height - (FPageControl.FTop.Croprect.Height +
+        FPageControl.FBottom.Croprect.Height);
     end;
     obright:
     begin
@@ -1616,12 +1653,12 @@ begin
       Fbutton.Height := 100;   // Fbutton.Width:=FPageControl.btnarea.Width;
 
       Fbutton.Align := altop;
-      left := FPageControl.Fleft.Width;
-      top := FPageControl.FTop.Height;
-      Width := FPageControl.Width - (FPageControl.Fleft.Width +
-        FPageControl.FRight.Width + FPageControl.btnarea.Width);
-      Height := FPageControl.Height - (FPageControl.FTop.Height +
-        FPageControl.FBottom.Height);
+      left := FPageControl.Fleft.Croprect.Width;
+      top := FPageControl.FTop.Croprect.Height;
+      Width := FPageControl.Width - (FPageControl.Fleft.Croprect.Width +
+        FPageControl.FRight.Croprect.Width + FPageControl.btnarea.Width);
+      Height := FPageControl.Height - (FPageControl.FTop.Croprect.Height +
+        FPageControl.FBottom.Croprect.Height);
     end;
   end;
 end;
@@ -1706,38 +1743,38 @@ procedure TONURPage.Resizing;
 begin
 
   FPageControl.FpageTopleft.Targetrect :=
-    Rect(0, 0, FPageControl.FpageTopleft.Width, FPageControl.FpageTopleft.Height);
+    Rect(0, 0, FPageControl.FpageTopleft.Croprect.Width, FPageControl.FpageTopleft.Croprect.Height);
 
   FPageControl.FpageTopRight.Targetrect :=
-    Rect((self.clientWidth) -FPageControl.FPageTopRight.Width, 0, self.clientWidth,
-     FPageControl.FPageTopRight.Height);
+    Rect((self.clientWidth) -FPageControl.FPageTopRight.Croprect.Width, 0, self.clientWidth,
+     FPageControl.FPageTopRight.Croprect.Height);
 
   FPageControl.FpageTop.Targetrect :=
-    Rect(FPageControl.FPageTopleft.Width, 0, self.clientWidth - FPageControl.FPageTopRight.Width,FPageControl.fpagetop.Height);
+    Rect(FPageControl.FPageTopleft.Croprect.Width, 0, self.clientWidth - FPageControl.FPageTopRight.Croprect.Width,FPageControl.fpagetop.Croprect.Height);
 
 
   FPageControl.FpageBottomleft.Targetrect :=
-    Rect(0, self.ClientHeight - FPageControl.FPageBottomleft.Height, FPageControl.FPageBottomleft.Width, self.ClientHeight);
+    Rect(0, self.ClientHeight - FPageControl.FPageBottomleft.Croprect.Height, FPageControl.FPageBottomleft.Croprect.Width, self.ClientHeight);
   FPageControl.FpageBottomRight.Targetrect :=
-    Rect(self.clientWidth - FPageControl.FPageBottomRight.Width,
-    self.clientHeight - FPageControl.FPageBottomRight.Height, self.clientWidth,
+    Rect(self.clientWidth - FPageControl.FPageBottomRight.Croprect.Width,
+    self.clientHeight - FPageControl.FPageBottomRight.Croprect.Height, self.clientWidth,
     self.clientHeight);
 
   FPageControl.FpageBottom.Targetrect :=
-    Rect(FPageControl.Fpagebottomleft.Width, self.clientHeight -
-  FPageControl.FPageBottom.Height, self.clientWidth - FPageControl.FPageBottomRight.Width,
+    Rect(FPageControl.Fpagebottomleft.Croprect.Width, self.clientHeight -
+  FPageControl.FPageBottom.Croprect.Height, self.clientWidth - FPageControl.FPageBottomRight.Croprect.Width,
     self.clientHeight);
 
   FPageControl.Fpageleft.Targetrect :=
-    Rect(0, FPageControl.FPageTopleft.Height, FPageControl.FPageleft.Width,
-    self.clientHeight - FPageControl.FPageBottomleft.Height);
+    Rect(0, FPageControl.FPageTopleft.Croprect.Height, FPageControl.FPageleft.Croprect.Width,
+    self.clientHeight - FPageControl.FPageBottomleft.Croprect.Height);
   FPageControl.FpageRight.Targetrect :=
-    Rect(self.clientWidth - FPageControl.FPageRight.Width, FPageControl.FPageTopRight.Height,
-    self.clientWidth, self.clientHeight - FPageControl.FPageBottomRight.Height);
+    Rect(self.clientWidth - FPageControl.FPageRight.Croprect.Width, FPageControl.FPageTopRight.Croprect.Height,
+    self.clientWidth, self.clientHeight - FPageControl.FPageBottomRight.Croprect.Height);
   FPageControl.FpageCenter.Targetrect :=
-    Rect(FPageControl.FPageleft.Width, FPageControl.fpagetop.Height,
-    self.clientWidth - (FPageControl.FPageRight.Width), self.clientHeight -
-     FPageControl.FPageBottom.Height);
+    Rect(FPageControl.FPageleft.Croprect.Width, FPageControl.fpagetop.Croprect.Height,
+    self.clientWidth - (FPageControl.FPageRight.Croprect.Width), self.clientHeight -
+     FPageControl.FPageBottom.Croprect.Height);
 
   Fbutton.Skindata := Skindata;
 end;

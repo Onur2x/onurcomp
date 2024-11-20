@@ -502,12 +502,20 @@ begin
     if Kind = oHorizontal then
     begin
       skinname := 'scrollbarh';
+
+ //     FTop.cropname      := 'LEFT';
+ //     FBottom.cropname   := 'RIGHT';
+
       self.Width := self.Height;
       self.Height := a;
     end
     else
     begin
       skinname := 'scrollbarv';
+ //     FTop.cropname      := 'TOP';
+ //     FBottom.cropname   := 'BOTTOM';
+
+
       self.Width := self.Height;
       self.Height := a;
     end;
@@ -713,6 +721,7 @@ begin
     Exit;
   if not Enabled then
     Exit;
+  if Max<=0 then exit;
   if (fcbutons = obshover) or (flbutons = obshover) or (frbutons = obshover) or (
     fCenterstate = obshover) then
     Exit;
@@ -780,7 +789,7 @@ end;
 constructor TONURScrollBar.Create(Aowner: TComponent);
 begin
   inherited Create(aowner);
-  Parent             := AOwner as TWinControl;
+//  Parent             := AOwner as TWinControl;
   Flbuttonrect       := Rect(1, 1, 20, 21);
   Frbuttonrect       := Rect(179, 1, 199, 21);
   Ftrackarea         := Rect(21, 1, 178, 21);
@@ -798,42 +807,42 @@ begin
   Fstep              := 1;
   Captionvisible     := False;
 
-  FNormali           := TONURCUSTOMCROP.Create;
-  FNormali.cropname  := 'NORMAL';
-  FTop               := TONURCUSTOMCROP.Create;
-  FTop.cropname      := 'TOP';
-  FBottom            := TONURCUSTOMCROP.Create;
-  FBottom.cropname   := 'BOTTOM';
-  Fhover             := TONURCUSTOMCROP.Create;
-  Fhover.cropname    := 'HOVER';
+  FNormali           := TONURCUSTOMCROP.Create('NORMAL');
+ // FNormali.cropname  := 'NORMAL';
+  FTop               := TONURCUSTOMCROP.Create('TOP');
+ // FTop.cropname      := 'TOP';
+  FBottom            := TONURCUSTOMCROP.Create('BOTTOM');
+ // FBottom.cropname   := 'BOTTOM';
+  Fhover             := TONURCUSTOMCROP.Create('HOVER');
+//  Fhover.cropname    := 'HOVER';
 
-  FbuttonNL          := TONURCUSTOMCROP.Create;
-  FbuttonNL.cropname := 'LEFTBUTTONNORMAL';
-  FbuttonUL          := TONURCUSTOMCROP.Create;
-  FbuttonUL.cropname := 'LEFTBUTTONHOVER';
-  FbuttonBL          := TONURCUSTOMCROP.Create;
-  FbuttonBL.cropname := 'LEFTBUTTONPRESSED';
-  FbuttonDL          := TONURCUSTOMCROP.Create;
-  FbuttonDL.cropname := 'LEFTBUTTONDISABLE';
+  FbuttonNL          := TONURCUSTOMCROP.Create('LEFTBUTTONNORMAL');
+//  FbuttonNL.cropname := 'LEFTBUTTONNORMAL';
+  FbuttonUL          := TONURCUSTOMCROP.Create('LEFTBUTTONHOVER');
+//  FbuttonUL.cropname := 'LEFTBUTTONHOVER';
+  FbuttonBL          := TONURCUSTOMCROP.Create('LEFTBUTTONPRESSED');
+//  FbuttonBL.cropname := 'LEFTBUTTONPRESSED';
+  FbuttonDL          := TONURCUSTOMCROP.Create('LEFTBUTTONDISABLE');
+//  FbuttonDL.cropname := 'LEFTBUTTONDISABLE';
 
-  FbuttonNR          := TONURCUSTOMCROP.Create;
-  FbuttonNR.cropname := 'RIGHTBUTTONNORMAL';
-  FbuttonUR          := TONURCUSTOMCROP.Create;
-  FbuttonUR.cropname := 'RIGHTBUTTONHOVER';
-  FbuttonBR          := TONURCUSTOMCROP.Create;
-  FbuttonBR.cropname := 'RIGHTBUTTONPRESSED';
-  FbuttonDR          := TONURCUSTOMCROP.Create;
-  FbuttonDR.cropname := 'RIGHTBUTTONDISABLE';
+  FbuttonNR          := TONURCUSTOMCROP.Create('RIGHTBUTTONNORMAL');
+//  FbuttonNR.cropname := 'RIGHTBUTTONNORMAL';
+  FbuttonUR          := TONURCUSTOMCROP.Create('RIGHTBUTTONHOVER');
+//  FbuttonUR.cropname := 'RIGHTBUTTONHOVER';
+  FbuttonBR          := TONURCUSTOMCROP.Create('RIGHTBUTTONPRESSED');
+//  FbuttonBR.cropname := 'RIGHTBUTTONPRESSED';
+  FbuttonDR          := TONURCUSTOMCROP.Create('RIGHTBUTTONDISABLE');
+//  FbuttonDR.cropname := 'RIGHTBUTTONDISABLE';
 
 
-  FbuttonCN          := TONURCUSTOMCROP.Create;
-  FbuttonCN.cropname := 'CENTERBUTTONNORMAL';
-  FbuttonCU          := TONURCUSTOMCROP.Create;
-  FbuttonCU.cropname := 'CENTERBUTTONHOVER';
-  FbuttonCB          := TONURCUSTOMCROP.Create;
-  FbuttonCB.cropname := 'CENTERBUTTONPRESSED';
-  FbuttonCD          := TONURCUSTOMCROP.Create;
-  FbuttonCD.cropname := 'CENTERBUTTONDISABLE';
+  FbuttonCN          := TONURCUSTOMCROP.Create('CENTERBUTTONNORMAL');
+//  FbuttonCN.cropname := 'CENTERBUTTONNORMAL';
+  FbuttonCU          := TONURCUSTOMCROP.Create('CENTERBUTTONHOVER');
+//  FbuttonCU.cropname := 'CENTERBUTTONHOVER';
+  FbuttonCB          := TONURCUSTOMCROP.Create('CENTERBUTTONPRESSED');
+//  FbuttonCB.cropname := 'CENTERBUTTONPRESSED';
+  FbuttonCD          := TONURCUSTOMCROP.Create('CENTERBUTTONDISABLE');
+//  FbuttonCD.cropname := 'CENTERBUTTONDISABLE';
 
 
   Customcroplist.Add(FNormali);
@@ -864,9 +873,9 @@ destructor TONURScrollBar.Destroy;
 var
   i:byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
+{  for i:=0 to Customcroplist.Count-1 do
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-
+}
   Customcroplist.Clear;
 
   Skindata := nil;
@@ -897,7 +906,8 @@ procedure TONURScrollBar.paint;
 var
   DR: TRect;
 begin
-
+//  writeln('OPP');
+//  exit;
   if not Visible then Exit;
 
   resim.SetSize(0, 0);
@@ -1002,18 +1012,18 @@ begin
    if Enabled = True then   // CENTER BUTTON
     begin
       case fcbutons of
-        obsnormal: DR :=
-            Rect(FbuttonCN.Left, FbuttonCN.Top, FbuttonCN.Right, FbuttonCN.Bottom);
-        obshover: DR :=
-            Rect(FbuttonCU.Left, FbuttonCU.Top, FbuttonCU.Right, FbuttonCU.Bottom);
-        obspressed: DR :=
-            Rect(FbuttonCB.Left, FbuttonCB.Top, FbuttonCB.Right, FbuttonCB.Bottom);
+        obsnormal: DR := FbuttonCN.Croprect;
+      //      Rect(FbuttonCN.Croprect.Left, FbuttonCN.Top, FbuttonCN.Right, FbuttonCN.Bottom);
+        obshover: DR := FbuttonCu.Croprect;
+       //     Rect(FbuttonCU.Left, FbuttonCU.Top, FbuttonCU.Right, FbuttonCU.Bottom);
+        obspressed: DR := FbuttonCb.Croprect;
+       //     Rect(FbuttonCB.Left, FbuttonCB.Top, FbuttonCB.Right, FbuttonCB.Bottom);
       end;
     end
     else
     begin
-      DR := Rect(FbuttonCD.Left, FbuttonCD.Top, FbuttonCD.Right,
-        FbuttonCD.Bottom);
+      DR := FbuttonCd.Croprect
+    //  Rect(FbuttonCD.Left, FbuttonCD.Top, FbuttonCD.Right, FbuttonCD.Bottom);
     end;
 
 
@@ -1022,13 +1032,17 @@ begin
   if self.Kind = oHorizontal then
   begin
     buttonh := self.ClientHeight - (borderwh);  // button Width and Height;
-    flbuttonrect := Rect(borderwh, borderwh, buttonh, buttonh);// left button    ;
+    flbuttonrect := Rect(borderwh, borderwh, buttonh, buttonh);// left button;
     Frbuttonrect := Rect(self.ClientWidth - (buttonh + borderwh), borderwh,
       self.ClientWidth - borderwh, buttonh); // right button
     Ftrackarea := Rect(flbuttonrect.Right, flbuttonrect.top, frbuttonrect.Left,
       frbuttonrect.Bottom);
 
-    buttonh := DR.Width;// Max:=Max-self.Width;
+    buttonh :=Round(((Ftrackarea.Width-MaxMin)/MaxMin)*100);//Round((Ftrackarea.Width- MaxMin));//DR.Width;//self.Height-ABS(Round((Ftrackarea.Width / MaxMin)- DR.Width));// Max:=Max-self.Width;
+    if buttonh<10 then buttonh:=10;
+
+   // buttonh :=DR.Width;
+
     fcenterbuttonarea := Rect(FPosition+Flbuttonrect.Width {+ buttonh}, borderwh,
         FPosition +Frbuttonrect.Width{+ buttonh} + buttonh, self.clientHeight - borderwh);
   end
@@ -1042,7 +1056,10 @@ begin
     Ftrackarea := Rect(flbuttonrect.left, flbuttonrect.bottom,
       frbuttonrect.Right, frbuttonrect.top);
 
-    buttonh := DR.Height;
+    buttonh :=   Round(((Ftrackarea.Height-MaxMin)/MaxMin)*100); //Round(Ftrackarea.Height-MaxMin );   //MaxMin div Ftrackarea.Height));// DR.Height;
+    if buttonh<10 then buttonh:=10;
+   // buttonh:=DR.Height;
+
     fcenterbuttonarea := Rect(borderwh, FPosition+Flbuttonrect.Height {+ buttonh}, self.ClientWidth -
         borderwh, FPosition +Frbuttonrect.Height+ {buttonh +} buttonh);
 
@@ -1201,12 +1218,16 @@ begin
     if Kind = oHorizontal then
     begin
       skinname := 'trackbarh';
+   //   Fleft.cropname      := 'LEFT';
+  //    FRight.cropname   := 'RIGHT';
       self.Width := self.Height;
       self.Height := a;
     end
     else
     begin
       skinname := 'trackbarv';
+   //   Fleft.cropname      := 'TOP';
+   //   FRight.cropname   := 'BOTTOM';
       self.Width := self.Height;
       self.Height := a;
     end;
@@ -1221,21 +1242,21 @@ begin
   inherited Create(aowner);
 
 
-  FCenter := TONURCUSTOMCROP.Create;
-  FCenter.cropname := 'CENTER';
-  FRight := TONURCUSTOMCROP.Create;
-  FRight.cropname := 'RIGHT';
-  Fleft := TONURCUSTOMCROP.Create;
-  Fleft.cropname := 'LEFT';
+  FCenter := TONURCUSTOMCROP.Create('CENTER');
+//  FCenter.cropname := 'CENTER';
+  FRight := TONURCUSTOMCROP.Create('RIGHT');
+//  FRight.cropname := 'RIGHT';
+  Fleft := TONURCUSTOMCROP.Create('LEFT');
+//  Fleft.cropname := 'LEFT';
 
-  FNormal := TONURCUSTOMCROP.Create;
-  FNormal.cropname := 'NORMAL';
-  FEnter := TONURCUSTOMCROP.Create;
-  FEnter.cropname := 'HOVER';
-  FPress := TONURCUSTOMCROP.Create;
-  FPress.cropname := 'PRESSED';
-  Fdisable := TONURCUSTOMCROP.Create;
-  Fdisable.cropname := 'DISABLE';
+  FNormal := TONURCUSTOMCROP.Create('NORMAL');
+//  FNormal.cropname := 'NORMAL';
+  FEnter := TONURCUSTOMCROP.Create('HOVER');
+//  FEnter.cropname := 'HOVER';
+  FPress := TONURCUSTOMCROP.Create('PRESSED');
+//  FPress.cropname := 'PRESSED';
+  Fdisable := TONURCUSTOMCROP.Create('DISABLE');
+//  Fdisable.cropname := 'DISABLE';
 
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
@@ -1268,9 +1289,9 @@ destructor TONURTrackBar.Destroy;
 var
   i:byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
+{  for i:=0 to Customcroplist.Count-1 do
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-
+ }
   Customcroplist.Clear;
   inherited Destroy;
 end;
@@ -1310,15 +1331,15 @@ procedure TONURTrackBar.resizing;
 begin
   if Kind = oHorizontal then
   begin
-     FLeft.Targetrect   := Rect(0, 0, FLeft.FSRight - Fleft.FSLeft, self.ClientHeight);
-     FRight.Targetrect  := Rect(self.ClientWidth - (FRight.FSRight - FRight.FSLeft), 0, self.ClientWidth, self.ClientHeight);
-     FCenter.Targetrect := Rect((Fleft.FSRight - Fleft.FSLeft), 0, self.ClientWidth - (FRight.FSRight - FRight.FSLeft), self.ClientHeight);
+     FLeft.Targetrect   := Rect(0, 0, Fleft.Croprect.Width{FLeft.FSRight - Fleft.FSLeft}, self.ClientHeight);
+     FRight.Targetrect  := Rect(self.ClientWidth - FRight.Croprect.Width{(FRight.FSRight - FRight.FSLeft)}, 0, self.ClientWidth, self.ClientHeight);
+     FCenter.Targetrect := Rect(Fleft.Croprect.Width{(Fleft.FSRight - Fleft.FSLeft)}, 0, self.ClientWidth - FRight.Croprect.Width {(FRight.FSRight - FRight.FSLeft)}, self.ClientHeight);
   end
   else
   begin
-     FLeft.Targetrect   :=  Rect(0, 0, self.ClientWidth, FLeft.FSBottom - Fleft.FSTop);
-     FRight.Targetrect  :=  Rect(0, self.ClientHeight - (FRight.FSBottom - FRight.FSTop), self.ClientWidth, self.ClientHeight);
-     FCenter.Targetrect :=  Rect(0, (Fleft.FSBottom - Fleft.FSTop), self.ClientWidth, self.ClientHeight - (FRight.FSBottom - FRight.FSTop));
+     FLeft.Targetrect   :=  Rect(0, 0, self.ClientWidth,Fleft.Croprect.Height);// FLeft.FSBottom - Fleft.FSTop);
+     FRight.Targetrect  :=  Rect(0, self.ClientHeight - FRight.Croprect.Height {(FRight.FSBottom - FRight.FSTop)}, self.ClientWidth, self.ClientHeight);
+     FCenter.Targetrect :=  Rect(0, Fleft.Croprect.Height{(Fleft.FSBottom - Fleft.FSTop)}, self.ClientWidth, self.ClientHeight - FRight.Croprect.Height{(FRight.FSBottom - FRight.FSTop)});
    end;
 end;
 
@@ -1396,9 +1417,9 @@ begin
     FIsPressed := True;
     FState := obspressed;
     if Kind = oHorizontal then
-      FPosition := CheckRange(X - ((FPress.FSright - FPress.FSLeft) div 2))
+      FPosition := CheckRange(X - (FPress.Croprect.Width{(FPress.FSright - FPress.FSLeft)} div 2))
     else
-      FPosition := CheckRange(Y - ((FPress.FSBottom - FPress.FSTop) div 2));
+      FPosition := CheckRange(Y - (FPress.Croprect.Height{(FPress.FSBottom - FPress.FSTop)} div 2));
 
     Changed;
     invalidate;
@@ -1435,9 +1456,9 @@ begin
   if FIsPressed then
   begin
     if Kind = oHorizontal then
-      MAXi := X - ((FPress.FSright - FPress.FSLeft) div 2)
+      MAXi := X - (FPress.Croprect.Width{(FPress.FSright - FPress.FSLeft)} div 2)
     else
-      MAXi := Y - ((FPress.FSBottom - FPress.FSTop) div 2);
+      MAXi := Y - (FPress.Croprect.Height{(FPress.FSBottom - FPress.FSTop)} div 2);
 
     FPosition := CheckRange(MAXi);
     FState := obspressed;
@@ -1502,16 +1523,22 @@ begin
     if Kind = oHorizontal then
     begin
       skinname := 'progressbarh';
+    //  FTop.cropname      := 'LEFT';
+    //  FBottom.cropname   := 'RIGHT';
+
       self.Width := self.Height;
       self.Height := a;
     end
     else
     begin
       skinname := 'progressbarv';
+    //  FTop.cropname      := 'TOP';
+    //  FBottom.cropname   := 'BOTTOM';
       self.Width := self.Height;
       self.Height := a;
     end;
   end;
+
 
   if skindata<>nil then
   Skindata := self.Skindata;
@@ -1531,19 +1558,19 @@ begin
   fposition := 10;
   kind := oHorizontal;
 
-  Fleft   := TONURCUSTOMCROP.Create;
-  Fleft.cropname   := 'LEFT';
-  FCenter := TONURCUSTOMCROP.Create;
-  FCenter.cropname := 'CENTER';
-  FRight  := TONURCUSTOMCROP.Create;
-  FRight.cropname  := 'RIGHT';
-  Ftop    := TONURCUSTOMCROP.Create;
-  Ftop.cropname    := 'TOP';
-  fbottom := TONURCUSTOMCROP.Create;
-  fbottom.cropname := 'BOTTOM';
+  Fleft   := TONURCUSTOMCROP.Create('LEFT');
+//  Fleft.cropname   := 'LEFT';
+  FCenter := TONURCUSTOMCROP.Create('CENTER');
+//  FCenter.cropname := 'CENTER';
+  FRight  := TONURCUSTOMCROP.Create('RIGHT');
+//  FRight.cropname  := 'RIGHT';
+  Ftop    := TONURCUSTOMCROP.Create('TOP');
+//  Ftop.cropname    := 'TOP';
+  fbottom := TONURCUSTOMCROP.Create('BOTTOM');
+//  fbottom.cropname := 'BOTTOM';
 
-  fbar := TONURCUSTOMCROP.Create;
-  fbar.cropname := 'BAR';
+  fbar := TONURCUSTOMCROP.Create('BAR');
+//  fbar.cropname := 'BAR';
 
   Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
@@ -1560,9 +1587,9 @@ destructor TONURProgressBar.Destroy;
 var
   i:byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
+{  for i:=0 to Customcroplist.Count-1 do
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-
+}
   Customcroplist.Clear;
 
   inherited Destroy;
@@ -1585,18 +1612,23 @@ procedure TONURProgressBar.Resizing;
 begin
   if self.Kind = oHorizontal then   //yatay
   begin
-   Fleft.Targetrect   := Rect(0, 0, Fleft.Width,self.ClientHeight);
-   FRight.Targetrect  := Rect(self.ClientWidth - FRight.Width, 0, self.ClientWidth, self.ClientHeight);
-   ftop.Targetrect    := Rect(Fleft.Width,0,self.ClientWidth- FRight.Width ,ftop.Height);
-   fbottom.Targetrect := Rect(Fleft.Width,self.ClientHeight- FRight.Height,self.ClientWidth - FRight.Width,self.ClientHeight);
-   FCenter.Targetrect := Rect(Fleft.Width, ftop.Height, self.ClientWidth - FRight.Width, self.ClientHeight-fbottom.Height);
+   Fleft.Targetrect   := Rect(0, 0, Fleft.Croprect.Width,self.ClientHeight);
+   FRight.Targetrect  := Rect(self.ClientWidth - FRight.Croprect.Width, 0, self.ClientWidth, self.ClientHeight);
+
+   ftop.Targetrect    := Rect(Fleft.Croprect.Width,0,self.ClientWidth- FRight.Croprect.Width ,ftop.Croprect.Height);
+
+   fbottom.Targetrect := Rect(Fleft.Croprect.Width,self.ClientHeight- fbottom.Croprect.Height,self.ClientWidth - FRight.Croprect.Width,self.ClientHeight);
+
+   FCenter.Targetrect := Rect(Fleft.Croprect.Width, ftop.Croprect.Height, self.ClientWidth - FRight.Croprect.Width, self.ClientHeight-fbottom.Croprect.Height);
   end else
   begin                              //dikey
-   Ftop.Targetrect    := Rect(0,0,self.ClientWidth, Ftop.Height);
-   fbottom.Targetrect := Rect(0,self.ClientHeight-fbottom.Height,self.ClientWidth,self.ClientHeight);
-   Fleft.Targetrect   := Rect(0, Ftop.Height, Fleft.Width, self.ClientHeight-fbottom.Height);
-   FRight.Targetrect  := Rect(self.ClientWidth-FRight.Width,Ftop.Height,self.ClientWidth,self.ClientHeight-fbottom.Height);
-   FCenter.Targetrect := Rect(Fleft.Width,ftop.Height,self.ClientWidth-FRight.Width,self.ClientHeight-fbottom.Height);
+   Ftop.Targetrect    := Rect(0,0,self.ClientWidth, Ftop.Croprect.Height);
+   fbottom.Targetrect := Rect(0,self.ClientHeight-fbottom.Croprect.Height,self.ClientWidth,self.ClientHeight);
+
+   Fleft.Targetrect   := Rect(0, Ftop.Croprect.Height, Fleft.Croprect.Width, self.ClientHeight-fbottom.Croprect.Height);
+
+   FRight.Targetrect  := Rect(self.ClientWidth-FRight.Croprect.Width,Ftop.Croprect.Height,self.ClientWidth,self.ClientHeight-fbottom.Croprect.Height);
+   FCenter.Targetrect := Rect(Fleft.Croprect.Width,ftop.Croprect.Height,self.ClientWidth-FRight.Croprect.Width,self.ClientHeight-fbottom.Croprect.Height);
   end;
 end;
 
@@ -1617,21 +1649,24 @@ begin
   begin
 
     if self.Kind = oHorizontal then
-     DBAR := Rect(0,0 , (fposition * self.ClientWidth) div fmax, self.ClientHeight)
+     DBAR := Rect(0, self.ClientHeight-FCenter.Croprect.Height ,((fposition * self.ClientWidth) div fmax), FCenter.Croprect.Height)//self.ClientHeight)
     else
-     DBAR := Rect(0, 0 ,self.ClientWidth, (fposition * self.ClientHeight) div fmax);
+     DBAR := Rect(self.ClientWidth-FCenter.Croprect.Width, 0 ,FCenter.Croprect.Width, (fposition * self.ClientHeight) div fmax);
 
      // DRAW CENTER
     // if self.Kind = oHorizontal then
     // DrawPartstrechRegion(FCenter.Croprect, Self, self.ClientWidth-(Fleft.Width+FRight.Width), self.ClientHeight -(Ftop.Height + Fbottom.Height), FCenter.Targetrect, alpha)
     // else
-     DrawPartstrechRegion(FCenter.Croprect, Self,FCenter.Targetrect.Width,FCenter.Targetrect.Height, FCenter.Targetrect, alpha);
 
-      DrawPartnormal(Fbar.Croprect, self, DBAR, alpha); //bar
+
       DrawPartnormal(Ftop.Croprect,self,ftop.Targetrect,alpha);
       DrawPartnormal(fbottom.Croprect,self,fbottom.Targetrect,alpha);
       DrawPartnormal(Fleft.Croprect, Self,Fleft.Targetrect, alpha);
       DrawPartnormal(FRight.Croprect, Self,FRight.Targetrect, alpha);
+
+      DrawPartstrechRegion(FCenter.Croprect, Self,FCenter.Targetrect.Width,FCenter.Targetrect.Height, FCenter.Targetrect, alpha);
+
+      DrawPartnormal(Fbar.Croprect, self, DBAR, alpha); //bar
   end
   else
   begin
@@ -1719,16 +1754,16 @@ begin
   inherited Create(AOwner);
   skinname      := 'knob';
 
-  FCenter := TONURCUSTOMCROP.Create;
-  FCenter.cropname := 'CENTER';
-  Fbuttonnormal:=TONURCUSTOMCROP.Create;
-  Fbuttonnormal.cropname := 'NORMAL';
-  Fbuttondown:=TONURCUSTOMCROP.Create;
-  Fbuttondown.cropname := 'PRESSED';
-  Fbuttonhover:=TONURCUSTOMCROP.Create;
-  Fbuttonhover.cropname := 'HOVER';
-  Fbuttondisable:=TONURCUSTOMCROP.Create;
-  Fbuttondisable.cropname := 'DISABLE';
+  FCenter := TONURCUSTOMCROP.Create('CENTER');
+//  FCenter.cropname := 'CENTER';
+  Fbuttonnormal:=TONURCUSTOMCROP.Create('NORMAL');
+//  Fbuttonnormal.cropname := 'NORMAL';
+  Fbuttondown:=TONURCUSTOMCROP.Create('PRESSED');
+//  Fbuttondown.cropname := 'PRESSED';
+  Fbuttonhover:=TONURCUSTOMCROP.Create('HOVER');
+//  Fbuttonhover.cropname := 'HOVER';
+  Fbuttondisable:=TONURCUSTOMCROP.Create('DISABLE');
+//  Fbuttondisable.cropname := 'DISABLE';
 
   Customcroplist.Add(FCenter);
   Customcroplist.Add(Fbuttonnormal);
@@ -1757,9 +1792,9 @@ destructor TONURKnob.Destroy;
 var
   i:byte;
 begin
-  for i:=0 to Customcroplist.Count-1 do
+{  for i:=0 to Customcroplist.Count-1 do
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-
+}
   Customcroplist.Clear;
   inherited Destroy;
 end;

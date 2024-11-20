@@ -14,14 +14,20 @@ type
 
   { Toncaret }
 
-  Toncaret = class(TONURPersistent)
+  { TOnurCaret }
+
+  TOnurCaret = class(TONURPersistent)
   private
     parent: TONURCustomEdit;
     FHeight, FWidth: integer;
     fvisibled: boolean;
     fblinkcolor: Tcolor;
     fblinktime: integer;
+    factived: boolean;
+    blinktimer: Ttimer;
+    function GetActive: boolean;
     function Getblinktime: integer;
+    procedure SetActive(AValue: boolean);
     procedure Setblinktime(const Value: integer);
     function Getvisible: boolean;
     procedure Setvisible(const Value: boolean);
@@ -29,12 +35,11 @@ type
     function Paint: boolean;
   public
     CaretPos: TPoint;
-    caretvisible: boolean;
-    blinktimer: Ttimer;
     constructor Create(aowner: TPersistent);
     destructor Destroy; override;
   published
     property Visible: boolean read Getvisible write Setvisible;
+    property Active : boolean read GetActive write SetActive;
     property Blinktime: integer read Getblinktime write Setblinktime;
     property Height: integer read FHeight write FHeight;
     property Width: integer read FWidth write FWidth;
@@ -46,8 +51,175 @@ type
 
 
   { TONURCustomEdit }
+  TONURCustomEdit= class(TONURCustomControl)
+  private
+    FPasswordChar : char;
+    FNumbersOnly  : boolean;
+    Fcharcase: ToCharCase;
+    FEchoMode: TOEchoMode;
+    FLines: TStrings;
+    FOnChange: TNotifyEvent;
+    FReadOnly: boolean;
+    FCarets: TOnurCaret;
+    FDrawOffsetX: Integer;
+    fMultiLine: boolean;
+    FSelecting: Boolean;
+    FSelectingStartX: Point;//Integer;
+    FSelectingEndX: Point;//Integer;
 
-  TONURCustomEdit = class(TONURCustomControl)
+    FHintText: String;
+    FHintTextColor: TColor;
+    FHintTextStyle: TFontStyles;
+
+
+    function GetCaretPos: TPoint;
+    function getcharcase: ToCharCase;
+    function getcurrentline: string;
+    function getechomode: toechomode;
+    function GetMultiLine: boolean;
+    function getnumberonly: boolean;
+    function GetPasswordChar: char;
+    function GetReadOnly: boolean;
+  //  function GetSelStartX: integer;
+    function GetText: string;
+    procedure LinesChanged(Sender: TObject);
+    procedure SetCaretPost(AValue: TPoint);
+    procedure setcharcase(const Value: tocharcase);
+    procedure setcurrentline(astr: string);
+    procedure setechomode(const Value: TOEchoMode);
+    procedure SetLines(AValue: TStrings);
+    procedure SetMultiLine(AValue: boolean);
+    procedure setnumberonly(const Value: boolean);
+    procedure SetPasswordChar(AValue: char);
+    procedure SetReadOnly(AValue: boolean);
+//    procedure SetSelStartX(AValue: integer);
+
+  protected
+  type
+    {$SCOPEDENUMS ON}
+    EPaintCache = (TEXT, CARET_VISIBLE, SEL_START, SEL_END);
+    {$SCOPEDENUMS OFF}
+  public
+    FTextWidthCache: array[EPaintCache] of record
+      Str: String;
+      Width: Integer;
+    end;
+
+
+
+    {
+    FCaretTimer: TTimer;
+    FCaretX: Integer;
+    FCaretFlash: Integer;
+
+    }
+
+
+
+    procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
+    procedure WMKillFocus(var Message: TLMKillFocus); message LM_KILLFOCUS;
+    procedure ClearCache;
+
+    procedure CalculatePreferredSize(var PreferredWidth, PreferredHeight: integer; WithThemeSpace: Boolean); override;
+    function GetTextWidthCache(const Cache: EPaintCache; const Str: String): Integer;
+
+    procedure SelectAll;
+    procedure ClearSelection;
+    function GetSelectionLen: Integer;
+    function HasSelection: Boolean;
+    function CharIndexAtXY(X, Y: Integer): Integer;
+    function CalculateHeight: Integer;
+
+    function GetAvailableWidth: Integer;
+    function GetSelectedText: String;
+
+    procedure AddCharAtCursor(C: TUtf8Char);
+    procedure AddStringAtCursor(Str: String; ADeleteSelection: Boolean = False);
+    procedure DeleteCharAtCursor;
+    procedure DeleteSelection;
+
+    procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
+
+    procedure ParentFontChanged; override;
+
+    procedure FontChanged(Sender: TObject); override;
+    procedure TextChanged; override;
+    procedure Paint; override;
+
+    procedure KeyDown(var Key: Word; Shift: TShiftState); override;
+    procedure UTF8KeyPress(var UTF8Key: TUTF8Char); override;
+
+    procedure SetCaretPos(Pos: Integer);
+
+
+  protected
+    procedure DoEnter; override;
+    procedure DoExit; override;
+    procedure DoChange; virtual;
+    procedure SetText(AValue: string);virtual;
+    property CaretPos: TPoint read GetCaretPos write SetCaretPost;
+//    property Lines: TStrings read FLines write SetLines;
+    property MultiLine: boolean read GetMultiLine write SetMultiLine default False;
+  property Lines: TStrings read FLines write SetLines;
+  // property Selstart: integer read GetSelStartX write SetSelStartX;
+
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+    procedure Clear;
+
+
+
+   published
+    property Alpha;
+    property Text: string read GetText write SetText stored False;
+    property PasswordChar: char read GetPasswordChar write SetPasswordChar default #0;
+    property ReadOnly: boolean read GetReadOnly write SetReadOnly default False;
+    property NumberOnly :boolean read getnumberonly write setnumberonly;
+    property CharCase: ToCharCase read GetCharCase write SetCharCase;
+    property EchoMode : TOEchoMode read getechomode write setechomode;
+    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property Skindata;
+    property Action;
+    property Align;
+    property Anchors;
+    property AutoSize;
+    property BidiMode;
+    property Constraints;
+    property DragCursor;
+    property DragKind;
+    property DragMode;
+    property Enabled;
+    property Font;
+    property TabStop;
+    property TabOrder;
+    property ParentBidiMode;
+    property OnChangeBounds;
+    property OnClick;
+    property OnContextPopup;
+    property OnDragDrop;
+    property OnDragOver;
+    property OnEndDrag;
+    property OnMouseDown;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
+    property OnResize;
+    property OnStartDrag;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
+    property ShowHint;
+    property Visible;
+  end;
+{
+  TONURCustomEdit8 = class(TONURCustomControl)
   private
     fSelStart: TPoint;
     fSelLength: integer;
@@ -63,7 +235,7 @@ type
     FLines: TStrings;
     FOnChange: TNotifyEvent;
     FReadOnly: boolean;
-    FCarets: Toncaret;
+    FCarets: TOnurCaret;
 
     function Caretttopos(leftch: integer): integer;
     procedure DrawText;
@@ -181,7 +353,7 @@ type
 
   end;
 
-
+}
   { TONUREdit }
 
   TONUREdit = class(TONURCustomEdit)
@@ -201,15 +373,9 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure paint; override;
-
   published
-    property LeftTextMargin;
-    property RightTextMargin;
     property Alpha;
     property Text;
-    property Selstart;
-    //    property SelEnd;
-    //    property SelText;
     property PasswordChar;
     property OnChange;
     property Action;
@@ -276,7 +442,6 @@ type
     property Alpha;
     property Lines;
     property Text;
-    property Selstart;
     property PasswordChar;
     property OnChange;
     property Action;
@@ -379,8 +544,7 @@ type
     property Buttonwidth: integer read Fbuttonwidth write setbuttonwidth;
     property Buttonheight: integer read Fbuttonheight write setbuttonheight;
     property Text;
-    property Selstart;
-    property PasswordChar;
+//    property PasswordChar;
     property OnChange;
     property Action;
     property Align;
@@ -429,7 +593,7 @@ procedure Register;
 
 implementation
 
-uses  BGRAPath, LazUTF8, onurlist, Clipbrd, StrUtils;
+uses  BGRAPath, LazUTF8,Clipbrd;//, onurlist,  StrUtils;
 
 procedure Register;
 begin
@@ -438,12 +602,31 @@ end;
 
 { Toncaret }
 
-function Toncaret.Getblinktime: integer;
+function TOnurCaret.Getblinktime: integer;
 begin
   Result := fblinktime;
 end;
 
-procedure toncaret.setblinktime(const Value: integer);
+function TOnurCaret.GetActive: boolean;
+begin
+ result:=factived;
+end;
+
+procedure TOnurCaret.SetActive(AValue: boolean);
+begin
+   if AValue <> factived then
+    factived := AValue;
+
+   blinktimer.Enabled := AValue;
+
+  if AValue = False then
+  begin
+    fvisibled := False;
+    paint;
+  end;
+end;
+
+procedure TOnurCaret.Setblinktime(const Value: integer);
 begin
   if (Value <> fblinktime) and (Value > 10) then
   begin
@@ -452,39 +635,32 @@ begin
   end;
 end;
 
-function toncaret.getvisible: boolean;
+function TOnurCaret.Getvisible: boolean;
 begin
   Result := fvisibled;
 end;
 
-procedure toncaret.setvisible(const Value: boolean);
+procedure TOnurCaret.Setvisible(const Value: boolean);
 begin
   if Value <> fvisibled then
     fvisibled := Value;
 
-  blinktimer.Enabled := Value;
-
-  if Value = False then
-  begin
-    caretvisible := False;
-    paint;
-  end;
 end;
 
-procedure toncaret.ontimerblink(Sender: TObject);
+procedure TOnurCaret.ontimerblink(Sender: TObject);
 begin
-  caretvisible := not caretvisible;
+  fvisibled := not fvisibled;
   paint;
 end;
 
-function toncaret.paint: boolean;
+function TOnurCaret.Paint: boolean;
 begin
   if parent is TONURCustomEdit then
     TONURCustomEdit(parent).Invalidate;
   Result := True;
 end;
 
-constructor toncaret.Create(aowner: TPersistent);
+constructor TOnurCaret.Create(aowner: TPersistent);
 begin
   inherited Create;
   parent              := TONURCustomEdit(aowner);
@@ -498,10 +674,10 @@ begin
   blinktimer.Enabled  := False;
   CaretPos.X          := 0;
   CaretPos.Y          := 0;
-  caretvisible        := False;
+  factived            := False;
 end;
 
-destructor toncaret.Destroy;
+destructor TOnurCaret.Destroy;
 begin
   FreeAndNil(blinktimer);
   inherited Destroy;
@@ -517,6 +693,11 @@ end;
 
 { TONURCustomEdit }
 
+function GetFontSize(Control: TWinControl; IncAmount: Integer): Integer;
+begin
+  Result := Round(Abs(GetFontData(Control.Font.Handle).Height) * 72 / Control.Font.PixelsPerInch) + IncAmount;
+end;
+
 function VisibleText(const aVisibleText: TCaption; const APasswordChar: char): TCaption;
 begin
   if aPasswordChar = #0 then
@@ -531,28 +712,36 @@ begin
   Invalidate;
 end;
 
-constructor TONURCustomEdit.Create(aowner: TComponent);
+constructor TONURCustomEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   TabStop  := True;
   Cursor   := crIBeam;
   ControlStyle := ControlStyle - [csAcceptsControls] +
-    [csParentBackground, csClickEvents, csCaptureMouse, csDoubleClicks,
+    [ csClickEvents, csCaptureMouse, csDoubleClicks,
     csRequiresKeyboardInput];
 
   FLines := TStringList.Create;
-  FVisibleTextStart := Point(1, 0);
+//  FVisibleTextStart := Point(1, 0);
   FPasswordChar := #0;
-  FCarets := Toncaret.Create(self);
+  FCarets := TOnurCaret.Create(self);
+  FCarets.Color:=clred;
   Self.Height := 30;
   Self.Width := 80;
   resim.SetSize(Width, Height);
   Captionvisible := False;
+  FSelecting:=false;
   if self is TONURMemo then
   begin
     MultiLine := True;
     TStringList(FLines).OnChange := @LinesChanged;
   end;
+  doexit;
+
+end;
+
+procedure TONURCustomEdit.Clear;
+begin
 
 end;
 
@@ -564,114 +753,116 @@ begin
 end;
 
 
-procedure TONURCustomEdit.paint;
+procedure TONURCustomEdit.Paint;
 var
   //  gradienrect1, gradienrect2, Selrect,
   caretrect: Trect;
-  //  textx, Texty, i, a: integer;
-  lControlText, lTmpText: string;
-  lCaretPixelPos: integer;
-  lTextBottomSpacing, lTextTopSpacing, lCaptionHeight, lLineHeight, lLineTop: integer;
-  lSize: TSize;
+  lTextLeftSpacing,lTextRightSpacing,
+  lTextBottomSpacing, lTextTopSpacing,lTextCenter:integer;
+  lTextCenterSp: integer;
+
+  TextWidth: Integer;
+  X1, X2: Integer;
+  DrawCaretX: Integer;
+  NewText:string;
 begin
 
   if csDesigning in ComponentState then
     Exit;
   if not Visible then Exit;
 
-  if self is TONURSpinEdit then
-  begin
-    lTextTopSpacing := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[1]).Height;// self).fTOP.Height{fsBottom - TONURSpinEdit(self).OTOP.fsTop};
-    lTextBottomSpacing := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[4]).Height;//.fBOTTOM.Height;
-    //fsBottom - TONURSpinEdit(self).OBOTTOM.fsTop; // 3;//GetMeasures(TCDEDIT_BOTTOM_TEXT_SPACING);
-  end
-  else
-  if self is TONUREdit then
-  begin
-    lTextTopSpacing := TONURCustomCrop(TONUREdit(self).Customcroplist[1]).Height;
-    // fTOP.Height;  //fsBottom - TONUREdit(self).OTOP.fsTop; //3;//GetMeasures(TCDEDIT_TOP_TEXT_SPACING);
-    lTextBottomSpacing :=TONURCustomCrop(TONUREdit(self).Customcroplist[4]).Height;
-    // .fBOTTOM.Height; //fsBottom - TONUREdit(self).OBOTTOM.fsTop; // 3;//GetMeasures(TCDEDIT_BOTTOM_TEXT_SPACING);
-  end
-  else
-  if self is TONURMemo then
-  begin
-    lTextTopSpacing := TONURCustomCrop(TONURMemo(self).Customcroplist[1]).Height;
-    //fTOP.Height;//fsBottom - TONURMemo(self).OTOP.fsTop;
-    lTextBottomSpacing := TONURCustomCrop(TONURMemo(self).Customcroplist[1]).Height;
-    //fBOTTOM.Height;//fsBottom - TONURMemo(self).OBOTTOM.fsTop;
-  end
-  else
-  if self is TONURComboBox then
-  begin
-    lTextTopSpacing := TONURCustomCrop(TONURComboBox(self).Customcroplist[1]).Height;
-    // 1 =ftop crop OTOP.Height;
-    lTextBottomSpacing := TONURCustomCrop(TONURComboBox(self).Customcroplist[4]).Height;
-    //4 fbottom crop OBOTTOM.Height;
-  end;
+  inherited Paint;
 
-  lLineHeight := self.canvas.TextHeight('ŹÇ');
-  lSize := Size(self.Width, self.Height);
-  lLineHeight := Min(lSize.cy - lTextBottomSpacing, lLineHeight);
-  lLineTop := lTextTopSpacing + Fcarets.CaretPos.Y * lLineHeight;
+  lTextTopSpacing    := TONURCustomCrop(self.Customcroplist[1]).Croprect.Height;
+  lTextBottomSpacing := TONURCustomCrop(self.Customcroplist[4]).Croprect.Height;
+  lTextLeftSpacing   := TONURCustomCrop(self.Customcroplist[6]).Croprect.Width;
+  lTextRightSpacing  := TONURCustomCrop(self.Customcroplist[7]).Croprect.Width;
+//  lTextCenter        := TONURCustomCrop(self.Customcroplist[8]).Croprect.Height;
 
-
-
-
-  if Lines.Count = 0 then lControlText := ''
+ // WriteLn(lTextTopSpacing,'---',lTextBottomSpacing);
+ { if Lines.Count = 0 then lControlText := ''
   else
     lControlText := Lines.Strings[Fcarets.CaretPos.Y];
+}
 
-  lTmpText := UTF8Copy(lControlText, fVisibleTextStart.X, Fcarets.CaretPos.X -
-    fVisibleTextStart.X + 1);
-  lTmpText := VisibleText(lTmpText, fPasswordChar);
 
-  if Text = '' then
+ if (Text <> '') then
   begin
-    if self is TONURSpinEdit then
-      lCaretPixelPos := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[6]).Width + fLeftTextMargin
+    NewText:=Text;
+
+    if Fcharcase=ecUppercase then
+     NewText:=UTF8UpperString(NewText)
     else
-    if self is TONUREdit then
-      lCaretPixelPos := TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width + fLeftTextMargin
-    else
-    if self is TONURMemo then
-      lCaretPixelPos := TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width + fLeftTextMargin
-    else
-    if self is TONURComboBox then
-      lCaretPixelPos := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width +
-        fLeftTextMargin;
+     NewText:=UTF8LowerCase(NewText);
+
+    NewText:=VisibleText(NewText,FPasswordChar);
 
 
-    lCaptionHeight := lLineHeight;
-  end
-  else
-  begin
-    lCaptionHeight := self.canvas.TextHeight(self.Text);
 
-    if self is TONURSpinEdit then
-      lCaretPixelPos := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[6]).Width +
-        (self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
-    else
-    if self is TONUREdit then
-      lCaretPixelPos := TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width +
-        (self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
-    else
-    if self is TONURMemo then
-      lCaretPixelPos := TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width +
-        (self.canvas.TextWidth(lTmpText) + fLeftTextMargin)
-    else
-    if self is TONURComboBox then
-      lCaretPixelPos := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width +
-        (self.canvas.TextWidth(lTmpText) + fLeftTextMargin);
+ //   WriteLn(Canvas.TextWidth(NewText),'  ',Canvas.TextFitInfo(NewText,ClientWidth ),'  ',GetTextWidthCache(EPaintCache.TEXT, Copy(NewText, 1, FCarets.CaretPos.x)));
+  //  TextWidth := Canvas.TextWidth(NewText)+lTextRightSpacing;//
+
+    TextWidth := GetTextWidthCache(EPaintCache.TEXT, Copy(NewText, 1, FCarets.CaretPos.x))+lTextRightSpacing;
+
+  //  if (not Fcarets.Visible) then
+  //  begin
+      if (TextWidth >ClientWidth-(lTextLeftSpacing+lTextRightSpacing)) then //-(lTextRightSpacing)) then
+        FDrawOffsetX := -((TextWidth) - GetAvailableWidth())
+      else
+        FDrawOffsetX := lTextLeftSpacing;
+ //   end;
+
+
+
+    // Selection
+    if HasSelection() then
+    begin
+      if (FSelectingStartX.x > FSelectingEndX.x) then
+      begin
+        X1 := FSelectingEndX.x;
+        X2 := FSelectingStartX.x;
+      end else
+      if (FSelectingStartX.x < FSelectingEndX.x) then
+      begin
+        X1 := FSelectingStartX.x;
+        X2 := FSelectingEndX.x;
+      end else
+      begin
+        X1 := FSelectingStartX.x;
+        X2 := FSelectingStartX.x + 1;
+      end;
+
+      X1 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_START, Copy(NewText, 1, FSelectingStartX.x));
+      X2 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_END,   Copy(NewText, 1, FSelectingEndX.x));
+
+      Canvas.Brush.Color := clblue;//FColorSelection;
+      Canvas.FillRect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing);
+    end;
+
+    Canvas.TextRect(Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, lTextTopSpacing, newText);
+  //Canvas.TextRect(Rect(lTextLeftSpacing,lTextCenter-lTextCenterSp, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, 1, newText);
+
+//  canvas.TextRect(ClientRect, FDrawOffsetX, lTextTopSpacing, newText);
   end;
 
 
-  inherited Paint;
-  DrawText;
-  caretrect := Rect(lCaretPixelPos, lLineTop, lCaretPixelPos +
-    FCarets.Width, lLineTop + lCaptionHeight);
 
-  if Fcarets.Caretvisible then
+  //DrawText;
+{  caretrect := Rect(lCaretPixelPos, lLineTop, lCaretPixelPos +
+    FCarets.Width, lLineTop + lCaptionHeight);
+ }
+  if (Text = '') then
+    DrawCaretX := lTextLeftSpacing//TONURCustomCrop(self.Customcroplist[6]).Width
+  else
+   DrawCaretX := (FDrawOffsetX + (TextWidth-lTextLeftSpacing));// - 1;
+
+
+
+ caretrect:=Rect( DrawCaretX, lTextTopSpacing, DrawCaretX+FCarets.Width, ClientHeight-lTextBottomSpacing );
+
+
+
+  if Fcarets.visible then
   begin
     canvas.Brush.Color := FCarets.Color;     //color or image
     canvas.FillRect(caretrect);
@@ -681,170 +872,22 @@ end;
 
 
 
-procedure tonURcustomedit.drawtext;
-//  ASize: TSize; AState: TCDControlState; AStateEx: TCDEditStateEx);
-var
-  lVisibleText, lControlText: TCaption;
-  lSelLeftPos, lSelLeftPixelPos, lSelLength, lSelRightPos: integer;
-  lTextWidth, lLineHeight, lLineTop: integer;
-  lControlTextLen: PtrInt;
-  lTextLeftSpacing, lTextTopSpacing, lTextRightSpacing, lTextBottomSpacing: integer;
-  lTextColor: TColor;
-  i, lVisibleLinesCount: integer;
-  //cmp: TONURCustomControl;
-  ASize: TSize;
-begin
-
-  lTextColor := self.Font.Color;
-  ASize := Size(self.Width, Self.Height);
-
-
- // if self is TONURSpinEdit then
- //   cmp := TONURSpinEdit(self);
-
-  if self is TONURSpinEdit then
-  begin
-    lTextLeftSpacing   := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[6]).Width;
-    lTextRightSpacing  := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[8]).Width;
-    lTextTopSpacing    := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[1]).Height;
-    lTextBottomSpacing := TONURCustomCrop(TONURSpinEdit(self).Customcroplist[4]).Height;
-  end
-  else
-  if self is TONUREdit then
-  begin
-    lTextLeftSpacing   := TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width;
-    lTextRightSpacing  := TONURCustomCrop(TONUREdit(self).Customcroplist[8]).Width;
-    lTextTopSpacing    := TONURCustomCrop(TONUREdit(self).Customcroplist[1]).Height;
-    lTextBottomSpacing := TONURCustomCrop(TONUREdit(self).Customcroplist[4]).Height;
-
-  end
-  else
-  if self is TONURMemo then
-  begin
-    lTextLeftSpacing   := TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width;
-    lTextRightSpacing  := TONURCustomCrop(TONURMemo(self).Customcroplist[8]).Width;
-    lTextTopSpacing    := TONURCustomCrop(TONURMemo(self).Customcroplist[1]).Height;
-    lTextBottomSpacing := TONURCustomCrop(TONURMemo(self).Customcroplist[4]).Height;
-
-  end
-  else
-  if self is TONURcombobox then
-  begin
-    lTextLeftSpacing   := TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width;
-    lTextRightSpacing  := TONURCustomCrop(TONURcombobox(self).Customcroplist[8]).Width;
-    lTextTopSpacing    := TONURCustomCrop(TONURcombobox(self).Customcroplist[1]).Height;
-    lTextBottomSpacing := TONURCustomCrop(TONURcombobox(self).Customcroplist[4]).Height;
-  end;
-
-
-
-
-  lLineHeight := self.Canvas.TextHeight('ŹÇ');
-  //if self is TONURMemo  then
-
-  lLineHeight := Min(ASize.cy - lTextBottomSpacing, lLineHeight);
-  //else
-  //lLineHeight := Height-(lTextBottomSpacing+lTextTopSpacing);
-
-  // Fill this to be used in other parts
-  fLineHeight := lLineHeight;
-  fFullyVisibleLinesCount := ASize.cy - lTextTopSpacing - lTextBottomSpacing;
-  fFullyVisibleLinesCount := fFullyVisibleLinesCount div lLineHeight;
-  fFullyVisibleLinesCount := Min(fFullyVisibleLinesCount, Lines.Count);
-
-
-
-  // Calculate how many lines to draw
-  if Multiline then
-    lVisibleLinesCount := fFullyVisibleLinesCount + 1
-  else
-    lVisibleLinesCount := 1;
-
-  lVisibleLinesCount := Min(lVisibleLinesCount, Lines.Count);
-
-  // Now draw each line
-  for i := 0 to lVisibleLinesCount - 1 do
-  begin
-    lControlText := Lines.Strings[fVisibleTextStart.Y + i];
-    lControlText := VisibleText(lControlText, fPasswordChar);
-    lControlTextLen := UTF8Length(lControlText);
-    lLineTop := lTextTopSpacing + i * lLineHeight;
-
-    // The text
-    // self.Canvas.Pen.Style := psClear;
-    self.Canvas.Brush.Style := bsClear;
-    // ToDo: Implement multi-line selection
-    if (fSelLength = 0) or (fSelStart.Y <> fVisibleTextStart.Y + i) then
-    begin
-      lVisibleText := UTF8Copy(lControlText, fVisibleTextStart.X, lControlTextLen);
-      self.Canvas.TextOut(lTextLeftSpacing, lLineTop, lVisibleText);
-    end
-    // Text and Selection
-    else
-    begin
-      lSelLeftPos := fSelStart.X;
-      if fSelLength < 0 then lSelLeftPos := lSelLeftPos + fSelLength;
-
-      lSelRightPos := fSelStart.X;
-      if fSelLength > 0 then lSelRightPos := lSelRightPos + fSelLength;
-
-      lSelLength := fSelLength;
-      if lSelLength < 0 then lSelLength := lSelLength * -1;
-
-      // Text left of the selection
-      lVisibleText := UTF8Copy(lControlText, fVisibleTextStart.X,
-        lSelLeftPos - fVisibleTextStart.X + 1);
-      self.Canvas.TextOut(lTextLeftSpacing, lLineTop, lVisibleText);
-      lSelLeftPixelPos := self.Canvas.TextWidth(lVisibleText) + lTextLeftSpacing;
-
-      // The selection background
-      lVisibleText := UTF8Copy(lControlText, lSelLeftPos + 1, lSelLength);
-      lTextWidth := self.Canvas.TextWidth(lVisibleText);
-      self.Canvas.Brush.Color := clblue; //fselectolor; //WIN2000_SELECTION_BACKGROUND;
-      self.Canvas.Brush.Style := bsSolid;
-      self.Canvas.Rectangle(Bounds(lSelLeftPixelPos, lLineTop, lTextWidth, lLineHeight));
-      self.Canvas.Brush.Style := bsClear;
-
-      // The selection text
-      self.Canvas.Font.Color := clWhite;
-      self.Canvas.TextOut(lSelLeftPixelPos, lLineTop, lVisibleText);
-      lSelLeftPixelPos := lSelLeftPixelPos + lTextWidth;
-
-      // Text right of the selection
-      //  self.Canvas.Brush.Color := clWhite;
-      self.Canvas.Brush.Style := bsClear;
-      self.Canvas.Font.Color := lTextColor;
-      lVisibleText := UTF8Copy(lControlText, lSelLeftPos + lSelLength +
-        1, lControlTextLen);
-      self.Canvas.TextOut(lSelLeftPixelPos, lLineTop, lVisibleText);
-
-    end;
-
-  end;
-
-  // And the caret
-  // DrawCaret(ADest, Point(0, 0), ASize, AState, AStateEx);
-
-  // In the end the frame, because it must be on top of everything
-  //  DrawEditFrame(ADest, Point(0, 0), ASize, AState, AStateEx);
-end;
-
-
-function tonURcustomedit.getcharcase: tocharcase;
+function TONURCustomEdit.getcharcase: ToCharCase;
 begin
   Result := FCharCase;
 end;
 
-function tonURcustomedit.getechomode: toechomode;
+function TONURCustomEdit.getechomode: TOEchoMode;
 begin
   Result := fEchoMode;
 end;
 
-procedure tonURcustomedit.setechomode(const Value: toechomode);
+procedure TONURCustomEdit.setechomode(const Value: TOEchoMode);
 begin
   if fEchoMode = Value then
     exit;
   fEchoMode := Value;
+
   case fEchoMode of
     emNormal: PasswordChar := #0;
     emPassWord:
@@ -856,7 +899,7 @@ begin
   Invalidate;
 end;
 
-procedure tonURcustomedit.setcharcase(const Value: tocharcase);
+procedure TONURCustomEdit.setcharcase(const Value: TOCharCase);
 begin
   if FCharCase <> Value then
   begin
@@ -865,14 +908,9 @@ begin
   end;
 end;
 
-procedure tonURcustomedit.setlefttextmargin(avalue: integer);
-begin
-  if FLeftTextMargin = AValue then Exit;
-  FLeftTextMargin := AValue;
-  Invalidate;
-end;
 
-procedure tonURcustomedit.setlines(avalue: TStrings);
+
+procedure TONURCustomEdit.SetLines(AValue: TStrings);
 begin
   if FLines = AValue then Exit;
   FLines.Assign(AValue);
@@ -881,37 +919,32 @@ begin
   Invalidate;
 end;
 
-procedure tonURcustomedit.setmultiline(avalue: boolean);
+procedure TONURCustomEdit.SetMultiLine(AValue: boolean);
 begin
   if FMultiLine = AValue then Exit;
   FMultiLine := AValue;
   Invalidate;
 end;
 
-procedure tonURcustomedit.setnumberonly(const Value: boolean);
+procedure TONURCustomEdit.setnumberonly(const Value: boolean);
 begin
   if FNumbersOnly <> Value then FNumbersOnly := Value;
 end;
 
-procedure tonURcustomedit.setreadonly(avalue: boolean);
+procedure TONURCustomEdit.SetReadOnly(AValue: boolean);
 begin
   if FReadOnly <> avalue then FReadOnly := avalue;
 end;
 
-procedure tonURcustomedit.setrighttextmargin(avalue: integer);
-begin
-  if FRightTextMargin = AValue then Exit;
-  FRightTextMargin := AValue;
-  Invalidate;
-end;
 
-procedure tonURcustomedit.settext(avalue: string);
+
+procedure TONURCustomEdit.SetText(AValue: string);
 begin
   Lines.Text := aValue;
   Invalidate;
 end;
 
-procedure tonURcustomedit.setpasswordchar(avalue: char);
+procedure TONURCustomEdit.SetPasswordChar(AValue: char);
 begin
   if AValue = FPasswordChar then Exit;
   FPasswordChar := AValue;
@@ -919,14 +952,8 @@ begin
 end;
 
 
-procedure tonURcustomedit.realsettext(const Value: tcaption);
-begin
-  inherited RealSetText(Value);
-  Lines.Text := Value;
-  Invalidate;
-end;
 
-procedure tonURcustomedit.dochange;
+procedure TONURCustomEdit.dochange;
 begin
   Changed;
   if Assigned(FOnChange) then FOnChange(Self);
@@ -934,38 +961,29 @@ begin
 end;
 
 
-
-function tonURcustomedit.getlefttextmargin: integer;
+function TONURCustomEdit.GetCaretPos: TPoint;
 begin
-  Result := FLeftTextMargin;
+  Result := FCarets.CaretPos;
 end;
 
-function tonURcustomedit.getcaretpos: tpoint;
-begin
-  Result := FCarets.CaretPos;//FEditState.CaretPos;
-end;
-
-function tonURcustomedit.getmultiline: boolean;
+function TONURCustomEdit.GetMultiLine: boolean;
 begin
   Result := FMultiLine;
 end;
 
-function tonURcustomedit.getreadonly: boolean;
+function TONURCustomEdit.GetReadOnly: boolean;
 begin
   Result := FReadOnly;
 end;
 
-function tonURcustomedit.getnumberonly: boolean;
+function TONURCustomEdit.getnumberonly: boolean;
 begin
   Result := FNumbersOnly;
 end;
 
-function tonURcustomedit.getrighttextmargin: integer;
-begin
-  Result := FRightTextMargin;
-end;
 
-function tonURcustomedit.gettext: string;
+
+function TONURCustomEdit.GetText: string;
 begin
   if Multiline then
     Result := Lines.Text
@@ -975,430 +993,133 @@ begin
     Result := Lines[0];
 end;
 
-function tonURcustomedit.getpasswordchar: char;
+function TONURCustomEdit.GetPasswordChar: char;
 begin
   Result := FPasswordChar;
 end;
 
-procedure tonURcustomedit.dodeleteselection;
-var
-  lSelLeftPos, lSelRightPos, lSelLength: integer;
-  lControlText, lTextLeft, lTextRight: string;
-begin
-  if IsSomethingSelected then
-  begin
-    lSelLeftPos := FSelStart.X;
-    if FSelLength < 0 then lSelLeftPos := lSelLeftPos + FSelLength;
-    lSelRightPos := FSelStart.X;
-    if FSelLength > 0 then lSelRightPos := lSelRightPos + FSelLength;
-    lSelLength := FSelLength;
-    if lSelLength < 0 then lSelLength := lSelLength * -1;
-    lControlText := GetCurrentLine();
-
-    // Text left of the selection
-    lTextLeft := UTF8Copy(lControlText, FVisibleTextStart.X,
-      lSelLeftPos - FVisibleTextStart.X + 1);
-
-    // Text right of the selection
-    lTextRight := UTF8Copy(lControlText, lSelLeftPos + lSelLength +
-      1, Length(lControlText));
-
-    // Execute the deletion
-    SetCurrentLine(lTextLeft + lTextRight);
-
-    // Correct the caret position
-    // FEditState.CaretPos.X
-    FCarets.CaretPos.X := Length(lTextLeft);
-  end;
-
-  DoClearSelection;
-end;
-
-procedure tonURcustomedit.doclearselection;
-begin
-  FSelStart.X := 1;
-  FSelStart.Y := 0;
-  FSelLength  := 0;
-end;
-
-// Imposes sanity limits to the visible text start
-// and also imposes sanity limits on the caret
-procedure tonURcustomedit.domanagevisibletextstart;
-var
-  lVisibleText, lLineText: string;
-  lVisibleTextCharCount: integer;
-  lAvailableWidth: integer;
-begin
-  // Moved to the left and we need to adjust the text start
-  FVisibleTextStart.X := Min(FCarets.CaretPos.X{FEditState.CaretPos.X} + 1,
-    FVisibleTextStart.X);
-
-  // Moved to the right and we need to adjust the text start
-  lLineText := GetCurrentLine();
-  lVisibleText := UTF8Copy(lLineText, FVisibleTextStart.X, Length(lLineText));
-  // lAvailableWidth := Width - (Fleft.FSright-Fleft.FSLeft)- (FRight.FSright-FRight.FSLeft);
-
-  if self is TOnURSpinEdit then
-    lAvailableWidth := self.Width -
-      (TONURCustomCrop(TOnURSpinEdit(self).Customcroplist[6]).Width +
-      TONURCustomCrop(TOnURSpinEdit(self).Customcroplist[8]).Width +
-      (TOnURSpinEdit(self).Fdbuttonarea.Width))
-  else
-  if self is TonUREdit then
-    lAvailableWidth := self.Width -
-      (TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width + TONURCustomCrop(
-      TONUREdit(self).Customcroplist[8]).Width)
-  else
-  if self is TONURMemo then
-    lAvailableWidth := self.Width -
-      (TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width + TONURCustomCrop(
-      TONURMemo(self).Customcroplist[8]).Width)
-  else
-  if self is TONURcombobox then
-    lAvailableWidth := self.Width -
-      (TONURCustomCrop(TONURcombobox(self).Customcroplist[6]).Width +
-      TONURCustomCrop(TONURcombobox(self).Customcroplist[8]).Width +
-      (TONURcombobox(self).fbutonarea.Width));
 
 
 
-  lVisibleTextCharCount := Canvas.TextFitInfo(lVisibleText, lAvailableWidth);
-  FVisibleTextStart.X := Max(FCarets.CaretPos.X - lVisibleTextCharCount +
-    1, FVisibleTextStart.X);
-
-  // Moved upwards and we need to adjust the text start
-  FVisibleTextStart.Y := Min(FCarets.CaretPos.Y, FVisibleTextStart.Y);
-
-  // Moved downwards and we need to adjust the text start
-  FVisibleTextStart.Y := Max(FCarets.CaretPos.Y - FFullyVisibleLinesCount,
-    FVisibleTextStart.Y);
-
-  // Impose limits in the caret too
-  FCarets.CaretPos.X := Min(FCarets.CaretPos.X, UTF8Length(lLineText));
-  FCarets.CaretPos.Y := Min(FCarets.CaretPos.Y, FLines.Count - 1);
-  FCarets.CaretPos.Y := Max(FCarets.CaretPos.Y, 0);
-end;
-
-procedure tonURcustomedit.setcaretpost(avalue: tpoint);
+procedure TONURCustomEdit.SetCaretPost(AValue: TPoint);
 begin
   FCarets.CaretPos.X := AValue.X;
   FCarets.CaretPos.Y := AValue.Y;
   Invalidate;
+
 end;
 
 
-// Result.X -> returns a zero-based position of the caret
-function tonURcustomedit.mousepostocaretpos(x, y: integer): tpoint;
-var
-  lStrLen, i: PtrInt;
-  lVisibleStr, lCurChar: string;
-  lPos, lCurCharLen: integer;
-  lBestDiff: cardinal = $FFFFFFFF;
-  lLastDiff: cardinal = $FFFFFFFF;
-  lCurDiff, lBestMatch: integer;
-begin
-  // Find the best Y position
-
-  if self is TOnURSpinEdit then
-    lPos := Y - TONURCustomCrop(TONURSpinEdit(self).Customcroplist[6]).Width
-  else
-  if self is TonUREdit then
-    lPos := Y - TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width
-  else
-  if self is TONURMemo then
-    lPos := Y - TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width
-  else
-  if self is TONURcombobox then
-    lPos := Y - TONURCustomCrop(TONURComboBox(self).Customcroplist[6]).Width;
-
-  if FLineHeight < 1 then FLineHeight := 1;
-
-  Result.Y := lPos div FLineHeight;
-  Result.Y := Min(Result.Y, FFullyVisibleLinesCount);
-  Result.Y := Min(Result.Y, FLines.Count - 1);
-  if Result.Y < 0 then
-  begin
-    Result.X := 1;
-    Result.Y := 0;
-    Exit;
-  end;
-
-  // Find the best X position
-  Canvas.Font := Font;
-  lVisibleStr := FLines.Strings[Result.Y];
-  lVisibleStr := UTF8Copy(lVisibleStr, FVisibleTextStart.X, Length(lVisibleStr));
-  lVisibleStr := VisibleText(lVisibleStr, FPasswordChar);
-  lStrLen := UTF8Length(lVisibleStr);
-
-  if self is TOnURSpinEdit then
-    lPos := TONURCustomCrop(TOnURSpinEdit(self).Customcroplist[6]).Width
-  else
-  if self is TonUREdit then
-    lPos := TONURCustomCrop(TONUREdit(self).Customcroplist[6]).Width
-  else
-  if self is TONURMemo then
-    lPos := TONURCustomCrop(TONURMemo(self).Customcroplist[6]).Width
-  else
-  if self is TONURcombobox then
-    lPos := TONURCustomCrop(TONURcombobox(self).Customcroplist[6]).Width;
-
-  lBestMatch := 0;
-  for i := 0 to lStrLen do
-  begin
-    lCurDiff := X - lPos;
-    if lCurDiff < 0 then lCurDiff := lCurDiff * -1;
-
-    if lCurDiff < lBestDiff then
-    begin
-      lBestDiff := lCurDiff;
-      lBestMatch := i;
-    end;
-
-    // When the diff starts to grow we already found the caret pos, so exit
-    if lCurDiff > lLastDiff then Break
-    else
-      lLastDiff := lCurDiff;
-
-    if i <> lStrLen then
-    begin
-      lCurChar := UTF8Copy(lVisibleStr, i + 1, 1);
-      lCurCharLen := Canvas.TextWidth(lCurChar);
-      lPos := lPos + lCurCharLen;
-    end;
-  end;
-
-  Result.X := lBestMatch + (FVisibleTextStart.X - 1);
-  Result.X := Min(Result.X, FVisibleTextStart.X + lStrLen - 1);
-end;
-
-function tonURcustomedit.issomethingselected: boolean;
-begin
-  Result := FSelLength <> 0;
-end;
 
 
 
 procedure tonURcustomedit.doenter;
 begin
-  FCarets.Visible := True;
+  FCarets.Active := True;
   inherited DoEnter;
 end;
 
 procedure tonURcustomedit.doexit;
 begin
-  FCarets.Visible := False;
-  DoClearSelection();
+  FCarets.Active := False;
+  ClearSelection();
   inherited DoExit;
 end;
 
-procedure tonURcustomedit.keydown(var key: word; shift: tshiftstate);
+procedure TONURCustomEdit.KeyDown(var Key: Word; Shift: TShiftState);
 var
-  lLeftText, lRightText, lOldText: string;
-  lOldTextLength: PtrInt;
-  lKeyWasProcessed: boolean = True;
+  caretoldpos:integer;
 begin
   inherited KeyDown(Key, Shift);
 
+   if (ssCtrl in Shift) then
+    case Key of
+      VK_A:
+        begin
+          SelectAll();
 
-  lOldText := GetCurrentLine();
-  lOldTextLength := UTF8Length(lOldText);
-  FSelStart.Y := FCarets.CaretPos.Y;
+          Key := 0;
+        end;
 
-  //ToDo: Change this when proper multi-line selection is implemented
+      VK_V:
+        begin
+          AddStringAtCursor(Clipboard.AsText, True);
+
+          Key := 0;
+        end;
+
+      VK_C:
+        begin
+          Clipboard.AsText := GetSelectedText();
+
+          Key := 0;
+        end;
+    end;
 
   case Key of
-    // Backspace
     VK_BACK:
-    begin
-      // Selection backspace
-      if IsSomethingSelected() then
-        DoDeleteSelection()
-      // Normal backspace
-      else if FCarets.CaretPos.X > 0 then
       begin
-        lLeftText  := UTF8Copy(lOldText, 1, FCarets.CaretPos.X - 1);
-        lRightText := UTF8Copy(lOldText, FCarets.CaretPos.X + 1,
-          lOldTextLength);
-        SetCurrentLine(lLeftText + lRightText);
-        Dec(FCarets.CaretPos.X);
-        DoManageVisibleTextStart();
-        Invalidate;
-      end
-      else
-      if FCarets.CaretPos.y > 0 then
-      begin
-        Lines.Delete(FCarets.CaretPos.Y);
-        Dec(FCarets.CaretPos.Y);
-        lOldText := GetCurrentLine();
-        lOldTextLength := UTF8Length(lOldText);
+        if HasSelection() then
+          DeleteSelection()
+        else
+          DeleteCharAtCursor();
 
-        //  lLeftText := UTF8Copy(lOldText, 1, FCarets.CaretPos.X - 1);
-        //  lRightText := UTF8Copy(lOldText, FCarets.CaretPos.X + 1,  lOldTextLength);
-        //  SetCurrentLine(lLeftText + lRightText);
-        //  FCarets.CaretPos.X := lOldTextLength;
-
-        FCarets.CaretPos.X := lOldTextLength;
-        DoManageVisibleTextStart();
-
-        Invalidate;
+        Key := 0;
       end;
-    end;
-    //yapıalcak if FCarets.CaretPos.Y < FLines.Count - 1 then
-    // DEL
-    VK_DELETE:
-    begin
-      // Selection delete
-      if IsSomethingSelected() then
-        DoDeleteSelection()
-      // Normal delete
-      else if FCarets.CaretPos.X < lOldTextLength then
-      begin
-        lLeftText := UTF8Copy(lOldText, 1, FCarets.CaretPos.X);
-        lRightText := UTF8Copy(lOldText, FCarets.CaretPos.X + 2, lOldTextLength);
-        SetCurrentLine(lLeftText + lRightText);
-        Invalidate;
-      end;// else
-      if FCarets.CaretPos.y > 0 then
-      begin
-        if FCarets.CaretPos.X = 0 then
-          Lines.Delete(FCarets.CaretPos.Y);
-        // Dec(FCarets.CaretPos.Y);
-        lOldText := GetCurrentLine();
-        lOldTextLength := UTF8Length(lOldText);
 
-        if FCarets.CaretPos.X <= lOldTextLength then
-        begin
-          lLeftText := UTF8Copy(lOldText, 1, FCarets.CaretPos.X);
-          lRightText := UTF8Copy(lOldText, FCarets.CaretPos.X + 2, lOldTextLength);
-          SetCurrentLine(lLeftText + lRightText);
-
-        end;
-        // ShowMessage(inttostr(FCarets.CaretPos.X)+' '+inttostr(lOldTextLength));
-        //  lLeftText := UTF8Copy(lOldText, 1, FCarets.CaretPos.X - 1);
-        //  lRightText := UTF8Copy(lOldText, FCarets.CaretPos.X + 1,  lOldTextLength);
-        //  SetCurrentLine(lLeftText + lRightText);
-        //  FCarets.CaretPos.X := lOldTextLength;
-
-        //  FCarets.CaretPos.X:=lOldTextLength;
-        //  DoManageVisibleTextStart();
-
-        //  Invalidate;
-      end;
-    end;
     VK_LEFT:
-    begin
-      if (FCarets.CaretPos.X > 0) then
       begin
-        // Selecting to the left
-        if [ssShift] = Shift then
-        begin
-          if FSelLength = 0 then FSelStart.X := FCarets.CaretPos.X;
-          Dec(FSelLength);
-        end
-        // Normal move to the left
-        else
-          FSelLength := 0;
-
-        Dec(FCarets.CaretPos.X);
-        DoManageVisibleTextStart();
-        FCarets.Visible := True;
-        Invalidate;
-      end
-      // if we are not moving, at least deselect
-      else if ([ssShift] <> Shift) then
-      begin
-        FSelLength := 0;
-        Invalidate;
+        SetCaretPos(FCarets.CaretPos.x-1);
+        Key := 0;
       end;
-    end;
-    VK_HOME:
-    begin
-      if (FCarets.CaretPos.X > 0) then
-      begin
-        // Selecting to the left
-        if [ssShift] = Shift then
-        begin
-          if FSelLength = 0 then
-          begin
-            FSelStart.X := FCarets.CaretPos.X;
-            FSelLength := -1 * FCarets.CaretPos.X;
-          end
-          else
-            FSelLength := -1 * FSelStart.X;
-        end
-        // Normal move to the left
-        else
-          FSelLength := 0;
 
-
-        FCarets.CaretPos.X := 0;
-        DoManageVisibleTextStart();
-        FCarets.Visible := True;
-        Invalidate;
-      end
-      // if we are not moving, at least deselect
-      else if (FSelLength <> 0) and ([ssShift] <> Shift) then
-      begin
-        FSelLength := 0;
-        Invalidate;
-      end;
-    end;
     VK_RIGHT:
-    begin
-      if FCarets.CaretPos.X < lOldTextLength then
       begin
-        // Selecting to the right
+        SetCaretPos(FCarets.CaretPos.x+1);
+
+        Key := 0;
+      end;
+    VK_HOME:
+      begin
+        ClearSelection;
         if [ssShift] = Shift then
         begin
-          if FSelLength = 0 then FSelStart.X := FCarets.CaretPos.X;
-          Inc(FSelLength);
-        end
-        // Normal move to the right
-        else
-          FSelLength := 0;
+            FSelectingStartX.X := 0;
+            FSelectingEndX.X := FCarets.CaretPos.X;
+        end;
+        FCarets.CaretPos.X := 0;
 
-        Inc(FCarets.CaretPos.X);
-        DoManageVisibleTextStart();
-        FCarets.Visible := True;
-        Invalidate;
-      end
-      // if we are not moving, at least deselect
-      else if ([ssShift] <> Shift) then
-      begin
-        FSelLength := 0;
-        Invalidate;
+      Invalidate;
       end;
-    end;
+
     VK_END:
     begin
-      if FCarets.CaretPos.X < lOldTextLength then
+      //if FCarets.CaretPos.X < lOldTextLength then
       begin
+        ClearSelection;
+        caretoldpos:=GetAvailableWidth;
+
+       // WriteLn(caretoldpos);
         // Selecting to the right
         if [ssShift] = Shift then
         begin
-          if FSelLength = 0 then
-            FSelStart.X := FCarets.CaretPos.X;
-          FSelLength := lOldTextLength - FSelStart.X;
-        end
-        // Normal move to the right
-        else
-          FSelLength := 0;
+           FSelectingStartX.X := FCarets.CaretPos.X;
+           FSelectingEndX.X := caretoldpos;
+        end;
 
-        FCarets.CaretPos.X := lOldTextLength;
-        DoManageVisibleTextStart();
-        //  FCaretIsVisible := True;
-        FCarets.Visible := True;
+        FCarets.CaretPos.X :=  caretoldpos;
         Invalidate;
-      end
+      {end
       // if we are not moving, at least deselect
       else if (FSelLength <> 0) and ([ssShift] <> Shift) then
       begin
         FSelLength := 0;
-        Invalidate;
+        Invalidate;}
       end;
     end;
-    VK_UP:
+   {  VK_UP:
     begin
+      if not MultiLine then Exit;
       if (FCarets.CaretPos.Y > 0) then
       begin
         // Selecting downwards
@@ -1422,8 +1143,10 @@ begin
         Invalidate;
       end;
     end;
+     }
     VK_DOWN:
     begin
+       if not MultiLine then Exit;
       if FCarets.CaretPos.Y < FLines.Count - 1 then
       begin
       {// Selecting to the right
@@ -1433,61 +1156,52 @@ begin
         Inc(FSelLength);
       end
       // Normal move to the right
-      else} FSelLength := 0;
+      else}
+
+        //FSelLength := 0;
 
         Inc(FCarets.CaretPos.Y{FCaretPos.Y});
-        DoManageVisibleTextStart();
-        FCarets.Visible := True;
+
+        FCarets.Active := True;
         Invalidate;
       end
       // if we are not moving, at least deselect
       else if ([ssShift] <> Shift) then
       begin
-        FSelLength := 0;
+      //  FSelLength := 0;
         Invalidate;
       end;
     end;
-    VK_RETURN:
-    begin
-      if not MultiLine then Exit;
-      // Selection delete
-      if IsSomethingSelected() then
-        DoDeleteSelection();
-      // If the are no contents at the moment, add two lines, because the first one always exists for the user
-      if FLines.Count = 0 then
+    VK_DELETE:
       begin
-        FLines.Add('');
-        FLines.Add('');
-        // FCaretPos
-        FCarets.CaretPos := Point(0, 1);
-      end
-      else
-      begin
-        // Get the two halves of the text separated by the cursor
-        lLeftText := UTF8Copy(lOldText, 1, FCarets.CaretPos.X {FCaretPos.X});
-        lRightText := UTF8Copy(lOldText, FCarets.CaretPos.X{FCaretPos.X} + 1,
-          lOldTextLength);
-        // Move the right part to a new line
-        SetCurrentLine(lLeftText);
-        FLines.Insert({FCaretPos.Y}FCarets.CaretPos.Y + 1, lRightText);
-        // FCaretPos
-        FCarets.CaretPos := Point(0, FCarets.CaretPos.Y{FCaretPos.Y} + 1);
+        DeleteSelection();
+
+        Key := 0;
       end;
-      Invalidate;
-    end;
-
-    else
-      lKeyWasProcessed := False;
-  end; // case
-
-  if lKeyWasProcessed then
-  begin
-    //    FEventArrived := True;
-    Key := 0;
   end;
+
+
+  //ToDo: Change this when proper multi-line selection is implemented
+
+
+    // Backspace
+
+    //yapıalcak if FCarets.CaretPos.Y < FLines.Count - 1 then
+    // DEL
+
+
+
+
+ // if lKeyWasProcessed then
+//  begin
+    //    FEventArrived := True;
+//    Key := 0;
+//  end;
 end;
 
-procedure tonURcustomedit.keyup(var key: word; shift: tshiftstate);
+
+
+{procedure TONURCustomEdit.keyup(var key: word; shift: tshiftstate);
 var
   lOldText, lLeftText, lRightText: string;
 begin
@@ -1542,10 +1256,10 @@ begin
     end;
   end;
 end;
-
-procedure tonURcustomedit.utf8keypress(var utf8key: tutf8char);
+}
+procedure TONURCustomEdit.UTF8KeyPress(var UTF8Key: TUTF8Char);
 var
-  lLeftText, lRightText, lOldText: string;
+  lLeftText, lRightText, lOldText, NewText: string;
 begin
   inherited UTF8KeyPress(UTF8Key);
 
@@ -1562,9 +1276,9 @@ begin
     (UTF8Key[1] = #$2e) or (UTF8Key[1] = #$2c)) then exit;
   // (UTF8Key[1] in [#30..#$39, #$2e, #$2c])  then Exit;
 
+ // ClearSelection;
 
-
-  DoDeleteSelection;
+ { DoDeleteSelection;
   //▲ ▼ ► ◄ ‡ // ALT+30 ALT+31 ALT+16 ALT+17 ALT+0135
 
   // Normal characters
@@ -1575,76 +1289,298 @@ begin
   SetCurrentLine(lLeftText + UTF8Key + lRightText);
   Inc(FCarets.CaretPos.X{FCaretPos.X});
   DoManageVisibleTextStart();
-  FCarets.Visible := True;
+
+  }
+
+
+
+  if HasSelection then
+    DeleteSelection();
+
+
+  Inc(FCarets.CaretPos.X);
+  NewText := Text;
+  UTF8Insert(UTF8Key, NewText, FCarets.CaretPos.X);
+
+  Text := NewText;
+
+
+
+  UTF8Key := '';
+
+  FCarets.Active := True;
   Invalidate;
 end;
 
-procedure tonURcustomedit.mousedown(button: tmousebutton; shift: tshiftstate;
-  x, y: integer);
+procedure TONURCustomEdit.SetCaretPos(Pos: Integer);
+begin
+  if (Pos < 0) then
+    FCarets.CaretPos.x := 0
+  else
+  if (Pos > Length(Text)) then
+    FCarets.CaretPos.X := Length(Text)
+  else
+    FCarets.CaretPos.X := Pos;
+
+  Invalidate();
+end;
+
+
+
+
+procedure TONURCustomEdit.MouseDown(Button: TMouseButton; Shift: TShiftState;
+  X, Y: Integer);
+var
+  I: Integer;
 begin
   inherited MouseDown(Button, Shift, X, Y);
-  DragDropStarted := True;
-
-  // Caret positioning
-  // FCaretPos
-  FCarets.CaretPos := MousePosToCaretPos(X, Y);
-  FSelLength := 0;
-  FSelStart.X := FCarets.CaretPos.X;
-  FSelStart.Y := FCarets.CaretPos.Y;
-  FCarets.Visible := True;
-  FCarets.caretvisible := True;
 
   SetFocus;
 
+  I := CharIndexAtXY(X, Y);
+
+  SetCaretPos(I);
+  FCarets.Active := True;
+
+  FSelecting := True;
+  FSelectingStartX.X := I;
+  FSelectingEndX.X := I;
   Invalidate;
 end;
 
-procedure tonURcustomedit.mousemove(shift: tshiftstate; x, y: integer);
+procedure TONURCustomEdit.MouseMove(Shift: TShiftState; X, Y: Integer);
 begin
   inherited MouseMove(Shift, X, Y);
 
   // Mouse dragging selection
-  if DragDropStarted then
+
+  if FSelecting then
   begin
-    // FEditState.CaretPos
-    FCarets.CaretPos := MousePosToCaretPos(X, Y);
-    FSelLength := FCarets.CaretPos.X{FCaretPos.X} - FSelStart.X;
-    //    FEventArrived := True;
-    //  FCaretIsVisible := True;
-    FCarets.Visible := True;
-    Invalidate;
+    SetCaretPos(CharIndexAtXY(X, Y));
+
+    FSelectingEndX.x := CharIndexAtXY(X, Y);
+
+    Invalidate();
   end;
+
 end;
 
-procedure tonURcustomedit.mouseup(button: tmousebutton; shift: tshiftstate;
-  x, y: integer);
+procedure TONURCustomEdit.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
+  Y: Integer);
 begin
   inherited MouseUp(Button, Shift, X, Y);
-  DragDropStarted := False;
+  FSelecting := False;
+  FSelectingEndX.X := CharIndexAtXY(X, Y);
+
 end;
 
-procedure tonURcustomedit.mouseenter;
+procedure TONURCustomEdit.ParentFontChanged;
 begin
-  inherited MouseEnter;
+  inherited ParentFontChanged;
 end;
 
-procedure tonURcustomedit.mouseleave;
+procedure TONURCustomEdit.FontChanged(Sender: TObject);
 begin
-  inherited MouseLeave;
+  inherited FontChanged(Sender);
 end;
 
-procedure tonURcustomedit.wmsetfocus(var message: tlmsetfocus);
+procedure TONURCustomEdit.TextChanged;
+begin
+  inherited TextChanged;
+end;
+
+
+procedure TONURCustomEdit.WMSetFocus(var Message: TLMSetFocus);
 begin
   DoEnter;
 end;
 
-procedure tonURcustomedit.wmkillfocus(var message: tlmkillfocus);
+procedure TONURCustomEdit.WMKillFocus(var Message: TLMKillFocus);
 begin
   DoExit;
 end;
 
+procedure TONURCustomEdit.ClearCache;
 
-function tonURcustomedit.getcurrentline: string;
+ var
+  Cache: EPaintCache;
+begin
+  for Cache in EPaintCache do
+  begin
+    FTextWidthCache[Cache].Str   := '';
+    FTextWidthCache[Cache].Width := 0;
+  end;
+end;
+
+procedure TONURCustomEdit.CalculatePreferredSize(var PreferredWidth,
+  PreferredHeight: integer; WithThemeSpace: Boolean);
+begin
+  inherited CalculatePreferredSize(PreferredWidth, PreferredHeight,
+    WithThemeSpace);
+  PreferredHeight := CalculateHeight();
+end;
+
+function TONURCustomEdit.GetTextWidthCache(const Cache: EPaintCache;
+  const Str: String): Integer;
+begin
+  if (Str <> FTextWidthCache[Cache].Str) then
+  begin
+    FTextWidthCache[Cache].Str := Str;
+    FTextWidthCache[Cache].Width := Canvas.TextWidth(Str);
+  end;
+
+  Result := FTextWidthCache[Cache].Width;
+end;
+
+procedure TONURCustomEdit.SelectAll;
+begin
+  FSelectingStartX.x := 0;
+  FSelectingEndx.X   := Length(Text);
+
+  Invalidate();
+end;
+
+procedure TONURCustomEdit.ClearSelection;
+begin
+  FSelectingStartx.X := 0;
+  FSelectingEndx.X := 0;
+end;
+
+function TONURCustomEdit.GetSelectionLen: Integer;
+begin
+  Result := Abs(FSelectingStartX.x - FSelectingEndX.x);
+end;
+
+function TONURCustomEdit.HasSelection: Boolean;
+begin
+  Result := GetSelectionLen > 0;
+end;
+
+function TONURCustomEdit.CharIndexAtXY(X, Y: Integer): Integer;
+var
+  I, Test: Integer;
+  W: Integer;
+begin
+  Result := Length(Text);
+
+  Test := FDrawOffsetX;
+  for I := 1 to Length(Text) do
+  begin
+    W := Canvas.TextWidth(Text[I]);
+    Test += W;
+    if ((Test-(W div 2)) >= X) then
+    begin
+      Result := I-1;
+      Exit;
+    end;
+  end;
+
+end;
+
+function TONURCustomEdit.CalculateHeight: Integer;
+begin
+  with TBitmap.Create() do
+  try
+    Canvas.Font := Self.Font;
+    Canvas.Font.Size := GetFontSize(Self, 1);
+
+    Result := Canvas.TextHeight('Çİ');
+  finally
+    Free();
+  end;
+end;
+
+function TONURCustomEdit.GetAvailableWidth: Integer;
+begin
+  Result := ClientWidth;
+end;
+
+function TONURCustomEdit.GetSelectedText: String;
+begin
+   if (FSelectingStartx.X > FSelectingEndx.X) then
+    Result := UTF8Copy(Text, FSelectingEndX.X + 1, FSelectingStartX.X - FSelectingEndX.X)
+  else
+    Result := UTF8Copy(Text, FSelectingStartX.X + 1, FSelectingEndX.X - FSelectingStartX.X);
+end;
+
+
+procedure TONURCustomEdit.AddCharAtCursor(C: TUtf8Char);
+var
+  NewText: String;
+  i:integer;
+begin
+  //if (Ord(C) < 32) then
+ //   Exit;
+
+  WriteLn(c);
+  if HasSelection then
+    DeleteSelection();
+
+  Inc(FCarets.CaretPos.X);
+  NewText := Text;
+  UTF8Insert(C, NewText, FCarets.CaretPos.X);
+
+  Text := NewText;
+  //Canvas.TextFitInfo(lVisibleText, lAvailableWidth);
+
+end;
+
+procedure TONURCustomEdit.AddStringAtCursor(Str: String;
+  ADeleteSelection: Boolean);
+var
+  NewText: String;
+begin
+  if ADeleteSelection then
+    DeleteSelection();
+
+  NewText := Text;
+
+  Insert(Str, NewText, FCarets.CaretPos.X + 1);
+  Inc(FCarets.CaretPos.X, Length(Str));
+
+  Text := NewText;
+
+end;
+
+procedure TONURCustomEdit.DeleteCharAtCursor;
+var
+  NewText: String;
+begin
+  if (FCarets.CaretPos.X >= 1) and (FCarets.CaretPos.X <= Length(Text)) then
+  begin
+    NewText := Text;
+
+    Delete(NewText, FCarets.CaretPos.X, 1);
+    Dec(FCarets.CaretPos.X);
+
+    Text := NewText;
+  end;
+
+end;
+
+procedure TONURCustomEdit.DeleteSelection;
+var
+  NewText: String;
+begin
+  if HasSelection() then
+  begin
+    NewText := Text;
+
+    if (FSelectingStartX.x > FSelectingEndX.x) then
+      Delete(NewText, FSelectingEndX.x + 1, GetSelectionLen())
+    else
+      Delete(NewText, FSelectingStartX.x + 1, GetSelectionLen());
+
+    if (FSelectingEndX.x > FSelectingStartX.x) then
+      SetCaretPos(FCarets.CaretPos.X - GetSelectionLen());
+    Text := NewText;
+    ClearSelection();
+  end;
+
+end;
+
+
+function TONURCustomEdit.getcurrentline: string;
 begin
   if (FLines.Count = 0) or (FCarets.CaretPos.Y >= FLines.Count) then
     Result := ''
@@ -1652,13 +1588,13 @@ begin
     Result := FLines.Strings[FCarets.CaretPos.Y];
 end;
 
-procedure tonURcustomedit.setcurrentline(astr: string);
+procedure TONURCustomEdit.setcurrentline(astr: string);
 begin
   if (FLines.Count = 0) or (FCarets.CaretPos.Y >= FLines.Count) then
   begin
     FLines.Text := AStr;
-    FVisibleTextStart.X := 1;
-    FVisibleTextStart.Y := 0;
+   { FVisibleTextStart.X := 1;
+    FVisibleTextStart.Y := 0;}
     FCarets.CaretPos.X := 0;
     FCarets.CaretPos.Y := 0;
   end
@@ -1668,39 +1604,9 @@ begin
   DoChange();
 end;
 
-function tonURcustomedit.getselstartx: integer;
-begin
-  Result := FSelStart.X;
-end;
 
-function tonURcustomedit.getsellength: integer;
-begin
-  Result := FSelLength;
-  if Result < 0 then Result := Result * -1;
-end;
 
-procedure tonURcustomedit.setselstartx(anewx: integer);
-begin
-  FSelStart.X := ANewX;
-end;
 
-procedure tonURcustomedit.setsellength(anewlength: integer);
-begin
-  FSelLength := ANewLength;
-end;
-
-function tonURcustomedit.caretttopos(leftch: integer): integer;
-var
-  a, i: integer;
-begin
-  a := 0;
-  for i := leftch to Lines.Text.Length do
-  begin
-    a := a + Canvas.TextExtent(Lines.Text[i]).cx;
-    if i >= fcarets.CaretPos.X then
-      break;
-  end;
-end;
 
 
 
@@ -1710,45 +1616,27 @@ end;
 
 constructor TONUREdit.Create(AOwner: TComponent);
 begin
-  inherited Create(AOwner);
-  skinname              := 'edit';
-  FTop                  := TONURCUSTOMCROP.Create;
-  FTop.cropname         := 'TOP';
-  FBottom               := TONURCUSTOMCROP.Create;
-  FBottom.cropname      := 'BOTTOM';
-  FCenter               := TONURCUSTOMCROP.Create;
-  FCenter.cropname      := 'CENTER';
-  FRight                := TONURCUSTOMCROP.Create;
-  FRight.cropname       := 'RIGHT';
-  FTopRight             := TONURCUSTOMCROP.Create;
-  FTopRight.cropname    := 'TOPRIGHT';
-  FBottomRight          := TONURCUSTOMCROP.Create;
-  FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft                 := TONURCUSTOMCROP.Create;
-  Fleft.cropname        := 'LEFT';
-  FTopleft              := TONURCUSTOMCROP.Create;
-  FTopleft.cropname     := 'TOPLEFT';
-  FBottomleft           := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname  := 'BOTTOMLEFT';
+ inherited Create(AOwner);
+ skinname              := 'edit';
+ FTop                  := TONURCUSTOMCROP.Create('TOP');
+ FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+ FCenter               := TONURCUSTOMCROP.Create('CENTER');
+ FRight                := TONURCUSTOMCROP.Create('RIGHT');
+ FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+ FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+ Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+ FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+ FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
 
-  FhTop                 := TONURCUSTOMCROP.Create;
-  FhTop.cropname        := 'HOVERTOP';
-  FhBottom              := TONURCUSTOMCROP.Create;
-  FhBottom.cropname     := 'BOVERBOTTOM';
-  FhCenter              := TONURCUSTOMCROP.Create;
-  FhCenter.cropname     := 'HOVERCENTER';
-  FhRight               := TONURCUSTOMCROP.Create;
-  FhRight.cropname      := 'HOVERRIGHT';
-  FhTopRight            := TONURCUSTOMCROP.Create;
-  FhTopRight.cropname   := 'HOVERTOPRIGHT';
-  FhBottomRight         := TONURCUSTOMCROP.Create;
-  FhBottomRight.cropname:= 'HOVERBOTTOMRIGHT';
-  Fhleft                := TONURCUSTOMCROP.Create;
-  Fhleft.cropname       := 'HOVERLEFT';
-  FhTopleft             := TONURCUSTOMCROP.Create;
-  FhTopleft.cropname    := 'HOVERTOPLEFT';
-  FhBottomleft          := TONURCUSTOMCROP.Create;
-  FhBottomleft.cropname := 'HOVERBOTTOMLEFT';
+ FhTop                 := TONURCUSTOMCROP.Create('HOVERTOP');
+ FhBottom              := TONURCUSTOMCROP.Create('HOVERBOTTOM');
+ FhCenter              := TONURCUSTOMCROP.Create('HOVERCENTER');
+ FhRight               := TONURCUSTOMCROP.Create('HOVERRIGHT');
+ FhTopRight            := TONURCUSTOMCROP.Create('HOVERTOPRIGHT');
+ FhBottomRight         := TONURCUSTOMCROP.Create('HOVERBOTTOMRIGHT');
+ Fhleft                := TONURCUSTOMCROP.Create('HOVERLEFT');
+ FhTopleft             := TONURCUSTOMCROP.Create('HOVERTOPLEFT');
+ FhBottomleft          := TONURCUSTOMCROP.Create('HOVERBOTTOMLEFT');
 
   Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
@@ -1757,8 +1645,8 @@ begin
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
+  Customcroplist.Add(FCenter);
 
   Customcroplist.Add(FhTopleft);
   Customcroplist.Add(FhTop);
@@ -1767,14 +1655,14 @@ begin
   Customcroplist.Add(FhBottom);
   Customcroplist.Add(FhBottomRight);
   Customcroplist.Add(Fhleft);
-  Customcroplist.Add(FhCenter);
   Customcroplist.Add(FhRight);
+  Customcroplist.Add(FhCenter);
 
   Self.Height    := 30;
   Self.Width     := 80;
   resim.SetSize(Width, Height);
   Captionvisible := False;
-
+  fState         := obsnormal;
 end;
 
 destructor TONUREdit.Destroy;
@@ -1804,24 +1692,23 @@ end;
 
 procedure TONUREdit.Resizing;
 begin
- 
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
-    0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
-    FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
-    FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
-    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
-    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width,
-    self.clientHeight - FBottomleft.Height);
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
-    self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
-    FRight.Width, self.clientHeight - FBottom.Height);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Croprect.Width,
+    0, self.clientWidth, FTopRight.Croprect.Height);
+  ftop.Targetrect := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -
+    FTopRight.Croprect.Width, FTop.Croprect.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,
+    FBottomleft.Croprect.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width,
+    self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Croprect.Width, self.clientHeight -
+    FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+  Fleft.Targetrect := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width,
+    self.clientHeight - FBottomleft.Croprect.Height);
+  FRight.Targetrect := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height,
+    self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+  FCenter.Targetrect := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth -
+    FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
 
 end;
 
@@ -1834,6 +1721,7 @@ begin
   resim.SetSize(0, 0);
 
   resim.SetSize(self.ClientWidth, self.ClientHeight);
+  resim.Fill(BGRAPixelTransparent,dmset);
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
@@ -1884,6 +1772,7 @@ begin
   begin
     resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
+
   inherited paint;
 end;
 
@@ -1928,24 +1817,24 @@ end;
 
 procedure TONURMemo.Resizing;
 begin
- 
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width,
-    0, self.clientWidth, FTopRight.Height);
-  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
-    FTopRight.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
-    FBottomleft.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Width,
-    self.clientHeight - FBottomRight.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
-    FBottom.Height, self.clientWidth - FBottomRight.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width,
-    self.clientHeight - FBottomleft.Height);
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Width, FTopRight.Height,
-    self.clientWidth, self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
-    FRight.Width, self.clientHeight - FBottom.Height);
+
+   FTopleft.Targetrect := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+   FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Croprect.Width,
+     0, self.clientWidth, FTopRight.Croprect.Height);
+   ftop.Targetrect := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -
+     FTopRight.Croprect.Width, FTop.Croprect.Height);
+   FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,
+     FBottomleft.Croprect.Width, self.ClientHeight);
+   FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width,
+     self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+   FBottom.Targetrect := Rect(FBottomleft.Croprect.Width, self.clientHeight -
+     FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+   Fleft.Targetrect := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width,
+     self.clientHeight - FBottomleft.Croprect.Height);
+   FRight.Targetrect := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height,
+     self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+   FCenter.Targetrect := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth -
+     FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
 
 end;
 
@@ -1976,43 +1865,44 @@ begin
   Width := 150;
   Height := 150;
   skinname := 'memo';
-  FTop                  := TONURCUSTOMCROP.Create;
-  FTop.cropname         := 'TOP';
-  FBottom               := TONURCUSTOMCROP.Create;
-  FBottom.cropname      := 'BOTTOM';
-  FCenter               := TONURCUSTOMCROP.Create;
-  FCenter.cropname      := 'CENTER';
-  FRight                := TONURCUSTOMCROP.Create;
-  FRight.cropname       := 'RIGHT';
-  FTopRight             := TONURCUSTOMCROP.Create;
-  FTopRight.cropname    := 'TOPRIGHT';
-  FBottomRight          := TONURCUSTOMCROP.Create;
-  FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft                 := TONURCUSTOMCROP.Create;
-  Fleft.cropname        := 'LEFT';
-  FTopleft              := TONURCUSTOMCROP.Create;
-  FTopleft.cropname     := 'TOPLEFT';
-  FBottomleft           := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname  := 'BOTTOMLEFT';
+  FTop                  := TONURCUSTOMCROP.Create('TOP');
+ //  FTop.cropname         := 'TOP';
+   FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+ //  FBottom.cropname      := 'BOTTOM';
+   FCenter               := TONURCUSTOMCROP.Create('CENTER');
+ //  FCenter.cropname      := 'CENTER';
+   FRight                := TONURCUSTOMCROP.Create('RIGHT');
+ //  FRight.cropname       := 'RIGHT';
+   FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+ //  FTopRight.cropname    := 'TOPRIGHT';
+   FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+ //  FBottomRight.cropname := 'BOTTOMRIGHT';
+   Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+ //  Fleft.cropname        := 'LEFT';
+   FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+ //  FTopleft.cropname     := 'TOPLEFT';
+   FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+ //  FBottomleft.cropname  := 'BOTTOMLEFT';
 
-  FhTop                 := TONURCUSTOMCROP.Create;
-  FhTop.cropname        := 'HOVERTOP';
-  FhBottom              := TONURCUSTOMCROP.Create;
-  FhBottom.cropname     := 'BOVERBOTTOM';
-  FhCenter              := TONURCUSTOMCROP.Create;
-  FhCenter.cropname     := 'HOVERCENTER';
-  FhRight               := TONURCUSTOMCROP.Create;
-  FhRight.cropname      := 'HOVERRIGHT';
-  FhTopRight            := TONURCUSTOMCROP.Create;
-  FhTopRight.cropname   := 'HOVERTOPRIGHT';
-  FhBottomRight         := TONURCUSTOMCROP.Create;
-  FhBottomRight.cropname:= 'HOVERBOTTOMRIGHT';
-  Fhleft                := TONURCUSTOMCROP.Create;
-  Fhleft.cropname       := 'HOVERLEFT';
-  FhTopleft             := TONURCUSTOMCROP.Create;
-  FhTopleft.cropname    := 'HOVERTOPLEFT';
-  FhBottomleft          := TONURCUSTOMCROP.Create;
-  FhBottomleft.cropname := 'HOVERBOTTOMLEFT';
+
+  FhTop                 := TONURCUSTOMCROP.Create('HOVERTOP');
+//  FhTop.cropname        := 'HOVERTOP';
+  FhBottom              := TONURCUSTOMCROP.Create('HOVERBOTTOM');
+//  FhBottom.cropname     := 'HOVERBOTTOM';
+  FhCenter              := TONURCUSTOMCROP.Create('HOVERCENTER');
+//  FhCenter.cropname     := 'HOVERCENTER';
+  FhRight               := TONURCUSTOMCROP.Create('HOVERRIGHT');
+//  FhRight.cropname      := 'HOVERRIGHT';
+  FhTopRight            := TONURCUSTOMCROP.Create('HOVERTOPRIGHT');
+//  FhTopRight.cropname   := 'HOVERTOPRIGHT';
+  FhBottomRight         := TONURCUSTOMCROP.Create('HOVERBOTTOMRIGHT');
+//  FhBottomRight.cropname:= 'HOVERBOTTOMRIGHT';
+  Fhleft                := TONURCUSTOMCROP.Create('HOVERLEFT');
+//  Fhleft.cropname       := 'HOVERLEFT';
+  FhTopleft             := TONURCUSTOMCROP.Create('HOVERTOPLEFT');
+//  FhTopleft.cropname    := 'HOVERTOPLEFT';
+  FhBottomleft          := TONURCUSTOMCROP.Create('HOVERBOTTOMLEFT');
+//  FhBottomleft.cropname := 'HOVERBOTTOMLEFT';
 
   Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
@@ -2021,8 +1911,8 @@ begin
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
+  Customcroplist.Add(FCenter);
 
   Customcroplist.Add(FhTopleft);
   Customcroplist.Add(FhTop);
@@ -2031,12 +1921,13 @@ begin
   Customcroplist.Add(FhBottom);
   Customcroplist.Add(FhBottomRight);
   Customcroplist.Add(Fhleft);
-  Customcroplist.Add(FhCenter);
   Customcroplist.Add(FhRight);
+  Customcroplist.Add(FhCenter);
 
 
   resim.SetSize(Width, Height);
   Captionvisible := False;
+  fState         := obsnormal;
 end;
 
 destructor TONURMemo.Destroy;
@@ -2313,43 +2204,44 @@ constructor TONURSpinEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   skinname := 'spinedit';
-  FTop                  := TONURCUSTOMCROP.Create;
-  FTop.cropname         := 'TOP';
-  FBottom               := TONURCUSTOMCROP.Create;
-  FBottom.cropname      := 'BOTTOM';
-  FCenter               := TONURCUSTOMCROP.Create;
-  FCenter.cropname      := 'CENTER';
-  FRight                := TONURCUSTOMCROP.Create;
-  FRight.cropname       := 'RIGHT';
-  FTopRight             := TONURCUSTOMCROP.Create;
-  FTopRight.cropname    := 'TOPRIGHT';
-  FBottomRight          := TONURCUSTOMCROP.Create;
-  FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft                 := TONURCUSTOMCROP.Create;
-  Fleft.cropname        := 'LEFT';
-  FTopleft              := TONURCUSTOMCROP.Create;
-  FTopleft.cropname     := 'TOPLEFT';
-  FBottomleft           := TONURCUSTOMCROP.Create;
-  FBottomleft.cropname  := 'BOTTOMLEFT';
+  FTop                  := TONURCUSTOMCROP.Create('TOP');
+ //  FTop.cropname         := 'TOP';
+   FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+ //  FBottom.cropname      := 'BOTTOM';
+   FCenter               := TONURCUSTOMCROP.Create('CENTER');
+ //  FCenter.cropname      := 'CENTER';
+   FRight                := TONURCUSTOMCROP.Create('RIGHT');
+ //  FRight.cropname       := 'RIGHT';
+   FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+ //  FTopRight.cropname    := 'TOPRIGHT';
+   FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+ //  FBottomRight.cropname := 'BOTTOMRIGHT';
+   Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+ //  Fleft.cropname        := 'LEFT';
+   FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+ //  FTopleft.cropname     := 'TOPLEFT';
+   FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+ //  FBottomleft.cropname  := 'BOTTOMLEFT';
 
-  FhTop                 := TONURCUSTOMCROP.Create;
-  FhTop.cropname        := 'HOVERTOP';
-  FhBottom              := TONURCUSTOMCROP.Create;
-  FhBottom.cropname     := 'BOVERBOTTOM';
-  FhCenter              := TONURCUSTOMCROP.Create;
-  FhCenter.cropname     := 'HOVERCENTER';
-  FhRight               := TONURCUSTOMCROP.Create;
-  FhRight.cropname      := 'HOVERRIGHT';
-  FhTopRight            := TONURCUSTOMCROP.Create;
-  FhTopRight.cropname   := 'HOVERTOPRIGHT';
-  FhBottomRight         := TONURCUSTOMCROP.Create;
-  FhBottomRight.cropname:= 'HOVERBOTTOMRIGHT';
-  Fhleft                := TONURCUSTOMCROP.Create;
-  Fhleft.cropname       := 'HOVERLEFT';
-  FhTopleft             := TONURCUSTOMCROP.Create;
-  FhTopleft.cropname    := 'HOVERTOPLEFT';
-  FhBottomleft          := TONURCUSTOMCROP.Create;
-  FhBottomleft.cropname := 'HOVERBOTTOMLEFT';
+
+  FhTop                 := TONURCUSTOMCROP.Create('HOVERTOP');
+//  FhTop.cropname        := 'HOVERTOP';
+  FhBottom              := TONURCUSTOMCROP.Create('HOVERBOTTOM');
+//  FhBottom.cropname     := 'HOVERBOTTOM';
+  FhCenter              := TONURCUSTOMCROP.Create('HOVERCENTER');
+//  FhCenter.cropname     := 'HOVERCENTER';
+  FhRight               := TONURCUSTOMCROP.Create('HOVERRIGHT');
+//  FhRight.cropname      := 'HOVERRIGHT';
+  FhTopRight            := TONURCUSTOMCROP.Create('HOVERTOPRIGHT');
+//  FhTopRight.cropname   := 'HOVERTOPRIGHT';
+  FhBottomRight         := TONURCUSTOMCROP.Create('HOVERBOTTOMRIGHT');
+//  FhBottomRight.cropname:= 'HOVERBOTTOMRIGHT';
+  Fhleft                := TONURCUSTOMCROP.Create('HOVERLEFT');
+//  Fhleft.cropname       := 'HOVERLEFT';
+  FhTopleft             := TONURCUSTOMCROP.Create('HOVERTOPLEFT');
+//  FhTopleft.cropname    := 'HOVERTOPLEFT';
+  FhBottomleft          := TONURCUSTOMCROP.Create('HOVERBOTTOMLEFT');
+//  FhBottomleft.cropname := 'HOVERBOTTOMLEFT';
 
   Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
@@ -2358,8 +2250,8 @@ begin
   Customcroplist.Add(FBottom);
   Customcroplist.Add(FBottomRight);
   Customcroplist.Add(Fleft);
-  Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
+  Customcroplist.Add(FCenter);
 
   Customcroplist.Add(FhTopleft);
   Customcroplist.Add(FhTop);
@@ -2368,49 +2260,47 @@ begin
   Customcroplist.Add(FhBottom);
   Customcroplist.Add(FhBottomRight);
   Customcroplist.Add(Fhleft);
-  Customcroplist.Add(FhCenter);
   Customcroplist.Add(FhRight);
+  Customcroplist.Add(FhCenter);
 
 
-  Self.Height := 25;
-  Self.Width  := 100;
+  Self.Height     := 25;
+  Self.Width      := 100;
+  Captionvisible  := False;
+  fState          := obsnormal;
+//  Text            := '';
+  Text            := '0';
+  Caption         := '0';
+  NumberOnly      := True;
+  Fbuttonwidth    := 11;
+  Fbuttonheight   := 11;
+  fmin            := 0;
+  fmax            := 0;
+  fvalue          := 0;
   resim.SetSize(Width, Height);
-  Captionvisible := False;
-  Text := '';
-  Text := '0';
-  Caption := '0';
-  NumberOnly := True;
-
-  Fbuttonwidth := 11;
-  Fbuttonheight := 11;
-
-  fmin := 0;
-  fmax := 0;
-  fvalue := 0;
-
 
 
   // up button
-  FuNormal := TONURCUSTOMCROP.Create;
-  FuNormal.cropname := 'UPBUTONNORMAL';
-  FuPress := TONURCUSTOMCROP.Create;
-  FuPress.cropname := 'UPBUTONPRESS';
-  FuEnter := TONURCUSTOMCROP.Create;
-  FuEnter.cropname := 'UPBUTONHOVER';
-  Fudisable := TONURCUSTOMCROP.Create;
-  Fudisable.cropname := 'UPBUTONDISABLE';
-  Fustate := obsNormal;
+  FuNormal            := TONURCUSTOMCROP.Create('UPBUTONNORMAL');
+//  FuNormal.cropname   := 'UPBUTONNORMAL';
+  FuPress             := TONURCUSTOMCROP.Create('UPBUTONPRESS');
+//  FuPress.cropname    := 'UPBUTONPRESS';
+  FuEnter             := TONURCUSTOMCROP.Create('UPBUTONHOVER');
+//  FuEnter.cropname    := 'UPBUTONHOVER';
+  Fudisable           := TONURCUSTOMCROP.Create('UPBUTONDISABLE');
+//  Fudisable.cropname  := 'UPBUTONDISABLE';
+  Fustate             := obsNormal;
 
   // Down button
-  FdNormal := TONURCUSTOMCROP.Create;
-  FdNormal.cropname := 'DOWNBUTONNORMAL';
-  FdPress := TONURCUSTOMCROP.Create;
-  FdPress.cropname := 'DOWNBUTONPRESS';
-  FdEnter := TONURCUSTOMCROP.Create;
-  FdEnter.cropname := 'DOWNBUTONHOVER';
-  Fddisable := TONURCUSTOMCROP.Create;
-  Fddisable.cropname := 'DOWNBUTONDISABLE';
-  Fdstate := obsNormal;
+  FdNormal            := TONURCUSTOMCROP.Create('DOWNBUTONNORMAL');
+//  FdNormal.cropname   := 'DOWNBUTONNORMAL';
+  FdPress             := TONURCUSTOMCROP.Create('DOWNBUTONPRESS');
+//  FdPress.cropname    := 'DOWNBUTONPRESS';
+  FdEnter             := TONURCUSTOMCROP.Create('DOWNBUTONHOVER');
+//  FdEnter.cropname    := 'DOWNBUTONHOVER';
+  Fddisable           := TONURCUSTOMCROP.Create('DOWNBUTONDISABLE');
+//  Fddisable.cropname  := 'DOWNBUTONDISABLE';
+  Fdstate             := obsNormal;
 
   Customcroplist.Add(FuNormal);
   Customcroplist.Add(FuEnter);
@@ -2422,12 +2312,10 @@ begin
   Customcroplist.Add(Fddisable);
 
 
-  Fubuttonarea := Rect(Self.Width - self.Height div 2, 0, self.Width, self.Height div 2);
-  Fdbuttonarea := Rect(Self.Width - self.Height div 2, self.Height div
-    2, self.Width, self.Height);
-  Caption := '0';
-  Text := '0';
-  Value := 0;
+  Fubuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2, 0, self.ClientWidth, self.ClientHeight div 2);
+  Fdbuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2, self.ClientHeight div
+    2, self.ClientWidth, self.ClientHeight);
+
 
 end;
 
@@ -2458,30 +2346,30 @@ end;
 
 procedure TONURSpinEdit.Resizing;
 begin
-   Fubuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2,
+    Fubuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2,
     0, self.ClientWidth, self.ClientHeight div 2);
   Fdbuttonarea := Rect(Self.ClientWidth - self.ClientHeight div 2,
     self.ClientHeight div 2, self.ClientWidth, self.ClientHeight);
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Width, FTopleft.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Width + Fubuttonarea.Width,
-    0, self.clientWidth - Fubuttonarea.Width, FTopRight.Height);
-  ftop.Targetrect := Rect(FTopleft.Width, 0, self.clientWidth -
-    FTopRight.Width + Fubuttonarea.Width, FTop.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Height,
-    FBottomleft.Width, self.ClientHeight);
+  FTopleft.Targetrect := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Croprect.Width + Fubuttonarea.Width,
+    0, self.clientWidth - Fubuttonarea.Width, FTopRight.Croprect.Height);
+  ftop.Targetrect := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -
+    FTopRight.Croprect.Width + Fubuttonarea.Width, FTop.Croprect.Height);
+  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,
+    FBottomleft.Croprect.Width, self.ClientHeight);
   FBottomRight.Targetrect := Rect(self.clientWidth -
-    FBottomRight.Width + Fubuttonarea.Width, self.clientHeight -
-    FBottomRight.Height, self.clientWidth - Fubuttonarea.Width, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Width, self.clientHeight -
-    FBottom.Height, self.clientWidth - FBottomRight.Width + Fubuttonarea.Width,
+    FBottomRight.Croprect.Width + Fubuttonarea.Width, self.clientHeight -
+    FBottomRight.Croprect.Height, self.clientWidth - Fubuttonarea.Width, self.clientHeight);
+  FBottom.Targetrect := Rect(FBottomleft.Croprect.Width, self.clientHeight -
+    FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width + Fubuttonarea.Width,
     self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Height, Fleft.Width,
-    self.clientHeight - FBottomleft.Height);
+  Fleft.Targetrect := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width,
+    self.clientHeight - FBottomleft.Croprect.Height);
   FRight.Targetrect := Rect(self.clientWidth -
-    FRight.Width + Fubuttonarea.Width, FTopRight.Height, self.clientWidth - Fubuttonarea.Width,
-    self.clientHeight - FBottomRight.Height);
-  FCenter.Targetrect := Rect(Fleft.Width, FTop.Height, self.clientWidth -
-    FRight.Width + Fubuttonarea.Width, self.clientHeight - FBottom.Height);
+    FRight.Croprect.Width + Fubuttonarea.Width, FTopRight.Croprect.Height, self.clientWidth - Fubuttonarea.Width,
+    self.clientHeight - FBottomRight.Croprect.Height);
+  FCenter.Targetrect := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth -
+    FRight.Croprect.Width + Fubuttonarea.Width, self.clientHeight - FBottom.Croprect.Height);
 
 end;
 
@@ -2497,6 +2385,7 @@ begin
   resim.SetSize(0, 0);
 
   resim.SetSize(self.ClientWidth, self.ClientHeight);
+
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
