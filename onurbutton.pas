@@ -1440,7 +1440,7 @@ end;
 procedure TONURRadioButton.Paint;
 var
   DR: TRect;
-  fbuttoncenter: integer;
+  fbuttoncenter,a,b: integer;
 begin
   if not Visible then Exit;
   resim.SetSize(0, 0);
@@ -1547,11 +1547,37 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.SetSize(0,0);
+    resim.SetSize(self.Width, Self.Height);
+    resim.Fill(BGRAPixelTransparent);
+   { case Fstate of
+      obsNormal:
+      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+
+      obshover:
+      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+      obspressed:
+      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+    end; }
+
+    a:=(Height div 2);
+    b:=(Height div 2) div 2;
+    if Checked = True then
+     resim.FillEllipseAntialias(a,a,a-b,a-b,BGRA(155, 155, 155))
+    else
+     resim.EllipseAntialias(a,a,a-b,a-b,BGRA(155, 155, 155),2);
+
+    yaziyaz(resim.Canvas,self.font,Rect(Height,0{Height div 2},Width,Height),caption,0,0);
   end;
+
+
+
   inherited paint;
 
-  if Length(Caption) > 0 then
+  if (Length(Caption) > 0) and (Skindata<>nil) then
   begin
     canvas.Brush.Style := bsClear;
     canvas.TextOut(Textx, Texty, (Caption));
@@ -2745,15 +2771,27 @@ begin
     resim.ResampleFilter:=rfBestQuality;
     BGRAReplace(resim, resim.Resample(self.ClientWidth,self.ClientHeight,rmFineResample));
 
-      if Crop = True then
-        CropToimg(resim);
+ //     if Crop = True then
+ //       CropToimg(resim);
 
   end
   else
   begin
     resim.SetSize(0,0);
     resim.SetSize(self.Width, Self.Height);
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    case Fstate of
+      obsNormal:
+      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+
+      obshover:
+      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+      obspressed:
+      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+    end;
   end;
   inherited Paint;
 end;
@@ -3222,9 +3260,21 @@ begin
   end
   else
   begin
-    resim.SetSize(0,0);
-    resim.SetSize(self.ClientWidth, Self.ClientHeight);
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+     resim.SetSize(0,0);
+    resim.SetSize(self.Width, Self.Height);
+  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    case Fstate of
+      obsNormal:
+      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+
+      obshover:
+      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+      obspressed:
+      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+    end;
   end;
   inherited Paint;
 end;
@@ -3517,7 +3567,8 @@ begin
      end
      else
      begin
-       resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
+       resim.Fill(BGRA(80, 80, 80, alpha), dmSet);
+
      end;
 
 
@@ -3806,7 +3857,22 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(100, 150, 100, alpha), dmSet);
+  //  resim.Fill(BGRA(100, 150, 100, alpha), dmSet);
+     resim.SetSize(0,0);
+    resim.SetSize(self.Width, Self.Height);
+  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    case Fstate of
+      obsNormal:
+      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+
+      obshover:
+      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+      obspressed:
+      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+    end;
   end;
 
   inherited Paint;
@@ -4001,7 +4067,37 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+     resim.SetSize(0,0);
+    resim.SetSize(self.Width, Self.Height);
+   // resim.Fill(BGRAPixelTransparent);
+  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    case Fstate of
+      obsNormal:
+      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+
+      obshover:
+      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+      obspressed:
+      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+    end;
+
+    if Checked = True then
+    begin
+       //resim.FillEllipseInRect(rect(0,0,20,Height),BGRA(155, 155, 155),dmset,alpha);
+      // resim.EllipseAntialias((Height div 2)+3,(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
+      resim.FillRect(rect(0,0,Width div 2,Height),BGRA(155, 155, 155),dmset);
+      yaziyaz(resim.Canvas,self.font,rect(Width div 2,0,Width,Height),'ON  ',0,0);
+    end else
+    begin
+      // resim.FillEllipseInRect(rect(Width-20,0,Width,Height),BGRA(155, 155, 155),dmset,alpha);
+      // resim.EllipseAntialias((Width-((Height div 2)-3)),(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
+      resim.FillRect(rect(Width div 2,0,Width,Height),BGRA(155, 155, 155),dmset);
+      yaziyaz(resim.Canvas,self.font,rect(Height div 2,0,Width div 2,Height),'OFF',0,0);
+    end;
   end;
   inherited Paint;
 end;
@@ -4096,23 +4192,16 @@ end;
 constructor TONURCheckbox.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
-  skinname := 'checkbox';
-  fcheckwidth := 12;
+  skinname      := 'checkbox';
+  fcheckwidth   := 12;
   fcaptiondirection := ocright;
-  obenter := TONURCUSTOMCROP.Create('NORMALHOVER');
-//  obenter.cropname := 'NORMALHOVER';
-  obleave := TONURCUSTOMCROP.Create('NORMAL');
-//  obleave.cropname := 'NORMAL';
-  obdown := TONURCUSTOMCROP.Create('PRESSED');
-//  obdown.cropname := 'PRESSED';
+  obenter       := TONURCUSTOMCROP.Create('NORMALHOVER');
+  obleave       := TONURCUSTOMCROP.Create('NORMAL');
+  obdown        := TONURCUSTOMCROP.Create('PRESSED');
   obcheckleaves := TONURCUSTOMCROP.Create('CHECK');
-//  obcheckleaves.cropname := 'CHECK';
   obcheckenters := TONURCUSTOMCROP.Create('CHECKHOVER');
-//  obcheckenters.cropname := 'CHECKHOVER';
-  obdisableoff := TONURCUSTOMCROP.Create('DISABLENORMAL');
-//  obdisableoff.cropname := 'DISABLENORMAL';
-  obdisableon := TONURCUSTOMCROP.Create('DISABLECHECK');
-//  obdisableon.cropname := 'DISABLECHECK';
+  obdisableoff  := TONURCUSTOMCROP.Create('DISABLENORMAL');
+  obdisableon   := TONURCUSTOMCROP.Create('DISABLECHECK');
 
 
 
@@ -4162,7 +4251,7 @@ end;
 procedure TONURCheckbox.Paint;
 var
   DR: TRect; 
-  fbuttoncenter: integer;
+  fbuttoncenter,a,b: integer;
 begin
 
   if not Visible then Exit;
@@ -4273,19 +4362,61 @@ begin
   end
   else
   begin
-   resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+   //resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+
+     resim.SetSize(0,0);
+    resim.SetSize(self.Width, Self.Height);
+    resim.Fill(BGRAPixelTransparent);
+  {  case Fstate of
+      obsNormal:
+      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+
+      obshover:
+      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+      obspressed:
+      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+    end;  }
+
+    a:=(Height div 2);
+    b:=(Height div 2) div 2;
+
+    if Checked = True then
+    begin
+       //resim.FillEllipseInRect(rect(0,0,20,Height),BGRA(155, 155, 155),dmset,alpha);
+      // resim.EllipseAntialias((Height div 2)+3,(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
+     // resim.FillRect(rect(0,0,Height div 2,Height div 2),BGRA(155, 155, 155),dmset);
+   //   resim.RectangleAntialias(a,a,a-b,a-b,BGRA(155, 155, 155),b);
+      resim.FillRectAntialias(a+b,a+b,a-b,a-b,BGRA(155, 155, 155))
+     // yaziyaz(resim.Canvas,self.font,Rect(Width-(Height div 2),0{Height div 2},Width-2,Height),'ON',0,0);
+    end else
+    begin
+   //    resim.FillEllipseInRect(rect(Width-20,0,Width,Height),BGRA(155, 155, 155),dmset,alpha);
+      // resim.EllipseAntialias((Width-((Height div 2)-3)),(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
+      //resim.FillRect(rect(Width div 2,0,Width,Height),BGRA(155, 155, 155),dmset);
+     // yaziyaz(resim.Canvas,self.font,Rect(Height div 2,0{Height div 2},Width-(Height div 2),Height),'OFF',0,0);
+      resim.RectangleAntialias(a+b,a+b,a-b,a-b,BGRA(135, 135, 135),2);
+
+    end;
+   // resim.TextrOut((Height div 2),(Height div 2),Caption,ColorToBGRA(self.font.color));
+   // resim.TextRect(Rect((Height div 2),(Height div 2),Width,Height),caption,taCenter,tlcenter,ColorToBGRA(self.font.color));
+    yaziyaz(resim.Canvas,self.font,Rect(Height,0{Height div 2},Width,Height),caption,0,0);
   end;
+
 
 
   inherited paint;
 
 
-  if Length(Caption) > 0 then
+  if (Length(Caption) > 0) and  (Skindata <> nil) then
   begin
     //self.resim.TextOut(textx,Texty,(Caption+' RRR'),ColorToBGRA(self.font.Color));
     canvas.Brush.Style := bsClear;
     canvas.TextOut(Textx, Texty, Caption);
   end;
+
   //inherited paint;
 end;
 

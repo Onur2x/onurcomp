@@ -2287,8 +2287,8 @@ begin
       p := buffer.Scanline[Y];
       for X := buffer.Width - 1 downto 0 do
        begin
-       // if p^=BGRAPixelTransparent then//
-        if p^.Alpha <20 then
+        if p^=BGRAPixelTransparent then
+       // if p^.Alpha <20 then
         begin
         //  p^ := BGRAPixelTransparent;
           SpanRgn := CreateRectRgn(x, y, x +1, y +1);
@@ -2346,7 +2346,12 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
+ //   resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
+
+    resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+      PointF(0, 0), PointF(0, Height), dmSet);
+
+
   end;
 
 //  DrawPartstrechFinal(self.ClientRect,resim,self.ClientWidth,self.ClientHeight,alpha);

@@ -6,7 +6,7 @@ unit onurbar;
 interface
 
 uses
-  Windows, Classes,Controls, Graphics,BGRABitmap, BGRABitmapTypes, onurctrl;
+  Windows, Classes, Controls, Graphics,BGRABitmap, BGRABitmapTypes, onurctrl;
 
 type
   { TONURScrollBar }

@@ -580,7 +580,8 @@ begin
   end
   else
   begin
-   resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+   resim.Fill(BGRA(60, 60, 60,alpha), dmSet);
+   yaziyaz(resim.canvas,self.Font,ClientRect,Caption,0,0);
   end;
 
   inherited Paint;
@@ -812,7 +813,7 @@ begin
     top             := 85;
     Width           := 30;
     Height          := 30;
-    Caption         := '';
+    Caption         := '>>';
     Captionvisible  := false;
     Skinname        := 'contentslider';
     Fnormal.cropname := 'LEFTBUTTONNORMAL';
@@ -832,7 +833,7 @@ begin
     top            := 85;
     Width          := 30;
     Height         := 30;
-    Caption        := '';
+    Caption        := '<<';
     Captionvisible := false;
     Skinname       := 'contentslider';
     Fnormal.cropname := 'RIGHTBUTTONNORMAL';
@@ -902,24 +903,25 @@ begin
 
   // WriteLn('PAIMT');
 
-   if Fcontent.count>0 then
+
+  //  yaziyaz(resim.Canvas, self.Font,  DR, Fcontent[indx], taCenter);
+  end
+  else
+  begin
+   resim.Fill(BGRA(60, 60, 60,alpha), dmSet);
+  end;
+
+
+  if Fcontent.count>0 then
    begin
     stl.Alignment := taCenter;
     stl.Wordbreak := True;
     stl.Layout := tlCenter;
     stl.SingleLine := False;
 
-
-
     resim.TextRect(DR, 0, 0, Fcontent[indx], stl,ColorToBGRA(self.font.color));
 
    end;
-  //  yaziyaz(resim.Canvas, self.Font,  DR, Fcontent[indx], taCenter);
-  end
-  else
-  begin
-   resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
-  end;
 
   inherited Paint;
 end;
@@ -1035,6 +1037,7 @@ begin
     PageControl := TONURPage(Component).PageControl
   else
     PageControl := TONURPageControl(Component);
+
   if PageControl <> nil then
   begin
     if Index = 0 then
@@ -1240,12 +1243,12 @@ begin
     //CENTERRIGHT // SAĞORTA
     DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
 
-    if Crop then
-      CropToimg(resim);
+ //   if Crop then
+ //     CropToimg(resim);
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
+    resim.Fill(BGRA(80, 80, 80, alpha), dmSet);
   end;
 
   inherited Paint;
@@ -1291,9 +1294,6 @@ begin
 
 
 
-
-
-
   btnarea.Skindata := self.Skindata;
 
   if FPages.Count > 0 then
@@ -1316,7 +1316,12 @@ end;
 
 procedure TONURPageControl.InsertPage(Page: TONURPage);
 begin
-  FPages.Add(Page);
+//  if fpages.count>0 then
+//   FPages.Insert(0,page)//Add(Page);
+//  else
+   fpages.add(page);
+
+
   Page.FPageControl := Self;
   Page.FreeNotification(Self);
 end;
@@ -1835,7 +1840,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(140, 170, 140, alpha), dmSet);
+    resim.Fill(BGRA(60, 60, 60, alpha), dmSet);
   end;
   inherited Paint;
 end;
@@ -1985,7 +1990,23 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(100, 150, 100, alpha), dmSet);
+
+     resim.SetSize(0,0);
+    resim.SetSize(self.Width, Self.Height);
+  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    case Fstate of
+      obsNormal:
+      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+
+      obshover:
+      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+      obspressed:
+      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+    end;
+    //resim.Fill(BGRA(100, 150, 100, alpha), dmSet);
   end;
 
   inherited Paint;
@@ -2022,7 +2043,7 @@ begin
     DrawPartnormal(FPageControl.Fbuttonarea.Croprect, self, rect(0, 0, self.clientWidth,
       self.clientHeight), Alpha)
   else
-    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
+    resim.Fill(BGRA(80, 80, 80, alpha), dmSet);
 
   inherited Paint;
 end;
