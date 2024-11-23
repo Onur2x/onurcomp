@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<CONFIG>
-  <Compiler Value="/home/pardus/lazarus/fpc/bin/x86_64-linux/fpc.sh" Date="1700775348"/>
-  <Params Value=" -MObjFPC -Scghi -Cg -Os1 -l -vewnhibq -Fi/home/pardus/lazarus/ccr/onurcomp/example/lib/x86_64-linux -Fu/home/pardus/lazarus/ccr/onurcomp/export/lib/x86_64-linux -Fu/home/pardus/lazarus/lazarus/components/ideintf/units/x86_64-linux/gtk2 -Fu/home/pardus/lazarus/lazarus/components/lazcontrols/lib/x86_64-linux/gtk2 -Fu/home/pardus/lazarus/ccr/bgrabitmap/bgrabitmap/lib/x86_64-linux-gtk2-3.2.2 -Fu/home/pardus/lazarus/lazarus/lcl/units/x86_64-linux/gtk2 -Fu/home/pardus/lazarus/lazarus/lcl/units/x86_64-linux -Fu/home/pardus/lazarus/lazarus/components/freetype/lib/x86_64-linux -Fu/home/pardus/lazarus/lazarus/components/buildintf/units/x86_64-linux -Fu/home/pardus/lazarus/lazarus/components/lazutils/lib/x86_64-linux -Fu/home/pardus/lazarus/lazarus/packager/units/x86_64-linux -Fu/home/pardus/lazarus/ccr/onurcomp/example/ -FU/home/pardus/lazarus/ccr/onurcomp/example/lib/x86_64-linux/ -FE/home/pardus/lazarus/ccr/onurcomp/example/ -o/home/pardus/lazarus/ccr/onurcomp/example/demo -dLCL -dLCLgtk2 demo.lpr"/>
-</CONFIG>
