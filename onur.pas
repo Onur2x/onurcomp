@@ -9,7 +9,7 @@ interface
 
 uses
   onurctrl, onurpanel, onuredit, onurpage, onurlist, onurbutton, onurbar, 
-  LazarusPackageIntf;
+  onurmenu, LazarusPackageIntf;
 
 implementation
 
@@ -22,6 +22,7 @@ begin
   RegisterUnit('onurlist', @onurlist.Register);
   RegisterUnit('onurbutton', @onurbutton.Register);
   RegisterUnit('onurbar', @onurbar.Register);
+  RegisterUnit('onurmenu', @onurmenu.Register);
 end;
 
 initialization

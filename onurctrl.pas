@@ -366,7 +366,7 @@ implementation
 //{$DEFINE XML}
 
 uses //onuredit, onurbar, onurbutton, onurpage, onurlist,
-  onurpanel,
+  onurpanel,onurmenu,
   {$IFDEF XML}uXMLIni{$ELSE}inifiles{$ENDIF};
 
 procedure Register;
@@ -1402,7 +1402,7 @@ begin
         with (TONURCustomControl(com)) do
           for a := 0 to Customcroplist.Count - 1 do
           begin
-            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
            end;
       end;
 
@@ -1411,12 +1411,20 @@ begin
         with (TONURGraphicControl(com)) do
           for a := 0 to Customcroplist.Count - 1 do
           begin
-            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
 
           end;
-
       end;
 
+      if (com is TONURPopupMenu) and (TONURPopupMenu(com).Skindata = Self) then
+      begin
+
+        with (TONURPopupMenu(com)) do
+          for a := 0 to Customcroplist.Count - 1 do
+          begin
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+          end;
+      end;
 
     end;
 
@@ -1533,7 +1541,7 @@ begin
         begin
           with (TONURCustomControl(fparent.Components[i])) do
             for a := 0 to Customcroplist.Count - 1 do
-             cropparse(TONURCustomCrop(Customcroplist[a]), ReadString( Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'))
+             cropparse(TONURCustomCrop(Customcroplist[a]), ReadString( Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'))
         end;
 
         if (fparent.Components[i] is TONURGraphicControl) and
@@ -1541,7 +1549,15 @@ begin
         begin
           with (TONURGraphicControl(fparent.Components[i])) do
             for a := 0 to Customcroplist.Count - 1 do
-             cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+             cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+        end;
+
+
+        if (fparent.Components[i] is TONURPopupMenu) and (TONURPopupMenu(fparent.Components[i]).Skindata = Self) then
+        begin
+          with (TONURPopupMenu(fparent.Components[i])) do
+           for a := 0 to Customcroplist.Count - 1 do
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
         end;
       end;
     end;
@@ -1736,7 +1752,7 @@ begin
           with (TONURCustomControl(fparent.Components[i])) do
 
             for a := 0 to Customcroplist.Count - 1 do
-              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
 
         end;
 
@@ -1745,9 +1761,17 @@ begin
         begin
           with (TONURGraphicControl(fparent.Components[i])) do
              for a := 0 to Customcroplist.Count - 1 do
-              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,0,0,clblack'));
+              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
 
         end;
+
+
+        if (fparent.Components[i] is TONURPopupMenu) and (TONURPopupMenu(fparent.Components[i]).Skindata = Self) then
+        with (TONURPopupMenu(fparent.Components[i])) do
+          for a := 0 to Customcroplist.Count - 1 do
+          begin
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+          end;
 
       end;
     end;
@@ -1910,6 +1934,19 @@ begin
               writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname,
                 croptostring(TONURCustomCrop(Customcroplist[a])));
         end;
+
+
+        if (fparent.Components[i] is TONURPopupMenu) then
+        begin
+          with (TONURPopupMenu(fparent.Components[i])) do
+
+            for a := 0 to Customcroplist.Count - 1 do
+              writeString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname,
+                croptostring(TONURCustomCrop(Customcroplist[a])));
+        end;
+
+
+
       end;
     end;
 

@@ -35,7 +35,7 @@
     <Description Value="Button,Panel,Edit,progressbar,Checkbox"/>
     <License Value="LGPL with static linking exception. This is the same license as is used in the LCL (Lazarus Component Library)."/>
     <Version Build="1"/>
-    <Files Count="8">
+    <Files Count="9">
       <Item2>
         <Filename Value="onurctrl.pas"/>
         <HasRegisterProc Value="True"/>
@@ -71,6 +71,11 @@
         <HasRegisterProc Value="True"/>
         <UnitName Value="onurbar"/>
       </Item8>
+      <Item9>
+        <Filename Value="onurmenu.pas"/>
+        <HasRegisterProc Value="True"/>
+        <UnitName Value="onurmenu"/>
+      </Item9>
     </Files>
     <CompatibilityMode Value="True"/>
     <RequiredPkgs Count="3">
