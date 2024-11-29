@@ -103,14 +103,14 @@ type
   private
     Fleft, FCenter, FRight,Ftop,fbottom, Fbar: TONURCUSTOMCROP;
     FOnChange: TNotifyEvent;
-    fposition, fmax, fmin: int64;
+    fposition, fmax, fmin: integer;//64;
     FCaptonvisible: boolean;
-    procedure setposition(const Val: int64);
-    procedure setmax(const Val: int64);
-    procedure setmin(const Val: int64);
-    function Getposition: int64;
-    function Getmin: int64;
-    function Getmax: int64;
+    procedure setposition(const Val: integer);
+    procedure setmax(const Val: integer);
+    procedure setmin(const Val: integer);
+    function Getposition: integer;
+    function Getmin: integer;
+    function Getmax: integer;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
     procedure Resize; override;
@@ -124,9 +124,9 @@ type
     property Alpha;
     property Textvisible : boolean read FCaptonvisible write FCaptonvisible;
     property Skindata;
-    property Min         : int64 read Getmin write setmin;
-    property Max         : int64 read Getmax write setmax;
-    property Position    : int64 read Getposition write setposition;
+    property Min         : integer read Getmin write setmin;
+    property Max         : integer read Getmax write setmax;
+    property Position    : integer read Getposition write setposition;
     property Onchange    : TNotifyEvent read FOnChange write FOnChange;
     property Kind;
     property Transparent;
@@ -297,7 +297,7 @@ type
     property MinValue     : Integer read FMinValue write SetMinValue;
     property Step         : Integer read FStep write FStep;
     property ScroolStep   : Integer read FScroolStep write FScroolStep;
-    property CurrentValue : Integer read FValue write SetValue;
+    property Value        : Integer read FValue write SetValue;
     property OnChange     : TNotifyEvent read FOnChange write FOnChange;
     property Transparent;
     property Align;
@@ -808,41 +808,25 @@ begin
   Captionvisible     := False;
 
   FNormali           := TONURCUSTOMCROP.Create('NORMAL');
- // FNormali.cropname  := 'NORMAL';
   FTop               := TONURCUSTOMCROP.Create('TOP');
- // FTop.cropname      := 'TOP';
   FBottom            := TONURCUSTOMCROP.Create('BOTTOM');
- // FBottom.cropname   := 'BOTTOM';
   Fhover             := TONURCUSTOMCROP.Create('HOVER');
-//  Fhover.cropname    := 'HOVER';
 
   FbuttonNL          := TONURCUSTOMCROP.Create('LEFTBUTTONNORMAL');
-//  FbuttonNL.cropname := 'LEFTBUTTONNORMAL';
   FbuttonUL          := TONURCUSTOMCROP.Create('LEFTBUTTONHOVER');
-//  FbuttonUL.cropname := 'LEFTBUTTONHOVER';
   FbuttonBL          := TONURCUSTOMCROP.Create('LEFTBUTTONPRESSED');
-//  FbuttonBL.cropname := 'LEFTBUTTONPRESSED';
   FbuttonDL          := TONURCUSTOMCROP.Create('LEFTBUTTONDISABLE');
-//  FbuttonDL.cropname := 'LEFTBUTTONDISABLE';
 
   FbuttonNR          := TONURCUSTOMCROP.Create('RIGHTBUTTONNORMAL');
-//  FbuttonNR.cropname := 'RIGHTBUTTONNORMAL';
   FbuttonUR          := TONURCUSTOMCROP.Create('RIGHTBUTTONHOVER');
-//  FbuttonUR.cropname := 'RIGHTBUTTONHOVER';
   FbuttonBR          := TONURCUSTOMCROP.Create('RIGHTBUTTONPRESSED');
-//  FbuttonBR.cropname := 'RIGHTBUTTONPRESSED';
   FbuttonDR          := TONURCUSTOMCROP.Create('RIGHTBUTTONDISABLE');
-//  FbuttonDR.cropname := 'RIGHTBUTTONDISABLE';
 
 
   FbuttonCN          := TONURCUSTOMCROP.Create('CENTERBUTTONNORMAL');
-//  FbuttonCN.cropname := 'CENTERBUTTONNORMAL';
   FbuttonCU          := TONURCUSTOMCROP.Create('CENTERBUTTONHOVER');
-//  FbuttonCU.cropname := 'CENTERBUTTONHOVER';
   FbuttonCB          := TONURCUSTOMCROP.Create('CENTERBUTTONPRESSED');
-//  FbuttonCB.cropname := 'CENTERBUTTONPRESSED';
   FbuttonCD          := TONURCUSTOMCROP.Create('CENTERBUTTONDISABLE');
-//  FbuttonCD.cropname := 'CENTERBUTTONDISABLE';
 
 
   Customcroplist.Add(FNormali);
@@ -863,6 +847,8 @@ begin
   Customcroplist.Add(FbuttonCD);
 
 
+
+
   if Parent is TONURCustomControl then
   Skindata:= TONURCustomControl(parent).Skindata
   else
@@ -870,8 +856,8 @@ begin
 end;
 
 destructor TONURScrollBar.Destroy;
-var
-  i:byte;
+//var
+//  i:byte;
 begin
 {  for i:=0 to Customcroplist.Count-1 do
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
@@ -906,20 +892,22 @@ procedure TONURScrollBar.paint;
 var
   DR: TRect;
 begin
-//  writeln('OPP');
-//  exit;
+
   if not Visible then Exit;
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
 
-  if (fCenterstate = obshover) then
-  centerbuttonareaset;
+
 
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
+
+    if (fCenterstate = obshover) then
+    centerbuttonareaset;
+
 
     // DRAW TO BACKGROUND
     if self.Kind = oHorizontal then
@@ -996,7 +984,29 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+
+     centerbuttonareaset;
+
+     resim.Fill(BGRABlack,dmSet);
+     resim.FillRect(2,2,Width-2,Height-2,BGRA(90, 90, 90,alpha),dmset);
+
+     resim.FillRect(flbuttonrect,BGRA(40, 40, 40),dmset);
+     resim.FillRect(Frbuttonrect,BGRA(40, 40, 40),dmset);
+     resim.FillRect(fcenterbuttonarea,BGRA(40, 40, 40),dmset);
+
+     if Kind = oHorizontal then
+     begin
+      yaziyazBGRA(resim.CanvasBGRA,self.font,flbuttonrect,'<',tacenter);
+      yaziyazBGRA(resim.CanvasBGRA,self.font,frbuttonrect,'>',tacenter);
+      yaziyazBGRA(resim.CanvasBGRA,self.font,fcenterbuttonarea,'||',tacenter);
+
+     end
+     else
+     begin
+      yaziyazBGRA(resim.CanvasBGRA,self.font,flbuttonrect,'^',tacenter);
+      yaziyazBGRA(resim.CanvasBGRA,self.font,frbuttonrect,'v',tacenter);
+      yaziyazBGRA(resim.CanvasBGRA,self.font,fcenterbuttonarea,'=',tacenter);
+     end;
   end;
   inherited Paint;
 
@@ -1403,7 +1413,28 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+
+   if Kind = oHorizontal then
+     fcenterbuttonarea := Rect(FPosition {+ buttonh}, 2,
+        FPosition +20{+ buttonh} , self.clientHeight-2)
+   else
+     fcenterbuttonarea := Rect(2,FPosition {+ buttonh}, self.ClientWidth-2,
+        FPosition +20{+ buttonh} );
+
+
+
+
+     resim.Fill(BGRABlack,dmSet);
+     resim.FillRect(2,2,Width-2,Height-2,BGRA(90, 90, 90,alpha),dmset);
+
+     resim.FillRect(fcenterbuttonarea,BGRA(40, 40, 40),dmset);
+
+   //  resim.GradientFill(fcenterbuttonarea.left, fcenterbuttonarea.top, fcenterbuttonarea.Right, fcenterbuttonarea.bottom, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+   //     PointF(0, 0), PointF(0, fcenterbuttonarea.Height), dmSet);
+     Captionvisible:=false;
+     yaziyazBGRA(resim.CanvasBGRA,self.font,ClientRect,inttostr(position),taCenter);
+
+
   end;
   inherited Paint;
 end;
@@ -1470,7 +1501,7 @@ end;
 
 { TONURProgressBar }
 
-procedure TONURProgressBar.setposition(const Val: int64);
+procedure TONURProgressBar.setposition(const Val: Integer);
 begin
   fposition := ValueRange(Val, fmin, fmax);
   Caption := IntToStr(fposition);
@@ -1478,7 +1509,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURProgressBar.setmax(const Val: int64);
+procedure TONURProgressBar.setmax(const Val: Integer);
 begin
   if fmax <> val then
   begin
@@ -1486,7 +1517,7 @@ begin
   end;
 end;
 
-procedure TONURProgressBar.setmin(const Val: int64);
+procedure TONURProgressBar.setmin(const Val: Integer);
 begin
   if fmin <> val then
   begin
@@ -1494,17 +1525,17 @@ begin
   end;
 end;
 
-function TONURProgressBar.Getposition: int64;
+function TONURProgressBar.Getposition: Integer;
 begin
   Result := fposition;
 end;
 
-function TONURProgressBar.Getmin: int64;
+function TONURProgressBar.Getmin: Integer;
 begin
   Result := fmin;
 end;
 
-function TONURProgressBar.Getmax: int64;
+function TONURProgressBar.Getmax: Integer;
 begin
   Result := fmax;
 end;
@@ -1552,25 +1583,18 @@ begin
 
   skinname := 'progressbarh';
   self.Width := 150;
-  self.Height := 10;
+  self.Height := 16;
   fmin := 0;
   fmax := 100;
   fposition := 10;
-  kind := oHorizontal;
+  //kind := oHorizontal;
 
   Fleft   := TONURCUSTOMCROP.Create('LEFT');
-//  Fleft.cropname   := 'LEFT';
   FCenter := TONURCUSTOMCROP.Create('CENTER');
-//  FCenter.cropname := 'CENTER';
   FRight  := TONURCUSTOMCROP.Create('RIGHT');
-//  FRight.cropname  := 'RIGHT';
   Ftop    := TONURCUSTOMCROP.Create('TOP');
-//  Ftop.cropname    := 'TOP';
   fbottom := TONURCUSTOMCROP.Create('BOTTOM');
-//  fbottom.cropname := 'BOTTOM';
-
-  fbar := TONURCUSTOMCROP.Create('BAR');
-//  fbar.cropname := 'BAR';
+  fbar    := TONURCUSTOMCROP.Create('BAR');
 
   Customcroplist.Add(Fleft);
   Customcroplist.Add(FCenter);
@@ -1619,7 +1643,9 @@ begin
 
    fbottom.Targetrect := Rect(Fleft.Croprect.Width,self.ClientHeight- fbottom.Croprect.Height,self.ClientWidth - FRight.Croprect.Width,self.ClientHeight);
 
-   FCenter.Targetrect := Rect(Fleft.Croprect.Width, ftop.Croprect.Height, self.ClientWidth - FRight.Croprect.Width, self.ClientHeight-fbottom.Croprect.Height);
+  // FCenter.Targetrect := Rect(Fleft.Croprect.Width, ftop.Croprect.Height, self.ClientWidth - FRight.Croprect.Width, self.ClientHeight-fbottom.Croprect.Height);
+   FCenter.Targetrect := Rect(0, ftop.Croprect.Height, self.ClientWidth , self.ClientHeight-fbottom.Croprect.Height);
+
   end else
   begin                              //dikey
    Ftop.Targetrect    := Rect(0,0,self.ClientWidth, Ftop.Croprect.Height);
@@ -1659,21 +1685,34 @@ begin
     // else
 
 
+      DrawPartstrechRegion(FCenter.Croprect, Self,FCenter.Targetrect.Width,FCenter.Targetrect.Height, FCenter.Targetrect, alpha);
+      DrawPartnormal(Fbar.Croprect, self, DBAR, alpha); //bar
+
+
+
       DrawPartnormal(Ftop.Croprect,self,ftop.Targetrect,alpha);
       DrawPartnormal(fbottom.Croprect,self,fbottom.Targetrect,alpha);
       DrawPartnormal(Fleft.Croprect, Self,Fleft.Targetrect, alpha);
       DrawPartnormal(FRight.Croprect, Self,FRight.Targetrect, alpha);
 
-      DrawPartstrechRegion(FCenter.Croprect, Self,FCenter.Targetrect.Width,FCenter.Targetrect.Height, FCenter.Targetrect, alpha);
-
-      DrawPartnormal(Fbar.Croprect, self, DBAR, alpha); //bar
+      Captionvisible := FCaptonvisible;
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+
+    if self.Kind = oHorizontal then
+     DBAR := Rect(0, 0 ,((fposition * self.ClientWidth) div fmax), self.ClientHeight)//self.ClientHeight)
+    else
+     DBAR := Rect(0, 0 ,self.ClientWidth, (fposition * self.ClientHeight) div fmax);
+
+
+     resim.Fill(BGRA(80, 80, 80,alpha), dmSet);
+     resim.FillRect(DBAR,BGRA(40, 40, 40),dmset);
+      Captionvisible:=false;
+     yaziyazBGRA(resim.CanvasBGRA,self.font,ClientRect,Caption,taCenter);
   end;
 
-  Captionvisible := FCaptonvisible;
+
   inherited paint;
 end;
 
@@ -1789,8 +1828,8 @@ begin
 end;
 
 destructor TONURKnob.Destroy;
-var
-  i:byte;
+//var
+//  i:byte;
 begin
 {  for i:=0 to Customcroplist.Count-1 do
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
@@ -1826,6 +1865,7 @@ var
   zValue: Integer;
   Temp : TBGRABitmap;
   tWidth,tHeight:integer;
+//  Center: TPointF;
 begin
 
   if not Visible then Exit;
@@ -1880,7 +1920,30 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    zValue  := Round (360 / (fMaxValue - fMinValue) * (FValue - fMinValue));// + 45;
+
+    tHeight := clientHeight div 2;
+    tWidth  := clientWidth div 2;
+    temp    :=TBGRABitmap.Create(ClientWidth,clientHeight);
+
+    temp.EllipseAntialias(tWidth, tHeight,tWidth-5,tHeight-5,cssBlack,2,cssGray);
+    temp.EllipseAntialias(tWidth, tHeight,tWidth-10,tHeight-10,cssBlack,2,BGRA(80, 80, 80,alpha));
+    temp.RectangleAntialias(tWidth, tHeight-20,tWidth,tHeight+10,cssWhite,3);
+    affine  := TBGRAAffineBitmapTransform.Create(Temp.Resample(tWidth,tHeight) as TBGRABitmap);
+    Affine.Translate(-tWidth div 2, -tHeight div 2);
+
+    affine.RotateDeg(zValue);
+    Affine.Translate(tWidth div 2, tHeight div 2);
+
+    temp.SetSize(0,0);
+    temp.SetSize(tWidth, tHeight);
+
+    Temp.Fill(affine,dmDrawWithTransparency);
+    resim.BlendImage(self.clientWidth div 2-(tWidth div 2) ,self.clientHeight div 2- tHeight div 2,temp,boLinearBlend);// Fill(affine);
+
+    yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(0,tHeight-30,ClientWidth,ClientHeight),inttostr(Value),tacenter);
+    affine.free;
+    temp.Free;
   end;
 
   inherited Paint;

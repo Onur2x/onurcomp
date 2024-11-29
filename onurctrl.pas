@@ -367,7 +367,7 @@ implementation
 
 uses //onuredit, onurbar, onurbutton, onurpage, onurlist,
   onurpanel,onurmenu,
-  {$IFDEF XML}uXMLIni{$ELSE}inifiles{$ENDIF};
+  {$IFDEF XML}uXMLIni{$ELSE}inifiles{$ENDIF},BGRAGrayscaleMask;
 
 procedure Register;
 begin
@@ -484,7 +484,7 @@ procedure yaziyaz(TT: TCanvas; TF: TFont; re: TRect; Fcap: string; asd: TAlignme
 var
   stl: TTextStyle;
 begin
-  TT.Font.Quality := fqCleartype;
+  TT.Font.Quality := fqClearType;
   TT.Font.Name := TF.Name;
   TT.Font.Size := TF.size;
   TT.Font.Color := TF.Color;
@@ -508,7 +508,7 @@ begin
   TT.Font.Quality     := fqCleartype;
   TT.Font.Name        := TF.Name;
   TT.Font.Height      := TF.size+20;
-  TT.Font.Color       := TF.Color xor $FFFFFF;
+  TT.Font.Color       := TF.Color;// xor $FFFFFF;
   TT.Font.style       := TF.style;
   TT.Font.Orientation := TF.Orientation;
   TT.Brush.Style      := bsClear;
@@ -527,10 +527,10 @@ var
 begin
   TT.Font.Quality     := fqSystemClearType;
   TT.Font.Name        := TF.Name;
-  TT.Font.Height      := TF.size+20;
-  TT.Font.Color       := TF.Color xor $FFFFFF;
+  TT.Font.Height      := TF.size+10;
+  TT.Font.Color       := TF.Color;// xor $FFFFFF;
   TT.Font.style       := TF.style;
-  TT.Font.Opacity     := 255;
+ // TT.Font.Opacity     := 255;
   TT.Font.Orientation := TF.Orientation;
   TT.Brush.Style      := bsClear;
   stl.Alignment       := asd;
@@ -538,8 +538,11 @@ begin
   stl.Layout          := tlCenter;
   stl.SingleLine      := False;
   TT.TextRect(re, 0, 0, Fcap, stl);
-
 end;
+
+
+
+
 
 
 function ValueRange(const Value, Min, Max: integer): integer;
@@ -632,6 +635,30 @@ begin
       Inc(p);
     end;
   end;
+end;
+
+procedure CropBGRA(var LBitmap : TBgraBitmap);
+const
+     CThreshold = 162;
+var
+     LMask: TGrayscaleMask;
+     LData: PByte;
+     LRect: TRect;
+     LIndex: integer;
+begin
+     // make a copy of the alpha channel
+     LMask := TGrayscaleMask.Create(LBitmap, cAlpha);
+     LData := LMask.Data;
+     for LIndex := LMask.NbPixels - 1 downto 0 do
+     begin
+       if LData^ < CThreshold then
+         LData^ := 0;
+       Inc(LData);
+     end;
+     // get bounds of the modified mask
+     LRect := LMask.GetImageBounds;
+     LMask.Free;
+     BGRAReplace(LBitmap, LBitmap.GetPart(LRect));
 end;
 
 
@@ -1236,6 +1263,11 @@ begin
   if ThemeStyle = 'modern' then        // if Theme style modern region corner
   begin
     WindowRgn := CreateRectRgn(0, 0, frmain.Width, frmain.Height);
+
+
+    CropBGRA(frmain);
+
+
 
     for Y := 0 to frmain.Height - 1 do
     begin
@@ -1987,13 +2019,17 @@ begin
   parent := TWinControl(Aowner);
   ControlStyle := ControlStyle + [csClickEvents, csCaptureMouse,
     csDoubleClicks, csParentBackground];
-  Width := 100;
-  Height := 30;
-  Fkind := oHorizontal;
-  Transparent := True;
+  Width            := 100;
+  Height           := 30;
+  Fkind            := oHorizontal;
+  Transparent      := True;
   Backgroundbitmaped := True;
-  ParentColor := True;
-  FAlignment := taCenter;
+  ParentColor      := True;
+  FAlignment       := taCenter;
+  self.font.size   := 10;
+  self.font.Name   := 'calibri';
+  self.Font.color  := clWhite;
+
   resim := TBGRABitmap.Create(clientWidth,clientHeight);
 
   Captionvisible := True;
@@ -2141,9 +2177,8 @@ begin
 //  BGRAReplace(resim, resim.Resample(self.ClientWidth,self.ClientHeight,rmFineResample));
 
   resim.Draw(self.canvas, 0, 0, False);
-  //   canvas.Unlock;
 
-  //WriteLn('OK');
+
 
   if Captionvisible then
   //  yaziyazBGRA(resim.CanvasBGRA, self.Font, self.ClientRect, Caption, Alignment);
@@ -2176,6 +2211,9 @@ begin
   Backgroundbitmaped := True;
   Width := 100;
   Height := 30;
+  self.font.size   := 10;
+  self.font.Name   := 'calibri';
+  self.Font.color  := clWhite;
   resim := TBGRABitmap.Create(ClientWidth,ClientHeight);
 //  WindowRgn := CreateRectRgn(0, 0, self.Width, self.Height);
   Captionvisible := True;
@@ -2319,6 +2357,9 @@ begin
     end;
   end;
  }
+
+
+
    for Y := 0 to buffer.Height - 1 do
     begin
       p := buffer.Scanline[Y];
@@ -2344,6 +2385,9 @@ begin
         Inc(p);
       end;
     end;
+
+
+    //
 
  // buffer.InvalidateBitmap;
 
@@ -2395,8 +2439,14 @@ begin
 
 //  BGRAReplace(resim, resim.Resample(self.ClientWidth,self.ClientHeight,rmSimpleStretch));
 
+
+
+
   if Crop then
-  CropToimg(resim);
+  begin
+   CropBGRA(resim);
+   CropToimg(resim);
+  end;
 
   resim.Draw(self.canvas, 0, 0, False);
 

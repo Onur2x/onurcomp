@@ -1127,13 +1127,9 @@ begin
   FButtonType       := OBTNClose;
   skinname          := 'closebutton';
   FNormal           := TONURCUSTOMCROP.Create('NORMAL');
-//  FNormal.cropname  := 'NORMAL';
   FPress            := TONURCUSTOMCROP.Create('PRESSED');
-//  FPress.cropname   := 'PRESSED';
   FEnter            := TONURCUSTOMCROP.Create('HOVER');
-//  FEnter.cropname   := 'HOVER';
   Fdisable          := TONURCUSTOMCROP.Create('DISABLE');
-//  Fdisable.cropname := 'DISABLE';
 
   Customcroplist.Add(FNormal);
   Customcroplist.Add(FEnter);
@@ -1152,12 +1148,7 @@ begin
 end;
 
 destructor TONURsystemButton.Destroy;
-var
-  A: integer;
 begin
- {  for A:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[A]).free;
- }
   Customcroplist.Clear;
   inherited Destroy;
 end;
@@ -1205,7 +1196,7 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190), dmSet);
+    resim.Fill(BGRA(90, 90, 90), dmSet);
   end;
   inherited Paint;
 end;
@@ -1394,19 +1385,12 @@ begin
   fcheckwidth := 12;
   fcaptiondirection := ocright;
   obenter := TONURCUSTOMCROP.Create('NORMALHOVER');
-//  obenter.cropname := 'NORMALHOVER';
   obleave := TONURCUSTOMCROP.Create('NORMAL');
-//  obleave.cropname := 'NORMAL';
   obdown := TONURCUSTOMCROP.Create('PRESSED');
-//  obdown.cropname := 'PRESSED';
   obcheckleaves := TONURCUSTOMCROP.Create('CHECK');
-//  obcheckleaves.cropname := 'CHECK';
   obcheckenters := TONURCUSTOMCROP.Create('CHECKHOVER');
-//  obcheckenters.cropname := 'CHECKHOVER';
   obdisableoff := TONURCUSTOMCROP.Create('DISABLENORMAL');
-//  obdisableoff.cropname := 'DISABLENORMAL';
   obdisableon := TONURCUSTOMCROP.Create('DISABLECHECK');
-//  obdisableon.cropname := 'DISABLECHECK';
 
   Customcroplist.Add(obenter);
   Customcroplist.Add(obleave);
@@ -1426,13 +1410,7 @@ begin
 end;
 
 destructor TONURRadioButton.Destroy;
-var
- i:byte;
 begin
-  {
- for i:=0 to Customcroplist.Count-1 do
- TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-}
  Customcroplist.Clear;
  inherited Destroy;
 end;
@@ -1446,46 +1424,12 @@ begin
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
 
+
+
+
+
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-
-
-
-     case fCaptionDirection of
-      ocup:
-      begin
-        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := DR.top;//obleave.Croprect.Top;//fborderWidth;
-        fbuttoncenter := ((self.clientHeight div 2) div 2) + (fcheckwidth div 2);
-        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
-          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
-      end;
-      ocdown:
-      begin
-        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
-        Texty := ((self.clientHeight div 2)) + DR.Top;//obleave.Croprect.Top;// + fborderWidth;
-        fbuttoncenter := ((self.clientHeight div 2) div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
-          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
-      end;
-      ocleft:
-      begin
-        textx := self.ClientWidth - (fcheckwidth + self.canvas.TextWidth(Caption) + 5);
-        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
-        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect(self.ClientWidth - fcheckwidth, fbuttoncenter, self.ClientWidth,
-          fbuttoncenter + fcheckwidth);
-      end;
-      ocright:
-      begin
-        textx := fcheckwidth + 5;
-        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
-        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
-        Fclientrect := Rect(0, fbuttoncenter, fcheckwidth, fbuttoncenter + fcheckwidth);
-      end;
-    end;
-
-
 
     if Enabled = True then
     begin
@@ -1543,6 +1487,42 @@ begin
           Self.Font.Color := obdisableoff.Fontcolor;
         end;
     end;
+
+
+    case fCaptionDirection of
+      ocup:
+      begin
+        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
+        Texty := DR.top;//obleave.Croprect.Top;//fborderWidth;
+        fbuttoncenter := ((self.clientHeight div 2) div 2) + (fcheckwidth div 2);
+        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
+          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
+      end;
+      ocdown:
+      begin
+        textx := (self.ClientWidth div 2) - (self.canvas.TextWidth(Caption) div 2);
+        Texty := ((self.clientHeight div 2)) + DR.Top;//obleave.Croprect.Top;// + fborderWidth;
+        fbuttoncenter := ((self.clientHeight div 2) div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect((self.ClientWidth div 2) - (fcheckwidth div 2),
+          fbuttoncenter, (self.ClientWidth div 2) + (fcheckwidth div 2), fbuttoncenter + fcheckwidth);
+      end;
+      ocleft:
+      begin
+        textx := self.ClientWidth - (fcheckwidth + self.canvas.TextWidth(Caption) + 5);
+        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
+        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect(self.ClientWidth - fcheckwidth, fbuttoncenter, self.ClientWidth,
+          fbuttoncenter + fcheckwidth);
+      end;
+      ocright:
+      begin
+        textx := fcheckwidth + 5;
+        Texty := (self.clientHeight div 2) - (self.canvas.TextHeight(Caption) div 2);
+        fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
+        Fclientrect := Rect(0, fbuttoncenter, fcheckwidth, fbuttoncenter + fcheckwidth);
+      end;
+    end;
+
     DrawPartnormal(DR, Self, Fclientrect, alpha);
   end
   else
@@ -1550,27 +1530,48 @@ begin
     resim.SetSize(0,0);
     resim.SetSize(self.Width, Self.Height);
     resim.Fill(BGRAPixelTransparent);
-   { case Fstate of
-      obsNormal:
-      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
-        PointF(0, 0), PointF(0, Height), dmSet);
 
-      obshover:
-      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
-        PointF(0, 0), PointF(0, Height), dmSet);
-      obspressed:
-      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
-        PointF(0, 0), PointF(0, Height), dmSet);
-    end; }
 
-    a:=(Height div 2);
-    b:=(Height div 2) div 2;
+    case fCaptionDirection of
+      ocup:
+      begin
+        a:= (self.ClientWidth div 2);
+        b:= resim.CanvasBGRA.TextHeight(Caption);
+        textx := a - (resim.CanvasBGRA.TextWidth(Caption) div 2);
+        Texty := 0;
+        Fclientrect :=rect(a,b, a+fcheckwidth,b+fcheckwidth);
+      end;
+      ocdown:
+      begin
+        a:= (self.ClientWidth div 2);
+        b:= resim.CanvasBGRA.TextHeight(Caption);
+        textx := a - (resim.CanvasBGRA.TextWidth(Caption) div 2);
+        Texty := self.ClientHeight-b;
+        Fclientrect :=rect(a,0, a+fcheckwidth,fcheckwidth);
+      end;
+      ocleft:
+      begin
+        a:= (self.clientHeight div 2);
+        b:= resim.CanvasBGRA.TextWidth(Caption);
+        textx :=5;
+        Texty := a - resim.CanvasBGRA.TextHeight(Caption);
+        Fclientrect := Rect(b+resim.CanvasBGRA.TextHeight(Caption),0,b+fcheckwidth+resim.CanvasBGRA.TextHeight(Caption),fcheckwidth);
+      end;
+      ocright:
+      begin
+        a:= (self.clientHeight div 2);
+        b:= resim.CanvasBGRA.TextHeight(Caption);
+        textx :=fcheckwidth+5;
+        Texty := a - b;
+        Fclientrect := Rect(0,0,CheckWidth,fcheckwidth);
+      end;
+    end;
+
     if Checked = True then
-     resim.FillEllipseAntialias(a,a,a-b,a-b,BGRA(155, 155, 155))
+     resim.EllipseInRect(Fclientrect,bgrablack,bgra(155, 155, 155),dmset)
     else
-     resim.EllipseAntialias(a,a,a-b,a-b,BGRA(155, 155, 155),2);
-
-    yaziyaz(resim.Canvas,self.font,Rect(Height,0{Height div 2},Width,Height),caption,0,0);
+     resim.EllipseInRect(Fclientrect,bgrablack,BGRAPixelTransparent,dmset);
+    yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
   end;
 
 
@@ -1959,15 +1960,10 @@ Begin
   Self.Height           := 30;
   Self.Width            := 30;
   Fonclientp            := TONURCUSTOMCROP.Create('LEDONNORMAL');
-//  Fonclientp.cropname   := 'LEDONNORMAL';
   Fonclientph           := TONURCUSTOMCROP.Create('LEDONHOVER');
-//  Fonclientph.cropname  := 'LEDONHOVER';
   Foffclientp           := TONURCUSTOMCROP.Create('LEDOFFNORMAL');
-//  Foffclientp.cropname  := 'LEDOFFNORMAL';
   Foffclientph          := TONURCUSTOMCROP.Create('LEDOFFHOVER');
-//  Foffclientph.cropname := 'LEDOFFHOVER';
   Fdisabled             := TONURCUSTOMCROP.Create('LEDDISABLE');
-//  Fdisabled.cropname    := 'LEDDISABLE';
 
   Customcroplist.Add(Fonclientp);
   Customcroplist.Add(Fonclientph);
@@ -1985,13 +1981,7 @@ end;
 
 // -----------------------------------------------------------------------------
 destructor TONURLed.Destroy;
-var
- i:byte;
 begin
-  {
- for i:=0 to Customcroplist.Count-1 do
- TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-}
  Customcroplist.Clear;
  inherited Destroy;
 End;
@@ -2046,7 +2036,10 @@ begin
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+   if fcheck then
+    resim.Fill(BGRA(115, 115, 115,alpha), dmSet)
+   else
+   resim.Fill(BGRA(90, 90, 90,alpha), dmSet);
   end;
   inherited Paint;
 End;
@@ -2229,7 +2222,6 @@ begin
   inherited Create(AOwner);
   skinname := 'label';
   fclientp := TONURCUSTOMCROP.Create('CLIENT');
-//  fclientp.cropname := 'CLIENT';
   Customcroplist.Add(fclientp);
 
   FInterval := 100;
@@ -2271,6 +2263,10 @@ begin
 
   Skindata := nil;
 
+  FCharWidth  := tempbitmap.TextSize('ABCÇDEFGĞHIİJKLMNOÖPRSŞTUÜVYZQXW').cx div 32;
+  FCharHeight := tempbitmap.TextSize('ÇĞ').cy;// * 2) div Flist.Count;
+
+  //ShowMessage(inttostr(fCharWidth)+'   '+inttostr(FCharHeight));
   Getbmp;
 end;
 
@@ -2302,9 +2298,10 @@ var
 begin
   FBitmap.SetSize(0,0);
   if self.Caption = '' then exit;
-  if (Skindata = nil) then  exit;
+
   if tempbitmap.Empty then exit;
 
+ // if (Skindata = nil) then  exit;
 
 
   if Caption <> '' then
@@ -2353,8 +2350,8 @@ procedure TONURlabel.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   if Flist.Count<1 then exit;
-  FCharWidth:=fclientp.Croprect.Width div UTF8LengthFast(Flist[0]);
-  FCharHeight:=fclientp.Croprect.Height div Flist.Count;
+  FCharWidth  := fclientp.Croprect.Width div UTF8LengthFast(Flist[0]);
+  FCharHeight := fclientp.Croprect.Height div Flist.Count;
 
 
 end;
@@ -2373,23 +2370,48 @@ procedure TONURlabel.paint;
 var
   TrgtRect: TRect;
    img: TBGRACustomBitmap;
+   i:integer;
 begin
   if not Visible then exit;
-  resim.SetSize(0,0);
 
-  resim.Setsize((Length(self.Caption) * CharWidth),self.ClientHeight);
-  tempbitmap.SetSize(0,0);
-
-  tempbitmap.SetSize(fclientp.Croprect.Width, fclientp.Croprect.Height);
-  FBitmap.SetSize(0,0);
 
 
  if (Skindata <> nil) and not (csDesigning in ComponentState) then
  begin
+
+    resim.SetSize(0,0);
+
+    resim.Setsize((Length(self.Caption) * CharWidth),self.ClientHeight);
+    tempbitmap.SetSize(0,0);
+
+    tempbitmap.SetSize(fclientp.Croprect.Width, fclientp.Croprect.Height);
+    FBitmap.SetSize(0,0);
+
     TrgtRect := Rect(0, 0, tempbitmap.Width, tempbitmap.Height);
     DrawPartnormalbmp(fclientp.Croprect, self, tempbitmap, TrgtRect, Alpha);
     Getbmp;
+
+ end
+ else
+ begin
+   resim.SetSize(0,0);
+   resim.Setsize((Length(self.Caption) * CharWidth),self.ClientHeight);
+   FBitmap.SetSize(0,0);
+
+   tempbitmap.SetSize(0,0);
+
+   if Strings.count>0 then
+   begin
+    tempbitmap.SetSize((32 * CharWidth),CharHeight*Flist.count);
+    tempbitmap.Fill(BGRAPixelTransparent);
+    for i:=0 to Flist.Count - 1 do
+    tempbitmap.TextOut(0,i*tempbitmap.TextSize(Flist[i]).cy ,Flist[i],BGRAWhite);
+   end;
+  // tempbitmap.SaveToFile('C:\lazarus\components\paketler\ONUR\onurcomp\aa.png');
+   Getbmp;
  end;
+
+
 
 
   if not FStretch then
@@ -2414,6 +2436,7 @@ begin
     end else
       resim.StretchPutImage(rect(0,0,self.ClientWidth,self.ClientHeight),FBitmap.GetPart(Rect(0,0,FBitmap.Width, CharHeight)),dmDrawWithTransparency, Alpha);
   end;
+
   inherited paint;
 end;
 
@@ -2438,80 +2461,44 @@ begin
 
   skinname                := 'cropbutton';
   FNormalTL               := TONURCUSTOMCROP.Create('NORMALTOPLEFT');
-//  FNormalTL.cropname      := 'NORMALTOPLEFT';
   FNormalTR               := TONURCUSTOMCROP.Create('NORMALTOPRIGHT');
-//  FNormalTR.cropname      := 'NORMALTOPRIGHT';
   FNormalT                := TONURCUSTOMCROP.Create('NORMALTOP');
-//  FNormalT.cropname       := 'NORMALTOP';
   FNormalBL               := TONURCUSTOMCROP.Create('NORMALBOTTOMLEFT');
-//  FNormalBL.cropname      := 'NORMALBOTTOMLEFT';
   FNormalBR               := TONURCUSTOMCROP.Create('NORMALBOTTOMRIGHT');
-//  FNormalBR.cropname      := 'NORMALBOTTOMRIGHT';
   FNormalB                := TONURCUSTOMCROP.Create('NORMALBOTTOM');
-//  FNormalB.cropname       := 'NORMALBOTTOM';
   FNormalL                := TONURCUSTOMCROP.Create('NORMALLEFT');
-//  FNormalL.cropname       := 'NORMALLEFT';
   FNormalR                := TONURCUSTOMCROP.Create('NORMALRIGHT');
-//  FNormalR.cropname       := 'NORMALRIGHT';
   FNormalC                := TONURCUSTOMCROP.Create('NORMALCENTER');
-//  FNormalC.cropname       := 'NORMALCENTER';
 
   FHoverTL                := TONURCUSTOMCROP.Create('HOVERTOPLEFT');
-//  FHoverTL.cropname       := 'HOVERTOPLEFT';
   FHoverTR                := TONURCUSTOMCROP.Create('HOVERTOPRIGHT');
-//  FHoverTR.cropname       := 'HOVERTOPRIGHT';
   FHoverT                 := TONURCUSTOMCROP.Create('HOVERTOP');
-//  FHoverT.cropname        := 'HOVERTOP';
   FHoverBL                := TONURCUSTOMCROP.Create('HOVERBOTTOMLEFT');
-//  FHoverBL.cropname       := 'HOVERBOTTOMLEFT';
   FHoverBR                := TONURCUSTOMCROP.Create('HOVERBOTTOMRIGHT');
-//  FHoverBR.cropname       := 'HOVERBOTTOMRIGHT';
   FHoverB                 := TONURCUSTOMCROP.Create('HOVERBOTTOM');
-//  FHoverB.cropname        := 'HOVERBOTTOM';
   FHoverL                 := TONURCUSTOMCROP.Create('HOVERLEFT');
-//  FHoverL.cropname        := 'HOVERLEFT';
   FHoverR                 := TONURCUSTOMCROP.Create('HOVERRIGHT');
-//  FHoverR.cropname        := 'HOVERRIGHT';
   FHoverC                 := TONURCUSTOMCROP.Create('HOVERCENTER');
-//  FHoverC.cropname        := 'HOVERCENTER';
 
   FPressTL                := TONURCUSTOMCROP.Create('PRESSTOPLEFT');
-//  FPressTL.cropname       := 'PRESSTOPLEFT';
   FPressTR                := TONURCUSTOMCROP.Create('PRESSTOPRIGHT');
-//  FPressTR.cropname       := 'PRESSTOPRIGHT';
   FPressT                 := TONURCUSTOMCROP.Create('PRESSTOP');
-//  FPressT.cropname        := 'PRESSTOP';
   FPressBL                := TONURCUSTOMCROP.Create('PRESSBOTTOMLEFT');
-//  FPressBL.cropname       := 'PRESSBOTTOMLEFT';
   FPressBR                := TONURCUSTOMCROP.Create('PRESSBOTTOMRIGHT');
-//  FPressBR.cropname       := 'PRESSBOTTOMRIGHT';
   FPressB                 := TONURCUSTOMCROP.Create('PRESSBOTTOM');
-//  FPressB.cropname        := 'PRESSBOTTOM';
   FPressL                 := TONURCUSTOMCROP.Create('PRESSLEFT');
-//  FPressL.cropname        := 'PRESSLEFT';
   FPressR                 := TONURCUSTOMCROP.Create('PRESSRIGHT');
-//  FPressR.cropname        := 'PRESSRIGHT';
   FPressC                 := TONURCUSTOMCROP.Create('PRESSCENTER');
-//  FPressC.cropname        := 'PRESSCENTER';
 
   FDisableTL              := TONURCUSTOMCROP.Create('DISABLETOPLEFT');
-//  FDisableTL.cropname     := 'DISABLETOPLEFT';
   FDisableTR              := TONURCUSTOMCROP.Create('DISABLETOPRIGHT');
-//  FDisableTR.cropname     := 'DISABLETOPRIGHT';
   FDisableT               := TONURCUSTOMCROP.Create('DISABLETOP');
-//  FDisableT.cropname      := 'DISABLETOP';
   FDisableBL              := TONURCUSTOMCROP.Create('DISABLEBOTTOMLEFT');
-//  FDisableBL.cropname     := 'DISABLEBOTTOMLEFT';
   FDisableBR              := TONURCUSTOMCROP.Create('DISABLEBOTTOMRIGHT');
-//  FDisableBR.cropname     := 'DISABLEBOTTOMRIGHT';
   FDisableB               := TONURCUSTOMCROP.Create('DISABLEBOTTOM');
-//  FDisableB.cropname      := 'DISABLEBOTTOM';
   FDisableL               := TONURCUSTOMCROP.Create('DISABLELEFT');
-//  FDisableL.cropname      := 'DISABLELEFT';
   FDisableR               := TONURCUSTOMCROP.Create('DISABLERIGHT');
-//  FDisableR.cropname      := 'DISABLERIGHT';
   FDisableC               := TONURCUSTOMCROP.Create('DISABLECENTER');
-//  FDisableC.cropname      := 'DISABLECENTER';
 
 
 
@@ -2562,12 +2549,7 @@ end;
 
 // -----------------------------------------------------------------------------
 destructor TONURCropButton.Destroy;
-var
-  i:byte;
 begin
-{  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-  }
   Customcroplist.Clear;
   inherited Destroy;
 end;
@@ -4070,7 +4052,7 @@ begin
   //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
      resim.SetSize(0,0);
     resim.SetSize(self.Width, Self.Height);
-   // resim.Fill(BGRAPixelTransparent);
+    resim.Fill(BGRAPixelTransparent);
   //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     case Fstate of
       obsNormal:
@@ -4090,13 +4072,17 @@ begin
        //resim.FillEllipseInRect(rect(0,0,20,Height),BGRA(155, 155, 155),dmset,alpha);
       // resim.EllipseAntialias((Height div 2)+3,(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
       resim.FillRect(rect(0,0,Width div 2,Height),BGRA(155, 155, 155),dmset);
-      yaziyaz(resim.Canvas,self.font,rect(Width div 2,0,Width,Height),'ON  ',0,0);
+    //  yaziyaz(resim.Canvas,self.font,rect(Width div 2,0,Width,Height),'ON  ',0,0);
+      yaziyazBGRA(resim.CanvasBGRA,self.font,rect(Width div 2,0,Width,Height),'ON  ',tacenter);
+
     end else
     begin
       // resim.FillEllipseInRect(rect(Width-20,0,Width,Height),BGRA(155, 155, 155),dmset,alpha);
       // resim.EllipseAntialias((Width-((Height div 2)-3)),(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
       resim.FillRect(rect(Width div 2,0,Width,Height),BGRA(155, 155, 155),dmset);
-      yaziyaz(resim.Canvas,self.font,rect(Height div 2,0,Width div 2,Height),'OFF',0,0);
+      yaziyazBGRA(resim.CanvasBGRA,self.font,rect(Height div 2,0,Width div 2,Height),'OFF',tacenter);
+
+   //   yaziyaz(resim.Canvas,self.font,rect(Height div 2,0,Width div 2,Height),'OFF',0,0);
     end;
   end;
   inherited Paint;
@@ -4364,9 +4350,9 @@ begin
   begin
    //resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
 
-     resim.SetSize(0,0);
-    resim.SetSize(self.Width, Self.Height);
-    resim.Fill(BGRAPixelTransparent);
+   // resim.SetSize(0,0);
+  //  resim.SetSize(self.Width, Self.Height);
+  //  resim.Fill(BGRAPixelTransparent);
   {  case Fstate of
       obsNormal:
       resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
@@ -4380,29 +4366,89 @@ begin
         PointF(0, 0), PointF(0, Height), dmSet);
     end;  }
 
-    a:=(Height div 2);
-    b:=(Height div 2) div 2;
+  //  a:=(Height div 2);
+  //  b:=(Height div 2) div 2;
 
-    if Checked = True then
-    begin
+ //   if Checked = True then
+  //  begin
        //resim.FillEllipseInRect(rect(0,0,20,Height),BGRA(155, 155, 155),dmset,alpha);
       // resim.EllipseAntialias((Height div 2)+3,(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
      // resim.FillRect(rect(0,0,Height div 2,Height div 2),BGRA(155, 155, 155),dmset);
    //   resim.RectangleAntialias(a,a,a-b,a-b,BGRA(155, 155, 155),b);
-      resim.FillRectAntialias(a+b,a+b,a-b,a-b,BGRA(155, 155, 155))
+ //     resim.FillRectAntialias(a+b,a+b,a-b,a-b,BGRA(155, 155, 155))
      // yaziyaz(resim.Canvas,self.font,Rect(Width-(Height div 2),0{Height div 2},Width-2,Height),'ON',0,0);
-    end else
-    begin
+ //   end else
+ //   begin
    //    resim.FillEllipseInRect(rect(Width-20,0,Width,Height),BGRA(155, 155, 155),dmset,alpha);
       // resim.EllipseAntialias((Width-((Height div 2)-3)),(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
       //resim.FillRect(rect(Width div 2,0,Width,Height),BGRA(155, 155, 155),dmset);
      // yaziyaz(resim.Canvas,self.font,Rect(Height div 2,0{Height div 2},Width-(Height div 2),Height),'OFF',0,0);
-      resim.RectangleAntialias(a+b,a+b,a-b,a-b,BGRA(135, 135, 135),2);
+  //    resim.RectangleAntialias(a+b,a+b,a-b,a-b,BGRA(135, 135, 135),2);
 
-    end;
+  //  end;
    // resim.TextrOut((Height div 2),(Height div 2),Caption,ColorToBGRA(self.font.color));
    // resim.TextRect(Rect((Height div 2),(Height div 2),Width,Height),caption,taCenter,tlcenter,ColorToBGRA(self.font.color));
-    yaziyaz(resim.Canvas,self.font,Rect(Height,0{Height div 2},Width,Height),caption,0,0);
+  //  yaziyaz(resim.Canvas,self.font,Rect(Height,0{Height div 2},Width,Height),caption,0,0);
+
+
+    resim.SetSize(0,0);
+    resim.SetSize(self.Width, Self.Height);
+    resim.Fill(BGRAPixelTransparent);
+
+
+    case fCaptionDirection of
+      ocup:
+      begin
+        a:= (self.ClientWidth div 2);
+        b:= resim.CanvasBGRA.TextHeight(Caption);
+        textx := a - (resim.CanvasBGRA.TextWidth(Caption) div 2);
+        Texty := 0;
+        Fclientrect :=rect(a,b, a+fcheckwidth,b+fcheckwidth);
+      end;
+      ocdown:
+      begin
+        a:= (self.ClientWidth div 2);
+        b:= resim.CanvasBGRA.TextHeight(Caption);
+        textx := a - (resim.CanvasBGRA.TextWidth(Caption) div 2);
+        Texty := self.ClientHeight-b;
+        Fclientrect :=rect(a,0, a+fcheckwidth,fcheckwidth);
+      end;
+      ocleft:
+      begin
+        a:= (self.clientHeight div 2);
+        b:= resim.CanvasBGRA.TextWidth(Caption);
+        textx :=5;
+        Texty := a - resim.CanvasBGRA.TextHeight(Caption);
+        Fclientrect := Rect(b+resim.CanvasBGRA.TextHeight(Caption),0,b+fcheckwidth+resim.CanvasBGRA.TextHeight(Caption),fcheckwidth);
+      end;
+      ocright:
+      begin
+        a:= (self.clientHeight div 2);
+        b:= resim.CanvasBGRA.TextHeight(Caption);
+        textx :=fcheckwidth+5;
+        Texty := a - b;
+        Fclientrect := Rect(0,0,CheckWidth,fcheckwidth);
+      end;
+    end;
+    //resim.FillRectAntialias(a+b,a+b,a-b,a-b,BGRA(155, 155, 155))
+
+    if Checked = True then
+     resim.Rectangle(Fclientrect,bgrablack,bgra(155, 155, 155),dmset)
+    else
+     resim.Rectangle(Fclientrect,bgrablack,BGRAPixelTransparent,dmset);
+
+    yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
+
+
+
+
+
+
+
+
+
+
+
   end;
 
 
