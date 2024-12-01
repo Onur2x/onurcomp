@@ -1051,7 +1051,7 @@ begin
     buttonh :=Round(((Ftrackarea.Width-MaxMin)/MaxMin)*100);//Round((Ftrackarea.Width- MaxMin));//DR.Width;//self.Height-ABS(Round((Ftrackarea.Width / MaxMin)- DR.Width));// Max:=Max-self.Width;
     if buttonh<10 then buttonh:=10;
 
-   // buttonh :=DR.Width;
+    buttonh :=DR.Width;
 
     fcenterbuttonarea := Rect(FPosition+Flbuttonrect.Width {+ buttonh}, borderwh,
         FPosition +Frbuttonrect.Width{+ buttonh} + buttonh, self.clientHeight - borderwh);

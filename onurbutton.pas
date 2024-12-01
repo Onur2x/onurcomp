@@ -3067,42 +3067,95 @@ begin
   inherited SetSkindata(Aimg);
   resizing;
 
+  FBGNormal.SetSize(FNormalTL.Croprect.Width+FNormalT.Croprect.Width+FNormalTR.Croprect.Width,FNormalTL.Croprect.Height+FNormalL.Croprect.Height+FNormalBL.Croprect.Height);
+  FBGHover.SetSize(FHoverTL.Croprect.Width+FHoverT.Croprect.Width+FHoverTR.Croprect.Width,FHoverTL.Croprect.Height+FHoverL.Croprect.Height+FHoverBL.Croprect.Height);
+  FBGPress.SetSize(FPressTL.Croprect.Width+FPressT.Croprect.Width+FPressTR.Croprect.Width,FPressTL.Croprect.Height+FPressL.Croprect.Height+FPressBL.Croprect.Height);
+  FBGDisable.SetSize(FDisableTL.Croprect.Width+FDisableT.Croprect.Width+FDisableTR.Croprect.Width,FDisableTL.Croprect.Height+FDisableL.Croprect.Height+FDisableBL.Croprect.Height);
+
+
+  //RECT LOAD
+  tl := Rect(0,0,FNormalTL.Croprect.Width,FNormalTL.Croprect.Height);
+  t  := Rect(FNormalTL.Croprect.Width,0,FNormalTL.Croprect.Width+FNormalT.Croprect.Width,FNormalT.Croprect.Height);
+  tr := Rect(FNormalTL.Croprect.Width+FNormalT.Croprect.Width,0,FNormalTL.Croprect.Width+FNormalT.Croprect.Width+FNormalTR.Croprect.Width,FNormalTR.Croprect.Height);
+  bl := Rect(0,FBGNormal.Height-FNormalbl.Croprect.Height,FNormalbl.Croprect.Width,FBGNormal.Height);
+  b  := Rect(FNormalBL.Croprect.Width,FBGNormal.Height-FNormalB.Croprect.Height,FBGNormal.Width-(FNormalBR.Croprect.Width),FBGNormal.Height);
+  br := Rect(FBGNormal.Width-FNormalBR.Croprect.Width,FBGNormal.Height-FNormalBR.Croprect.Height,FBGNormal.Width,FBGNormal.Height);
+  l  := Rect(0,FNormalTL.Croprect.Height,FNormalL.Croprect.Width,FNormalTL.Croprect.Height+FNormalL.Croprect.Height);
+  r  := Rect(FBGNormal.Width-FNormalR.Croprect.Width,FNormalTR.Croprect.Height,FBGNormal.Width, FBGNormal.Height- FNormalBR.Croprect.Height);
+  c  := Rect(FNormalL.Croprect.Width,FNormalT.Croprect.Height,FBGNormal.Width-FNormalR.Croprect.Width,FBGNormal.Height-FNormalB.Croprect.Height);
+
   /// LOAD FORM SKIN IMAGE TO NORMAL BUTTON IMAGE
 
-  // NORMAL BUTTON IMAGE
-  Drawbutton(FBGNormal,FNormalTL.Croprect,Rect(0,0,FNormalTL.Croprect.Width,FNormalTL.Croprect.Height));
-  Drawbutton(FBGNormal,FNormalT.Croprect,Rect(FNormalTL.Croprect.Width,0,FNormalT.Croprect.Width,FNormalT.Croprect.Height));
-  Drawbutton(FBGNormal,FNormalTr.Croprect,Rect(FNormalTL.Croprect.Width+FNormalT.Croprect.Width,0,FNormalTL.Croprect.Width+FNormalT.Croprect.Width+FNormalTR.Croprect.Width,FNormalTR.Croprect.Height));
-  Drawbutton(FBGNormal,FNormall.Croprect,Rect(0,FNormalTL.Croprect.Height,FNormalL.Croprect.Width,FNormalTL.Croprect.Height+FNormalL.Croprect.Height));
 
-  Drawbutton(FBGNormal,FNormalbl.Croprect,Rect(0,clientHeight-FNormalbl.Croprect.Height,FNormalbl.Croprect.Width,clientHeight));
-  Drawbutton(FBGNormal,FNormalbr.Croprect,Rect(clientWidth-FNormalBR.Croprect.Width,clientHeight-FNormalBR.Croprect.Height,clientWidth,clientHeight));
-  Drawbutton(FBGNormal,FNormalb.Croprect,Rect(FNormalBL.Croprect.Width,clientHeight-FNormalB.Croprect.Height,clientWidth-(FNormalBR.Croprect.Width),clientHeight));
-  Drawbutton(FBGNormal,FNormalr.Croprect,Rect(clientWidth-FNormalR.Croprect.Width,FNormalTR.Croprect.Height,clientWidth, clientHeight- FNormalBR.Croprect.Height));
-  Drawbutton(FBGNormal,FNormalc.Croprect,Rect(FNormalL.Croprect.Width,FNormalT.Croprect.Height,clientWidth-FNormalR.Croprect.Width,clientHeight-FNormalB.Croprect.Height));
+  // NORMAL BUTTON IMAGE
+  DrawPartnormal(FNormalTL.Croprect,FBGNormal,skindata.Fimage,tl,alpha);
+  DrawPartnormal(FNormalT.Croprect,FBGNormal,skindata.Fimage,t,alpha);
+  DrawPartnormal(FNormalTr.Croprect,FBGNormal,skindata.Fimage,tr,alpha);
+  DrawPartnormal(FNormalbL.Croprect,FBGNormal,skindata.Fimage,bl,alpha);
+  DrawPartnormal(FNormalb.Croprect,FBGNormal,skindata.Fimage,b,alpha);
+  DrawPartnormal(FNormalBr.Croprect,FBGNormal,skindata.Fimage,br,alpha);
+  DrawPartnormal(FNormalL.Croprect,FBGNormal,skindata.Fimage,l,alpha);
+  DrawPartnormal(FNormalR.Croprect,FBGNormal,skindata.Fimage,r,alpha);
+  DrawPartnormal(FNormalC.Croprect,FBGNormal,skindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGNormal,FBGNormal.Resample(clientWidth,clientHeight));
+
+
+
+  //RECT LOAD
+  tl := Rect(0,0,FHoverTL.Croprect.Width,FHoverTL.Croprect.Height);
+  t  := Rect(FHoverTL.Croprect.Width,0,FHoverTL.Croprect.Width+FHoverT.Croprect.Width,FHoverT.Croprect.Height);
+  tr := Rect(FHoverTL.Croprect.Width+FHoverT.Croprect.Width,0,FHoverTL.Croprect.Width+FHoverT.Croprect.Width+FHoverTR.Croprect.Width,FHoverTR.Croprect.Height);
+  bl := Rect(0,FBGHover.Height-FHoverbl.Croprect.Height,FHoverbl.Croprect.Width,FBGHover.Height);
+  b  := Rect(FHoverBL.Croprect.Width,FBGHover.Height-FHoverB.Croprect.Height,FBGHover.Width-(FHoverBR.Croprect.Width),FBGHover.Height);
+  br := Rect(FBGHover.Width-FHoverBR.Croprect.Width,FBGHover.Height-FHoverBR.Croprect.Height,FBGHover.Width,FBGHover.Height);
+  l  := Rect(0,FHoverTL.Croprect.Height,FHoverL.Croprect.Width,FHoverTL.Croprect.Height+FHoverL.Croprect.Height);
+  r  := Rect(FBGHover.Width-FHoverR.Croprect.Width,FHoverTR.Croprect.Height,FBGHover.Width, FBGHover.Height- FHoverBR.Croprect.Height);
+  c  := Rect(FHoverL.Croprect.Width,FHoverT.Croprect.Height,FBGHover.Width-FHoverR.Croprect.Width,FBGHover.Height-FHoverB.Croprect.Height);
+
 
   // HOVER BUTTON IMAGE
-  Drawbutton(FBGHover,FHoverTL.Croprect,Rect(0,0,FHoverTL.Croprect.Width,FHoverTL.Croprect.Height));
-  Drawbutton(FBGHover,FHoverTr.Croprect,Rect(ClientWidth-FHoverTR.Croprect.Width,0,ClientWidth,FHoverTR.Croprect.Height));
-  Drawbutton(FBGHover,FHoverT.Croprect,Rect(FHoverTL.Croprect.Width,0,clientWidth-FHoverTR.Croprect.Width,FHoverT.Croprect.Height));
-  Drawbutton(FBGHover,FHoverbl.Croprect,Rect(0,clientHeight-FHoverbl.Croprect.Height,FHoverbl.Croprect.Width,clientHeight));
-  Drawbutton(FBGHover,FHoverbr.Croprect,Rect(clientWidth-FHoverBR.Croprect.Width,clientHeight-FHoverBR.Croprect.Height,clientWidth,clientHeight));
-  Drawbutton(FBGHover,FHoverb.Croprect,Rect(FHoverBL.Croprect.Width,clientHeight-FHoverB.Croprect.Height,clientWidth-(FHoverBR.Croprect.Width),clientHeight));
-  Drawbutton(FBGHover,FHoverl.Croprect,Rect(0,FHoverTL.Croprect.Height,FHoverL.Croprect.Width,clientHeight-FHoverBL.Croprect.Height));
-  Drawbutton(FBGHover,FHoverr.Croprect,Rect(clientWidth-FHoverR.Croprect.Width,FHoverTR.Croprect.Height,clientWidth, clientHeight- FHoverBR.Croprect.Height));
-  Drawbutton(FBGHover,FHoverc.Croprect,Rect(FHoverL.Croprect.Width,FHoverT.Croprect.Height,clientWidth-FHoverR.Croprect.Width,clientHeight-FHoverB.Croprect.Height));
+  DrawPartnormal(FHoverTL.Croprect,FBGHover,skindata.Fimage,tl,alpha);
+  DrawPartnormal(FHoverT.Croprect,FBGHover,skindata.Fimage,t,alpha);
+  DrawPartnormal(FHoverTr.Croprect,FBGHover,skindata.Fimage,tr,alpha);
+  DrawPartnormal(FHoverbL.Croprect,FBGHover,skindata.Fimage,bl,alpha);
+  DrawPartnormal(FHoverb.Croprect,FBGHover,skindata.Fimage,b,alpha);
+  DrawPartnormal(FHoverBr.Croprect,FBGHover,skindata.Fimage,br,alpha);
+  DrawPartnormal(FHoverL.Croprect,FBGHover,skindata.Fimage,l,alpha);
+  DrawPartnormal(FHoverR.Croprect,FBGHover,skindata.Fimage,r,alpha);
+  DrawPartnormal(FHoverC.Croprect,FBGHover,skindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGHover,FBGHover.Resample(clientWidth,clientHeight));
 
 
-  // PRESS BUTTON IMAGE
-  Drawbutton(FBGPress,FPressTL.Croprect,Rect(0,0,FPressTL.Croprect.Width,FPressTL.Croprect.Height));
-  Drawbutton(FBGPress,FPressTr.Croprect,Rect(ClientWidth-FPressTR.Croprect.Width,0,ClientWidth,FPressTR.Croprect.Height));
-  Drawbutton(FBGPress,FPressT.Croprect,Rect(FPressTL.Croprect.Width,0,clientWidth-FPressTR.Croprect.Width,FPressT.Croprect.Height));
-  Drawbutton(FBGPress,FPressbl.Croprect,Rect(0,clientHeight-FPressbl.Croprect.Height,FPressbl.Croprect.Width,clientHeight));
-  Drawbutton(FBGPress,FPressbr.Croprect,Rect(clientWidth-FPressBR.Croprect.Width,clientHeight-FPressBR.Croprect.Height,clientWidth,clientHeight));
-  Drawbutton(FBGPress,FPressb.Croprect,Rect(FPressBL.Croprect.Width,clientHeight-FPressB.Croprect.Height,clientWidth-(FPressBR.Croprect.Width),clientHeight));
-  Drawbutton(FBGPress,FPressl.Croprect,Rect(0,FPressTL.Croprect.Height,FPressL.Croprect.Width,clientHeight-FPressBL.Croprect.Height));
-  Drawbutton(FBGPress,FPressr.Croprect,Rect(clientWidth-FPressR.Croprect.Width,FPressTR.Croprect.Height,clientWidth, clientHeight- FPressBR.Croprect.Height));
-  Drawbutton(FBGPress,FPressc.Croprect,Rect(FPressL.Croprect.Width,FPressT.Croprect.Height,clientWidth-FPressR.Croprect.Width,clientHeight-FPressB.Croprect.Height));
+
+  //RECT LOAD
+  tl := Rect(0,0,FPressTL.Croprect.Width,FPressTL.Croprect.Height);
+  t  := Rect(FPressTL.Croprect.Width,0,FPressTL.Croprect.Width+FPressT.Croprect.Width,FPressT.Croprect.Height);
+  tr := Rect(FPressTL.Croprect.Width+FPressT.Croprect.Width,0,FPressTL.Croprect.Width+FPressT.Croprect.Width+FPressTR.Croprect.Width,FPressTR.Croprect.Height);
+  bl := Rect(0,FBGPress.Height-FPressbl.Croprect.Height,FPressbl.Croprect.Width,FBGPress.Height);
+  b  := Rect(FPressBL.Croprect.Width,FBGPress.Height-FPressB.Croprect.Height,FBGPress.Width-(FPressBR.Croprect.Width),FBGPress.Height);
+  br := Rect(FBGPress.Width-FPressBR.Croprect.Width,FBGPress.Height-FPressBR.Croprect.Height,FBGPress.Width,FBGPress.Height);
+  l  := Rect(0,FPressTL.Croprect.Height,FPressL.Croprect.Width,FPressTL.Croprect.Height+FPressL.Croprect.Height);
+  r  := Rect(FBGPress.Width-FPressR.Croprect.Width,FPressTR.Croprect.Height,FBGPress.Width, FBGPress.Height- FPressBR.Croprect.Height);
+  c  := Rect(FPressL.Croprect.Width,FPressT.Croprect.Height,FBGPress.Width-FPressR.Croprect.Width,FBGPress.Height-FPressB.Croprect.Height);
+
+
+
+ // HOVER BUTTON IMAGE
+  DrawPartnormal(FPressTL.Croprect,FBGPress,skindata.Fimage,tl,alpha);
+  DrawPartnormal(FPressT.Croprect,FBGPress,skindata.Fimage,t,alpha);
+  DrawPartnormal(FPressTr.Croprect,FBGPress,skindata.Fimage,tr,alpha);
+  DrawPartnormal(FPressbL.Croprect,FBGPress,skindata.Fimage,bl,alpha);
+  DrawPartnormal(FPressb.Croprect,FBGPress,skindata.Fimage,b,alpha);
+  DrawPartnormal(FPressBr.Croprect,FBGPress,skindata.Fimage,br,alpha);
+  DrawPartnormal(FPressL.Croprect,FBGPress,skindata.Fimage,l,alpha);
+  DrawPartnormal(FPressR.Croprect,FBGPress,skindata.Fimage,r,alpha);
+  DrawPartnormal(FPressC.Croprect,FBGPress,skindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGPress,FBGPress.Resample(clientWidth,clientHeight));
+
+
 
 
  // PRESS BUTTON IMAGE
@@ -3117,6 +3170,10 @@ begin
   Drawbutton(FBGDisable,FDisablec.Croprect,Rect(FDisableL.Croprect.Width,FDisableT.Croprect.Height,clientWidth-FDisableR.Croprect.Width,clientHeight-FDisableB.Croprect.Height));
 
 
+
+  BGRAReplace(FBGDisable,FBGDisable.Resample(clientWidth,clientHeight));
+
+
 end;
 
 procedure TONURGraphicsButton.resize;
@@ -3127,7 +3184,6 @@ begin
   FoldHeight := Height;
  // CheckAutoWidth;  }
   if Assigned(Skindata) then
-
   Resizing;
 end;
 
@@ -3157,13 +3213,13 @@ begin
    FNormalR.Targetrect   := Rect(self.ClientWidth - FNormalR.Width, FNormalTR.Height, self.ClientWidth, self.ClientHeight - FNormalBR.Height);
    FNormalC.Targetrect   := Rect(FNormalL.Width, FNormalT.Height, self.ClientWidth - FNormalR.Width, self.ClientHeight -(FNormalB.Height));
  }
-
+{
   FBGDisable.setsize(self.ClientWidth,Self.ClientHeight);
   FBGHover.setsize(self.ClientWidth,Self.ClientHeight);
   FBGNormal.setsize(self.ClientWidth,Self.ClientHeight);
   FBGPress.setsize(self.ClientWidth,Self.ClientHeight);
 
-
+}
 end;
 
 // -----------------------------------------------------------------------------
@@ -3180,101 +3236,31 @@ end;
 
 // -----------------------------------------------------------------------------
 procedure TONURGraphicsButton.Paint;
-var
-  tl,t,tr,bl,b,br,l,r,c:Trect;
-  tmp: TBGRABitmap;
 begin
   if not Visible then exit;
- // resim.SetSize(0,0);
- // resim.SetSize(self.ClientWidth, Self.ClientHeight);
-
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-    {  if Enabled = True then
-      begin
-        case Fstate of
-          obsNormal:
-          begin
-            TL  := FNormalTL.Croprect;
-            TR  := FNormalTR.Croprect;
-            T   := FNormalT.Croprect;
-            BL  := FNormalBL.Croprect;
-            BR  := FNormalBR.Croprect;
-            B   := FNormalB.Croprect;
-            L   := FNormalL.Croprect;
-            R   := FNormalR.Croprect;
-            C   := FNormalC.Croprect;
-            Self.Font.Color := FNormalC.Fontcolor;
-          end;
-          obspressed:
-          begin
-            TL  := FPressTL.Croprect;
-            TR  := FPressTR.Croprect;
-            T   := FPressT.Croprect;
-            BL  := FPressBL.Croprect;
-            BR  := FPressBR.Croprect;
-            B   := FPressB.Croprect;
-            L   := FPressL.Croprect;
-            R   := FPressR.Croprect;
-            C   := FPressC.Croprect;
-            Self.Font.Color := FPressC.Fontcolor;
-          end;
-          obshover:
-          begin
-            TL  := FHoverTL.Croprect;
-            TR  := FHoverTR.Croprect;
-            T   := FHoverT.Croprect;
-            BL  := FHoverBL.Croprect;
-            BR  := FHoverBR.Croprect;
-            B   := FHoverB.Croprect;
-            L   := FHoverL.Croprect;
-            R   := FHoverR.Croprect;
-            C   := FHoverC.Croprect;
-            Self.Font.Color := FHoverC.Fontcolor;
-          end;
-        end;
-      end
-      else
-      begin
-        TL  := FDisableTL.Croprect;
-        TR  := FDisableTR.Croprect;
-        T   := FDisableT.Croprect;
-        BL  := FDisableBL.Croprect;
-        BR  := FDisableBR.Croprect;
-        B   := FDisableB.Croprect;
-        L   := FDisableL.Croprect;
-        R   := FDisableR.Croprect;
-        C   := FDisableC.Croprect;
-        Self.Font.Color := FDisableC.Fontcolor;
-      end;
-
-     }
     resim.SetSize(0,0);
     resim.SetSize(clientWidth,clientHeight);
-    tmp:=TBGRABitmap.Create(FBGNormal.Width,FBGNormal.Height);
+
     if Enabled = True then
     begin
-    case Fstate of
-          obsNormal  : tmp.PutImage(0,0,FBGNormal,dmDrawWithTransparency);
-          obshover   : tmp.PutImage(0,0,FBGHover,dmDrawWithTransparency);
-          obspressed : tmp.PutImage(0,0,FBGPress,dmDrawWithTransparency);
-          else
-          tmp.PutImage(0,0,FBGNormal,dmDrawWithTransparency);
-    end;
+      case Fstate of
+            obsNormal  : resim.PutImage(0,0,FBGNormal,dmDrawWithTransparency);
+            obshover   : resim.PutImage(0,0,FBGHover,dmDrawWithTransparency);
+            obspressed : resim.PutImage(0,0,FBGPress,dmDrawWithTransparency);
+            else
+            resim.PutImage(0,0,FBGNormal,dmDrawWithTransparency);
+      end;
     end else
     begin
-      tmp.PutImage(0,0,FBGDisable,dmDrawWithTransparency);
+      resim.PutImage(0,0,FBGDisable,dmDrawWithTransparency);
     end;
-
-    BGRAReplace(tmp,tmp.Resample(clientWidth,clientHeight));
-    resim.PutImage(0,0,tmp,dmDrawWithTransparency);
-    tmp.Free;
   end
   else
   begin
     resim.SetSize(0,0);
     resim.SetSize(self.Width, Self.Height);
-  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     case Fstate of
       obsNormal:
       resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
@@ -4266,7 +4252,7 @@ end;
 
 procedure TONURCheckbox.Paint;
 var
-  DR: TRect; 
+  DR: TRect;
   fbuttoncenter,a,b: integer;
 begin
 

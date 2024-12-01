@@ -317,10 +317,19 @@ procedure DrawPartnormali(ARect: TRect; Target: TONURGraphicControl;
 procedure DrawPartnormali(ARect: TRect; Target: TOnURCustomControl;
   x, y, w, h: integer; Opaque: byte; txt: string; Txtalgn: TAlignment; colorr: TBGRAPixel);
 
+procedure DrawPartnormali(t:TOnURCustomControl;ARect: TRect; Target: TBGRABitmap;
+  x, y, w, h: integer; Opaque: byte; txt: string; Txtalgn: TAlignment; colorr: TBGRAPixel);
+
+procedure DrawPartnormali(t:TOnURCustomControl;ARect: TRect; Target: TBGRABitmap;
+  x, y, w, h: integer; Opaque: byte);
+
 procedure DrawPartnormal(ARect: TRect; Target: TOnURCustomControl;
   ATargetRect: TRect; Opaque: byte);
 
 procedure DrawPartnormaltext(ARect: TRect; Target: TOnURCustomControl;
+  ATargetRect: TRect; Opaque: byte; txt: string; Txtalgn: TAlignment; colorr: TBGRAPixel);
+
+procedure DrawPartnormaltext(t:TONURCustomControl;ARect: TRect; Target: TBGRABitmap;
   ATargetRect: TRect; Opaque: byte; txt: string; Txtalgn: TAlignment; colorr: TBGRAPixel);
 
 procedure DrawPartstrechRegion(ARect: TRect; Target: TOnURCustomControl;
@@ -639,7 +648,7 @@ end;
 
 procedure CropBGRA(var LBitmap : TBgraBitmap);
 const
-     CThreshold = 162;
+     CThreshold = 25;
 var
      LMask: TGrayscaleMask;
      LData: PByte;
@@ -971,6 +980,59 @@ begin
   partial.Free;
 end;
 
+procedure DrawPartnormaltext(t:TONURCustomControl;ARect:TRect;Target:TBGRABitmap;ATargetRect:TRect;
+  Opaque:byte;txt:string;Txtalgn:TAlignment;colorr:TBGRAPixel);
+var
+  partial: TBGRACustomBitmap;
+begin
+  if (ARect.Width = 0) and (ARect.Height = 0) then
+   Target.Fill(BGRA(190, 208, 190), dmSet)
+  else
+  begin
+    partial := t.FSkindata.Fimage.GetPart(ARect);
+
+    if partial <> nil then
+    begin
+      target.StretchPutImage(ATargetRect, partial, dmDrawWithTransparency, Opaque);
+      ATargetRect.left := ATargetRect.left + 1;
+      ATargetRect.right := ATargetRect.right - 1;
+      ATargetRect.top := ATargetRect.top + 1;
+      ATargetRect.bottom := ATargetRect.bottom - 1;
+      ATargetRect.Left:=ATargetRect.Left+10;
+      Target.TextRect(ATargetRect, txt, Txtalgn, tlCenter, colorr);
+    end;
+    FreeAndNil(partial);
+  end;
+
+end;
+
+procedure DrawPartnormali(t:TOnURCustomControl;ARect:TRect;Target:TBGRABitmap;x,
+  y,w,h:integer;Opaque:byte;txt:string;Txtalgn:TAlignment;colorr:TBGRAPixel);
+var
+  partial: TBGRACustomBitmap;
+  r: Trect;
+begin
+  partial := T.FSkindata.Fimage.GetPart(ARect);
+  r := Rect(x, y, w, h);
+  if partial <> nil then
+    Target.StretchPutImage(R, partial, dmDrawWithTransparency, Opaque);
+  Target.TextOut(x + 5, y + 5, txt, colorr);
+  partial.Free;
+end;
+
+procedure DrawPartnormali(t:TOnURCustomControl;ARect:TRect;Target:TBGRABitmap;x,
+  y,w,h:integer;Opaque:byte);
+var
+  partial: TBGRACustomBitmap;
+begin
+  partial := T.FSkindata.Fimage.GetPart(ARect);
+  if partial <> nil then
+    Target.StretchPutImage(Rect(x, y, w, h), partial,
+      dmDrawWithTransparency, Opaque);
+  partial.Free;
+
+end;
+
 
 { TONURCUSTOMCROP }
  {
@@ -1265,7 +1327,7 @@ begin
     WindowRgn := CreateRectRgn(0, 0, frmain.Width, frmain.Height);
 
 
-    CropBGRA(frmain);
+  //  CropBGRA(frmain);
 
 
 
@@ -2176,13 +2238,15 @@ begin
 //  resim.ResampleFilter:=rfBestQuality;
 //  BGRAReplace(resim, resim.Resample(self.ClientWidth,self.ClientHeight,rmFineResample));
 
-  resim.Draw(self.canvas, 0, 0, False);
 
 
 
   if Captionvisible then
-  //  yaziyazBGRA(resim.CanvasBGRA, self.Font, self.ClientRect, Caption, Alignment);
-   yaziyaz(self.Canvas, self.Font, self.ClientRect, Caption, Alignment);
+    yaziyazBGRA(resim.CanvasBGRA, self.Font, self.ClientRect, Caption, Alignment);
+  // yaziyaz(self.Canvas, self.Font, self.ClientRect, Caption, Alignment);
+
+  resim.Draw(self.canvas, 0, 0, False);
+
 
 end;
 
@@ -2444,7 +2508,7 @@ begin
 
   if Crop then
   begin
-   CropBGRA(resim);
+  // CropBGRA(resim);
    CropToimg(resim);
   end;
 

@@ -232,6 +232,7 @@ type
     Flist: TStrings;
     findex: integer;
     fmodusewhelll:boolean;
+    fback:Tbgrabitmap;
     vScrollBar, hScrollBar: TONURScrollBar;
     FItemsShown, FitemHeight, FItemVOffset,FItemHOffset: integer;
     fchangelist:boolean;
@@ -628,7 +629,7 @@ type
 
   TONURColumList = class(TONURCustomControl)
   private
-
+    fback:Tbgrabitmap;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
     FTop, FBottom, FCenter, factiveitems, fheader, fitems: TONURCUSTOMCROP;
     fheaderfont: Tfont;
@@ -2279,57 +2280,41 @@ begin
     [csParentBackground, csClickEvents, csCaptureMouse, csDoubleClicks];
 
 
-  FListItems := TONURlistItems.Create(Self, TONURlistItem);
-  Fcolumns   := TONURListColums.Create(Self, TONURColumn);
-  fselectcolor := Clblue;
-  FItemVOffset := 0;
-  FItemHOffset := 0;
-  FItemHeight := 24;
-  FheaderHeight := 24;
-  FFocusedItem := -1;
+  FListItems         := TONURlistItems.Create(Self, TONURlistItem);
+  Fcolumns           := TONURListColums.Create(Self, TONURColumn);
+  fselectcolor       := Clblue;
+  FItemVOffset       := 0;
+  FItemHOffset       := 0;
+  FItemHeight        := 24;
+  FheaderHeight      := 24;
+  FFocusedItem       := -1;
   FAutoHideScrollBar := True;
-  Font.Name := 'Calibri';
-  Font.Size := 9;
-  Font.Style := [];
-  TabStop := True;
+  Font.Name          := 'Calibri';
+  Font.Size          := 9;
+  Font.Style         := [];
+  TabStop            := True;
   fbackgroundvisible := True;
-  fheadervisible := True;
-  FItemsShown := 0;
-  fcolumindex := 0;
-  Fheaderfont := Tfont.Create;
-  Fheaderfont.Name := 'Calibri';
-  Fheaderfont.Size := 10;
-  Fheaderfont.Style := [];
-  fmodusewhelll := False;
-  FTop                  := TONURCUSTOMCROP.Create('TOP');
-//  FTop.cropname         := 'TOP';
-  FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
-//  FBottom.cropname      := 'BOTTOM';
-  FCenter               := TONURCUSTOMCROP.Create('CENTER');
-//  FCenter.cropname      := 'CENTER';
-  FRight                := TONURCUSTOMCROP.Create('RIGHT');
-//  FRight.cropname       := 'RIGHT';
-  FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
-//  FTopRight.cropname    := 'TOPRIGHT';
-  FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
-//  FBottomRight.cropname := 'BOTTOMRIGHT';
-  Fleft                 := TONURCUSTOMCROP.Create('LEFT');
-//  Fleft.cropname        := 'LEFT';
-  FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
-//  FTopleft.cropname     := 'TOPLEFT';
-  FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
-//  FBottomleft.cropname  := 'BOTTOMLEFT';
-
-
-
-  fitems := TONURCUSTOMCROP.Create('ITEM');
-//  fitems.cropname := 'ITEM';
-
-  factiveitems := TONURCUSTOMCROP.Create('ACTIVEITEM');
-//  factiveitems.cropname := 'ACTIVEITEM';
-
-  fheader := TONURCUSTOMCROP.Create('HEADER');
-//  fheader.cropname := 'HEADER';
+  fheadervisible     := True;
+  FItemsShown        := 0;
+  fcolumindex        := 0;
+  Fheaderfont        := Tfont.Create;
+  Fheaderfont.Name   := 'Calibri';
+  Fheaderfont.Size   := 10;
+  Fheaderfont.Style  := [];
+  fmodusewhelll      := False;
+  fback              := TBGRABitmap.Create(Self.ClientWidth,Self.ClientHeight);
+  FTop               := TONURCUSTOMCROP.Create('TOP');
+  FBottom            := TONURCUSTOMCROP.Create('BOTTOM');
+  FCenter            := TONURCUSTOMCROP.Create('CENTER');
+  FRight             := TONURCUSTOMCROP.Create('RIGHT');
+  FTopRight          := TONURCUSTOMCROP.Create('TOPRIGHT');
+  FBottomRight       := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+  Fleft              := TONURCUSTOMCROP.Create('LEFT');
+  FTopleft           := TONURCUSTOMCROP.Create('TOPLEFT');
+  FBottomleft        := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+  fitems             := TONURCUSTOMCROP.Create('ITEM');
+  factiveitems       := TONURCUSTOMCROP.Create('ACTIVEITEM');
+  fheader            := TONURCUSTOMCROP.Create('HEADER');
 
   Customcroplist.Add(FTopleft);
   Customcroplist.Add(FTop);
@@ -2403,6 +2388,8 @@ begin
 }
   Customcroplist.Clear;
 
+  if Assigned(fback) then
+    FreeAndNil(fback);
   if Assigned(VScrollBar) then
     FreeAndNil(VScrollBar);
   if Assigned(HScrollBar) then
@@ -2560,8 +2547,9 @@ procedure TONURColumList.resizing;
 begin
   if Assigned(Skindata) then
   begin
-   vScrollBar.Skindata:=Skindata;
-   hScrollBar.Skindata:=Skindata;
+   //vScrollBar.Skindata:=Skindata;
+   //hScrollBar.Skindata:=Skindata;
+   Scrollscreen;
 
    FTopleft.Targetrect     := Rect(0, 0,FTopleft.Croprect.Width,FTopleft.Croprect.Height);
    FTopRight.Targetrect    := Rect(self.ClientWidth - FTopRight.Croprect.Width,0, self.ClientWidth, FTopRight.Croprect.Height);
@@ -2573,7 +2561,30 @@ begin
    FRight.Targetrect       := Rect(self.ClientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height, self.ClientWidth, self.ClientHeight - FBottomRight.Croprect.Height);
    FCenter.Targetrect      := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.ClientWidth - FRight.Croprect.Width, self.ClientHeight -(FBottom.Croprect.Height));
 
-   Scrollscreen;
+
+
+   fback.SetSize(0, 0);
+   fback.SetSize(self.ClientWidth, self.ClientHeight);
+
+   //ORTA CENTER
+   DrawPartnormal(FCenter.Croprect,fback,Skindata.Fimage, FCenter.Targetrect, alpha);
+   //SOL ÜST TOPLEFT
+   DrawPartnormal(FTopleft.Croprect, fback,Skindata.Fimage, FTopleft.Targetrect, alpha);
+    //SAĞ ÜST TOPRIGHT
+   DrawPartnormal(FTopRight.Croprect, fback,Skindata.Fimage, FTopRight.Targetrect, alpha);
+    //UST TOP
+   DrawPartnormal(ftop.Croprect, fback,Skindata.Fimage, ftop.Targetrect, alpha);
+    // SOL ALT BOTTOMLEFT
+   DrawPartnormal(FBottomleft.Croprect, fback,Skindata.Fimage, FBottomleft.Targetrect, alpha);
+   //SAĞ ALT BOTTOMRIGHT
+   DrawPartnormal(FBottomRight.Croprect, fback,Skindata.Fimage, FBottomRight.Targetrect, alpha);
+   //ALT BOTTOM
+   DrawPartnormal(FBottom.Croprect, fback,Skindata.Fimage, FBottom.Targetrect, alpha);
+   // SOL ORTA CENTERLEFT
+   DrawPartnormal(Fleft.Croprect, fback,Skindata.Fimage, fleft.Targetrect, alpha);
+   // SAĞ ORTA CENTERRIGHT
+   DrawPartnormal(FRight.Croprect, fback,Skindata.Fimage,FRight.Targetrect, alpha);
+
   end;
 end;
 
@@ -2589,26 +2600,21 @@ var
 
    a, b, k, z, i, gt: integer;
  // x1, x2, x3, x4: integer;
+ tmp:TBGRABitmap;
 begin
 
    if (not Visible) then Exit;
 
 
-   resim.SetSize(0, 0);
-   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
-   resim.FontQuality :=fqSystemClearType;
+
+
+
+
 
    if (Skindata <> nil) and not (csDesigning in ComponentState) then
    begin
-
-      // DrawPartnormal(FCenter.Croprect, self, FCenter.Targetrect, alpha);
-
-
-    //ORTA CENTER
-     DrawPartnormal(FCenter.Croprect, self, FCenter.Targetrect, alpha);
-
-     //if FListItems.Count > 0 then
+    tmp := TBGRABitmap.Create(self.ClientWidth, self.ClientHeight);
      if Fcolumns.Count > 0 then
      begin
 
@@ -2622,9 +2628,10 @@ begin
       FItemshShown := 0;
 
 
-      resim.FontName   := Fheaderfont.Name;
-      resim.FontHeight := Fheaderfont.Height;
-      resim.FontStyle  := Fheaderfont.Style;
+      tmp.FontQuality :=fqSystemClearType;
+      tmp.FontName   := Fheaderfont.Name;
+      tmp.FontHeight := Fheaderfont.Height;
+      tmp.FontStyle  := Fheaderfont.Style;
 
         if (fheadervisible = True)  then    // if header visible?
         begin
@@ -2653,36 +2660,32 @@ begin
               if (fheadervisible = True)  then
               begin
                 if Fcolumns[z].Caption<>'' then
-                begin
-                  DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha,Fcolumns[z].Caption,Fcolumns[z].Textalign,ColorToBGRA(fheader.Fontcolor{Fheaderfont.Color}, alpha));
-                end else
-                begin
-                  DrawPartnormali(fheader.Croprect, self, x1,x2,x3,x4, alpha);
-                end;
+                  DrawPartnormali(self,fheader.Croprect, tmp, x1,x2,x3,x4, alpha,Fcolumns[z].Caption,Fcolumns[z].Textalign,ColorToBGRA(fheader.Fontcolor{Fheaderfont.Color}, alpha))
+                else
+                  DrawPartnormali(self,fheader.Croprect, tmp, x1,x2,x3,x4, alpha);
               end;
             end;
           end;
         end;
 
 
-      if fHeadervisible then
-      begin
-       b:=fHeaderHeight+FTop.Croprect.Height;
-       fheaderh:=FheaderHeight;
-      end
-      else
-      begin
-       fheaderh:=0;
-       b:=FTop.Croprect.Height;
-      end;
+        if fHeadervisible then
+        begin
+         b:=fHeaderHeight+FTop.Croprect.Height;
+         fheaderh:=FheaderHeight;
+        end
+        else
+        begin
+         fheaderh:=0;
+         b:=FTop.Croprect.Height;
+        end;
 
 
-      a  := Fleft.Croprect.Width;
-     // b  := a;
-      x1:=0;
-      x2:=0;
-      x3:=0;
-      x4:=0;
+        a  := Fleft.Croprect.Width;
+        x1:=0;
+        x2:=0;
+        x3:=0;
+        x4:=0;
 
        for z := 0+abs(FItemhOffset) to (Fcolumns.Count - 1) do  // columns
        begin
@@ -2707,112 +2710,68 @@ begin
           gt:=FItemvOffset + (self.ClientHeight div FItemHeight);
 
 
-          resim.FontName   := Fcolumns[z].font.Name;
-          resim.FontHeight := Fcolumns[z].Font.Height;
-          resim.FontStyle  := Fcolumns[z].Font.Style;
+          tmp.FontName   := Fcolumns[z].font.Name;
+          tmp.FontHeight := Fcolumns[z].Font.Height;
+          tmp.FontStyle  := Fcolumns[z].Font.Style;
 
 
-          for i := FItemvOffset to gt  do   // items
+          for i := FItemvOffset to gt  do
           begin
-          //   writeln(i,'       ', FListItems[i].Cells[z],'       ',Cells[i,z]);
+            if Cells[z,i]<>'' then
+            begin
+               if i = FFocusedItem then
+               begin
+                 if vScrollBar.Visible then
+                   DrawPartnormali(self,factiveitems.Croprect, tmp, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha))
+                 else
+                   DrawPartnormali(self,factiveitems.Croprect, tmp, x1,b,x3,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha));
+               end else
+               begin
+                 if vScrollBar.Visible then
+                   DrawPartnormali(self,fitems.Croprect, tmp, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha))
+                 else
+                   DrawPartnormali(self,fitems.Croprect, tmp, x1,b,x3,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha));
+               end;
+            end else
+            begin
+                if i = FFocusedItem then
+                begin
+                   if vScrollBar.Visible then
+                     DrawPartnormali(self,factiveitems.Croprect, tmp, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha)
+                   else
+                    DrawPartnormali(self,factiveitems.Croprect, tmp, x1,b,x3,b+FItemHeight, alpha);
+                end else
+                begin
+                   if vScrollBar.Visible then
+                    DrawPartnormali(self,fitems.Croprect, tmp, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha)
+                   else
+                    DrawPartnormali(self,fitems.Croprect, tmp, x1,b,x3,b+FItemHeight, alpha);
+                end;
+            end;
 
-           //  writeln(i,'  ',FItemvOffset,'  ',z,'   ',FListItems[z].FSize,' -- ',Cells[z,i],'  //   ',FListItems[z].Cells[i]);
-             // if (i < Fcolumns[z].FSize-1) and (i>-1) then
-           //   begin
-                // if FListItems[i].FSize-1>=z then
-                //  begin
-
-                    if Cells[z,i]<>'' then // FListItems[z].FCells[i]<>'' then
-                    begin
-                       if i = FFocusedItem then
-                       begin
-                         if vScrollBar.Visible then
-                           DrawPartnormali(factiveitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha))
-                         else
-                           DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha));
-                       end else
-                       begin
-                         if vScrollBar.Visible then
-                           DrawPartnormali(fitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha))
-                         else
-                           DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha,Cells[z,i],FListItems[z].Ftextalign,ColorToBGRA(Font.Color, alpha));
-                       end;
-                    end else
-                    begin
-                        if i = FFocusedItem then
-                        begin
-                           if vScrollBar.Visible then
-                             DrawPartnormali(factiveitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha)
-                           else
-                            DrawPartnormali(factiveitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
-                        end else
-                        begin
-                           if vScrollBar.Visible then
-                            DrawPartnormali(fitems.Croprect, self, x1,b,x3+vScrollBar.Width,b+FItemHeight, alpha)
-                           else
-                            DrawPartnormali(fitems.Croprect, self, x1,b,x3,b+FItemHeight, alpha);
-                        end;
-                    end;
-                  //end;
-            //  end;
-              b +=FItemHeight;
-              if b >= (FCenter.Targetrect.Height-HScrollBar.Height) then Break;
+            b +=FItemHeight;
+            if b >= (FCenter.Targetrect.Height-HScrollBar.Height) then Break;
           end; // items end
+
 
          FItemshShown +=1;
          if x3>=(FCenter.Targetrect.Width-vScrollBar.Width) then Break;
        end;  // columns end
-
-
-
-
-         //  hScrollbar.Max := FListItems[0].FSize-1;//(FListItems.Count - fark2);
-         {  vScrollBar.Max := (FListItems.Count - FItemshShown)-1;
-
-           if hScrollBar.Max>0 then
-            hScrollBar.Enabled := True
-           else
-            hScrollBar.Enabled := False;
-
-
-           if vScrollBar.Max>0 then
-            vScrollbar.Enabled := True
-           else
-            vScrollbar.Enabled := False;
-          }
-
-       //    hScrollBar.Enabled := True;
-       //    vScrollBar.Enabled := True;
      end;
 
+     resim.SetSize(0, 0);
+     resim.SetSize(self.ClientWidth, self.ClientHeight);
+     resim.PutImage(0,0,fback,dmSetExceptTransparent);
+     resim.BlendImage(0, 0, tmp, boTransparent);
+     tmp.Free;
 
-
-
-    //SOL ÜST TOPLEFT
-    DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
-    //SAĞ ÜST TOPRIGHT
-    DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
-    //UST TOP
-    DrawPartnormal(ftop.Croprect, self, ftop.Targetrect, alpha);
-    // SOL ALT BOTTOMLEFT
-    DrawPartnormal(FBottomleft.Croprect, self, FBottomleft.Targetrect, alpha);
-    //SAĞ ALT BOTTOMRIGHT
-    DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
-    //ALT BOTTOM
-    DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
-    // SOL ORTA CENTERLEFT
-    DrawPartnormal(Fleft.Croprect, self, fleft.Targetrect, alpha);
-    // SAĞ ORTA CENTERRIGHT
-    DrawPartnormal(FRight.Croprect, self,FRight.Targetrect, alpha);
-
-
-  //  if Crop then
-  //   CropToimg(resim);
 
   end
   else
   begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    resim.SetSize(0, 0);
+    resim.SetSize(self.ClientWidth, self.ClientHeight);
+    resim.Fill(BGRA(80, 80, 80,alpha), dmSet);
     FCenter.Targetrect.Height := self.Height;
   end;
 
@@ -4256,7 +4215,7 @@ begin
   fmodusewhelll   := False;
   FitemHeight     := 24;
 
-
+  FBack           := TBGRABitmap.Create(Self.ClientWidth,self.ClientHeight);
 
   vScrollBar := TonURScrollBar.Create(self);
   with vScrollBar do
@@ -4294,29 +4253,18 @@ begin
     Position   := 0;
   end;
   FTop                  := TONURCUSTOMCROP.Create('TOP');
-//  FTop.cropname         := 'TOP';
   FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
-//  FBottom.cropname      := 'BOTTOM';
   FCenter               := TONURCUSTOMCROP.Create('CENTER');
-//  FCenter.cropname      := 'CENTER';
   FRight                := TONURCUSTOMCROP.Create('RIGHT');
-//  FRight.cropname       := 'RIGHT';
   FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
-//  FTopRight.cropname    := 'TOPRIGHT';
   FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
-//  FBottomRight.cropname := 'BOTTOMRIGHT';
   Fleft                 := TONURCUSTOMCROP.Create('LEFT');
-//  Fleft.cropname        := 'LEFT';
   FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
-//  FTopleft.cropname     := 'TOPLEFT';
   FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
-//  FBottomleft.cropname  := 'BOTTOMLEFT';
 
 
   factiveitems := TONURCUSTOMCROP.Create('ACTIVEITEM');
-//  factiveitems.cropname := 'ACTIVEITEM';
   fitems := TONURCUSTOMCROP.Create('ITEM');
-//  fitems.cropname := 'ITEM';
 
 
   Customcroplist.Add(FTopleft);
@@ -4345,6 +4293,8 @@ begin
 }
   Customcroplist.Clear;
 
+  if Assigned(fback) then
+    FreeAndNil(fback);
 
   if Assigned(vScrollBar) then
     FreeAndNil(vScrollBar);
@@ -4476,6 +4426,8 @@ procedure TONURListBox.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
   resizing;
+
+
 end;
 
 procedure TONURListBox.Resize;
@@ -4504,6 +4456,32 @@ begin
   Fleft.Targetrect        := Rect(0, FTopleft.Croprect.Height,(Fleft.Croprect.Width), self.ClientHeight - (FBottomleft.Croprect.Height));
   FRight.Targetrect       := Rect(self.ClientWidth - (FRight.Croprect.Width),(FTopRight.Croprect.Height), self.ClientWidth, self.ClientHeight - (FBottomRight.Croprect.Height));
   FCenter.Targetrect      := Rect(Fleft.Croprect.Width,FTop.Croprect.Height, self.ClientWidth - FRight.Croprect.Width, self.ClientHeight - FBottom.Croprect.Height);
+
+  FBack.SetSize(0, 0);
+  FBack.SetSize(self.ClientWidth, self.ClientHeight);
+
+  //ORTA CENTER
+   DrawPartnormal(FCenter.Croprect,FBack,Skindata.fimage, fcenter.Targetrect, alpha);
+
+  //SOL ÜST TOPLEFT
+  DrawPartnormal(FTopleft.Croprect, FBack,Skindata.fimage, FTopleft.Targetrect, alpha);
+  //SAĞ ÜST TOPRIGHT
+  DrawPartnormal(FTopRight.Croprect, FBack,Skindata.fimage, FTopRight.Targetrect, alpha);
+  //UST TOP
+  DrawPartnormal(FTop.Croprect, FBack,Skindata.fimage,FTop.Targetrect, alpha);
+  // SOL ALT BOTTOMLEFT
+  DrawPartnormal(FBottomleft.Croprect, FBack,Skindata.fimage,FBottomleft.Targetrect, alpha);
+  //SAĞ ALT BOTTOMRIGHT
+  DrawPartnormal(FBottomRight.Croprect, FBack,Skindata.fimage, FBottomRight.Targetrect, alpha);
+  //ALT BOTTOM
+  DrawPartnormal(FBottom.Croprect, FBack,Skindata.fimage, FBottom.Targetrect, alpha);
+  // SOL ORTA CENTERLEFT
+  DrawPartnormal(Fleft.Croprect, FBack,Skindata.fimage, Fleft.Targetrect, alpha);
+  // SAĞ ORTA CENTERRIGHT
+  DrawPartnormal(FRight.Croprect, FBack,Skindata.fimage, FRight.Targetrect, alpha);
+
+
+
   if Flist.Count>0 then
   Scrollscreen;
 end;
@@ -4512,6 +4490,7 @@ procedure TONURListBox.paint;
 var
   a, b, i: integer;
    Target: Trect;
+   tmp:TBGRABitmap;
 begin
   if not Visible then Exit;
 
@@ -4523,11 +4502,11 @@ begin
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
+  tmp:=TBGRABitmap.Create(self.ClientWidth, self.ClientHeight);
 
-  if (Skindata <> nil) and not (csDesigning in ComponentState) then
-
-   //ORTA CENTER
-   DrawPartnormal(FCenter.Croprect, self, fcenter.Targetrect, alpha);
+  tmp.FontName   := self.font.Name;
+  tmp.FontHeight := self.Font.Height;
+  tmp.FontStyle  := self.Font.Style;
 
   if Flist.Count > 0 then
   begin
@@ -4535,9 +4514,8 @@ begin
 
     a := Fleft.Croprect.Width;
     b := FTop.Croprect.Height;
-    resim.FontName   := self.font.Name;
-    resim.FontHeight := self.Font.Height;
-    resim.FontStyle  := self.Font.Style;
+
+
 
    if hScrollBar.Visible then
       for i := FItemvOffset to  (FItemvOffset + (FCenter.Targetrect.Height-HScrollBar.Height) div FItemHeight) - 1 do
@@ -4552,19 +4530,12 @@ begin
          Target := Rect(a, b, self.ClientWidth - a, b + FitemHeight);
 
           if (vScrollBar.Visible) then
-            Target.Right := self.ClientWidth - (vScrollBar.ClientWidth);// + FRight.Width);
+            Target.Right := self.ClientWidth - (vScrollBar.ClientWidth);
 
-        {  if i = findex then
-            DrawPartnormaltext(factiveitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(Fselectedcolor, alpha))
+          if i = findex then
+            DrawPartnormaltext(self,factiveitems.Croprect, tmp, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(factiveitems.Fontcolor, alpha))
           else
-           DrawPartnormaltext(fitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(self.Font.Color, alpha));
-          }
-            if i = findex then
-            DrawPartnormaltext(factiveitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(factiveitems.Fontcolor{ColorToBGRA(Fselectedcolor}, alpha))
-          else
-             DrawPartnormaltext(fitems.Croprect, self, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(fitems.Fontcolor{self.Font.Color}, alpha));
-
-
+            DrawPartnormaltext(self,fitems.Croprect, tmp, Target, alpha,FList[i],taLeftJustify,ColorToBGRA(fitems.Fontcolor, alpha));
 
         end;
         b := b + FitemHeight;
@@ -4573,34 +4544,20 @@ begin
       end;
 
   end;
-//  if (Skindata <> nil) then
+
+
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-    //SOL ÜST TOPLEFT
-    DrawPartnormal(FTopleft.Croprect, self, FTopleft.Targetrect, alpha);
-    //SAĞ ÜST TOPRIGHT
-    DrawPartnormal(FTopRight.Croprect, self, FTopRight.Targetrect, alpha);
-    //UST TOP
-    DrawPartnormal(FTop.Croprect, self, FTop.Targetrect, alpha);
-    // SOL ALT BOTTOMLEFT
-    DrawPartnormal(FBottomleft.Croprect, self,FBottomleft.Targetrect, alpha);
-    //SAĞ ALT BOTTOMRIGHT
-    DrawPartnormal(FBottomRight.Croprect, self, FBottomRight.Targetrect, alpha);
-    //ALT BOTTOM
-    DrawPartnormal(FBottom.Croprect, self, FBottom.Targetrect, alpha);
-    // SOL ORTA CENTERLEFT
-    DrawPartnormal(Fleft.Croprect, self, Fleft.Targetrect, alpha);
-    // SAĞ ORTA CENTERRIGHT
-    DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
 
-    if Crop then
-      CropToimg(resim);
+    resim.PutImage(0,0,fback,dmSetExceptTransparent);
+    resim.BlendImage(0, 0, tmp, boTransparent);
   end
   else
   begin
     resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     FCenter.Targetrect.Height := self.ClientHeight;
   end;
+  tmp.Free;
   inherited paint;
 end;
 
@@ -5664,8 +5621,8 @@ if not Visible then Exit;
     // SAĞ ORTA CENTERRIGHT
     DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
 
-    if Crop then
-      CropToimg(resim);
+  //  if Crop then
+  //    CropToimg(resim);
   end
   else
   begin
