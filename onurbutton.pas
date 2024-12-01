@@ -177,6 +177,8 @@ uses
     FAutoWidth: boolean;
     FoldHeight, FoldWidth: Integer;
     FClientPicture:Tpoint;
+    FBGDisable,FBGHover,FBGNormal,FBGPress:TBGRABitmap;
+    procedure Drawbutton(a:Tbgrabitmap;des,trgt:Trect);
     function GetAutoWidth: boolean;
 
   protected
@@ -2917,83 +2919,50 @@ begin
   resim.SetSize(ClientWidth, ClientHeight);
 
     FNormalTL               := TONURCUSTOMCROP.Create('NORMALTOPLEFT');
-//  FNormalTL.cropname      := 'NORMALTOPLEFT';
   FNormalTR               := TONURCUSTOMCROP.Create('NORMALTOPRIGHT');
-//  FNormalTR.cropname      := 'NORMALTOPRIGHT';
   FNormalT                := TONURCUSTOMCROP.Create('NORMALTOP');
-//  FNormalT.cropname       := 'NORMALTOP';
   FNormalBL               := TONURCUSTOMCROP.Create('NORMALBOTTOMLEFT');
-//  FNormalBL.cropname      := 'NORMALBOTTOMLEFT';
   FNormalBR               := TONURCUSTOMCROP.Create('NORMALBOTTOMRIGHT');
-//  FNormalBR.cropname      := 'NORMALBOTTOMRIGHT';
   FNormalB                := TONURCUSTOMCROP.Create('NORMALBOTTOM');
-//  FNormalB.cropname       := 'NORMALBOTTOM';
   FNormalL                := TONURCUSTOMCROP.Create('NORMALLEFT');
-//  FNormalL.cropname       := 'NORMALLEFT';
   FNormalR                := TONURCUSTOMCROP.Create('NORMALRIGHT');
-//  FNormalR.cropname       := 'NORMALRIGHT';
   FNormalC                := TONURCUSTOMCROP.Create('NORMALCENTER');
-//  FNormalC.cropname       := 'NORMALCENTER';
 
   FHoverTL                := TONURCUSTOMCROP.Create('HOVERTOPLEFT');
-//  FHoverTL.cropname       := 'HOVERTOPLEFT';
   FHoverTR                := TONURCUSTOMCROP.Create('HOVERTOPRIGHT');
-//  FHoverTR.cropname       := 'HOVERTOPRIGHT';
   FHoverT                 := TONURCUSTOMCROP.Create('HOVERTOP');
-//  FHoverT.cropname        := 'HOVERTOP';
   FHoverBL                := TONURCUSTOMCROP.Create('HOVERBOTTOMLEFT');
-//  FHoverBL.cropname       := 'HOVERBOTTOMLEFT';
   FHoverBR                := TONURCUSTOMCROP.Create('HOVERBOTTOMRIGHT');
-//  FHoverBR.cropname       := 'HOVERBOTTOMRIGHT';
   FHoverB                 := TONURCUSTOMCROP.Create('HOVERBOTTOM');
-//  FHoverB.cropname        := 'HOVERBOTTOM';
   FHoverL                 := TONURCUSTOMCROP.Create('HOVERLEFT');
-//  FHoverL.cropname        := 'HOVERLEFT';
   FHoverR                 := TONURCUSTOMCROP.Create('HOVERRIGHT');
-//  FHoverR.cropname        := 'HOVERRIGHT';
   FHoverC                 := TONURCUSTOMCROP.Create('HOVERCENTER');
-//  FHoverC.cropname        := 'HOVERCENTER';
 
   FPressTL                := TONURCUSTOMCROP.Create('PRESSTOPLEFT');
-//  FPressTL.cropname       := 'PRESSTOPLEFT';
   FPressTR                := TONURCUSTOMCROP.Create('PRESSTOPRIGHT');
-//  FPressTR.cropname       := 'PRESSTOPRIGHT';
   FPressT                 := TONURCUSTOMCROP.Create('PRESSTOP');
-//  FPressT.cropname        := 'PRESSTOP';
   FPressBL                := TONURCUSTOMCROP.Create('PRESSBOTTOMLEFT');
-//  FPressBL.cropname       := 'PRESSBOTTOMLEFT';
   FPressBR                := TONURCUSTOMCROP.Create('PRESSBOTTOMRIGHT');
-//  FPressBR.cropname       := 'PRESSBOTTOMRIGHT';
   FPressB                 := TONURCUSTOMCROP.Create('PRESSBOTTOM');
-//  FPressB.cropname        := 'PRESSBOTTOM';
   FPressL                 := TONURCUSTOMCROP.Create('PRESSLEFT');
-//  FPressL.cropname        := 'PRESSLEFT';
   FPressR                 := TONURCUSTOMCROP.Create('PRESSRIGHT');
-//  FPressR.cropname        := 'PRESSRIGHT';
   FPressC                 := TONURCUSTOMCROP.Create('PRESSCENTER');
-//  FPressC.cropname        := 'PRESSCENTER';
 
   FDisableTL              := TONURCUSTOMCROP.Create('DISABLETOPLEFT');
-//  FDisableTL.cropname     := 'DISABLETOPLEFT';
   FDisableTR              := TONURCUSTOMCROP.Create('DISABLETOPRIGHT');
-//  FDisableTR.cropname     := 'DISABLETOPRIGHT';
   FDisableT               := TONURCUSTOMCROP.Create('DISABLETOP');
-//  FDisableT.cropname      := 'DISABLETOP';
   FDisableBL              := TONURCUSTOMCROP.Create('DISABLEBOTTOMLEFT');
-//  FDisableBL.cropname     := 'DISABLEBOTTOMLEFT';
   FDisableBR              := TONURCUSTOMCROP.Create('DISABLEBOTTOMRIGHT');
-//  FDisableBR.cropname     := 'DISABLEBOTTOMRIGHT';
   FDisableB               := TONURCUSTOMCROP.Create('DISABLEBOTTOM');
-//  FDisableB.cropname      := 'DISABLEBOTTOM';
   FDisableL               := TONURCUSTOMCROP.Create('DISABLELEFT');
-//  FDisableL.cropname      := 'DISABLELEFT';
   FDisableR               := TONURCUSTOMCROP.Create('DISABLERIGHT');
-//  FDisableR.cropname      := 'DISABLERIGHT';
   FDisableC               := TONURCUSTOMCROP.Create('DISABLECENTER');
-//  FDisableC.cropname      := 'DISABLECENTER';
 
 
-
+  FBGDisable              := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGHover                := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGNormal               := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGPress                := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
 
 
 
@@ -3047,6 +3016,10 @@ begin
 {  for i:=0 to Customcroplist.Count-1 do
   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
   }
+  FreeAndNil(FBGDisable);
+  FreeAndNil(FBGHover);
+  FreeAndNil(FBGNormal);
+  FreeAndNil(FBGPress);
   Customcroplist.Clear;
   inherited Destroy;
 end;
@@ -3080,11 +3053,70 @@ begin
 end;
 // -----------------------------------------------------------------------------
 
+procedure TONURGraphicsButton.Drawbutton(a:Tbgrabitmap;des,trgt:Trect);
+begin
+ DrawPartnormal(des,a,skindata.Fimage,trgt,Alpha);
+
+end;
+
 // -----------------------------------------------------------------------------
 procedure TONURGraphicsButton.SetSkindata(Aimg: TONURImg);
+var
+  tl,t,tr,bl,b,br,l,r,c:Trect;
 begin
   inherited SetSkindata(Aimg);
   resizing;
+
+  /// LOAD FORM SKIN IMAGE TO NORMAL BUTTON IMAGE
+
+  // NORMAL BUTTON IMAGE
+  Drawbutton(FBGNormal,FNormalTL.Croprect,Rect(0,0,FNormalTL.Croprect.Width,FNormalTL.Croprect.Height));
+  Drawbutton(FBGNormal,FNormalT.Croprect,Rect(FNormalTL.Croprect.Width,0,FNormalT.Croprect.Width,FNormalT.Croprect.Height));
+  Drawbutton(FBGNormal,FNormalTr.Croprect,Rect(FNormalTL.Croprect.Width+FNormalT.Croprect.Width,0,FNormalTL.Croprect.Width+FNormalT.Croprect.Width+FNormalTR.Croprect.Width,FNormalTR.Croprect.Height));
+  Drawbutton(FBGNormal,FNormall.Croprect,Rect(0,FNormalTL.Croprect.Height,FNormalL.Croprect.Width,FNormalTL.Croprect.Height+FNormalL.Croprect.Height));
+
+  Drawbutton(FBGNormal,FNormalbl.Croprect,Rect(0,clientHeight-FNormalbl.Croprect.Height,FNormalbl.Croprect.Width,clientHeight));
+  Drawbutton(FBGNormal,FNormalbr.Croprect,Rect(clientWidth-FNormalBR.Croprect.Width,clientHeight-FNormalBR.Croprect.Height,clientWidth,clientHeight));
+  Drawbutton(FBGNormal,FNormalb.Croprect,Rect(FNormalBL.Croprect.Width,clientHeight-FNormalB.Croprect.Height,clientWidth-(FNormalBR.Croprect.Width),clientHeight));
+  Drawbutton(FBGNormal,FNormalr.Croprect,Rect(clientWidth-FNormalR.Croprect.Width,FNormalTR.Croprect.Height,clientWidth, clientHeight- FNormalBR.Croprect.Height));
+  Drawbutton(FBGNormal,FNormalc.Croprect,Rect(FNormalL.Croprect.Width,FNormalT.Croprect.Height,clientWidth-FNormalR.Croprect.Width,clientHeight-FNormalB.Croprect.Height));
+
+  // HOVER BUTTON IMAGE
+  Drawbutton(FBGHover,FHoverTL.Croprect,Rect(0,0,FHoverTL.Croprect.Width,FHoverTL.Croprect.Height));
+  Drawbutton(FBGHover,FHoverTr.Croprect,Rect(ClientWidth-FHoverTR.Croprect.Width,0,ClientWidth,FHoverTR.Croprect.Height));
+  Drawbutton(FBGHover,FHoverT.Croprect,Rect(FHoverTL.Croprect.Width,0,clientWidth-FHoverTR.Croprect.Width,FHoverT.Croprect.Height));
+  Drawbutton(FBGHover,FHoverbl.Croprect,Rect(0,clientHeight-FHoverbl.Croprect.Height,FHoverbl.Croprect.Width,clientHeight));
+  Drawbutton(FBGHover,FHoverbr.Croprect,Rect(clientWidth-FHoverBR.Croprect.Width,clientHeight-FHoverBR.Croprect.Height,clientWidth,clientHeight));
+  Drawbutton(FBGHover,FHoverb.Croprect,Rect(FHoverBL.Croprect.Width,clientHeight-FHoverB.Croprect.Height,clientWidth-(FHoverBR.Croprect.Width),clientHeight));
+  Drawbutton(FBGHover,FHoverl.Croprect,Rect(0,FHoverTL.Croprect.Height,FHoverL.Croprect.Width,clientHeight-FHoverBL.Croprect.Height));
+  Drawbutton(FBGHover,FHoverr.Croprect,Rect(clientWidth-FHoverR.Croprect.Width,FHoverTR.Croprect.Height,clientWidth, clientHeight- FHoverBR.Croprect.Height));
+  Drawbutton(FBGHover,FHoverc.Croprect,Rect(FHoverL.Croprect.Width,FHoverT.Croprect.Height,clientWidth-FHoverR.Croprect.Width,clientHeight-FHoverB.Croprect.Height));
+
+
+  // PRESS BUTTON IMAGE
+  Drawbutton(FBGPress,FPressTL.Croprect,Rect(0,0,FPressTL.Croprect.Width,FPressTL.Croprect.Height));
+  Drawbutton(FBGPress,FPressTr.Croprect,Rect(ClientWidth-FPressTR.Croprect.Width,0,ClientWidth,FPressTR.Croprect.Height));
+  Drawbutton(FBGPress,FPressT.Croprect,Rect(FPressTL.Croprect.Width,0,clientWidth-FPressTR.Croprect.Width,FPressT.Croprect.Height));
+  Drawbutton(FBGPress,FPressbl.Croprect,Rect(0,clientHeight-FPressbl.Croprect.Height,FPressbl.Croprect.Width,clientHeight));
+  Drawbutton(FBGPress,FPressbr.Croprect,Rect(clientWidth-FPressBR.Croprect.Width,clientHeight-FPressBR.Croprect.Height,clientWidth,clientHeight));
+  Drawbutton(FBGPress,FPressb.Croprect,Rect(FPressBL.Croprect.Width,clientHeight-FPressB.Croprect.Height,clientWidth-(FPressBR.Croprect.Width),clientHeight));
+  Drawbutton(FBGPress,FPressl.Croprect,Rect(0,FPressTL.Croprect.Height,FPressL.Croprect.Width,clientHeight-FPressBL.Croprect.Height));
+  Drawbutton(FBGPress,FPressr.Croprect,Rect(clientWidth-FPressR.Croprect.Width,FPressTR.Croprect.Height,clientWidth, clientHeight- FPressBR.Croprect.Height));
+  Drawbutton(FBGPress,FPressc.Croprect,Rect(FPressL.Croprect.Width,FPressT.Croprect.Height,clientWidth-FPressR.Croprect.Width,clientHeight-FPressB.Croprect.Height));
+
+
+ // PRESS BUTTON IMAGE
+  Drawbutton(FBGDisable,FDisableTL.Croprect,Rect(0,0,FDisableTL.Croprect.Width,FDisableTL.Croprect.Height));
+  Drawbutton(FBGDisable,FDisableTr.Croprect,Rect(ClientWidth-FDisableTR.Croprect.Width,0,ClientWidth,FDisableTR.Croprect.Height));
+  Drawbutton(FBGDisable,FDisableT.Croprect,Rect(FDisableTL.Croprect.Width,0,clientWidth-FDisableTR.Croprect.Width,FDisableT.Croprect.Height));
+  Drawbutton(FBGDisable,FDisablebl.Croprect,Rect(0,clientHeight-FDisablebl.Croprect.Height,FDisablebl.Croprect.Width,clientHeight));
+  Drawbutton(FBGDisable,FDisablebr.Croprect,Rect(clientWidth-FDisableBR.Croprect.Width,clientHeight-FDisableBR.Croprect.Height,clientWidth,clientHeight));
+  Drawbutton(FBGDisable,FDisableb.Croprect,Rect(FDisableBL.Croprect.Width,clientHeight-FDisableB.Croprect.Height,clientWidth-(FDisableBR.Croprect.Width),clientHeight));
+  Drawbutton(FBGDisable,FDisablel.Croprect,Rect(0,FDisableTL.Croprect.Height,FDisableL.Croprect.Width,clientHeight-FDisableBL.Croprect.Height));
+  Drawbutton(FBGDisable,FDisabler.Croprect,Rect(clientWidth-FDisableR.Croprect.Width,FDisableTR.Croprect.Height,clientWidth, clientHeight- FDisableBR.Croprect.Height));
+  Drawbutton(FBGDisable,FDisablec.Croprect,Rect(FDisableL.Croprect.Width,FDisableT.Croprect.Height,clientWidth-FDisableR.Croprect.Width,clientHeight-FDisableB.Croprect.Height));
+
+
 end;
 
 procedure TONURGraphicsButton.resize;
@@ -3095,6 +3127,7 @@ begin
   FoldHeight := Height;
  // CheckAutoWidth;  }
   if Assigned(Skindata) then
+
   Resizing;
 end;
 
@@ -3125,6 +3158,10 @@ begin
    FNormalC.Targetrect   := Rect(FNormalL.Width, FNormalT.Height, self.ClientWidth - FNormalR.Width, self.ClientHeight -(FNormalB.Height));
  }
 
+  FBGDisable.setsize(self.ClientWidth,Self.ClientHeight);
+  FBGHover.setsize(self.ClientWidth,Self.ClientHeight);
+  FBGNormal.setsize(self.ClientWidth,Self.ClientHeight);
+  FBGPress.setsize(self.ClientWidth,Self.ClientHeight);
 
 
 end;
@@ -3145,6 +3182,7 @@ end;
 procedure TONURGraphicsButton.Paint;
 var
   tl,t,tr,bl,b,br,l,r,c:Trect;
+  tmp: TBGRABitmap;
 begin
   if not Visible then exit;
  // resim.SetSize(0,0);
@@ -3152,7 +3190,7 @@ begin
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-      if Enabled = True then
+    {  if Enabled = True then
       begin
         case Fstate of
           obsNormal:
@@ -3210,39 +3248,31 @@ begin
         Self.Font.Color := FDisableC.Fontcolor;
       end;
 
-
+     }
     resim.SetSize(0,0);
-    resim.SetSize(tl.Width+t.Width+tr.Width,tl.Height+l.Height+bl.Height);
-    if resim.Width<1 then resim.SetSize(1,resim.Height);
-    if resim.Height<1 then resim.SetSize(resim.Width,1);
+    resim.SetSize(clientWidth,clientHeight);
+    tmp:=TBGRABitmap.Create(FBGNormal.Width,FBGNormal.Height);
+    if Enabled = True then
+    begin
+    case Fstate of
+          obsNormal  : tmp.PutImage(0,0,FBGNormal,dmDrawWithTransparency);
+          obshover   : tmp.PutImage(0,0,FBGHover,dmDrawWithTransparency);
+          obspressed : tmp.PutImage(0,0,FBGPress,dmDrawWithTransparency);
+          else
+          tmp.PutImage(0,0,FBGNormal,dmDrawWithTransparency);
+    end;
+    end else
+    begin
+      tmp.PutImage(0,0,FBGDisable,dmDrawWithTransparency);
+    end;
 
-
-    //TOPLEFT   //SOLÜST
-    DrawPartnormal(tl, self,Rect(0,0,tl.Width,tl.Height),Alpha);//  FNormalTL.Targetrect, alpha);
-    //TOPRIGHT //SAĞÜST
-    DrawPartnormal(tr, self,Rect(resim.Width-tr.Width,0,resim.Width,tr.Height),Alpha);// FNormalTR.Targetrect, alpha);
-    //TOP  //ÜST
-    DrawPartnormal(T, self, Rect(tl.Width,0,resim.Width-tr.Width,t.Height),Alpha);//FNormalT.Targetrect, alpha);
-    //BOTTOMLEFT // SOLALT
-    DrawPartnormal(Bl, self, Rect(0,resim.Height-bl.Height,bl.Width,resim.Height),Alpha);//FNormalBL.Targetrect, alpha);
-    //BOTTOMRIGHT  //SAĞALT
-    DrawPartnormal(br, self,Rect(resim.Width-br.Width,resim.Height-br.Height,resim.Width,resim.Height),Alpha);// FNormalBR.Targetrect, alpha);
-    //BOTTOM  //ALT
-    DrawPartnormal(b, self, Rect(bl.Width,resim.Height-b.Height,resim.Width-(br.Width),resim.Height),Alpha);//FNormalB.Targetrect, alpha);
-    //CENTERLEFT // SOLORTA
-    DrawPartnormal(l, self, Rect(0,tl.Height,l.Width,resim.Height-bl.Height),Alpha);// FNormalL.Targetrect, alpha);
-    //CENTERRIGHT // SAĞORTA
-    DrawPartnormal(r, self, Rect(resim.Width-r.Width,tr.Height,resim.Width, resim.Height- br.Height),Alpha);// FNormalR.Targetrect, alpha);
-    //CENTER //ORTA
-    DrawPartnormal(c, self, Rect(l.Width,t.Height,resim.Width-r.Width,resim.Height-b.Height),Alpha);// FNormalC.Targetrect, alpha);
-
-    resim.ResampleFilter:=rfBestQuality;
-    BGRAReplace(resim, resim.Resample(self.ClientWidth,self.ClientHeight,rmFineResample));
-
+    BGRAReplace(tmp,tmp.Resample(clientWidth,clientHeight));
+    resim.PutImage(0,0,tmp,dmDrawWithTransparency);
+    tmp.Free;
   end
   else
   begin
-     resim.SetSize(0,0);
+    resim.SetSize(0,0);
     resim.SetSize(self.Width, Self.Height);
   //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     case Fstate of
