@@ -100,6 +100,7 @@ uses
     Fstate           : TONURButtonState;
     FAutoWidth       : boolean;
     FoldHeight, FoldWidth: Integer;
+    FBGDisable,FBGHover,FBGNormal,FBGPress:TBGRABitmap;
     function GetAutoWidth: boolean;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
@@ -176,9 +177,9 @@ uses
     Fstate: TONURButtonState;
     FAutoWidth: boolean;
     FoldHeight, FoldWidth: Integer;
-    FClientPicture:Tpoint;
+ //   FClientPicture:Tpoint;
     FBGDisable,FBGHover,FBGNormal,FBGPress:TBGRABitmap;
-    procedure Drawbutton(a:Tbgrabitmap;des,trgt:Trect);
+   // procedure Drawbutton(a:Tbgrabitmap;des,trgt:Trect);
     function GetAutoWidth: boolean;
 
   protected
@@ -406,6 +407,7 @@ uses
     FOpen, Fclose, Fopenhover, Fclosehover, FdisableOff,FdisableOn: TONURCUSTOMCROP;
     Fstate: TONURButtonState;
     FChecked: boolean;
+    foncap,foffcap:string;
     FOnChange: TNotifyEvent;
     procedure SetChecked(Value: boolean);
     procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
@@ -423,10 +425,12 @@ uses
     destructor Destroy; override;
     procedure Paint; override;
   published
+    property ONCaption  : string read foncap  write foncap;
+    property OFFCaption : string read foffcap write foffcap;
     property Alpha;
     property Skindata;
-    property Checked: boolean read FChecked write SetChecked default False;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property Checked    : boolean read FChecked write SetChecked default False;
+    property OnChange   : TNotifyEvent read FOnChange write FOnChange;
     property OnMouseDown;
     property OnMouseEnter;
     property OnMouseLeave;
@@ -1383,16 +1387,21 @@ end;
 constructor TONURRadioButton.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  skinname := 'radiobox';
-  fcheckwidth := 12;
+  skinname          := 'radiobox';
+  fcheckwidth       := 12;
   fcaptiondirection := ocright;
-  obenter := TONURCUSTOMCROP.Create('NORMALHOVER');
-  obleave := TONURCUSTOMCROP.Create('NORMAL');
-  obdown := TONURCUSTOMCROP.Create('PRESSED');
-  obcheckleaves := TONURCUSTOMCROP.Create('CHECK');
-  obcheckenters := TONURCUSTOMCROP.Create('CHECKHOVER');
-  obdisableoff := TONURCUSTOMCROP.Create('DISABLENORMAL');
-  obdisableon := TONURCUSTOMCROP.Create('DISABLECHECK');
+  Fstate            := obsnormal;
+  FChecked          := False;
+  Captionvisible    := False;
+  textx             := 10;
+  Texty             := 10;
+  obenter           := TONURCUSTOMCROP.Create('NORMALHOVER');
+  obleave           := TONURCUSTOMCROP.Create('NORMAL');
+  obdown            := TONURCUSTOMCROP.Create('PRESSED');
+  obcheckleaves     := TONURCUSTOMCROP.Create('CHECK');
+  obcheckenters     := TONURCUSTOMCROP.Create('CHECKHOVER');
+  obdisableoff      := TONURCUSTOMCROP.Create('DISABLENORMAL');
+  obdisableon       := TONURCUSTOMCROP.Create('DISABLECHECK');
 
   Customcroplist.Add(obenter);
   Customcroplist.Add(obleave);
@@ -1402,13 +1411,6 @@ begin
   Customcroplist.Add(obdisableON);
   Customcroplist.Add(obdisableOFF);
 
-
-
-  Fstate := obsnormal;
-  FChecked := False;
-  Captionvisible := False;
-  textx:=10;
-  Texty:=10;
 end;
 
 destructor TONURRadioButton.Destroy;
@@ -1425,8 +1427,6 @@ begin
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-
-
 
 
 
@@ -1573,18 +1573,18 @@ begin
      resim.EllipseInRect(Fclientrect,bgrablack,bgra(155, 155, 155),dmset)
     else
      resim.EllipseInRect(Fclientrect,bgrablack,BGRAPixelTransparent,dmset);
-    yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
   end;
 
 
+  yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
 
   inherited paint;
 
-  if (Length(Caption) > 0) and (Skindata<>nil) then
+ { if (Length(Caption) > 0) and (Skindata<>nil) then
   begin
     canvas.Brush.Style := bsClear;
     canvas.TextOut(Textx, Texty, (Caption));
-  end;
+  end;    }
 end;
 
 
@@ -2504,6 +2504,10 @@ begin
 
 
 
+  FBGDisable              := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGHover                := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGNormal               := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGPress                := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
 
 
 
@@ -2553,6 +2557,10 @@ end;
 destructor TONURCropButton.Destroy;
 begin
   Customcroplist.Clear;
+  FreeAndNil(FBGDisable);
+  FreeAndNil(FBGHover);
+  FreeAndNil(FBGNormal);
+  FreeAndNil(FBGPress);
   inherited Destroy;
 end;
 // -----------------------------------------------------------------------------
@@ -2595,9 +2603,134 @@ end;
 
 // -----------------------------------------------------------------------------
 procedure TONURCropButton.SetSkindata(Aimg: TONURImg);
+  var
+  tl,t,tr,bl,b,br,l,r,c:Trect;
 begin
   inherited SetSkindata(Aimg);
-  Resizing;
+  resizing;
+
+  FBGNormal.SetSize(FNormalTL.Croprect.Width+FNormalT.Croprect.Width+FNormalTR.Croprect.Width,FNormalTL.Croprect.Height+FNormalL.Croprect.Height+FNormalBL.Croprect.Height);
+  FBGHover.SetSize(FHoverTL.Croprect.Width+FHoverT.Croprect.Width+FHoverTR.Croprect.Width,FHoverTL.Croprect.Height+FHoverL.Croprect.Height+FHoverBL.Croprect.Height);
+  FBGPress.SetSize(FPressTL.Croprect.Width+FPressT.Croprect.Width+FPressTR.Croprect.Width,FPressTL.Croprect.Height+FPressL.Croprect.Height+FPressBL.Croprect.Height);
+  FBGDisable.SetSize(FDisableTL.Croprect.Width+FDisableT.Croprect.Width+FDisableTR.Croprect.Width,FDisableTL.Croprect.Height+FDisableL.Croprect.Height+FDisableBL.Croprect.Height);
+
+
+  //RECT LOAD
+  tl := Rect(0,0,FNormalTL.Croprect.Width,FNormalTL.Croprect.Height);
+  t  := Rect(FNormalTL.Croprect.Width,0,FNormalTL.Croprect.Width+FNormalT.Croprect.Width,FNormalT.Croprect.Height);
+  tr := Rect(FNormalTL.Croprect.Width+FNormalT.Croprect.Width,0,FNormalTL.Croprect.Width+FNormalT.Croprect.Width+FNormalTR.Croprect.Width,FNormalTR.Croprect.Height);
+  bl := Rect(0,FBGNormal.Height-FNormalbl.Croprect.Height,FNormalbl.Croprect.Width,FBGNormal.Height);
+  b  := Rect(FNormalBL.Croprect.Width,FBGNormal.Height-FNormalB.Croprect.Height,FBGNormal.Width-(FNormalBR.Croprect.Width),FBGNormal.Height);
+  br := Rect(FBGNormal.Width-FNormalBR.Croprect.Width,FBGNormal.Height-FNormalBR.Croprect.Height,FBGNormal.Width,FBGNormal.Height);
+  l  := Rect(0,FNormalTL.Croprect.Height,FNormalL.Croprect.Width,FNormalTL.Croprect.Height+FNormalL.Croprect.Height);
+  r  := Rect(FBGNormal.Width-FNormalR.Croprect.Width,FNormalTR.Croprect.Height,FBGNormal.Width, FBGNormal.Height- FNormalBR.Croprect.Height);
+  c  := Rect(FNormalL.Croprect.Width,FNormalT.Croprect.Height,FBGNormal.Width-FNormalR.Croprect.Width,FBGNormal.Height-FNormalB.Croprect.Height);
+
+  /// LOAD FORM SKIN IMAGE TO NORMAL BUTTON IMAGE
+
+
+  // NORMAL BUTTON IMAGE
+  DrawPartnormal(FNormalTL.Croprect,FBGNormal,skindata.Fimage,tl,alpha);
+  DrawPartnormal(FNormalT.Croprect,FBGNormal,skindata.Fimage,t,alpha);
+  DrawPartnormal(FNormalTr.Croprect,FBGNormal,skindata.Fimage,tr,alpha);
+  DrawPartnormal(FNormalbL.Croprect,FBGNormal,skindata.Fimage,bl,alpha);
+  DrawPartnormal(FNormalb.Croprect,FBGNormal,skindata.Fimage,b,alpha);
+  DrawPartnormal(FNormalBr.Croprect,FBGNormal,skindata.Fimage,br,alpha);
+
+  DrawPartstrechRegion(FNormalL.Croprect,FBGNormal,self.skindata.Fimage,FNormalL.Croprect.Width,ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),l,alpha);
+  DrawPartstrechRegion(FNormalR.Croprect,FBGNormal,self.skindata.Fimage,FNormalR.Croprect.Width,ClientHeight-(FNormalTR.Croprect.Height+FNormalBR.Croprect.Height),r,alpha);
+  DrawPartstrechRegion(FNormalC.Croprect,FBGNormal,self.skindata.Fimage,ClientWidth-(FNormalL.Croprect.Width+FNormalR.Croprect.Width),ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),c,alpha);
+
+ // DrawPartnormal(FNormalL.Croprect,FBGNormal,skindata.Fimage,l,alpha);
+ // DrawPartnormal(FNormalR.Croprect,FBGNormal,skindata.Fimage,r,alpha);
+ // DrawPartnormal(FNormalC.Croprect,FBGNormal,skindata.Fimage,c,alpha);
+
+ // BGRAReplace(FBGNormal,FBGNormal.Resample(clientWidth,clientHeight));
+
+
+
+  //RECT LOAD
+  tl := Rect(0,0,FHoverTL.Croprect.Width,FHoverTL.Croprect.Height);
+  t  := Rect(FHoverTL.Croprect.Width,0,FHoverTL.Croprect.Width+FHoverT.Croprect.Width,FHoverT.Croprect.Height);
+  tr := Rect(FHoverTL.Croprect.Width+FHoverT.Croprect.Width,0,FHoverTL.Croprect.Width+FHoverT.Croprect.Width+FHoverTR.Croprect.Width,FHoverTR.Croprect.Height);
+  bl := Rect(0,FBGHover.Height-FHoverbl.Croprect.Height,FHoverbl.Croprect.Width,FBGHover.Height);
+  b  := Rect(FHoverBL.Croprect.Width,FBGHover.Height-FHoverB.Croprect.Height,FBGHover.Width-(FHoverBR.Croprect.Width),FBGHover.Height);
+  br := Rect(FBGHover.Width-FHoverBR.Croprect.Width,FBGHover.Height-FHoverBR.Croprect.Height,FBGHover.Width,FBGHover.Height);
+  l  := Rect(0,FHoverTL.Croprect.Height,FHoverL.Croprect.Width,FHoverTL.Croprect.Height+FHoverL.Croprect.Height);
+  r  := Rect(FBGHover.Width-FHoverR.Croprect.Width,FHoverTR.Croprect.Height,FBGHover.Width, FBGHover.Height- FHoverBR.Croprect.Height);
+  c  := Rect(FHoverL.Croprect.Width,FHoverT.Croprect.Height,FBGHover.Width-FHoverR.Croprect.Width,FBGHover.Height-FHoverB.Croprect.Height);
+
+
+  // HOVER BUTTON IMAGE
+  DrawPartnormal(FHoverTL.Croprect,FBGHover,skindata.Fimage,tl,alpha);
+  DrawPartnormal(FHoverT.Croprect,FBGHover,skindata.Fimage,t,alpha);
+  DrawPartnormal(FHoverTr.Croprect,FBGHover,skindata.Fimage,tr,alpha);
+  DrawPartnormal(FHoverbL.Croprect,FBGHover,skindata.Fimage,bl,alpha);
+  DrawPartnormal(FHoverb.Croprect,FBGHover,skindata.Fimage,b,alpha);
+  DrawPartnormal(FHoverBr.Croprect,FBGHover,skindata.Fimage,br,alpha);
+
+  DrawPartnormal(FHoverL.Croprect,FBGHover,skindata.Fimage,l,alpha);
+  DrawPartnormal(FHoverR.Croprect,FBGHover,skindata.Fimage,r,alpha);
+
+
+  DrawPartnormal(FHoverC.Croprect,FBGHover,skindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGHover,FBGHover.Resample(clientWidth,clientHeight));
+
+
+
+  //RECT LOAD
+  tl := Rect(0,0,FPressTL.Croprect.Width,FPressTL.Croprect.Height);
+  t  := Rect(FPressTL.Croprect.Width,0,FPressTL.Croprect.Width+FPressT.Croprect.Width,FPressT.Croprect.Height);
+  tr := Rect(FPressTL.Croprect.Width+FPressT.Croprect.Width,0,FPressTL.Croprect.Width+FPressT.Croprect.Width+FPressTR.Croprect.Width,FPressTR.Croprect.Height);
+  bl := Rect(0,FBGPress.Height-FPressbl.Croprect.Height,FPressbl.Croprect.Width,FBGPress.Height);
+  b  := Rect(FPressBL.Croprect.Width,FBGPress.Height-FPressB.Croprect.Height,FBGPress.Width-(FPressBR.Croprect.Width),FBGPress.Height);
+  br := Rect(FBGPress.Width-FPressBR.Croprect.Width,FBGPress.Height-FPressBR.Croprect.Height,FBGPress.Width,FBGPress.Height);
+  l  := Rect(0,FPressTL.Croprect.Height,FPressL.Croprect.Width,FPressTL.Croprect.Height+FPressL.Croprect.Height);
+  r  := Rect(FBGPress.Width-FPressR.Croprect.Width,FPressTR.Croprect.Height,FBGPress.Width, FBGPress.Height- FPressBR.Croprect.Height);
+  c  := Rect(FPressL.Croprect.Width,FPressT.Croprect.Height,FBGPress.Width-FPressR.Croprect.Width,FBGPress.Height-FPressB.Croprect.Height);
+
+
+
+ // HOVER BUTTON IMAGE
+  DrawPartnormal(FPressTL.Croprect,FBGPress,skindata.Fimage,tl,alpha);
+  DrawPartnormal(FPressT.Croprect,FBGPress,skindata.Fimage,t,alpha);
+  DrawPartnormal(FPressTr.Croprect,FBGPress,skindata.Fimage,tr,alpha);
+  DrawPartnormal(FPressbL.Croprect,FBGPress,skindata.Fimage,bl,alpha);
+  DrawPartnormal(FPressb.Croprect,FBGPress,skindata.Fimage,b,alpha);
+  DrawPartnormal(FPressBr.Croprect,FBGPress,skindata.Fimage,br,alpha);
+  DrawPartnormal(FPressL.Croprect,FBGPress,skindata.Fimage,l,alpha);
+  DrawPartnormal(FPressR.Croprect,FBGPress,skindata.Fimage,r,alpha);
+  DrawPartnormal(FPressC.Croprect,FBGPress,skindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGPress,FBGPress.Resample(clientWidth,clientHeight));
+
+ //RECT LOAD
+  tl := Rect(0,0,FDisableTL.Croprect.Width,FDisableTL.Croprect.Height);
+  t  := Rect(FDisableTL.Croprect.Width,0,FDisableTL.Croprect.Width+FDisableT.Croprect.Width,FDisableT.Croprect.Height);
+  tr := Rect(FDisableTL.Croprect.Width+FDisableT.Croprect.Width,0,FDisableTL.Croprect.Width+FDisableT.Croprect.Width+FDisableTR.Croprect.Width,FDisableTR.Croprect.Height);
+  bl := Rect(0,FBGDisable.Height-FDisablebl.Croprect.Height,FDisablebl.Croprect.Width,FBGDisable.Height);
+  b  := Rect(FDisableBL.Croprect.Width,FBGDisable.Height-FDisableB.Croprect.Height,FBGDisable.Width-(FDisableBR.Croprect.Width),FBGDisable.Height);
+  br := Rect(FBGDisable.Width-FDisableBR.Croprect.Width,FBGDisable.Height-FDisableBR.Croprect.Height,FBGDisable.Width,FBGDisable.Height);
+  l  := Rect(0,FDisableTL.Croprect.Height,FDisableL.Croprect.Width,FDisableTL.Croprect.Height+FDisableL.Croprect.Height);
+  r  := Rect(FBGDisable.Width-FDisableR.Croprect.Width,FDisableTR.Croprect.Height,FBGDisable.Width, FBGDisable.Height- FDisableBR.Croprect.Height);
+  c  := Rect(FDisableL.Croprect.Width,FDisableT.Croprect.Height,FBGDisable.Width-FDisableR.Croprect.Width,FBGDisable.Height-FDisableB.Croprect.Height);
+
+
+
+ // PRESS BUTTON IMAGE
+  DrawPartnormal(FDisableTL.Croprect,FBGDisable,skindata.Fimage,tl,alpha);
+  DrawPartnormal(FDisableT.Croprect,FBGDisable,skindata.Fimage,t,alpha);
+  DrawPartnormal(FDisableTr.Croprect,FBGDisable,skindata.Fimage,tr,alpha);
+  DrawPartnormal(FDisablebL.Croprect,FBGDisable,skindata.Fimage,bl,alpha);
+  DrawPartnormal(FDisableb.Croprect,FBGDisable,skindata.Fimage,b,alpha);
+  DrawPartnormal(FDisableBr.Croprect,FBGDisable,skindata.Fimage,br,alpha);
+  DrawPartnormal(FDisableL.Croprect,FBGDisable,skindata.Fimage,l,alpha);
+  DrawPartnormal(FDisableR.Croprect,FBGDisable,skindata.Fimage,r,alpha);
+  DrawPartnormal(FDisableC.Croprect,FBGDisable,skindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGDisable,FBGDisable.Resample(clientWidth,clientHeight));
+
 end;
 
 procedure TONURCropButton.Resize;
@@ -2643,7 +2776,7 @@ procedure TONURCropButton.Paint;
 var
   tl,t,tr,bl,b,br,l,r,c:Trect;
 begin
-  if not Visible then exit;
+{  if not Visible then exit;
 //  resim.SetSize(0,0);
 //  resim.SetSize(self.Width, Self.Height);
 
@@ -2707,25 +2840,7 @@ begin
         Self.Font.Color := FDisableC.Fontcolor;
       end;
 
-       //TOPLEFT   //SOLÜST
-   { DrawPartnormal(tl, self, FNormalTL.Targetrect, alpha);
-    //TOPRIGHT //SAĞÜST
-    DrawPartnormal(tr, self, FNormalTR.Targetrect, alpha);
-    //TOP  //ÜST
-    DrawPartnormal(T, self, FNormalt.Targetrect, alpha);
-    //BOTTOMLEFT // SOLALT
-    DrawPartnormal(Bl, self, FNormalBL.Targetrect, alpha);
-    //BOTTOMRIGHT  //SAĞALT
-    DrawPartnormal(br, self, FNormalBR.Targetrect, alpha);
-    //BOTTOM  //ALT
-    DrawPartnormal(b, self, FNormalB.Targetrect, alpha);
-    //CENTERLEFT // SOLORTA
-    DrawPartnormal(l, self, FNormalL.Targetrect, alpha);
-    //CENTERRIGHT // SAĞORTA
-    DrawPartnormal(r, self, FNormalR.Targetrect, alpha);
-    //CENTER //ORTA
-    DrawPartnormal(c, self, FNormalC.Targetrect, alpha);
-   }
+
     resim.SetSize(0,0);
     resim.SetSize(tl.Width+t.Width+tr.Width,tl.Height+l.Height+bl.Height);
     if resim.Width<1 then resim.SetSize(1,resim.Height);
@@ -2764,6 +2879,46 @@ begin
     resim.SetSize(0,0);
     resim.SetSize(self.Width, Self.Height);
   //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
+    case Fstate of
+      obsNormal:
+      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+
+      obshover:
+      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+      obspressed:
+      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+        PointF(0, 0), PointF(0, Height), dmSet);
+    end;
+  end;
+  inherited Paint;  }
+
+
+  if not Visible then exit;
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+  begin
+    resim.SetSize(0,0);
+    resim.SetSize(clientWidth,clientHeight);
+
+    if Enabled = True then
+    begin
+      case Fstate of
+            obsNormal  : begin resim.PutImage(0,0,FBGNormal,dmDrawWithTransparency); self.font.Color:=FNormalC.Fontcolor end;
+            obshover   : begin resim.PutImage(0,0,FBGHover,dmDrawWithTransparency); self.font.Color:=FHoverC.Fontcolor end;
+            obspressed : begin resim.PutImage(0,0,FBGPress,dmDrawWithTransparency); self.font.Color:=FPressC.Fontcolor end;
+            else
+            begin resim.PutImage(0,0,FBGNormal,dmDrawWithTransparency); self.font.Color:=FNormalC.Fontcolor end;
+      end;
+    end else
+    begin
+      resim.PutImage(0,0,FBGDisable,dmDrawWithTransparency); self.font.Color:=FDisableC.Fontcolor;
+    end;
+  end
+  else
+  begin
+    resim.SetSize(0,0);
+    resim.SetSize(self.Width, Self.Height);
     case Fstate of
       obsNormal:
       resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
@@ -2918,7 +3073,7 @@ begin
   //Skindata                := nil;
   resim.SetSize(ClientWidth, ClientHeight);
 
-    FNormalTL               := TONURCUSTOMCROP.Create('NORMALTOPLEFT');
+  FNormalTL               := TONURCUSTOMCROP.Create('NORMALTOPLEFT');
   FNormalTR               := TONURCUSTOMCROP.Create('NORMALTOPRIGHT');
   FNormalT                := TONURCUSTOMCROP.Create('NORMALTOP');
   FNormalBL               := TONURCUSTOMCROP.Create('NORMALBOTTOMLEFT');
@@ -3010,12 +3165,7 @@ end;
 
 // -----------------------------------------------------------------------------
 destructor TONURGraphicsButton.Destroy;
-var
-  i:byte;
 begin
-{  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-  }
   FreeAndNil(FBGDisable);
   FreeAndNil(FBGHover);
   FreeAndNil(FBGNormal);
@@ -3053,11 +3203,6 @@ begin
 end;
 // -----------------------------------------------------------------------------
 
-procedure TONURGraphicsButton.Drawbutton(a:Tbgrabitmap;des,trgt:Trect);
-begin
- DrawPartnormal(des,a,skindata.Fimage,trgt,Alpha);
-
-end;
 
 // -----------------------------------------------------------------------------
 procedure TONURGraphicsButton.SetSkindata(Aimg: TONURImg);
@@ -3100,6 +3245,9 @@ begin
 
   BGRAReplace(FBGNormal,FBGNormal.Resample(clientWidth,clientHeight));
 
+//  DrawPartstrechRegion(FNormalL.Croprect,FBGNormal,self.skindata.Fimage,FNormalL.Croprect.Width,ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),l,alpha);
+//  DrawPartstrechRegion(FNormalR.Croprect,FBGNormal,self.skindata.Fimage,FNormalR.Croprect.Width,ClientHeight-(FNormalTR.Croprect.Height+FNormalBR.Croprect.Height),r,alpha);
+//  DrawPartstrechRegion(FNormalC.Croprect,FBGNormal,self.skindata.Fimage,ClientWidth-(FNormalL.Croprect.Width+FNormalR.Croprect.Width),ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),c,alpha);
 
 
   //RECT LOAD
@@ -3156,20 +3304,29 @@ begin
   BGRAReplace(FBGPress,FBGPress.Resample(clientWidth,clientHeight));
 
 
+//RECT LOAD
+  tl := Rect(0,0,FDisableTL.Croprect.Width,FDisableTL.Croprect.Height);
+  t  := Rect(FDisableTL.Croprect.Width,0,FDisableTL.Croprect.Width+FDisableT.Croprect.Width,FDisableT.Croprect.Height);
+  tr := Rect(FDisableTL.Croprect.Width+FDisableT.Croprect.Width,0,FDisableTL.Croprect.Width+FDisableT.Croprect.Width+FDisableTR.Croprect.Width,FDisableTR.Croprect.Height);
+  bl := Rect(0,FBGDisable.Height-FDisablebl.Croprect.Height,FDisablebl.Croprect.Width,FBGDisable.Height);
+  b  := Rect(FDisableBL.Croprect.Width,FBGDisable.Height-FDisableB.Croprect.Height,FBGDisable.Width-(FDisableBR.Croprect.Width),FBGDisable.Height);
+  br := Rect(FBGDisable.Width-FDisableBR.Croprect.Width,FBGDisable.Height-FDisableBR.Croprect.Height,FBGDisable.Width,FBGDisable.Height);
+  l  := Rect(0,FDisableTL.Croprect.Height,FDisableL.Croprect.Width,FDisableTL.Croprect.Height+FDisableL.Croprect.Height);
+  r  := Rect(FBGDisable.Width-FDisableR.Croprect.Width,FDisableTR.Croprect.Height,FBGDisable.Width, FBGDisable.Height- FDisableBR.Croprect.Height);
+  c  := Rect(FDisableL.Croprect.Width,FDisableT.Croprect.Height,FBGDisable.Width-FDisableR.Croprect.Width,FBGDisable.Height-FDisableB.Croprect.Height);
+
 
 
  // PRESS BUTTON IMAGE
-  Drawbutton(FBGDisable,FDisableTL.Croprect,Rect(0,0,FDisableTL.Croprect.Width,FDisableTL.Croprect.Height));
-  Drawbutton(FBGDisable,FDisableTr.Croprect,Rect(ClientWidth-FDisableTR.Croprect.Width,0,ClientWidth,FDisableTR.Croprect.Height));
-  Drawbutton(FBGDisable,FDisableT.Croprect,Rect(FDisableTL.Croprect.Width,0,clientWidth-FDisableTR.Croprect.Width,FDisableT.Croprect.Height));
-  Drawbutton(FBGDisable,FDisablebl.Croprect,Rect(0,clientHeight-FDisablebl.Croprect.Height,FDisablebl.Croprect.Width,clientHeight));
-  Drawbutton(FBGDisable,FDisablebr.Croprect,Rect(clientWidth-FDisableBR.Croprect.Width,clientHeight-FDisableBR.Croprect.Height,clientWidth,clientHeight));
-  Drawbutton(FBGDisable,FDisableb.Croprect,Rect(FDisableBL.Croprect.Width,clientHeight-FDisableB.Croprect.Height,clientWidth-(FDisableBR.Croprect.Width),clientHeight));
-  Drawbutton(FBGDisable,FDisablel.Croprect,Rect(0,FDisableTL.Croprect.Height,FDisableL.Croprect.Width,clientHeight-FDisableBL.Croprect.Height));
-  Drawbutton(FBGDisable,FDisabler.Croprect,Rect(clientWidth-FDisableR.Croprect.Width,FDisableTR.Croprect.Height,clientWidth, clientHeight- FDisableBR.Croprect.Height));
-  Drawbutton(FBGDisable,FDisablec.Croprect,Rect(FDisableL.Croprect.Width,FDisableT.Croprect.Height,clientWidth-FDisableR.Croprect.Width,clientHeight-FDisableB.Croprect.Height));
-
-
+  DrawPartnormal(FDisableTL.Croprect,FBGDisable,skindata.Fimage,tl,alpha);
+  DrawPartnormal(FDisableT.Croprect,FBGDisable,skindata.Fimage,t,alpha);
+  DrawPartnormal(FDisableTr.Croprect,FBGDisable,skindata.Fimage,tr,alpha);
+  DrawPartnormal(FDisablebL.Croprect,FBGDisable,skindata.Fimage,bl,alpha);
+  DrawPartnormal(FDisableb.Croprect,FBGDisable,skindata.Fimage,b,alpha);
+  DrawPartnormal(FDisableBr.Croprect,FBGDisable,skindata.Fimage,br,alpha);
+  DrawPartnormal(FDisableL.Croprect,FBGDisable,skindata.Fimage,l,alpha);
+  DrawPartnormal(FDisableR.Croprect,FBGDisable,skindata.Fimage,r,alpha);
+  DrawPartnormal(FDisableC.Croprect,FBGDisable,skindata.Fimage,c,alpha);
 
   BGRAReplace(FBGDisable,FBGDisable.Resample(clientWidth,clientHeight));
 
@@ -3246,15 +3403,15 @@ begin
     if Enabled = True then
     begin
       case Fstate of
-            obsNormal  : resim.PutImage(0,0,FBGNormal,dmDrawWithTransparency);
-            obshover   : resim.PutImage(0,0,FBGHover,dmDrawWithTransparency);
-            obspressed : resim.PutImage(0,0,FBGPress,dmDrawWithTransparency);
+            obsNormal  : begin resim.PutImage(0,0,FBGNormal,dmDrawWithTransparency); self.font.Color:=FNormalC.Fontcolor end;
+            obshover   : begin resim.PutImage(0,0,FBGHover,dmDrawWithTransparency); self.font.Color:=FHoverC.Fontcolor end;
+            obspressed : begin resim.PutImage(0,0,FBGPress,dmDrawWithTransparency); self.font.Color:=FPressC.Fontcolor end;
             else
-            resim.PutImage(0,0,FBGNormal,dmDrawWithTransparency);
+            begin resim.PutImage(0,0,FBGNormal,dmDrawWithTransparency); self.font.Color:=FNormalC.Fontcolor end;
       end;
     end else
     begin
-      resim.PutImage(0,0,FBGDisable,dmDrawWithTransparency);
+      resim.PutImage(0,0,FBGDisable,dmDrawWithTransparency); self.font.Color:=FDisableC.Fontcolor;
     end;
   end
   else
@@ -3466,33 +3623,19 @@ begin
   Align                 := alTop;
   skinname              := 'Navmenu';
   FTop                  := TONURCUSTOMCROP.Create('TOP');
-//  FTop.cropname         := 'TOP';
   FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
-//  FBottom.cropname      := 'BOTTOM';
   FCenter               := TONURCUSTOMCROP.Create('CENTER');
-//  FCenter.cropname      := 'CENTER';
   FRight                := TONURCUSTOMCROP.Create('RIGHT');
-//  FRight.cropname       := 'RIGHT';
   FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
-//  FTopRight.cropname    := 'TOPRIGHT';
   FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
-//  FBottomRight.cropname := 'BOTTOMRIGHT';
   Fleft                 := TONURCUSTOMCROP.Create('LEFT');
-//  Fleft.cropname        := 'LEFT';
   FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
-//  FTopleft.cropname     := 'TOPLEFT';
   FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
-//  FBottomleft.cropname  := 'BOTTOMLEFT';
-
   // for button
   FNormal               := TONURCUSTOMCROP.Create('BUTTONNORMAL');
-//  FNormal.cropname      := 'BUTTONNORMAL';
   FPress                := TONURCUSTOMCROP.Create('BUTTONDOWN');
-//  FPress.cropname       := 'BUTTONDOWN';
   FEnter                := TONURCUSTOMCROP.Create('BUTTONHOVER');
-//  FEnter.cropname       := 'BUTTONHOVER';
   Fdisable              := TONURCUSTOMCROP.Create('BUTTONDISABLE');
-//  Fdisable.cropname     := 'BUTTONDISABLE';
 
   Captionvisible        := False;
   fmoveable             := true;
@@ -3560,8 +3703,8 @@ begin
        //CENTERRIGHT // SAĞORTA
        DrawPartnormal(FRight.Croprect, self, FRight.Targetrect, alpha);
 
-       if Crop then
-         CropToimg(resim);
+     //  if Crop then
+     //    CropToimg(resim);
      end
      else
      begin
@@ -3948,23 +4091,18 @@ end;
 constructor TONURSwich.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
-  skinname := 'swich';
-  FOpen := TONURCUSTOMCROP.Create('OPEN');
-//  FOpen.cropname := 'OPEN';
-  Fclose := TONURCUSTOMCROP.Create('CLOSE');
-//  Fclose.cropname := 'CLOSE';
-  Fopenhover := TONURCUSTOMCROP.Create('OPENHOVER');
-//  Fopenhover.cropname := 'OPENHOVER';
-  Fclosehover := TONURCUSTOMCROP.Create('CLOSEHOVER');
-//  Fclosehover.cropname := 'CLOSEHOVER';
-  FdisableOn := TONURCUSTOMCROP.Create('DISABLEON');
-//  FdisableOn.cropname := 'DISABLEON';
-  FdisableOFF := TONURCUSTOMCROP.Create('DISABLEOFF');
-//  FdisableOFF.cropname := 'DISABLEOFF';
-
-  Fstate := obsnormal;
-  FChecked := False;
+  skinname       := 'swich';
+  Fstate         := obsnormal;
+  FChecked       := False;
   Captionvisible := False;
+  FOpen          := TONURCUSTOMCROP.Create('OPEN');
+  Fclose         := TONURCUSTOMCROP.Create('CLOSE');
+  Fopenhover     := TONURCUSTOMCROP.Create('OPENHOVER');
+  Fclosehover    := TONURCUSTOMCROP.Create('CLOSEHOVER');
+  FdisableOn     := TONURCUSTOMCROP.Create('DISABLEON');
+  FdisableOFF    := TONURCUSTOMCROP.Create('DISABLEOFF');
+  foncap         := 'ON';
+  foffcap        := 'OFF';
 
   Customcroplist.Add(FOpen);
   Customcroplist.Add(Fopenhover);
@@ -3978,12 +4116,7 @@ begin
 end;
 
 destructor TONURSwich.Destroy;
-  var
-  i:byte;
 begin
-{  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
- }
   Customcroplist.Clear;
   inherited Destroy;
 end;
@@ -4065,16 +4198,13 @@ begin
   end
   else
   begin
-  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
-     resim.SetSize(0,0);
+    resim.SetSize(0,0);
     resim.SetSize(self.Width, Self.Height);
     resim.Fill(BGRAPixelTransparent);
-  //  resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
     case Fstate of
       obsNormal:
       resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
         PointF(0, 0), PointF(0, Height), dmSet);
-
       obshover:
       resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
         PointF(0, 0), PointF(0, Height), dmSet);
@@ -4084,23 +4214,16 @@ begin
     end;
 
     if Checked = True then
-    begin
-       //resim.FillEllipseInRect(rect(0,0,20,Height),BGRA(155, 155, 155),dmset,alpha);
-      // resim.EllipseAntialias((Height div 2)+3,(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
-      resim.FillRect(rect(0,0,Width div 2,Height),BGRA(155, 155, 155),dmset);
-    //  yaziyaz(resim.Canvas,self.font,rect(Width div 2,0,Width,Height),'ON  ',0,0);
-      yaziyazBGRA(resim.CanvasBGRA,self.font,rect(Width div 2,0,Width,Height),'ON  ',tacenter);
-
-    end else
-    begin
-      // resim.FillEllipseInRect(rect(Width-20,0,Width,Height),BGRA(155, 155, 155),dmset,alpha);
-      // resim.EllipseAntialias((Width-((Height div 2)-3)),(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
-      resim.FillRect(rect(Width div 2,0,Width,Height),BGRA(155, 155, 155),dmset);
-      yaziyazBGRA(resim.CanvasBGRA,self.font,rect(Height div 2,0,Width div 2,Height),'OFF',tacenter);
-
-   //   yaziyaz(resim.Canvas,self.font,rect(Height div 2,0,Width div 2,Height),'OFF',0,0);
-    end;
+      resim.FillRect(rect(0,0,Width div 2,Height),BGRA(155, 155, 155),dmset)
+    else
+     resim.FillRect(rect(Width div 2,0,Width,Height),BGRA(155, 155, 155),dmset);
   end;
+
+   if Checked = True then
+     yaziyazBGRA(resim.CanvasBGRA,self.font,rect(Width div 2,0,Width,Height),foncap,tacenter)
+   else
+     yaziyazBGRA(resim.CanvasBGRA,self.font,rect(Height div 2,0,Width div 2,Height),foffcap,tacenter);
+
   inherited Paint;
 end;
 
@@ -4224,14 +4347,8 @@ begin
 end;
 
 destructor TONURCheckbox.Destroy;
-var
-  i:byte;
 begin
-{  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-}
   Customcroplist.Clear;
-
   inherited Destroy;
 end;
 
@@ -4364,48 +4481,6 @@ begin
   end
   else
   begin
-   //resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
-
-   // resim.SetSize(0,0);
-  //  resim.SetSize(self.Width, Self.Height);
-  //  resim.Fill(BGRAPixelTransparent);
-  {  case Fstate of
-      obsNormal:
-      resim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
-        PointF(0, 0), PointF(0, Height), dmSet);
-
-      obshover:
-      resim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
-        PointF(0, 0), PointF(0, Height), dmSet);
-      obspressed:
-      resim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
-        PointF(0, 0), PointF(0, Height), dmSet);
-    end;  }
-
-  //  a:=(Height div 2);
-  //  b:=(Height div 2) div 2;
-
- //   if Checked = True then
-  //  begin
-       //resim.FillEllipseInRect(rect(0,0,20,Height),BGRA(155, 155, 155),dmset,alpha);
-      // resim.EllipseAntialias((Height div 2)+3,(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
-     // resim.FillRect(rect(0,0,Height div 2,Height div 2),BGRA(155, 155, 155),dmset);
-   //   resim.RectangleAntialias(a,a,a-b,a-b,BGRA(155, 155, 155),b);
- //     resim.FillRectAntialias(a+b,a+b,a-b,a-b,BGRA(155, 155, 155))
-     // yaziyaz(resim.Canvas,self.font,Rect(Width-(Height div 2),0{Height div 2},Width-2,Height),'ON',0,0);
- //   end else
- //   begin
-   //    resim.FillEllipseInRect(rect(Width-20,0,Width,Height),BGRA(155, 155, 155),dmset,alpha);
-      // resim.EllipseAntialias((Width-((Height div 2)-3)),(Height div 2)+3,(Height div 2)-6,(Height div 2)-6,BGRA(155, 155, 155),3);
-      //resim.FillRect(rect(Width div 2,0,Width,Height),BGRA(155, 155, 155),dmset);
-     // yaziyaz(resim.Canvas,self.font,Rect(Height div 2,0{Height div 2},Width-(Height div 2),Height),'OFF',0,0);
-  //    resim.RectangleAntialias(a+b,a+b,a-b,a-b,BGRA(135, 135, 135),2);
-
-  //  end;
-   // resim.TextrOut((Height div 2),(Height div 2),Caption,ColorToBGRA(self.font.color));
-   // resim.TextRect(Rect((Height div 2),(Height div 2),Width,Height),caption,taCenter,tlcenter,ColorToBGRA(self.font.color));
-  //  yaziyaz(resim.Canvas,self.font,Rect(Height,0{Height div 2},Width,Height),caption,0,0);
-
 
     resim.SetSize(0,0);
     resim.SetSize(self.Width, Self.Height);
@@ -4453,34 +4528,25 @@ begin
     else
      resim.Rectangle(Fclientrect,bgrablack,BGRAPixelTransparent,dmset);
 
-    yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
-
-
-
-
-
-
-
-
-
-
 
   end;
 
+  yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
 
 
   inherited paint;
 
-
+  {
   if (Length(Caption) > 0) and  (Skindata <> nil) then
   begin
     //self.resim.TextOut(textx,Texty,(Caption+' RRR'),ColorToBGRA(self.font.Color));
     canvas.Brush.Style := bsClear;
     canvas.TextOut(Textx, Texty, Caption);
   end;
-
+  }
   //inherited paint;
 end;
 
 
 end.
+

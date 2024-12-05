@@ -20,23 +20,23 @@ type
       fstep:integer;
       fcbutons, flbutons, frbutons,fCenterstate: TONURButtonState;
       flbuttonrect, frbuttonrect, Ftrackarea, fcenterbuttonarea: TRect;
-      FPosition, FPosValue: int64;
-      FMin, FMax: int64;
+      FPosition, FPosValue: integer;
+      FMin, FMax: integer;
       FIsPressed: boolean;
       FOnChange: TNotifyEvent;
       procedure centerbuttonareaset;
-      procedure SetPosition(Value: int64);
-      procedure SetMax(Val: int64);
-      procedure Setmin(Val: int64);
-      function Getposition: int64;
-      function Getmin: int64;
-      function Getmax: int64;
-      function CheckRange(const Value: int64): int64;
-      function MaxMin: int64;
-      function CalculatePosition(const Value: integer): int64;
-      function SliderFromPosition(const Value: integer): int64;
-      function PositionFromSlider(const Value: integer): int64;
-      procedure SetPercentage(Value: int64);
+      procedure SetPosition(Value: integer);
+      procedure SetMax(Val: integer);
+      procedure Setmin(Val: integer);
+      function Getposition: integer;
+      function Getmin: integer;
+      function Getmax: integer;
+      function CheckRange(const Value: integer): integer;
+      function MaxMin: integer;
+      function CalculatePosition(const Value: integer): integer;
+      function SliderFromPosition(const Value: integer): integer;
+      function PositionFromSlider(const Value: integer): integer;
+      procedure SetPercentage(Value: integer);
     protected
       procedure SetSkindata(Aimg: TONURImg); override;
       procedure Resize; override;
@@ -53,14 +53,14 @@ type
       constructor Create(Aowner: TComponent); override;
       destructor Destroy; override;
       procedure paint; override;
-      function GetPercentage: int64;
+      function GetPercentage: integer;
     published
       procedure calcsize;
       property Alpha;
       property Step      : integer      read Fstep       write Fstep;
-      property Min       : int64        read Getmin      write setmin;
-      property Max       : int64        read Getmax      write setmax;
-      property Position  : int64        read Getposition write setposition;
+      property Min       : integer      read Getmin      write setmin;
+      property Max       : integer      read Getmax      write setmax;
+      property Position  : integer      read Getposition write setposition;
       property OnChange  : TNotifyEvent read FOnChange   write FOnChange;
       property Kind;
       property Action;
@@ -357,12 +357,12 @@ end;
 { TONURScrollBar }
 
 
-function TONURScrollBar.Getposition: int64;
+function TONURScrollBar.Getposition: integer;
 begin
   Result := FPosValue; //CalculatePosition(SliderFromPosition(FPosition));
 end;
 
-procedure TONURScrollBar.SetPosition(Value: int64);
+procedure TONURScrollBar.SetPosition(Value: integer);
 begin
   if FPosition=PositionFromSlider(Value) then exit;
   if FIsPressed then Exit;
@@ -385,34 +385,34 @@ end;
 
 
 
-function TONURScrollBar.Getmin: int64;
+function TONURScrollBar.Getmin: integer;
 begin
   Result := FMin;
 end;
 
-procedure TONURScrollBar.Setmin(Val: int64);
+procedure TONURScrollBar.Setmin(Val: integer);
 begin
   if Val <> FMin then FMin := Val;
 end;
 
 
-function TONURScrollBar.Getmax: int64;
+function TONURScrollBar.Getmax: integer;
 begin
   Result := FMax;
 end;
 
-procedure TONURScrollBar.SetMax(Val: int64);
+procedure TONURScrollBar.SetMax(Val: integer);
 begin
   if Val <> FMax then FMax := Val;
 end;
 
-function TONURScrollBar.MaxMin: int64;
+function TONURScrollBar.MaxMin: integer;
 begin
   Result := FMax - FMin;
 end;
 
 
-function TONURScrollBar.CheckRange(const Value: int64): int64;
+function TONURScrollBar.CheckRange(const Value: integer): integer;
 begin
   if Kind = oVertical then
     Result := PositionFromSlider(SliderFromPosition(
@@ -426,7 +426,7 @@ end;
 
 
 
-function TONURScrollBar.CalculatePosition(const Value: integer): int64;
+function TONURScrollBar.CalculatePosition(const Value: integer): integer;
 begin
   if Kind = oHorizontal then
     Result := Value - Abs(FMin)
@@ -434,7 +434,7 @@ begin
     Result := Value;//FMax-Value; //for revers
 end;
 
-function TONURScrollBar.SliderFromPosition(const Value: integer): int64;
+function TONURScrollBar.SliderFromPosition(const Value: integer): integer;
 var
   iHW: integer;
 begin
@@ -448,7 +448,7 @@ end;
 
 
 
-function TONURScrollBar.PositionFromSlider(const Value: integer): int64;
+function TONURScrollBar.PositionFromSlider(const Value: integer): integer;
 var
   iHW: integer;
 begin
@@ -460,7 +460,7 @@ begin
   Result := Round((iHW / MaxMin) * Value);
 end;
 
-function TONURScrollBar.GetPercentage: int64;
+function TONURScrollBar.GetPercentage: integer;
 var
   Maxi, Pos, Z: integer;
 begin
@@ -477,7 +477,7 @@ end;
 
 
 
-procedure TONURScrollBar.SetPercentage(Value: int64);
+procedure TONURScrollBar.SetPercentage(Value: integer);
 begin
   Value := ValueRange(Value, 0, 100);
 
@@ -502,10 +502,8 @@ begin
     if Kind = oHorizontal then
     begin
       skinname := 'scrollbarh';
-
  //     FTop.cropname      := 'LEFT';
  //     FBottom.cropname   := 'RIGHT';
-
       self.Width := self.Height;
       self.Height := a;
     end
@@ -514,8 +512,6 @@ begin
       skinname := 'scrollbarv';
  //     FTop.cropname      := 'TOP';
  //     FBottom.cropname   := 'BOTTOM';
-
-
       self.Width := self.Height;
       self.Height := a;
     end;
@@ -533,7 +529,7 @@ begin
 
   inherited MouseDown(Button, Shift, X, Y);
 
- // FIsPressed := true;
+
   fCenterstate := obshover;
   if (Button = mbleft) and (PtInRect(flbuttonrect, point(X, Y))) then
     // left or up   button
@@ -543,25 +539,22 @@ begin
     frbutons := obsnormal;
     fcbutons := obsnormal;
     if Assigned(FOnChange) then FOnChange(Self);
-  //   Invalidate;
+    Invalidate;
   end
   else
   begin
-    if (Button = mbleft) and (PtInRect(frbuttonrect, point(X, Y))) then
-      // right  or down   button
+    if (Button = mbleft) and (PtInRect(frbuttonrect, point(X, Y))) then // right  or down   button
     begin
       flbutons := obsnormal;
       frbutons := obspressed;
       fcbutons := obsnormal;
       Position := Position+1;
       if Assigned(FOnChange) then FOnChange(Self);
-   //   Invalidate;
-
+      Invalidate;
     end
     else
     begin
-      if (Button = mbleft) and (PtInRect(fcenterbuttonarea, point(X, Y))) then
-        // center  button
+      if (Button = mbleft) and (PtInRect(fcenterbuttonarea, point(X, Y))) then  // center  button
       begin
         flbutons := obsnormal;
         frbutons := obsnormal;
@@ -594,7 +587,7 @@ begin
           frbutons := obsnormal;
           fcbutons := obsnormal;
           FIsPressed := False;
-        //  Invalidate;
+          Invalidate;
         end;
       end;
     end;
@@ -653,7 +646,7 @@ begin
         begin
           if kind = oHorizontal then
             FPosition :=
-              CheckRange(x - ({fcenterbuttonarea.Width +} (fcenterbuttonarea.Width div 2)))
+              CheckRange(x -  (fcenterbuttonarea.Width div 2))
           else
             FPosition := CheckRange(y-({fcenterbuttonarea.Height +}(fcenterbuttonarea.Height div 2)));
 
@@ -717,10 +710,8 @@ procedure TONURScrollBar.MouseEnter;
   Cursorpos: TPoint;
 begin
 
-  if csDesigning in ComponentState then
-    Exit;
-  if not Enabled then
-    Exit;
+  if csDesigning in ComponentState then Exit;
+  if not Enabled then Exit;
   if Max<=0 then exit;
   if (fcbutons = obshover) or (flbutons = obshover) or (frbutons = obshover) or (
     fCenterstate = obshover) then
@@ -850,18 +841,13 @@ begin
 
 
   if Parent is TONURCustomControl then
-  Skindata:= TONURCustomControl(parent).Skindata
+  Skindata := TONURCustomControl(parent).Skindata
   else
-  Skindata:=nil;
+  Skindata := nil;
 end;
 
 destructor TONURScrollBar.Destroy;
-//var
-//  i:byte;
 begin
-{  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
-}
   Customcroplist.Clear;
 
   Skindata := nil;
@@ -871,6 +857,8 @@ end;
 procedure TONURScrollBar.SetSkindata(Aimg: TONURImg);
 begin
   inherited SetSkindata(Aimg);
+  centerbuttonareaset;
+
 end;
 
 procedure TONURScrollBar.Resize;
@@ -890,7 +878,7 @@ end;
 
 procedure TONURScrollBar.paint;
 var
-  DR: TRect;
+  DR,DL,DC: TRect;
 begin
 
   if not Visible then Exit;
@@ -899,14 +887,14 @@ begin
   resim.SetSize(self.ClientWidth, self.ClientHeight);
 
 
-
-
-
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
     if (fCenterstate = obshover) then
     centerbuttonareaset;
+
+
+
 
 
     // DRAW TO BACKGROUND
@@ -931,6 +919,8 @@ begin
     end;
 
 
+
+
     /////////// DRAW TO BUTTON ///////////
 
     if (fCenterstate = obshover){ and (FAutoHideScrollBar)} then
@@ -938,49 +928,34 @@ begin
       if Enabled = True then  // LEFT OR TOP BUTTON
       begin
         case flbutons of
-          obsnormal  : DR := FbuttonNL.Croprect;
-          obshover   : DR := FbuttonUL.Croprect;
-          obspressed : DR := FbuttonBL.Croprect;
+          obsnormal  : DL := FbuttonNL.Croprect;
+          obshover   : DL := FbuttonUL.Croprect;
+          obspressed : DL := FbuttonBL.Croprect;
         end;
-      end
-      else
-      begin
-        DR := FbuttonDL.Croprect;
-      end;
-      DrawPartnormal(DR, self, flbuttonrect, alpha);  {left} {top}
 
-
-      if Enabled = True then   // RIGHT OR BOTTOM BUTTON
-      begin
-        case frbutons of
+        case frbutons of    // RIGHT OR DOWN BUTTON
           obsnormal  : DR := FbuttonNR.Croprect;
           obshover   : DR := FbuttonUR.Croprect;
           obspressed : DR := FbuttonBR.Croprect;
         end;
+
+        case fcbutons of   // CENTER BUTTON
+          obsnormal  : DC := FbuttonCN.Croprect;
+          obshover   : DC := FbuttonCU.Croprect;
+          obspressed : DC := FbuttonCB.Croprect;
+         end;
+
       end
       else
       begin
+        DL := FbuttonDL.Croprect;
         DR := FbuttonDR.Croprect;
+        DC := FbuttonCD.Croprect;
       end;
+      DrawPartnormal(DL, self, flbuttonrect, alpha);  {left} {top}
       DrawPartnormal(DR, self, frbuttonrect, alpha);
-
-
-      if Enabled = True then   // CENTER BUTTON
-      begin
-        case fcbutons of
-          obsnormal  : DR := FbuttonCN.Croprect;
-          obshover   : DR := FbuttonCU.Croprect;
-          obspressed : DR := FbuttonCB.Croprect;
-        end;
-      end
-      else
-      begin
-        DR := FbuttonCD.Croprect;
-      end;
-
-      DrawPartnormal(DR, self, fcenterbuttonarea, alpha);  {center}
+      DrawPartnormal(DC, self, fcenterbuttonarea, alpha);  {center}
     end;
-
   end
   else
   begin
@@ -1022,18 +997,14 @@ begin
    if Enabled = True then   // CENTER BUTTON
     begin
       case fcbutons of
-        obsnormal: DR := FbuttonCN.Croprect;
-      //      Rect(FbuttonCN.Croprect.Left, FbuttonCN.Top, FbuttonCN.Right, FbuttonCN.Bottom);
-        obshover: DR := FbuttonCu.Croprect;
-       //     Rect(FbuttonCU.Left, FbuttonCU.Top, FbuttonCU.Right, FbuttonCU.Bottom);
-        obspressed: DR := FbuttonCb.Croprect;
-       //     Rect(FbuttonCB.Left, FbuttonCB.Top, FbuttonCB.Right, FbuttonCB.Bottom);
+        obsnormal  : DR := FbuttonCN.Croprect;
+        obshover   : DR := FbuttonCu.Croprect;
+        obspressed : DR := FbuttonCb.Croprect;
       end;
     end
     else
     begin
       DR := FbuttonCd.Croprect
-    //  Rect(FbuttonCD.Left, FbuttonCD.Top, FbuttonCD.Right, FbuttonCD.Bottom);
     end;
 
 
@@ -1041,15 +1012,16 @@ begin
 
   if self.Kind = oHorizontal then
   begin
-    buttonh := self.ClientHeight - (borderwh);  // button Width and Height;
+    buttonh      := self.ClientHeight - borderwh;  // button Width and Height;
     flbuttonrect := Rect(borderwh, borderwh, buttonh, buttonh);// left button;
     Frbuttonrect := Rect(self.ClientWidth - (buttonh + borderwh), borderwh,
       self.ClientWidth - borderwh, buttonh); // right button
-    Ftrackarea := Rect(flbuttonrect.Right, flbuttonrect.top, frbuttonrect.Left,
+    Ftrackarea   := Rect(flbuttonrect.Right, flbuttonrect.top, frbuttonrect.Left,
       frbuttonrect.Bottom);
 
-    buttonh :=Round(((Ftrackarea.Width-MaxMin)/MaxMin)*100);//Round((Ftrackarea.Width- MaxMin));//DR.Width;//self.Height-ABS(Round((Ftrackarea.Width / MaxMin)- DR.Width));// Max:=Max-self.Width;
-    if buttonh<10 then buttonh:=10;
+    //buttonh :=Round(((Ftrackarea.Width-MaxMin)/MaxMin)*100);
+    //Round((Ftrackarea.Width- MaxMin));//DR.Width;//self.Height-ABS(Round((Ftrackarea.Width / MaxMin)- DR.Width));// Max:=Max-self.Width;
+   // if buttonh<10 then buttonh:=10;
 
     buttonh :=DR.Width;
 
@@ -1058,7 +1030,7 @@ begin
   end
   else
   begin
-    buttonh :=self.ClientWidth - (borderwh);  // button Width and Height;
+    buttonh :=self.ClientWidth - borderwh;  // button Width and Height;
 
     Flbuttonrect := Rect(borderwh, borderwh, buttonh, buttonh);// top button
     Frbuttonrect := Rect(borderwh, self.ClientHeight - (buttonh + borderwh),
@@ -1066,9 +1038,10 @@ begin
     Ftrackarea := Rect(flbuttonrect.left, flbuttonrect.bottom,
       frbuttonrect.Right, frbuttonrect.top);
 
-    buttonh :=   Round(((Ftrackarea.Height-MaxMin)/MaxMin)*100); //Round(Ftrackarea.Height-MaxMin );   //MaxMin div Ftrackarea.Height));// DR.Height;
-    if buttonh<10 then buttonh:=10;
-   // buttonh:=DR.Height;
+  //  buttonh :=   Round(((Ftrackarea.Height-MaxMin)/MaxMin)*100);
+  //Round(Ftrackarea.Height-MaxMin );   //MaxMin div Ftrackarea.Height));// DR.Height;
+   // if buttonh<10 then buttonh:=10;
+    buttonh:=DR.Height;
 
     fcenterbuttonarea := Rect(borderwh, FPosition+Flbuttonrect.Height {+ buttonh}, self.ClientWidth -
         borderwh, FPosition +Frbuttonrect.Height+ {buttonh +} buttonh);
@@ -1250,24 +1223,34 @@ end;
 constructor TONURTrackBar.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
+  FState            := obsnormal;
+  skinname          := 'trackbarh';
+  FIsPressed        := False;
+  fcenterbuttonarea := Rect(1, 1, 19, 19);
+  FW                := 0;
+  FH                := 0;
+  FPosition         := 0;
+  FXY               := 0;
+  FPosValue         := 0;
+  FMin              := 0;
+  FMax              := 100;
+  FPosValue         := 0;
+  Self.Height       := 30;
+  Self.Width        := 180;
+  Caption           := '';
+  Captionvisible    := False;
 
 
-  FCenter := TONURCUSTOMCROP.Create('CENTER');
-//  FCenter.cropname := 'CENTER';
-  FRight := TONURCUSTOMCROP.Create('RIGHT');
-//  FRight.cropname := 'RIGHT';
-  Fleft := TONURCUSTOMCROP.Create('LEFT');
-//  Fleft.cropname := 'LEFT';
+  FCenter           := TONURCUSTOMCROP.Create('CENTER');
+  FRight            := TONURCUSTOMCROP.Create('RIGHT');
+  Fleft             := TONURCUSTOMCROP.Create('LEFT');
+  FNormal           := TONURCUSTOMCROP.Create('NORMAL');
+  FEnter            := TONURCUSTOMCROP.Create('HOVER');
+  FPress            := TONURCUSTOMCROP.Create('PRESSED');
+  Fdisable          := TONURCUSTOMCROP.Create('DISABLE');
 
-  FNormal := TONURCUSTOMCROP.Create('NORMAL');
-//  FNormal.cropname := 'NORMAL';
-  FEnter := TONURCUSTOMCROP.Create('HOVER');
-//  FEnter.cropname := 'HOVER';
-  FPress := TONURCUSTOMCROP.Create('PRESSED');
-//  FPress.cropname := 'PRESSED';
-  Fdisable := TONURCUSTOMCROP.Create('DISABLE');
-//  Fdisable.cropname := 'DISABLE';
 
+  resim.SetSize(Width, Height);
   Customcroplist.Add(FCenter);
   Customcroplist.Add(FRight);
   Customcroplist.Add(Fleft);
@@ -1275,33 +1258,10 @@ begin
   Customcroplist.Add(FEnter);
   Customcroplist.Add(FPress);
   Customcroplist.Add(Fdisable);
-
-  FState := obsnormal;
-  skinname := 'trackbarh';
-  fcenterbuttonarea := Rect(1, 1, 19, 19);
-  FIsPressed := False;
-  FW := 0;
-  FH := 0;
-  FPosition := 0;
-  FXY := 0;
-  FPosValue := 0;
-  FMin := 0;
-  FMax := 100;
-  FPosValue := 0;
-  Self.Height := 30;
-  Self.Width := 180;
-  resim.SetSize(Width, Height);
-  Caption := '';
-  Captionvisible := False;
 end;
 
 destructor TONURTrackBar.Destroy;
-var
-  i:byte;
 begin
-{  for i:=0 to Customcroplist.Count-1 do
-  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
- }
   Customcroplist.Clear;
   inherited Destroy;
 end;
@@ -1341,15 +1301,15 @@ procedure TONURTrackBar.resizing;
 begin
   if Kind = oHorizontal then
   begin
-     FLeft.Targetrect   := Rect(0, 0, Fleft.Croprect.Width{FLeft.FSRight - Fleft.FSLeft}, self.ClientHeight);
-     FRight.Targetrect  := Rect(self.ClientWidth - FRight.Croprect.Width{(FRight.FSRight - FRight.FSLeft)}, 0, self.ClientWidth, self.ClientHeight);
-     FCenter.Targetrect := Rect(Fleft.Croprect.Width{(Fleft.FSRight - Fleft.FSLeft)}, 0, self.ClientWidth - FRight.Croprect.Width {(FRight.FSRight - FRight.FSLeft)}, self.ClientHeight);
+     FLeft.Targetrect   := Rect(0, 0, Fleft.Croprect.Width, self.ClientHeight);
+     FRight.Targetrect  := Rect(self.ClientWidth - FRight.Croprect.Width, 0, self.ClientWidth, self.ClientHeight);
+     FCenter.Targetrect := Rect(Fleft.Croprect.Width, 0, self.ClientWidth - FRight.Croprect.Width, self.ClientHeight);
   end
   else
   begin
-     FLeft.Targetrect   :=  Rect(0, 0, self.ClientWidth,Fleft.Croprect.Height);// FLeft.FSBottom - Fleft.FSTop);
-     FRight.Targetrect  :=  Rect(0, self.ClientHeight - FRight.Croprect.Height {(FRight.FSBottom - FRight.FSTop)}, self.ClientWidth, self.ClientHeight);
-     FCenter.Targetrect :=  Rect(0, Fleft.Croprect.Height{(Fleft.FSBottom - Fleft.FSTop)}, self.ClientWidth, self.ClientHeight - FRight.Croprect.Height{(FRight.FSBottom - FRight.FSTop)});
+     FLeft.Targetrect   :=  Rect(0, 0, self.ClientWidth,Fleft.Croprect.Height);
+     FRight.Targetrect  :=  Rect(0, self.ClientHeight - FRight.Croprect.Height, self.ClientWidth, self.ClientHeight);
+     FCenter.Targetrect :=  Rect(0, Fleft.Croprect.Height, self.ClientWidth, self.ClientHeight - FRight.Croprect.Height);
    end;
 end;
 
@@ -1389,18 +1349,9 @@ begin
     if Enabled = True then
     begin
       case Fstate of
-        obsNormal:
-        begin
-          SrcRect := FNormal.Croprect;
-        end;
-        obspressed:
-        begin
-          SrcRect := FPress.Croprect;
-        end;
-        obshover:
-        begin
-          SrcRect := FEnter.Croprect;
-        end;
+        obsNormal  : SrcRect := FNormal.Croprect;
+        obspressed : SrcRect := FPress.Croprect;
+        obshover   : SrcRect := FEnter.Croprect;
       end;
     end
     else
@@ -1429,8 +1380,6 @@ begin
 
      resim.FillRect(fcenterbuttonarea,BGRA(40, 40, 40),dmset);
 
-   //  resim.GradientFill(fcenterbuttonarea.left, fcenterbuttonarea.top, fcenterbuttonarea.Right, fcenterbuttonarea.bottom, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
-   //     PointF(0, 0), PointF(0, fcenterbuttonarea.Height), dmSet);
      Captionvisible:=false;
      yaziyazBGRA(resim.CanvasBGRA,self.font,ClientRect,inttostr(position),taCenter);
 
@@ -1448,9 +1397,9 @@ begin
     FIsPressed := True;
     FState := obspressed;
     if Kind = oHorizontal then
-      FPosition := CheckRange(X - (FPress.Croprect.Width{(FPress.FSright - FPress.FSLeft)} div 2))
+      FPosition := CheckRange(X - (FPress.Croprect.Width div 2))
     else
-      FPosition := CheckRange(Y - (FPress.Croprect.Height{(FPress.FSBottom - FPress.FSTop)} div 2));
+      FPosition := CheckRange(Y - (FPress.Croprect.Height div 2));
 
     Changed;
     invalidate;

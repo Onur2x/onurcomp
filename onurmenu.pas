@@ -7,9 +7,35 @@ interface
 
 uses
   Classes,  Controls, Graphics,BGRABitmap, BGRABitmapTypes, onurctrl,  Menus, types, LCLType;
-//  Windows, Classes,Controls, Graphics,BGRABitmap, BGRABitmapTypes, onurctrl,Menus,types,LCLType;
 
 type
+
+    TONURMainMenu = class(TMainMenu)
+    private
+      falpha: byte;
+      FSkindata: TONURImg;
+      Fnormal,fselected,Fline: TONURCUSTOMCROP;
+
+      bgresim:TBGRABitmap;
+
+      procedure SetAlpha(AValue: byte);
+      procedure Drawitem(Sender: TObject; ACanvas: TCanvas;
+      ARect: TRect; AState: TOwnerDrawState);
+      procedure Measureitem(Sender: TObject; ACanvas: TCanvas;
+      var AWidth, AHeight: Integer);
+    protected
+      procedure SetSkindata(Aimg: TONURImg);
+    public
+      skinname:string;
+      Customcroplist: TFPList;//TList;
+      constructor Create(Aowner: TComponent); override;
+      destructor Destroy; override;
+    published
+      property Skindata : TONURImg read FSkindata write SetSkindata;
+
+      property Alpha :byte read falpha write SetAlpha;
+      property OnChange;
+    end;
 
     { TONURPopupMenu }
 
@@ -19,7 +45,7 @@ type
       FSkindata: TONURImg;
       Fnormal,fselected,Fline: TONURCUSTOMCROP;
 
-      resim:TBGRABitmap;
+      bgresim:TBGRABitmap;
 
       procedure SetAlpha(AValue: byte);
       procedure DrawPopup(Sender: TObject; ACanvas: TCanvas;
@@ -31,8 +57,6 @@ type
       Customcroplist: TFPList;//TList;
       constructor Create(Aowner: TComponent); override;
       destructor Destroy; override;
-
-   //   procedure paint; override;
     published
       property Skindata : TONURImg read FSkindata write SetSkindata;
 
@@ -51,12 +75,143 @@ procedure Register;
 
 implementation
 
-uses SysUtils,BGRATransform;
+uses SysUtils;
 
 procedure Register;
 begin
-  RegisterComponents('ONUR', [TONURPopupMenu]);
+  RegisterComponents('ONUR', [TONURPopupMenu,TONURMainMenu]);
 
+end;
+
+procedure TONURMainMenu.SetAlpha(AValue:byte);
+begin
+  if falpha=AValue then Exit;
+  falpha:=AValue;
+end;
+
+
+procedure TONURMainMenu.Measureitem(Sender:TObject;ACanvas:TCanvas;var AWidth,
+  AHeight:Integer);
+begin
+//  bgresim.SetSize(0, 0);
+//  bgresim.SetSize( AWidth+5, AHeight+5);
+end;
+
+procedure TONURMainMenu.Drawitem(Sender:TObject;ACanvas:TCanvas;ARect:TRect;
+  AState:TOwnerDrawState);
+begin
+
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+  begin
+    // InflateRect(Arect,10,0);
+   //   bgresim.SetSize(0, 0);
+    //  bgresim.SetSize(ARect.Width+5, (ARect.Height*items.Count)+5);
+      bgresim.SetSize((ARect.Width*items.Count)+5, (ARect.Height*items.Count)+5);
+
+
+    // DrawPartnormalBGRABitmap(fnormal.Croprect,bgresim,self.skindata,ARect,255);
+
+
+      if  AState * [odSelected, odFocused]=[] then
+       DrawPartnormalBGRABitmap(fselected.Croprect,bgresim,self.skindata,ARect,255)
+      else
+       DrawPartnormalBGRABitmap(fnormal.Croprect,bgresim,self.skindata,ARect,255);
+
+
+
+      if (TMenuItem(Sender).Caption <> '-') then
+      begin
+        if  AState * [odSelected, odFocused]=[] then
+          bgresim.TextOut(ARect.Left + 15, ARect.Top, TMenuItem(Sender).Caption,colortobgra(fselected.Fontcolor))
+        else
+          bgresim.TextOut(ARect.Left + 15, ARect.Top, TMenuItem(Sender).Caption,colortobgra(fnormal.Fontcolor));
+      end else
+      begin
+        if  AState * [odSelected, odFocused]=[] then
+          bgresim.TextOut(ARect.Left + 15, ARect.Top, TMenuItem(Sender).Caption,colortobgra(fselected.Fontcolor))
+        else
+          bgresim.TextOut(ARect.Left + 15, ARect.Top, TMenuItem(Sender).Caption,colortobgra(fnormal.Fontcolor));
+      end;
+
+      bgresim.Draw(ACanvas,0,0,false);
+
+     // bgresim.SaveToFile('C:\lazarus\components\paketler\ONUR\onurcomp\backup\aa.png');
+
+
+  end else
+  begin
+
+     if  AState * [odSelected, odFocused]=[] then
+      ACanvas.Brush.Color:=clblue
+     else
+      ACanvas.Brush.Color:=clActiveBorder;
+
+     ACanvas.FillRect(ARect);
+
+     ACanvas.Pen.Width   := 0;
+     ACanvas.Brush.Style := bsClear;
+
+      if (TMenuItem(Sender).Caption <> '-') then
+      begin
+        if  AState * [odSelected, odFocused]=[] then
+          ACanvas.TextOut(ARect.Left + 5, ARect.Top, TMenuItem(Sender).Caption)
+        else
+          ACanvas.TextOut(ARect.Left + 5, ARect.Top, TMenuItem(Sender).Caption);
+      end else
+      begin
+        if  AState * [odSelected, odFocused]=[] then
+          ACanvas.TextOut(ARect.Left + 5, ARect.Top, TMenuItem(Sender).Caption)
+        else
+          ACanvas.TextOut(ARect.Left + 5, ARect.Top, TMenuItem(Sender).Caption);
+      end;
+  end;
+end;
+
+
+
+procedure TONURMainMenu.SetSkindata(Aimg:TONURImg);
+begin
+  if Aimg <> nil then
+  begin
+    FSkindata := Aimg;
+    Skindata.ReadskinsComp(self);
+  end
+  else
+  begin
+    FSkindata := nil;
+  end;
+end;
+
+constructor TONURMainMenu.Create(Aowner:TComponent);
+begin
+  inherited Create(Aowner);
+  Customcroplist  := TFPList.Create;//TList.Create;
+  bgresim         := TBGRABitmap.Create;
+  skinname        := 'mainmenu';
+  Fnormal         := TONURCUSTOMCROP.Create('NORMAL');
+  fselected       := TONURCUSTOMCROP.Create('SELECTED');
+  Fline           := TONURCUSTOMCROP.Create('LINE');
+  Customcroplist.Add(Fnormal);
+  Customcroplist.Add(fselected);
+  Customcroplist.Add(Fline);
+  OwnerDraw       := True;
+  self.OnDrawItem := @Drawitem;
+  self.OnMeasureItem := @Measureitem;
+end;
+
+destructor TONURMainMenu.Destroy;
+var
+  i:byte;
+begin
+  for i:=0 to Customcroplist.Count-1 do
+  TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+
+  Customcroplist.Clear;
+  FreeAndNil(Customcroplist);
+
+  if Assigned(bgresim) then  FreeAndNil(bgresim);
+
+  inherited Destroy;
 end;
 
 
@@ -69,64 +224,50 @@ begin
 
 end;
 
+
+
 procedure TONURPopupMenu.DrawPopup(Sender: TObject; ACanvas: TCanvas;
   ARect: TRect; AState: TOwnerDrawState);
-var
+//var
 // i:Integer;
-Re:TRect;
+//Re:TRect;
 begin
-  resim.SetSize(0, 0);
-  resim.SetSize(ARect.Width+5, (ARect.Height*items.Count)+5);
-  re:=ARect;
+  bgresim.SetSize(0, 0);
+  bgresim.SetSize( (ARect.Width)+5, (ARect.Height*items.Count)+5);
+
+
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
-    // for i:=0 to Items.Count-1 do
-  //   begin
-     // resim.Fill(BGRAPixelTransparent);
-     // if odSelected in AState then
 
-   //  ACanvas.Draw(ARect.left,ARect.top,resim.Bitmap);
-      ACanvas.Pen.Width:=0;
-     // InflateRect(ARect, 5,10);
-
-     ACanvas.Brush.Style := bsClear;
+      ACanvas.Pen.Width   := 0;
+      ACanvas.Brush.Style := bsClear;
 
       if  AState * [odSelected, odFocused]=[] then
-       DrawPartnormalBGRABitmap(fselected.Croprect,resim,self.skindata,re,255)
+       DrawPartnormalBGRABitmap(fselected.Croprect,bgresim,self.skindata,ARect,255)
       else
-       DrawPartnormalBGRABitmap(fnormal.Croprect,resim,self.skindata,re,255);
-   //   Resim.SaveToFile('C:\lazarus\components\paketler\ONUR\onurcomp\popup.png');
-      //resim.Draw(ACanvas,0,0,false);
-      //writeln('ok');
-     // ACanvas.GradientFill(ARect, clSkyBlue, clWhite, gdHorizontal);
-    //  end;
+       DrawPartnormalBGRABitmap(fnormal.Croprect,bgresim,self.skindata,ARect,255);
+
+
 
 
       if (TMenuItem(Sender).Caption <> '-') then
       begin
-     // if odSelected in AState then
         if  AState * [odSelected, odFocused]=[] then
-         // DrawPartnormal(fnormal.Croprect, self.Skindata.Fimage,resim,ARect, alpha)
-          resim.TextOut(re.Left + 5, re.Top, TMenuItem(Sender).Caption,colortobgra(fselected.Fontcolor))
+          bgresim.TextOut(ARect.Left + 5, ARect.Top, TMenuItem(Sender).Caption,colortobgra(fselected.Fontcolor))
         else
-          resim.TextOut(re.Left + 5, re.Top, TMenuItem(Sender).Caption,colortobgra(fnormal.Fontcolor));
+          bgresim.TextOut(ARect.Left + 5, ARect.Top, TMenuItem(Sender).Caption,colortobgra(fnormal.Fontcolor));
       end else
       begin
         if  AState * [odSelected, odFocused]=[] then
-         // DrawPartnormal(fnormal.Croprect, self.Skindata.Fimage,resim,ARect, alpha)
-          resim.TextOut(re.Left + 5, re.Top, TMenuItem(Sender).Caption,colortobgra(fselected.Fontcolor))
+          bgresim.TextOut(ARect.Left + 5, ARect.Top, TMenuItem(Sender).Caption,colortobgra(fselected.Fontcolor))
         else
-          resim.TextOut(re.Left + 5, re.Top, TMenuItem(Sender).Caption,colortobgra(fnormal.Fontcolor));
+          bgresim.TextOut(ARect.Left + 5, ARect.Top, TMenuItem(Sender).Caption,colortobgra(fnormal.Fontcolor));
       end;
 
-      resim.Draw(ACanvas,0,0,false);
-   //  end;
- //    Resim.SaveToFile('C:\lazarus\components\paketler\ONUR\onurcomp\popup.png');
-    // writeln(fnormal.Croprect.Width,'   ',fselected.Croprect.Width);
+      bgresim.Draw(ACanvas,0,0,false);
+
   end;
-
-
 end;
 
 procedure TONURPopupMenu.SetSkindata(Aimg: TONURImg);
@@ -151,7 +292,7 @@ constructor TONURPopupMenu.Create(Aowner: TComponent);
 begin
   inherited Create(Aowner);
   Customcroplist := TFPList.Create;//TList.Create;
-  resim          := TBGRABitmap.Create;
+  bgresim          := TBGRABitmap.Create;
   skinname       := 'popupmenu';
   Fnormal        := TONURCUSTOMCROP.Create('NORMAL');
   fselected      := TONURCUSTOMCROP.Create('SELECTED');
@@ -174,55 +315,12 @@ begin
   Customcroplist.Clear;
   FreeAndNil(Customcroplist);
 
-  if Assigned(resim) then  FreeAndNil(resim);
+  if Assigned(bgresim) then  FreeAndNil(bgresim);
 
   inherited Destroy;
 end;
 
 
- {
-
-procedure TONURProgressBar.paint;
-var
-
-  DBAR: TRect;
-begin
-
-  if not Visible then Exit;
-
-  resim.SetSize(0, 0);
-  resim.SetSize(self.ClientWidth, Self.ClientHeight);
-
-  if (Skindata <> nil) and not (csDesigning in ComponentState) then
-  begin
-
-    if self.Kind = oHorizontal then
-     DBAR := Rect(0,0 , (fposition * self.ClientWidth) div fmax, self.ClientHeight)
-    else
-     DBAR := Rect(0, 0 ,self.ClientWidth, (fposition * self.ClientHeight) div fmax);
-
-     // DRAW CENTER
-    // if self.Kind = oHorizontal then
-    // DrawPartstrechRegion(FCenter.Croprect, Self, self.ClientWidth-(Fleft.Width+FRight.Width), self.ClientHeight -(Ftop.Height + Fbottom.Height), FCenter.Targetrect, alpha)
-    // else
-     DrawPartstrechRegion(FCenter.Croprect, Self,FCenter.Targetrect.Width,FCenter.Targetrect.Height, FCenter.Targetrect, alpha);
-
-      DrawPartnormal(Fbar.Croprect, self, DBAR, alpha); //bar
-      DrawPartnormal(Ftop.Croprect,self,ftop.Targetrect,alpha);
-      DrawPartnormal(fbottom.Croprect,self,fbottom.Targetrect,alpha);
-      DrawPartnormal(Fleft.Croprect, Self,Fleft.Targetrect, alpha);
-      DrawPartnormal(FRight.Croprect, Self,FRight.Targetrect, alpha);
-  end
-  else
-  begin
-    resim.Fill(BGRA(190, 208, 190,alpha), dmSet);
-  end;
-
-  Captionvisible := FCaptonvisible;
-  inherited paint;
-end;
-
- }
 
 
 

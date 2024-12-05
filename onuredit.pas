@@ -72,7 +72,6 @@ type
     FHintTextStyle: TFontStyles;
 
 
-
     function GetCaretPos: TPoint;
     function getcharcase: ToCharCase;
     function getcurrentline: string;
@@ -156,7 +155,6 @@ type
 
 
   protected
-    procedure Drawtext(T:TBGRABitmap);virtual;
     procedure DoEnter; override;
     procedure DoExit; override;
     procedure DoChange; virtual;
@@ -365,7 +363,6 @@ type
     Fhleft, FhTopleft, FhBottomleft, FhRight, FhTopRight, FhBottomRight,
     FhTop, FhBottom, FhCenter: TONURCUSTOMCROP;
     fState: TONURButtonState;
-    FBGNormal,FBGHover:TBGRABitmap;
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
     procedure Resize; override;
@@ -755,7 +752,8 @@ begin
   inherited Destroy;
 end;
 
-procedure TONURCustomEdit.Drawtext(T:TBGRABitmap);
+
+procedure TONURCustomEdit.Paint;
 var
   //  gradienrect1, gradienrect2, Selrect,
   caretrect: Trect;
@@ -768,8 +766,12 @@ var
   DrawCaretX: Integer;
   NewText:string;
 begin
-  
 
+  if csDesigning in ComponentState then
+    Exit;
+  if not Visible then Exit;
+
+  inherited Paint;
 
   lTextTopSpacing    := TONURCustomCrop(self.Customcroplist[1]).Croprect.Height;
   lTextBottomSpacing := TONURCustomCrop(self.Customcroplist[4]).Croprect.Height;
@@ -833,25 +835,13 @@ begin
       X1 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_START, Copy(NewText, 1, FSelectingStartX.x));
       X2 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_END,   Copy(NewText, 1, FSelectingEndX.x));
 
- //     Canvas.Brush.Color := clblue;//FColorSelection;
- //     Canvas.FillRect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing);
-
-      t.CanvasBGRA.Brush.Color := clblue;
-      t.CanvasBGRA.FillRect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing);
+      Canvas.Brush.Color := clblue;//FColorSelection;
+      Canvas.FillRect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing);
     end;
 
-   // Canvas.TextRect(Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, lTextTopSpacing, newText);
- //  t.CanvasBGRA.Font.name:=self.Font.name;
- //  t.CanvasBGRA.Font.Height:=self.Font.size;
- //  t.CanvasBGRA.Font.Style:=self.Font.style;
- //  t.CanvasBGRA.Font.color:=TONURCustomCrop(self.Customcroplist[8]).Fontcolor;// self.Font.style;
+    Canvas.TextRect(Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, lTextTopSpacing, newText);
+  //Canvas.TextRect(Rect(lTextLeftSpacing,lTextCenter-lTextCenterSp, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, 1, newText);
 
-
-   //dd
-
-    t.CanvasBGRA.TextRect(Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, lTextTopSpacing, newText);
- // Canvas.TextRect(Rect(lTextLeftSpacing,lTextCenter-lTextCenterSp, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, 1, newText);
- //   t.TextRect(Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing),ClientHeight-lTextBottomSpacing),newtext,self.Alignment,tlCenter,colortobgra(TONURCustomCrop(self.Customcroplist[8]).Fontcolor));
 //  canvas.TextRect(ClientRect, FDrawOffsetX, lTextTopSpacing, newText);
   end;
 
@@ -874,19 +864,9 @@ begin
 
   if Fcarets.visible then
   begin
-   // canvas.Brush.Color := FCarets.Color;     //color or image
-   // canvas.FillRect(caretrect);
-    t.CanvasBGRA.Brush.Color := FCarets.Color;
-    t.CanvasBGRA.FillRect(caretrect);
+    canvas.Brush.Color := FCarets.Color;     //color or image
+    canvas.FillRect(caretrect);
   end;
-end;
-
-procedure TONURCustomEdit.Paint;
-begin
- if csDesigning in ComponentState then
-   Exit;
- if not Visible then Exit;
- inherited Paint;
 
 end;
 
@@ -1683,16 +1663,12 @@ begin
   resim.SetSize(Width, Height);
   Captionvisible := False;
   fState         := obsnormal;
-  FBGNormal:=TBGRABitmap.Create(80,30);
-  FBGHover:=TBGRABitmap.Create(80,30);
 end;
 
 destructor TONUREdit.Destroy;
 var
   i: byte;
 begin
-   FreeAndNil(FBGNormal);
-   FreeAndNil(FBGHover);
   for i := 0 to Customcroplist.Count - 1 do
     TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
@@ -1734,55 +1710,6 @@ begin
   FCenter.Targetrect := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth -
     FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
 
-    FBGNormal.Fill(BGRAPixelTransparent);
-    FBGHover.Fill(BGRAPixelTransparent);
-
-    FBGNormal.setsize(self.ClientWidth,self.ClientHeight);
-    FBGHover.setsize(self.ClientWidth,self.ClientHeight);
-
-   // DRAW NORMAL
-
-   //TOPLEFT   //SOLÜST
-    DrawPartnormal(FTopleft.Croprect,FBGNormal,Skindata.Fimage,FTopleft.Targetrect, alpha);
-    //TOPRIGHT //SAĞÜST
-    DrawPartnormal(FTopRight.Croprect, FBGNormal,Skindata.Fimage, FTopRight.Targetrect, alpha);
-    //TOP  //ÜST
-    DrawPartnormal(ftop.Croprect, FBGNormal,Skindata.Fimage, ftop.Targetrect, alpha);
-    //BOTTOMLEFT // SOLALT
-    DrawPartnormal(FBottomleft.Croprect, FBGNormal,Skindata.Fimage, FBottomleft.Targetrect, alpha);
-    //BOTTOMRIGHT  //SAĞALT
-    DrawPartnormal(FBottomRight.Croprect, FBGNormal,Skindata.Fimage, FBottomRight.Targetrect, alpha);
-    //BOTTOM  //ALT
-    DrawPartnormal(FBottom.Croprect, FBGNormal,Skindata.Fimage, FBottom.Targetrect, alpha);
-    //CENTERLEFT // SOLORTA
-    DrawPartnormal(Fleft.Croprect, FBGNormal,Skindata.Fimage, Fleft.Targetrect, alpha);
-    //CENTERRIGHT // SAĞORTA
-    DrawPartnormal(FRight.Croprect, FBGNormal,Skindata.Fimage, FRight.Targetrect, alpha);
-    //CENTER //ORTA
-    DrawPartnormal(FCenter.Croprect, FBGNormal,Skindata.Fimage, fcenter.Targetrect, alpha);
-
-
-    /// DRAW TO HOVER
-
-    //TOPLEFT   //SOLÜST
-    DrawPartnormal(FhTopleft.Croprect,FBGHover,Skindata.Fimage,FTopleft.Targetrect, alpha);
-    //TOPRIGHT //SAĞÜST
-    DrawPartnormal(FhTopRight.Croprect, FBGHover,Skindata.Fimage, FTopRight.Targetrect, alpha);
-    //TOP  //ÜST
-    DrawPartnormal(fhtop.Croprect, FBGHover,Skindata.Fimage, ftop.Targetrect, alpha);
-    //BOTTOMLEFT // SOLALT
-    DrawPartnormal(FhBottomleft.Croprect, FBGHover,Skindata.Fimage, FBottomleft.Targetrect, alpha);
-    //BOTTOMRIGHT  //SAĞALT
-    DrawPartnormal(FhBottomRight.Croprect, FBGHover,Skindata.Fimage, FBottomRight.Targetrect, alpha);
-    //BOTTOM  //ALT
-    DrawPartnormal(FhBottom.Croprect, FBGHover,Skindata.Fimage, FBottom.Targetrect, alpha);
-    //CENTERLEFT // SOLORTA
-    DrawPartnormal(Fhleft.Croprect, FBGHover,Skindata.Fimage, Fleft.Targetrect, alpha);
-    //CENTERRIGHT // SAĞORTA
-    DrawPartnormal(FhRight.Croprect, FBGHover,Skindata.Fimage, FRight.Targetrect, alpha);
-    //CENTER //ORTA
-    DrawPartnormal(FhCenter.Croprect, FBGHover,Skindata.Fimage, fcenter.Targetrect, alpha);
-
 end;
 
 procedure TONUREdit.paint;
@@ -1798,11 +1725,7 @@ begin
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
 
-  if (fState = obshover) and (FhCenter.croprect.width>0) and (Enabled) then
-   resim.PutImage(0,0,FBGHover,dmset)
-  else
-   resim.PutImage(0,0,FBGNormal,dmset);
-   {  if (fState = obshover) and (FhCenter.croprect.width>0) and (Enabled) then
+     if (fState = obshover) and (FhCenter.croprect.width>0) and (Enabled) then
      begin
         tl := FhTopleft.Croprect;
         tr := FhTopRight.Croprect;
@@ -1844,17 +1767,13 @@ begin
     DrawPartnormal(r, self, FRight.Targetrect, alpha);
     //CENTER //ORTA
     DrawPartnormal(c, self, fcenter.Targetrect, alpha);
-    }
   end
   else
   begin
     resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
   end;
 
-  Drawtext(resim);
   inherited paint;
-
- // resim.canvasbgra.TextRect(Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, lTextTopSpacing, newText);
 end;
 
 procedure TONUREdit.MouseLeave;
