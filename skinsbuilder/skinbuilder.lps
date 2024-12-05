@@ -8,8 +8,8 @@
       <Unit>
         <Filename Value="skinbuilder.lpr"/>
         <IsPartOfProject Value="True"/>
-        <EditorIndex Value="14"/>
-        <CursorPos Y="23"/>
+        <EditorIndex Value="6"/>
+        <CursorPos X="11" Y="15"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit>
@@ -20,18 +20,18 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit1"/>
-        <IsVisibleTab Value="True"/>
-        <TopLine Value="358"/>
-        <CursorPos X="50" Y="784"/>
+        <TopLine Value="189"/>
+        <CursorPos X="56" Y="250"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\onurbutton.pas"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="3"/>
-        <TopLine Value="3716"/>
-        <CursorPos X="63" Y="3217"/>
+        <TopLine Value="3228"/>
+        <CursorPos X="4" Y="3242"/>
         <UsageCount Value="103"/>
         <Loaded Value="True"/>
       </Unit>
@@ -41,7 +41,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="35"/>
         <CursorPos X="8" Y="49"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit>
       <Unit>
         <Filename Value="C:\Users\onur.ercelen\Desktop\PROGRAMLAR\FIREBIRD2020_standart\anaekran.pas"/>
@@ -50,21 +50,14 @@
         <ResourceBaseClass Value="Form"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1033"/>
-        <UsageCount Value="9"/>
-      </Unit>
-      <Unit>
-        <Filename Value="F:\MAKINIST_TAKIP_SISTEMI_SON_21_01_2019\SERVER_LAZARUS\1makinisttakibi.pas"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="728"/>
-        <CursorPos X="3" Y="731"/>
-        <UsageCount Value="2"/>
+        <UsageCount Value="6"/>
       </Unit>
       <Unit>
         <Filename Value="G:\onuryeni\butonu.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="1481"/>
         <CursorPos X="43" Y="1496"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit>
       <Unit>
         <Filename Value="G:\lcl\forms\calendarpopup.pas"/>
@@ -75,7 +68,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="14"/>
         <CursorPos X="3" Y="179"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit>
       <Unit>
         <Filename Value="G:\lcl\calendar.pp"/>
@@ -83,29 +76,28 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="162"/>
         <CursorPos X="38" Y="32"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit>
       <Unit>
         <Filename Value="C:\Users\onur.ercelen\Desktop\skins.ini"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="13" Y="13"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
         <DefaultSyntaxHighlighter Value="Ini"/>
       </Unit>
       <Unit>
         <Filename Value="unit1.lfm"/>
         <HasResources Value="True"/>
         <EditorIndex Value="-1"/>
-        <TopLine Value="351"/>
-        <CursorPos X="10" Y="351"/>
-        <UsageCount Value="4"/>
+        <TopLine Value="348"/>
+        <CursorPos X="10" Y="348"/>
+        <UsageCount Value="7"/>
         <DefaultSyntaxHighlighter Value="LFM"/>
       </Unit>
       <Unit>
         <Filename Value="..\onurlist.pas"/>
-        <EditorIndex Value="15"/>
-        <TopLine Value="1010"/>
-        <CursorPos X="2" Y="1033"/>
+        <EditorIndex Value="7"/>
+        <CursorPos X="52" Y="11"/>
         <UsageCount Value="102"/>
         <Loaded Value="True"/>
       </Unit>
@@ -114,13 +106,13 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="597"/>
         <CursorPos X="30" Y="601"/>
-        <UsageCount Value="95"/>
+        <UsageCount Value="92"/>
       </Unit>
       <Unit>
         <Filename Value="..\onurctrl.pas"/>
         <EditorIndex Value="2"/>
-        <TopLine Value="2854"/>
-        <CursorPos X="29" Y="2846"/>
+        <TopLine Value="870"/>
+        <CursorPos X="15" Y="884"/>
         <UsageCount Value="107"/>
         <Loaded Value="True"/>
       </Unit>
@@ -132,39 +124,39 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="362"/>
         <CursorPos X="12" Y="262"/>
-        <UsageCount Value="76"/>
+        <UsageCount Value="73"/>
       </Unit>
       <Unit>
         <Filename Value="skins\sdsa\Skin.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="101"/>
         <CursorPos X="38" Y="82"/>
-        <UsageCount Value="74"/>
+        <UsageCount Value="71"/>
       </Unit>
       <Unit>
         <Filename Value="skins\sdsa\SkinObjet.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="6" Y="9"/>
-        <UsageCount Value="74"/>
+        <UsageCount Value="71"/>
       </Unit>
       <Unit>
         <Filename Value="skins\sdsa\SkinType.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="26"/>
         <CursorPos X="6" Y="9"/>
-        <UsageCount Value="74"/>
+        <UsageCount Value="71"/>
       </Unit>
       <Unit>
         <Filename Value="..\onurpanel.pas"/>
-        <EditorIndex Value="13"/>
+        <EditorIndex Value="5"/>
         <TopLine Value="969"/>
-        <CursorPos X="40" Y="973"/>
+        <CursorPos Y="973"/>
         <UsageCount Value="108"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\onuredit.pas"/>
-        <EditorIndex Value="12"/>
+        <EditorIndex Value="4"/>
         <TopLine Value="150"/>
         <CursorPos X="24" Y="164"/>
         <UsageCount Value="108"/>
@@ -175,7 +167,7 @@
         <EditorIndex Value="1"/>
         <TopLine Value="1116"/>
         <CursorPos X="3" Y="1137"/>
-        <UsageCount Value="95"/>
+        <UsageCount Value="106"/>
         <Loaded Value="True"/>
       </Unit>
       <Unit>
@@ -184,7 +176,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="106"/>
         <CursorPos X="3" Y="120"/>
-        <UsageCount Value="38"/>
+        <UsageCount Value="35"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\..\lcl\grids.pas"/>
@@ -192,7 +184,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="279"/>
         <CursorPos X="3" Y="1721"/>
-        <UsageCount Value="36"/>
+        <UsageCount Value="33"/>
       </Unit>
       <Unit>
         <Filename Value="..\onurbutton_E.pas"/>
@@ -200,39 +192,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="699"/>
         <CursorPos X="5" Y="722"/>
-        <UsageCount Value="15"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\imgfrm.pas"/>
-        <ComponentName Value="onimgform"/>
-        <HasResources Value="True"/>
-        <ResourceBaseClass Value="Form"/>
-        <EditorIndex Value="-1"/>
-        <UsageCount Value="2"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\example\main.pas"/>
-        <HasResources Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="8"/>
-        <CursorPos X="50" Y="10"/>
-        <UsageCount Value="2"/>
-      </Unit>
-      <Unit>
-        <Filename Value="..\example\main.lfm"/>
-        <HasResources Value="True"/>
-        <EditorIndex Value="-1"/>
-        <TopLine Value="816"/>
-        <CursorPos X="62" Y="833"/>
-        <UsageCount Value="2"/>
-        <DefaultSyntaxHighlighter Value="LFM"/>
+        <UsageCount Value="12"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\..\fpc\3.3.1\source\rtl\inc\systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="538"/>
         <CursorPos X="10" Y="553"/>
-        <UsageCount Value="5"/>
+        <UsageCount Value="2"/>
       </Unit>
       <Unit>
         <Filename Value="C:\Users\karam\AppData\Local\lazarus\onlinepackagemanager\packages\EncConv\encconv\encconv.pas"/>
@@ -240,7 +207,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="7"/>
         <CursorPos X="34" Y="20"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\lazutils\lazutils.pas"/>
@@ -248,7 +215,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos X="3" Y="23"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\..\packager\registration\lazaruspackageintf.pas"/>
@@ -256,7 +223,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="57"/>
         <CursorPos X="31" Y="5"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\BGRABitmap\bgrabitmap\bgrawinresource.pas"/>
@@ -264,14 +231,14 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="181"/>
         <CursorPos X="28" Y="181"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\BGRABitmap\bgrabitmap\bgrabitmaptypes.pas"/>
         <UnitName Value="BGRABitmapTypes"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="5" Y="5"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\BGRABitmap\bgrabitmap\bgramultifiletype.pas"/>
@@ -279,7 +246,7 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="59"/>
         <CursorPos X="3" Y="63"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\onurbuttonorj.pas"/>
@@ -287,237 +254,239 @@
         <EditorIndex Value="-1"/>
         <TopLine Value="6616"/>
         <CursorPos Y="6618"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\fpweb\weblaz.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="10"/>
         <CursorPos X="27" Y="7"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\zeosdbo\src\core\ZClasses.pas"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="47"/>
         <CursorPos X="53" Y="63"/>
-        <UsageCount Value="4"/>
-        <DefaultSyntaxHighlighter Value="Delphi"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\..\packager\registration\fcllaz.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="3" Y="11"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\..\fpc\3.2.2\source\packages\fcl-db\src\base\db.pas"/>
         <UnitName Value="DB"/>
         <EditorIndex Value="-1"/>
-        <UsageCount Value="4"/>
+        <UsageCount Value="1"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\..\ide\lazarus.pp"/>
         <UnitName Value="Lazarus"/>
-        <EditorIndex Value="16"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="142"/>
         <CursorPos Y="171"/>
-        <UsageCount Value="39"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="36"/>
       </Unit>
       <Unit>
         <Filename Value="..\..\..\..\fpc\3.2.2\source\rtl\inc\systemh.inc"/>
         <EditorIndex Value="-1"/>
         <TopLine Value="539"/>
         <CursorPos X="10" Y="553"/>
-        <UsageCount Value="10"/>
+        <UsageCount Value="7"/>
       </Unit>
       <Unit>
         <Filename Value="skins\SkinBoxCtrls.pas"/>
         <EditorIndex Value="-1"/>
         <CursorPos X="60" Y="16483"/>
-        <UsageCount Value="9"/>
+        <UsageCount Value="6"/>
       </Unit>
       <Unit>
         <Filename Value="skins\spDialogs.pas"/>
-        <EditorIndex Value="5"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="455"/>
         <CursorPos X="37" Y="146"/>
-        <UsageCount Value="19"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="skins\spMessages.pas"/>
-        <EditorIndex Value="6"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="13"/>
         <CursorPos X="28" Y="28"/>
-        <UsageCount Value="19"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="skins\skin\DynamicSkinForm.pas"/>
-        <EditorIndex Value="7"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="10067"/>
         <CursorPos X="35" Y="9921"/>
-        <UsageCount Value="19"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="skins\skin\SkinBoxCtrls.pas"/>
-        <EditorIndex Value="8"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="988"/>
         <CursorPos X="32" Y="995"/>
-        <UsageCount Value="19"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="skins\skin\SkinCtrls.pas"/>
-        <EditorIndex Value="9"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="12204"/>
         <CursorPos X="15" Y="12059"/>
-        <UsageCount Value="19"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="skins\skin\SkinData.pas"/>
-        <EditorIndex Value="10"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="1527"/>
         <CursorPos X="38" Y="1294"/>
-        <UsageCount Value="19"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="skins\skin\SkinMenus.pas"/>
-        <EditorIndex Value="11"/>
+        <EditorIndex Value="-1"/>
         <TopLine Value="191"/>
         <CursorPos X="32" Y="200"/>
-        <UsageCount Value="19"/>
-        <Loaded Value="True"/>
+        <UsageCount Value="16"/>
       </Unit>
       <Unit>
         <Filename Value="C:\Users\Onur2x\AppData\Local\Temp\project1.lpr"/>
         <UnitName Value="Project1"/>
-        <EditorIndex Value="4"/>
-        <UsageCount Value="10"/>
-        <Loaded Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="48" Y="25"/>
+        <UsageCount Value="20"/>
+      </Unit>
+      <Unit>
+        <Filename Value="onuredit.pas"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="561"/>
+        <CursorPos X="33" Y="576"/>
+        <UsageCount Value="7"/>
       </Unit>
     </Units>
-    <JumpHistory HistoryIndex="28">
+    <JumpHistory HistoryIndex="29">
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="85" Column="21" TopLine="74"/>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="410" Column="51" TopLine="389"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="1703" Column="41" TopLine="1685"/>
+        <Filename Value="unit1.pas"/>
+        <Caret Line="412" Column="47" TopLine="399"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="1990" Column="32" TopLine="1966"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="6" Column="38"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="201" Column="19" TopLine="178"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="293" Column="20" TopLine="270"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="1148" Column="19" TopLine="1125"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="398" Column="29" TopLine="375"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="200" Column="20" TopLine="198"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1127" Column="29" TopLine="1108"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="1290" Column="3" TopLine="1190"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1180" Column="42" TopLine="1161"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="94" Column="19" TopLine="79"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1227" Column="42" TopLine="1202"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="1689" Column="36" TopLine="1681"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1268" Column="42" TopLine="1262"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="203" Column="17" TopLine="187"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1393" Column="39" TopLine="1367"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="1323" Column="29" TopLine="1300"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1450" Column="41" TopLine="1424"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="94" Column="19" TopLine="79"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1543" Column="56" TopLine="1519"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="34" Column="18" TopLine="10"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1689" Column="75" TopLine="1665"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="3442" Column="17" TopLine="3210"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1692" Column="9" TopLine="1668"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="262" Column="3" TopLine="247"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1760" Column="21" TopLine="1736"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="246" Column="16" TopLine="238"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1948" Column="9" TopLine="1924"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="24" Column="19" TopLine="14"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="2143" Column="9" TopLine="2119"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="3630" TopLine="3614"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="2158" Column="30" TopLine="2134"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="242" Column="6" TopLine="236"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="2180" Column="34" TopLine="2156"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="3283" Column="36" TopLine="3262"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="2192" Column="28" TopLine="2168"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="255" Column="20" TopLine="237"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="2320" Column="28" TopLine="2296"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="3704" Column="42" TopLine="3682"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="2351" Column="30" TopLine="2327"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="3686" Column="37" TopLine="3672"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="2358" Column="34" TopLine="2334"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="260" Column="5" TopLine="246"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="293" Column="20" TopLine="279"/>
       </Position>
       <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="1802" Column="19" TopLine="1762"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1452" Column="4" TopLine="1432"/>
       </Position>
       <Position>
-        <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="350" Column="19" TopLine="327"/>
-      </Position>
-      <Position>
-        <Filename Value="..\onurpage.pas"/>
-        <Caret Line="200" Column="18" TopLine="185"/>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="1688" Column="30" TopLine="1534"/>
       </Position>
       <Position>
         <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="3469" Column="33" TopLine="3447"/>
+        <Caret Line="108" Column="19" TopLine="101"/>
       </Position>
       <Position>
         <Filename Value="..\onurbutton.pas"/>
-        <Caret Line="262" Column="19" TopLine="248"/>
+        <Caret Line="2640" Column="3" TopLine="2627"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurctrl.pas"/>
+        <Caret Line="349" Column="28" TopLine="328"/>
+      </Position>
+      <Position>
+        <Filename Value="..\onurbutton.pas"/>
+        <Caret Line="2642" Column="203" TopLine="2627"/>
       </Position>
     </JumpHistory>
     <RunParams>

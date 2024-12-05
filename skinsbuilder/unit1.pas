@@ -5,10 +5,10 @@ unit Unit1;
 interface
 
 uses
-  Windows, Classes, SysUtils, Forms, Controls, Graphics, Dialogs, ExtCtrls,
-  StdCtrls, ExtDlgs, BGRAVirtualScreen, onurctrl, onurbutton, onurbar,
-  onuredit, onurpanel, onurlist, onurpage, BGRABitmap, BGRABitmapTypes,
-  ColorBox, ComCtrls,  Spin, ValEdit, inifiles, Types, Grids;
+  onurmenu,Windows,Classes,SysUtils,Forms,Controls,Graphics,Dialogs,ExtCtrls,
+  StdCtrls,ExtDlgs,BGRAVirtualScreen,onurctrl,onurbutton,onurbar,onuredit,
+  onurpanel,onurlist,onurpage,BGRABitmap,BGRABitmapTypes,ColorBox,ComCtrls,Spin,
+  ValEdit,inifiles,Types,Grids;
 
 type
 
@@ -20,9 +20,12 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    OnurCheckListBox1:TOnurCheckListBox;
+    ONURMainMenu1:TONURMainMenu;
     ONURNavButton1: TONURNavButton;
     ONURNavButton2: TONURNavButton;
     ONURNavMenuButton1: TONURNavMenuButton;
+    ONURPopupMenu1:TONURPopupMenu;
     PropEdit: TValueListEditor;
     ONURContentSlider1: TONURContentSlider;
     ONURStringGrid1: TONURStringGrid;
@@ -170,10 +173,17 @@ begin
     try
       myst.Delimiter     := ',';
       myst.DelimitedText := val;
-      Crp.LEFT           := StrToIntDef(myst.Strings[0], 2);
+     { Crp.LEFT           := StrToIntDef(myst.Strings[0], 2);
       Crp.TOP            := StrToIntDef(myst.Strings[1], 2);
       Crp.RIGHT          := StrToIntDef(myst.Strings[2], 4);
       Crp.BOTTOM         := StrToIntDef(myst.Strings[3], 4);
+      Crp.Fontcolor      := StringToColorDef(myst.Strings[4], clNone);
+      }
+       Crp.Croprect       := Rect(StrToIntDef(myst.Strings[0], 2),StrToIntDef(myst.Strings[1], 4),StrToIntDef(myst.Strings[2], 4),StrToIntDef(myst.Strings[3], 4));
+
+      if Crp.Croprect.IsEmpty then
+      Crp.Croprect       := Rect(0,0,1,1);
+
       Crp.Fontcolor      := StringToColorDef(myst.Strings[4], clNone);
     finally
       myst.Free;
@@ -191,15 +201,16 @@ begin
     FreeAndNil(skn);
   end;
 
-  PropEdit.Cells[1, 2] := IntToStr(ab.Left);
-  PropEdit.Cells[1, 3] := IntToStr(ab.top);
-  PropEdit.Cells[1, 4] := IntToStr(ab.Right);
-  PropEdit.Cells[1, 5] := IntToStr(ab.Bottom);
+
+  PropEdit.Cells[1, 2] := IntToStr(ab.Croprect.Left);
+  PropEdit.Cells[1, 3] := IntToStr(ab.Croprect.top);
+  PropEdit.Cells[1, 4] := IntToStr(ab.Croprect.Right);
+  PropEdit.Cells[1, 5] := IntToStr(ab.Croprect.Bottom);
   ColorBox2.Selected   := ab.Fontcolor;
-  rectlange.left       := ab.Left;
-  rectlange.Right      := ab.Right;
-  rectlange.top        := ab.top;
-  rectlange.bottom     := ab.bottom;
+  rectlange.left       := ab.Croprect.Left;
+  rectlange.Right      := ab.Croprect.Right;
+  rectlange.top        := ab.Croprect.top;
+  rectlange.bottom     := ab.Croprect.bottom;
   mainpicture.RedrawBitmap;
 
 end;
@@ -208,28 +219,32 @@ function croptostring(Crp: TONURCUSTOMCROP): string;
 begin
   Result := '';
   if Crp <> nil then
-    Result := IntToStr(Crp.LEFT) + ',' + IntToStr(Crp.TOP) + ',' +
+ {   Result := IntToStr(Crp.LEFT) + ',' + IntToStr(Crp.TOP) + ',' +
       IntToStr(Crp.RIGHT) + ',' + IntToStr(Crp.BOTTOM) + ',' +
+      ColorToString(Crp.Fontcolor); }
+
+   Result := IntToStr(Crp.Croprect.LEFT) + ',' + IntToStr(Crp.Croprect.TOP) + ',' +
+      IntToStr(Crp.Croprect.RIGHT) + ',' + IntToStr(Crp.Croprect.BOTTOM) + ',' +
       ColorToString(Crp.Fontcolor);
 end;
 
 procedure Tskinsbuildier.writedata(Ab: TONURCUSTOMCROP);
 begin
-  if PropEdit.Cells[1, 2] <> '' then ab.Left := StrToInt(PropEdit.Cells[1, 2])
+  if PropEdit.Cells[1, 2] <> '' then ab.Croprect.Left   := StrToInt(PropEdit.Cells[1, 2])
   else
-    ab.left := 0;
+    ab.Croprect.left := 0;
 
-  if PropEdit.Cells[1, 4] <> '' then ab.Right := StrToInt(PropEdit.Cells[1, 4])
+  if PropEdit.Cells[1, 4] <> '' then ab.Croprect.Right  := StrToInt(PropEdit.Cells[1, 4])
   else
-    ab.Right := 0;
+    ab.Croprect.Right := 0;
 
-  if PropEdit.Cells[1, 3] <> '' then ab.top := StrToInt(PropEdit.Cells[1, 3])
+  if PropEdit.Cells[1, 3] <> '' then ab.Croprect.top    := StrToInt(PropEdit.Cells[1, 3])
   else
-    ab.Top := 0;
+    ab.Croprect.Top := 0;
 
-  if PropEdit.Cells[1, 5] <> '' then ab.bottom := StrToInt(PropEdit.Cells[1, 5])
+  if PropEdit.Cells[1, 5] <> '' then ab.Croprect.bottom := StrToInt(PropEdit.Cells[1, 5])
   else
-    ab.Bottom := 0;
+    ab.Croprect.Bottom := 0;
 
   if PropEdit.Cells[1, 6] <> '' then
     ab.Fontcolor := StringToColor(PropEdit.Cells[1, 6])
@@ -243,6 +258,7 @@ begin
   //Extractfilepath(application.ExeName) + 'temp.ini');
   try
     skn.WriteString(PropEdit.Cells[1, 1], ab.cropname, croptostring(Ab));
+
   finally
     FreeAndNil(skn);
   end;
@@ -573,6 +589,12 @@ begin
     subnode := TreeView1.Items.AddChild(rootNode,
       TONURCUSTOMCROP(Oncolumlist1.Customcroplist[i]).cropname);
 
+  rootNode := TreeView1.Items.Add(nil, 'CHECKLISTBOX');
+  for i := 0 to OnurCheckListBox1.Customcroplist.Count - 1 do
+    subnode := TreeView1.Items.AddChild(rootNode,
+      TONURCUSTOMCROP(OnurCheckListBox1.Customcroplist[i]).cropname);
+
+
   rootNode := TreeView1.Items.Add(nil, 'COMBOBOX');
   for i := 0 to ONcombobox1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
@@ -620,6 +642,15 @@ begin
      subnode := TreeView1.Items.AddChild(rootNode,
       TONURCUSTOMCROP(ONURNavMenuButton1.Customcroplist[i]).cropname);
 
+  rootNode := TreeView1.Items.Add(nil, 'POPUP MENU');
+  for i := 0 to ONURPopupMenu1.Customcroplist.Count - 1 do
+     subnode := TreeView1.Items.AddChild(rootNode,
+      TONURCUSTOMCROP(ONURPopupMenu1.Customcroplist[i]).cropname);
+
+  rootNode := TreeView1.Items.Add(nil, 'MAİN MENU');
+  for i := 0 to ONURMainMenu1.Customcroplist.Count - 1 do
+     subnode := TreeView1.Items.AddChild(rootNode,
+      TONURCUSTOMCROP(ONURMainMenu1.Customcroplist[i]).cropname);
 { rootNode := TreeView1.Items.Add(nil, 'NAV BUTTON');
   for i := 0 to ONURNavMenuButton1.Buttons[0].Customcroplist.count-1 do//ONURNavButton1.Customcroplist.Count - 1 do
     subnode := TreeView1.Items.AddChild(rootNode,
@@ -664,6 +695,7 @@ begin
 
   objlist.add(oNListBox1);
   objlist.add(Oncolumlist1);
+  objlist.add(OnurCheckListBox1);
 
   objlist.add(ONcombobox1);
   objlist.add(onEdit1);
@@ -677,7 +709,8 @@ begin
 
   objlist.add(ONURNavMenuButton1);
 //  objlist.add(ONURNavMenuButton1.Buttons[0]);
-
+  objlist.add(ONURPopupMenu1);
+  objlist.add(ONURMainMenu1);
 
 
 
@@ -690,9 +723,13 @@ begin
     //  Oncolumlist1.Items.Add;
       Oncolumlist1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);//Items[a].Cells[i] := 'TEST ' + i.ToString + ' X ' + a.ToString;
       ONURStringGrid1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);
+
     end;
-
-
+ for i := 0 to 200 do
+ begin
+  OnListBox1.items.add('TEST '+inttostr(i));
+  OnurCheckListBox1.items.add('TEST '+inttostr(i));
+ end;
 
 end;
 
@@ -857,15 +894,15 @@ begin
       PropEdit.Keys[5]     := 'BOTTOM';
       PropEdit.Keys[6]     := 'FONTCOLOR';
       PropEdit.Cells[1, 1] := s;
-      PropEdit.Cells[1, 2] := IntToStr(oncrop.Left);
-      PropEdit.Cells[1, 3] := IntToStr(oncrop.top);
-      PropEdit.Cells[1, 4] := IntToStr(oncrop.Right);
-      PropEdit.Cells[1, 5] := IntToStr(oncrop.Bottom);
+      PropEdit.Cells[1, 2] := IntToStr(oncrop.Croprect.Left);
+      PropEdit.Cells[1, 3] := IntToStr(oncrop.Croprect.top);
+      PropEdit.Cells[1, 4] := IntToStr(oncrop.Croprect.Right);
+      PropEdit.Cells[1, 5] := IntToStr(oncrop.Croprect.Bottom);
       PropEdit.Cells[1, 6] := ColorToString(oncrop.Fontcolor);
-      rectlange.left       := oncrop.Left;
-      rectlange.Right      := oncrop.Right;
-      rectlange.top        := oncrop.top;
-      rectlange.bottom     := oncrop.bottom;
+      rectlange.left       := oncrop.Croprect.Left;
+      rectlange.Right      := oncrop.Croprect.Right;
+      rectlange.top        := oncrop.Croprect.top;
+      rectlange.bottom     := oncrop.Croprect.bottom;
       mainpicture.RedrawBitmap;
       notwriting           := false;
     end;

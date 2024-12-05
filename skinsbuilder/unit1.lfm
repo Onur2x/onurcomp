@@ -15,9 +15,10 @@ object skinsbuildier: Tskinsbuildier
   Font.Height = -15
   Font.Name = 'Calibri'
   Font.Style = [fsBold]
+  Menu = ONURMainMenu1
+  Position = poScreenCenter
   OnClose = FormClose
   OnCreate = FormCreate
-  Position = poScreenCenter
   object Panel2: TPanel
     Left = 217
     Height = 896
@@ -114,12 +115,14 @@ object skinsbuildier: Tskinsbuildier
         LineSize = 20
         Max = 100
         Min = 8
-        OnChange = TrackBar1Change
         PageSize = 10
         Position = 40
         Reversed = True
         ScalePos = trBottom
         ShowSelRange = False
+        OnChange = TrackBar1Change
+        Color = 3487029
+        ParentColor = False
         TabOrder = 0
       end
       object Label2: TLabel
@@ -247,6 +250,11 @@ object skinsbuildier: Tskinsbuildier
         Skindata = ONImg1
         Skinname = 'label'
         Caption = 'ONUR SKINS'
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
         Visible = False
         OnClick = ONlabel1Click
         Strings.Strings = (
@@ -257,8 +265,8 @@ object skinsbuildier: Tskinsbuildier
         Stretch = True
         ScrollBy = 2
         Interval = 100
-        CharHeight = 32
-        CharWidth = 20
+        CharHeight = 92
+        CharWidth = 61
         WaitOnEnd = 1000
       end
       object ONLed1: TONURLed
@@ -269,6 +277,11 @@ object skinsbuildier: Tskinsbuildier
         Transparent = False
         Skindata = ONImg1
         Skinname = 'led'
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
         Visible = False
         OnClick = ONLed1Click
         LedOn = True
@@ -282,6 +295,11 @@ object skinsbuildier: Tskinsbuildier
         Skindata = ONImg1
         Skinname = 'progressbarh'
         Caption = '10'
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
         Visible = False
         Textvisible = True
         Min = 0
@@ -297,6 +315,11 @@ object skinsbuildier: Tskinsbuildier
         Skindata = ONImg1
         Skinname = 'progressbarv'
         Caption = '10'
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
+        ParentFont = False
         Visible = False
         Textvisible = True
         Min = 0
@@ -326,8 +349,8 @@ object skinsbuildier: Tskinsbuildier
         UseDockManager = False
         Visible = False
         NumberOnly = True
-        Selstart = 0
         CharCase = ecNormal
+        EchoMode = emNormal
         Value = 0
         MaxValue = 0
         MinValue = 0
@@ -443,8 +466,8 @@ object skinsbuildier: Tskinsbuildier
         Font.Style = [fsBold]
         ParentFont = False
         Visible = False
-        Position = 3
-        Percentage = 0
+        Position = 0
+        Percentage = 100
         Kind = oVertical
         Max = 100
         Min = 0
@@ -458,8 +481,8 @@ object skinsbuildier: Tskinsbuildier
         Skinname = 'expandpanel'
         Crop = True
         Caption = 'ONColExpPanel1'
-        ChildSizing.LeftRightSpacing = 12
-        ChildSizing.TopBottomSpacing = 39
+        ChildSizing.LeftRightSpacing = 8
+        ChildSizing.TopBottomSpacing = 8
         DoubleBuffered = True
         Font.Color = clBlack
         Font.Height = -16
@@ -600,10 +623,8 @@ object skinsbuildier: Tskinsbuildier
         UseDockManager = False
         Visible = False
         NumberOnly = False
-        Selstart = 0
         CharCase = ecNormal
-        LeftTextMargin = 0
-        RightTextMargin = 0
+        EchoMode = emNormal
       end
       object ONMemo1: TONURMemo
         Cursor = crIBeam
@@ -628,8 +649,8 @@ object skinsbuildier: Tskinsbuildier
         UseDockManager = False
         Visible = False
         NumberOnly = False
-        Selstart = 0
         CharCase = ecNormal
+        EchoMode = emNormal
       end
       object ONcombobox1: TONURComboBox
         Cursor = crIBeam
@@ -652,8 +673,8 @@ object skinsbuildier: Tskinsbuildier
         UseDockManager = False
         Visible = False
         NumberOnly = False
-        Selstart = 0
         CharCase = ecNormal
+        EchoMode = emNormal
         Items.Strings = (
           'TEST 1'
           'TEST 2'
@@ -809,7 +830,6 @@ object skinsbuildier: Tskinsbuildier
         ParentColor = False
         ParentFont = False
         Visible = False
-        AutoWidth = False
       end
       object ONKnob1: TONURKnob
         Left = 100
@@ -820,13 +840,18 @@ object skinsbuildier: Tskinsbuildier
         Skinname = 'knob'
         Caption = 'ONKnob1'
         Color = clNone
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
         ParentColor = False
+        ParentFont = False
         Visible = False
         MaxValue = 100
         MinValue = -100
         Step = 2
         ScroolStep = 5
-        CurrentValue = 0
+        Value = 0
       end
       object ONPageControl1: TONURPageControl
         Left = 10
@@ -865,8 +890,13 @@ object skinsbuildier: Tskinsbuildier
           ClientHeight = 328
           ClientWidth = 306
           DoubleBuffered = True
+          Font.Color = clWhite
+          Font.Height = -13
+          Font.Name = 'calibri'
+          Font.Style = [fsBold]
           ParentBackground = True
           ParentDoubleBuffered = False
+          ParentFont = False
           TabOrder = 2
           UseDockManager = False
           Visible = False
@@ -892,8 +922,13 @@ object skinsbuildier: Tskinsbuildier
           ClientHeight = 328
           ClientWidth = 306
           DoubleBuffered = True
+          Font.Color = clWhite
+          Font.Height = -13
+          Font.Name = 'calibri'
+          Font.Style = [fsBold]
           ParentBackground = True
           ParentDoubleBuffered = False
+          ParentFont = False
           TabOrder = 1
           UseDockManager = False
           Buttonwidth = 86
@@ -915,7 +950,12 @@ object skinsbuildier: Tskinsbuildier
         Skindata = ONImg1
         Skinname = 'closebutton'
         Color = clNone
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
         ParentColor = False
+        ParentFont = False
         Visible = False
         ButtonType = OBTNClose
       end
@@ -927,7 +967,12 @@ object skinsbuildier: Tskinsbuildier
         Skindata = ONImg1
         Skinname = 'minimizebutton'
         Color = clNone
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
         ParentColor = False
+        ParentFont = False
         Visible = False
         ButtonType = OBTNMinimize
       end
@@ -939,7 +984,12 @@ object skinsbuildier: Tskinsbuildier
         Skindata = ONImg1
         Skinname = 'maximizebutton'
         Color = clNone
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
         ParentColor = False
+        ParentFont = False
         Visible = False
         ButtonType = OBTNMaximize
       end
@@ -954,8 +1004,13 @@ object skinsbuildier: Tskinsbuildier
         ClientHeight = 403
         ClientWidth = 302
         DoubleBuffered = True
+        Font.Color = clWhite
+        Font.Height = -13
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
         ParentBackground = True
         ParentDoubleBuffered = False
+        ParentFont = False
         TabOrder = 11
         UseDockManager = False
         Visible = False
@@ -1009,8 +1064,9 @@ object skinsbuildier: Tskinsbuildier
         Align = alTop
         Skindata = ONImg1
         Skinname = 'Navmenu'
-        ChildSizing.LeftRightSpacing = 26
-        ChildSizing.TopBottomSpacing = 12
+        ChildSizing.LeftRightSpacing = 24
+        ChildSizing.TopBottomSpacing = 4
+        ChildSizing.VerticalSpacing = 4
         ClientHeight = 50
         ClientWidth = 306
         DoubleBuffered = True
@@ -1028,31 +1084,66 @@ object skinsbuildier: Tskinsbuildier
         Movable = True
         ActiveButton = ONURNavButton2
         object ONURNavButton1: TONURNavButton
-          Left = 26
-          Height = 26
-          Top = 12
+          Left = 24
+          Height = 42
+          Top = 4
           Width = 100
           Align = alLeft
           Skindata = ONImg1
           Skinname = 'navbutton'
           Caption = 'NavButton1'
           Color = clNone
+          Font.Color = clWhite
+          Font.Height = -13
+          Font.Name = 'calibri'
+          Font.Style = [fsBold]
           ParentColor = False
+          ParentFont = False
           AutoWidth = False
         end
         object ONURNavButton2: TONURNavButton
-          Left = 126
-          Height = 26
-          Top = 12
+          Left = 124
+          Height = 42
+          Top = 4
           Width = 100
           Align = alLeft
           Skindata = ONImg1
           Skinname = 'navbutton'
           Caption = 'NavButton2'
           Color = clNone
+          Font.Color = clWhite
+          Font.Height = -13
+          Font.Name = 'calibri'
+          Font.Style = [fsBold]
           ParentColor = False
+          ParentFont = False
           AutoWidth = False
         end
+      end
+      object OnurCheckListBox1: TOnurCheckListBox
+        Left = 10
+        Height = 433
+        Top = 9
+        Width = 302
+        Skindata = ONImg1
+        Skinname = 'listbox'
+        Caption = 'OnurCheckListBox1'
+        ClientHeight = 433
+        ClientWidth = 302
+        DoubleBuffered = True
+        Font.Color = clWhite
+        Font.Height = -17
+        Font.Name = 'calibri'
+        Font.Style = [fsBold]
+        ParentBackground = True
+        ParentDoubleBuffered = False
+        ParentFont = False
+        TabOrder = 14
+        TabStop = True
+        UseDockManager = False
+        Visible = False
+        ItemIndex = -1
+        ItemHeight = 24
       end
     end
   end
@@ -1138,10 +1229,10 @@ object skinsbuildier: Tskinsbuildier
       RowSelect = True
       SeparatorColor = clBlack
       TabOrder = 0
-      OnChange = TreeView1Change
       Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoRowSelect, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
       TreeLineColor = clInfoBk
       TreeLinePenStyle = psDot
+      OnChange = TreeView1Change
     end
     object Button2: TButton
       Left = 0
@@ -1211,11 +1302,11 @@ object skinsbuildier: Tskinsbuildier
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       MaxValue = 255
-      OnChange = SpinEdit1Change
-      OnExit = SpinEdit1Exit
       ParentFont = False
       TabOrder = 3
       Visible = False
+      OnChange = SpinEdit1Change
+      OnExit = SpinEdit1Exit
     end
     object ColorBox3: TColorBox
       Left = 88
@@ -1229,10 +1320,10 @@ object skinsbuildier: Tskinsbuildier
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ItemHeight = 20
-      OnSelect = ColorBox3Select
       ParentFont = False
       TabOrder = 4
       Visible = False
+      OnSelect = ColorBox3Select
     end
     object ColorBox2: TColorBox
       Left = 112
@@ -1248,10 +1339,10 @@ object skinsbuildier: Tskinsbuildier
       Font.Name = 'Calibri'
       Font.Style = [fsBold]
       ItemHeight = 20
-      OnSelect = ColorBox2Select
       ParentFont = False
       TabOrder = 5
       Visible = False
+      OnSelect = ColorBox2Select
     end
   end
   object Panel1: TPanel
@@ -1443,5 +1534,17 @@ object skinsbuildier: Tskinsbuildier
       E514FB1CD54D784C72CE6F52C4AEE7A54EFC46BD36CB99ABE16D41830D59E719
       11FBA8CD6C663884B1698C4E9DD58423DF7FF4FC0F997E48E7
     }
+  end
+  object ONURPopupMenu1: TONURPopupMenu
+    OwnerDraw = True
+    Alpha = 0
+    Left = 492
+    Top = 209
+  end
+  object ONURMainMenu1: TONURMainMenu
+    OwnerDraw = True
+    Alpha = 0
+    Left = 669
+    Top = 204
   end
 end
