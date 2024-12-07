@@ -5,13 +5,45 @@ unit Unit1;
 interface
 
 uses
-  onurmenu,Windows,Classes,SysUtils,Forms,Controls,Graphics,Dialogs,ExtCtrls,
-  StdCtrls,ExtDlgs,BGRAVirtualScreen,onurctrl,onurbutton,onurbar,onuredit,
-  onurpanel,onurlist,onurpage,BGRABitmap,BGRABitmapTypes,ColorBox,ComCtrls,Spin,
-  ValEdit,inifiles,Types,Grids;
+  Windows,Classes,SysUtils,Forms,Controls,Graphics,
+  Dialogs,ExtCtrls,StdCtrls,ExtDlgs,onurctrl,onurbutton,
+  onurbar,onuredit,onurpanel,onurlist,onurpage,onurmenu,BGRABitmap,BGRABitmapTypes,
+  ColorBox,ComCtrls,Spin,ValEdit,inifiles,Types,Grids;
 
 type
 
+  TOnurScreen = class(TGraphicControl)
+  private
+   fbitmap   : TBGRABitmap;
+   FOnChange : TNotifyEvent;
+  public
+   constructor Create(Aowner: TComponent); override;
+   destructor Destroy; override;
+   procedure paint; override;
+   procedure PutImage(x,y:integer;a:Tbgrabitmap);
+   procedure MouseDown(Button:TMouseButton;Shift:TShiftState;X,Y:Integer);override;
+   procedure MouseMove(Shift:TShiftState;X,Y:Integer);override;
+   procedure MouseUp(Button:TMouseButton;Shift:TShiftState;X,Y:Integer);override;
+   property  Bitmap:TBGRABitmap read fbitmap;
+  published
+   property Onchange: TNotifyEvent read FOnChange write FOnChange;
+  end;
+
+  TOnurZoomScreen = class(TGraphicControl)
+  private
+   fbitmap   : TBGRABitmap;
+   FOnChange : TNotifyEvent;
+  public
+   constructor Create(Aowner: TComponent); override;
+   destructor Destroy; override;
+   procedure paint; override;
+   procedure PutImage(x,y:integer;a:Tbgrabitmap);
+   procedure MouseDown(Button:TMouseButton;Shift:TShiftState;X,Y:Integer);override;
+   procedure MouseMove(Shift:TShiftState;X,Y:Integer);override;
+   procedure MouseUp(Button:TMouseButton;Shift:TShiftState;X,Y:Integer);override;
+  published
+   property Onchange: TNotifyEvent read FOnChange write FOnChange;
+  end;
   { Tskinsbuildier }
 
   Tskinsbuildier = class(TForm)
@@ -20,6 +52,8 @@ type
     Button3: TButton;
     Button4: TButton;
     Button5: TButton;
+    Button6:TButton;
+    Button7:TButton;
     OnurCheckListBox1:TOnurCheckListBox;
     ONURMainMenu1:TONURMainMenu;
     ONURNavButton1: TONURNavButton;
@@ -40,7 +74,6 @@ type
     Label24: TLabel;
     Label25: TLabel;
     Label6: TLabel;
-    mainpicture: tbgravirtualscreen;
     odf: TOpenDialog;
     oncheckbox1: TONURcheckbox;
     ONColExpPanel1: TONURcollapexpandpanel;
@@ -69,7 +102,6 @@ type
     SpinEdit1: TSpinEdit;
     maxbut: TONURsystemButton;
     TreeView1: TTreeView;
-    zoomx: tbgravirtualscreen;
     label1: tlabel;
     label2: tlabel;
     label3: tlabel;
@@ -92,23 +124,25 @@ type
     panel4: tpanel;
     trackbar1: ttrackbar;
     procedure Button2Click(Sender: TObject);
+    procedure Button6Click(Sender:TObject);
+    procedure Button7Click(Sender:TObject);
     procedure ColorBox2Select(Sender: TObject);
     procedure ColorBox3Select(Sender: TObject);
     procedure formclose(Sender: TObject; var closeaction: tcloseaction);
     procedure formcreate(Sender: TObject);
+    procedure FormShow(Sender:TObject);
+    procedure ONProgressBar1MouseDown(Sender:TObject;Button:TMouseButton;Shift:
+      TShiftState;X,Y:Integer);
+    procedure ONProgressBar1MouseMove(Sender:TObject;Shift:TShiftState;X,Y:
+      Integer);
+    procedure ONProgressBar1MouseUp(Sender:TObject;Button:TMouseButton;Shift:
+      TShiftState;X,Y:Integer);
     procedure PropEditSelectCell(Sender: TObject; aCol, aRow: Integer;
       var CanSelect: Boolean);
     procedure infoeditSelectCell(Sender: TObject; aCol, aRow: integer;
       var CanSelect: boolean);
     procedure infoeditStringsChange(Sender: TObject);
     procedure infoeditTopLeftChanged(Sender: TObject);
-    procedure mainpicturemousedown(Sender: TObject; button: tmousebutton;
-      shift: tshiftstate; x, y: integer);
-    procedure mainpicturemousemove(Sender: TObject; shift: tshiftstate;
-      x, y: integer);
-    procedure mainpicturemouseup(Sender: TObject; button: tmousebutton;
-      shift: tshiftstate; x, y: integer);
-    procedure mainpictureredraw(Sender: TObject; bitmap: tbgrabitmap);
     procedure ONGraphicsButton2Click(Sender: TObject);
     procedure ONGraphicsButton3Click(Sender: TObject);
     procedure ONGraphicsButton4Click(Sender: TObject);
@@ -125,15 +159,10 @@ type
     procedure SpinEdit1Exit(Sender: TObject);
     procedure trackbar1change(Sender: TObject);
     procedure TreeView1Change(Sender: TObject; Node: TTreeNode);
-    procedure zoomxredraw(Sender: TObject; bitmap: tbgrabitmap);
+    procedure TreeView1Click(Sender:TObject);
   private
-
     procedure readdata(Ab: TONURCustomCrop);
-    //    procedure readskin;
-    procedure updatefrm;
-    //   procedure updateocustomcontrolu(aworkbook: tcontrol);
     procedure writedata(Ab: TONURCUSTOMCROP);
-    //    procedure writeskin;
     procedure zoomtimertimer;
   public
     objlist: TList;
@@ -147,16 +176,22 @@ type
 
 var
   skinsbuildier: Tskinsbuildier;
-  aktif, changeskininfo: boolean;
+  aktif, changeskininfo,
+  progressok : boolean;
   rectlange: Trect;
-  temp, mainimg, cropimg: TBGRABitmap;
+  mainimg, cropimg: TBGRABitmap;
   curPos: TPoint;
   skn: TIniFile;
   fselect : integer; // for propedit selected row
   notwriting:boolean; // for propedit save
+
+  mainscren:TOnurScreen;
+  zoomx:TOnurZoomScreen;
+
+
 implementation
 
-uses Variants;
+uses Variants,test,math;//,lazutf8;
 
 {$R *.lfm}
 
@@ -173,13 +208,11 @@ begin
     try
       myst.Delimiter     := ',';
       myst.DelimitedText := val;
-     { Crp.LEFT           := StrToIntDef(myst.Strings[0], 2);
-      Crp.TOP            := StrToIntDef(myst.Strings[1], 2);
-      Crp.RIGHT          := StrToIntDef(myst.Strings[2], 4);
-      Crp.BOTTOM         := StrToIntDef(myst.Strings[3], 4);
-      Crp.Fontcolor      := StringToColorDef(myst.Strings[4], clNone);
-      }
-       Crp.Croprect       := Rect(StrToIntDef(myst.Strings[0], 2),StrToIntDef(myst.Strings[1], 4),StrToIntDef(myst.Strings[2], 4),StrToIntDef(myst.Strings[3], 4));
+      Crp.Croprect.LEFT           := StrToIntDef(myst.Strings[0], 2);
+      Crp.Croprect.TOP            := StrToIntDef(myst.Strings[1], 2);
+      Crp.Croprect.RIGHT          := StrToIntDef(myst.Strings[2], 4);
+      Crp.Croprect.BOTTOM         := StrToIntDef(myst.Strings[3], 4);
+    //  Crp.Croprect       := Rect(StrToIntDef(myst.Strings[0], 2),StrToIntDef(myst.Strings[1], 4),StrToIntDef(myst.Strings[2], 4),StrToIntDef(myst.Strings[3], 4));
 
       if Crp.Croprect.IsEmpty then
       Crp.Croprect       := Rect(0,0,1,1);
@@ -190,6 +223,8 @@ begin
     end;
   end;
 end;
+
+
 
 
 procedure Tskinsbuildier.readdata(Ab: TONURCUSTOMCROP);
@@ -210,9 +245,8 @@ begin
   rectlange.left       := ab.Croprect.Left;
   rectlange.Right      := ab.Croprect.Right;
   rectlange.top        := ab.Croprect.top;
-  rectlange.bottom     := ab.Croprect.bottom;
-  mainpicture.RedrawBitmap;
-
+  rectlange.bottom     := ab.Croprect.bottom; //mainpicture.DiscardBitmap;
+  mainscren.PutImage(0,0,mainimg);
 end;
 
 function croptostring(Crp: TONURCUSTOMCROP): string;
@@ -274,10 +308,30 @@ begin
   end;
 end;
 
+
+
+
+
+
+procedure Tskinsbuildier.Button6Click(Sender:TObject);
+begin
+testfrm :=Ttestfrm.Create(self);
+//  testfrm.Parent:=Formpanel;
+  testfrm.ShowModal;
+end;
+
+procedure Tskinsbuildier.Button7Click(Sender:TObject);
+var
+  i:Integer;
+begin
+for i:=0 to 350 do
+oNListBox1.items.add('ITEMS '+inttostr(i));
+end;
+
 procedure Tskinsbuildier.SpinEdit1Change(Sender: TObject);
 begin
-  infoedit.Cells[infoedit.Selection.Left, infoedit.Selection.Top] :=
-    IntToStr(SpinEdit1.Value);
+//  infoedit.Cells[infoedit.Selection.Left, infoedit.Selection.Top] :=  IntToStr(SpinEdit1.Value);
+infoedit.Cells[1,8]:=IntToStr(SpinEdit1.Value);
 end;
 
 procedure Tskinsbuildier.SpinEdit1Exit(Sender: TObject);
@@ -287,16 +341,22 @@ end;
 
 procedure Tskinsbuildier.ColorBox3Select(Sender: TObject);
 begin
-    infoedit.Cells[infoedit.Selection.Left, infoedit.Selection.Top] :=
-    ColorToString(colorbox3.Selected);
+//    infoedit.Cells[infoedit.Selection.Left, infoedit.Selection.Top] :=
+ //   ColorToString(colorbox3.Selected);
 //  Button2Click(self);
+ // colorbox3.Visible := False;
+
+   //   infoedit.Cells[infoedit.Selection.Left, infoedit.Selection.Top] :=
+//    ColorToString(colorbox3.Selected);
+//  Button2Click(self);
+  infoedit.Cells[1,7]:= ColorToString(colorbox3.Selected);
   colorbox3.Visible := False;
 end;
 
 procedure Tskinsbuildier.ColorBox2Select(Sender: TObject);
 begin
-   PropEdit.Cells[PropEdit.Selection.Left, PropEdit.Selection.Top] :=
-    ColorToString(colorbox2.Selected);
+   PropEdit.Cells[1,6]:=  ColorToString(colorbox2.Selected);
+  // PropEdit.Cells[PropEdit.Selection.Left, PropEdit.Selection.Top] := ColorToString(colorbox2.Selected);
 //  Button2Click(self);
 // colorbox2.Visible := False;
 end;
@@ -324,9 +384,12 @@ begin
     SpinEdit1.Top := infoedit.Top + crect.Top;
     SpinEdit1.Left := infoedit.Left + crect.Left;
     SpinEdit1.Width := crect.Right - crect.Left;
-    //SpinEdit1.Value := strtoint(infoedit.Cells[ACol,ARow]);
+    if Length(infoedit.Cells[1,8])>0 then
+    SpinEdit1.Value := strtoint(infoedit.Cells[1,8]);
     SpinEdit1.Visible := True;
-    infoedit.ItemProps['OPACITY'].ReadOnly := True;
+    //infoedit.ItemProps['OPACITY'].ReadOnly := True;
+    //infoedit.ItemProps[8].ReadOnly:=true;
+    //SpinEdit1.Value := strtoint(infoedit.Cells[ACol,ARow]);
   end
   else
   begin
@@ -336,8 +399,8 @@ begin
 end;
 
 procedure Tskinsbuildier.infoeditStringsChange(Sender: TObject);
-var
-  a: integer;
+//var
+//  a: integer;
 begin
 
   if changeskininfo = True then
@@ -422,28 +485,46 @@ end;
 
 procedure Tskinsbuildier.formclose(Sender: TObject; var closeaction: tcloseaction);
 begin
+  FreeAndNil(zoomx);
+  FreeAndNil(mainscren);
+
   //  writeskin;
   FreeAndNil(mainimg);
-  FreeAndNil(temp);
+//  FreeAndNil(tempimg);
   FreeAndNil(cropimg);
 
 end;
 
 procedure Tskinsbuildier.formcreate(Sender: TObject);
+begin
+  ONImg1.formactive(false);
+  aktif            := False;
+  mainimg          := TBGRABitmap.Create(1920, 1080);
+  cropimg          := TBGRABitmap.Create(10, 10);
+
+  mainscren        := TOnurScreen.Create(self);
+  mainscren.Parent := ScrollBox1;
+  mainscren.Left   := 0;
+  mainscren.Top    := 0;
+  mainscren.Width  := 1920;
+  mainscren.Height := 1080;
+  mainscren.Cursor := crCross;
+
+  zoomx            := TOnurZoomScreen.create(self);
+  zoomx.parent     := Panel3;
+  zoomx.Width      := 250;
+  zoomx.Height     := 250;
+  zoomx.Align      := alBottom;
+
+
+end;
+
+procedure Tskinsbuildier.FormShow(Sender:TObject);
 var
   i, a: byte;
   rootNode, subnode: TTreeNode;
-
 begin
-  //FExpanded := [oleft, oright, otop, obottom, otopleft, otopright, obottomleft, obottomright, onormal, ohover, opress, odisable];
-//  ONImg1.formactive(false);//
-//  onimg1.Loadskin(ExtractFileDir(Application.ExeName)+'\darkskins.osf',false);
-  aktif   := False;
-  mainimg := TBGRABitmap.Create(mainpicture.Width, mainpicture.Height);
-  temp    := TBGRABitmap.Create(mainpicture.Width, mainpicture.Height);
-  cropimg := TBGRABitmap.Create(100, 100);
-  mainimg.Assign(ONImg1.Fimage);
-  mainpicture.RedrawBitmap;
+
 
 
   rootNode := TreeView1.Items.Add(nil, 'FORM');
@@ -718,73 +799,65 @@ begin
 
 
   for i := 0 to 4 do
-    for a := 0 to 200 do
-    begin
-    //  Oncolumlist1.Items.Add;
-      Oncolumlist1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);//Items[a].Cells[i] := 'TEST ' + i.ToString + ' X ' + a.ToString;
-      ONURStringGrid1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);
-
-    end;
- for i := 0 to 200 do
- begin
-  OnListBox1.items.add('TEST '+inttostr(i));
-  OnurCheckListBox1.items.add('TEST '+inttostr(i));
- end;
-
-end;
-
-
-
-
-
-
-procedure Tskinsbuildier.Updatefrm;
-begin
- { case RadioGroup1.ItemIndex of
-    0: oncrop := ONImg1.FTOPLEFT;
-    1: oncrop := ONImg1.FTOPRIGHT;
-    2: oncrop := ONImg1.FTOP;
-    3: oncrop := ONImg1.FBOTTOMLEFT;
-    4: oncrop := ONImg1.FBOTTOMRIGHT;
-    5: oncrop := ONImg1.FBOTTOM;
-    6: oncrop := ONImg1.FLEFT;
-    7: oncrop := ONImg1.FRIGHT;
-    8: oncrop := ONImg1.FCENTER;
-  end;
-  readdata(oncrop);
-  }
-end;
-
-
-
-
-procedure Tskinsbuildier.zoomTimerTimer;
-var
-  srcRect, fmrRect: TRect;
-  oo: integer;
-  img: TBGRACustomBitmap;
-begin
-  fmrRect := Rect(mainpicture.Left, mainpicture.Top, mainpicture.Left +
-    mainpicture.Width, mainpicture.Top + mainpicture.Height);
-
-  if PtInRect(fmrRect, curPos) then
+  for a := 0 to 200 do
   begin
-    oo      := trackbar1.Position;
-    srcRect := Rect(curPos.x - oo, curPos.y - oo, curPos.x + oo, curPos.y + oo);
+  //  Oncolumlist1.Items.Add;
+    Oncolumlist1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);//Items[a].Cells[i] := 'TEST ' + i.ToString + ' X ' + a.ToString;
+    ONURStringGrid1.Cells[i,a]:='TEST '+inttostr(i)+' -X- '+inttostr(a);
 
-    cropimg.SetSize(zoomx.Width, zoomx.Height);
-
-    img     := temp.GetPart(srcRect);
-    if img <> nil then
-    begin
-      img.ResampleFilter := rfBestQuality;
-      BGRAReplace(cropimg, img.Resample(zoomx.Width, zoomx.Height, rmSimpleStretch));
-    end;
-    FreeAndNil(img);
-    zoomx.RedrawBitmap;
   end;
 
-end;      //434 443 t 6 228     c 422 426 12 215  b 420 422 9 215   t 426 429 15 217
+  for i := 0 to 200 do
+  begin
+    OnListBox1.items.add('TEST '+inttostr(i));
+    OnurCheckListBox1.items.add('TEST '+inttostr(i));
+  end;
+
+
+  ONURStringGrid1.ColWidths[0]:=150;
+  ONURStringGrid1.ColWidths[1]:=50;
+  ONURStringGrid1.ColWidths[2]:=100;
+  ONURStringGrid1.ColWidths[3]:=250;
+  mainimg.Assign(ONImg1.Fimage);
+//  mainpicture.DiscardBitmap;
+  mainscren.PutImage(0,0,mainimg);
+
+
+  {
+  for i:=0 to self.ComponentCount-1 do
+  begin
+     if (Components[i] is TONURCustomControl)  then
+      TONURCustomControl(Components[i]).Skindata:=testfrm.ONImg1
+     else
+     if (Components[i] is TONURGraphicControl) then
+      TONURGraphicControl(Components[i]).Skindata:=testfrm.ONImg1;
+  end;
+ }
+end;
+
+procedure Tskinsbuildier.ONProgressBar1MouseDown(Sender:TObject;Button:
+  TMouseButton;Shift:TShiftState;X,Y:Integer);
+begin
+  progressok:=true;
+end;
+
+procedure Tskinsbuildier.ONProgressBar1MouseMove(Sender:TObject;Shift:
+  TShiftState;X,Y:Integer);
+begin
+if progressok=true then
+  begin
+    if TONURProgressBar(sender).Kind=oHorizontal then
+     TONURProgressBar(sender).Position:=abs(x-TONURProgressBar(sender).Width)
+    else
+     TONURProgressBar(sender).Position:=abs(y-TONURProgressBar(sender).Height);
+  end;
+end;
+
+procedure Tskinsbuildier.ONProgressBar1MouseUp(Sender:TObject;Button:
+  TMouseButton;Shift:TShiftState;X,Y:Integer);
+begin
+  progressok:=false;
+end;
 
 procedure Tskinsbuildier.trackbar1change(Sender: TObject);
 begin
@@ -796,7 +869,9 @@ procedure Tskinsbuildier.TreeView1Change(Sender: TObject; Node: TTreeNode);
 var
   s: string;
   i:integer;
+  y:TObject;
 begin
+
 
   if TreeView1.Selected.Level = 0 then
   begin
@@ -809,37 +884,16 @@ begin
      Tcontrol(Components[i]).visible:=false;
     end;
 
-    gg := Tcontrol(objlist[TreeView1.Selected.Index]);
-    gg.Visible := True;
-   { ONGraphicsButton1.Visible := False;
-    ONCropButton1.Visible := False;
-    ONPanel1.Visible := False;
-    onheaderpanel1.Visible := False;
-    onEdit1.Visible := False;
-    OnSpinEdit1.Visible := False;
-    ONcombobox1.Visible := False;
-    oNListBox1.Visible := False;
-    ONMemo1.Visible := False;
-    oNScrollBar1.Visible := False;
-    oNScrollBar2.Visible := False;
-    onswich1.Visible := False;
-    oncheckbox1.Visible := False;
-    onradiobutton1.Visible := False;
-    onprogressbar1.Visible := False;
-    onprogressbar2.Visible := False;
-    ontrackbar1.Visible := False;
-    ontrackbar2.Visible := False;
-    ONColExpPanel1.Visible := False;
-    Oncolumlist1.Visible := False;
-    ONlabel1.Visible := False;
-    ONLed1.Visible := False;
-    ONPageControl1.Visible := False;
-    ONKnob1.Visible := False;
-    maxbut.Visible:=false;
-    traybut.Visible:=false;
-    closebut.Visible:=false;
-    ONURStringGrid1.Visible:=false;
-    ONURContentSlider1.Visible:=false; }
+    if (TObject(objlist[TreeView1.Selected.Index]).ClassName<>'TONURMainMenu') and (TObject(objlist[TreeView1.Selected.Index]).ClassName<>'TONURPopupMenu') then
+    begin
+     gg := Tcontrol(objlist[TreeView1.Selected.Index]);
+     gg.Visible := True;
+    end else
+    begin
+    /// y:=TObject(objlist[TreeView1.Selected.Index]);
+    // gg:=Tcontrol(y as TONURMainMenu);
+   //  ShowMessage('OK');
+    end;
 
   end
   else
@@ -854,28 +908,26 @@ begin
       end
       else
       begin
-
-
-
         if gg is TONURGraphicControl then
         begin
           oncrop := TONURCUSTOMCROP(TONURGraphicControl(
             gg).Customcroplist[TreeView1.Selected.Index]);
           s := TONURGraphicControl(gg).Skinname;
-        end
-        else
-        if gg is TONURCustomControl then
+        end else
         begin
-          oncrop := TONURCUSTOMCROP(TONURCustomControl(gg).Customcroplist[TreeView1.Selected.Index]);
-          s := TONURCustomControl(gg).Skinname;
+          if gg is TONURCustomControl then
+          begin
+            oncrop := TONURCUSTOMCROP(TONURCustomControl(gg).Customcroplist[TreeView1.Selected.Index]);
+            s := TONURCustomControl(gg).Skinname;
+          end;
         end;
-
 
         if gg is TONURNavMenuButton then
         begin
           ONURNavButton1.Visible:=true;
           ONURNavButton2.Visible:=true;
         end;
+
         if gg is TONURPageControl then
         begin
           ONPage1.Visible:=true;
@@ -894,33 +946,51 @@ begin
       PropEdit.Keys[5]     := 'BOTTOM';
       PropEdit.Keys[6]     := 'FONTCOLOR';
       PropEdit.Cells[1, 1] := s;
-      PropEdit.Cells[1, 2] := IntToStr(oncrop.Croprect.Left);
-      PropEdit.Cells[1, 3] := IntToStr(oncrop.Croprect.top);
-      PropEdit.Cells[1, 4] := IntToStr(oncrop.Croprect.Right);
-      PropEdit.Cells[1, 5] := IntToStr(oncrop.Croprect.Bottom);
-      PropEdit.Cells[1, 6] := ColorToString(oncrop.Fontcolor);
-      rectlange.left       := oncrop.Croprect.Left;
-      rectlange.Right      := oncrop.Croprect.Right;
-      rectlange.top        := oncrop.Croprect.top;
-      rectlange.bottom     := oncrop.Croprect.bottom;
-      mainpicture.RedrawBitmap;
+
+
+      if oncrop.Croprect.Left>0 then
+      PropEdit.Cells[1, 2] := IntToStr(oncrop.Croprect.Left)
+      else
+      PropEdit.Cells[1, 2] := '0';
+
+       if oncrop.Croprect.top>0 then
+      PropEdit.Cells[1, 3] := IntToStr(oncrop.Croprect.top)
+      else
+      PropEdit.Cells[1, 3] := '0';
+
+       if oncrop.Croprect.Right>0 then
+      PropEdit.Cells[1, 4] := IntToStr(oncrop.Croprect.Right)
+      else
+      PropEdit.Cells[1, 4] := '0';
+
+      if oncrop.Croprect.Bottom>0 then
+      PropEdit.Cells[1, 5] := IntToStr(oncrop.Croprect.Bottom)
+      else
+      PropEdit.Cells[1, 5] := '0';
+
+      if ColorToString(oncrop.Fontcolor)<>'clnone' then
+      PropEdit.Cells[1, 6] := ColorToString(oncrop.Fontcolor)
+      else
+      PropEdit.Cells[1, 5] := 'clnone';
+
+      rectlange := oncrop.Croprect;
+      //mainpicture.DiscardBitmap;//RedrawBitmap;
+      mainscren.PutImage(0,0,mainimg);
       notwriting           := false;
+    end else
+    begin
+
+
     end;
+
   end;
 end;
 
-procedure Tskinsbuildier.mainpictureredraw(Sender: TObject; bitmap: tbgrabitmap);
+procedure Tskinsbuildier.TreeView1Click(Sender:TObject);
 begin
-  temp.SetSize(0, 0);
-  temp.SetSize(mainimg.Width, mainimg.Height);
-  temp.PutImage(0, 0, mainimg, dmSet);
-  temp.Canvas.Brush.Style := bsClear;
-  temp.Canvas.Pen.Style   := psDash;
-  temp.Canvas.Pen.Color   := clRed;
-  temp.Canvas.Pen.Width   := 1;
-  temp.Canvas.Rectangle(rectlange);
-  bitmap.PutImage(0, 0, temp, dmLinearBlend, 200);
+ TreeView1Change(sender,TreeView1.Selected);
 end;
+
 
 
 
@@ -931,7 +1001,7 @@ begin
     //image1.Picture.LoadFromFile(opd.FileName);
     mainimg.LoadFromFile(opd.FileName);
     ONImg1.Picture.LoadFromFile(opd.FileName);
-    mainpicture.RedrawBitmap;
+    mainscren.PutImage(0,0,mainimg);
   end;
 end;
 
@@ -939,6 +1009,9 @@ procedure Tskinsbuildier.ONGraphicsButton3Click(Sender: TObject);
 begin
   if odf.Execute then
   begin
+    rectlange.Width:=0;
+    rectlange.Height:=0;
+
     ONImg1.Loadskin(odf.FileName, False);
     changeskininfo := False;
     infoedit.Cells[1, 1] := ONImg1.Skinname;
@@ -950,9 +1023,12 @@ begin
     infoedit.Cells[1, 7] := ONImg1.MColor;
     infoedit.Cells[1, 8] := IntToStr(ONImg1.Opacity);
     changeskininfo := True;
+
     mainimg.Assign(ONImg1.Fimage);
-    mainpicture.RedrawBitmap;
-    Repaint;
+
+    mainscren.PutImage(0,0,mainimg);
+  //  mainpicture.DiscardBitmap;//RedrawBitmap;
+  //  Repaint;
   end;
 end;
 
@@ -960,8 +1036,8 @@ procedure Tskinsbuildier.ONGraphicsButton4Click(Sender: TObject);
 begin
   if sdf.Execute then
   begin
-    //  ONImg1.Readskinsfile(Extractfilepath(application.ExeName) + 'temp.ini');
     ONImg1.saveskin(sdf.FileName);
+    aktif := False;
   end;
 end;
 
@@ -987,86 +1063,188 @@ begin
   onled1.LedOn := not onled1.LedOn;
 end;
 
-procedure Tskinsbuildier.zoomxredraw(Sender: TObject; bitmap: tbgrabitmap);
-var
-  Xshift, Yshift: integer;
-  c: TBGRAPixel;
-begin
-  Xshift            := (zoomx.Width) div 2;
-  Yshift            := (zoomx.Height) div 2;
-  c                 := ColorToBGRA(ColorToRGB(ColorBox1.Selected));
-  cropimg.JoinStyle := pjsBevel;
-  cropimg.LineCap   := pecSquare;
-  cropimg.PenStyle  := psSolid;//psdot;
-  cropimg.DrawPolyLineAntialias(
-    [PointF(Xshift, Yshift - 20), PointF(Xshift, Yshift + 20),
-    PointF(Xshift, Yshift), PointF(Xshift - 20, Yshift),
-    PointF(Xshift + 20, Yshift)], c, 2);
 
-  bitmap.PutImage(0, 0, cropimg, dmLinearBlend{dmDrawWithTransparency}, 255);
+
+procedure Tskinsbuildier.zoomTimerTimer;
+var
+  srcRect: TRect;
+  oo: integer;
+begin
+  if PtInRect(mainscren.ClientRect, curPos) then
+  begin
+    cropimg.SetSize(0,0);
+    oo      := trackbar1.Position;
+    srcRect := Rect(curPos.x - oo, curPos.y - oo, curPos.x + oo, curPos.y + oo);
+    cropimg := mainscren.Bitmap.GetPart(srcRect);
+    BGRAReplace(cropimg, cropimg.Resample(zoomx.clientWidth, zoomx.clientHeight, rmSimpleStretch));
+    zoomx.PutImage(0,0,cropimg);
+  end;
 end;
 
-procedure Tskinsbuildier.mainpicturemousedown(Sender: TObject;
-  button: tmousebutton; shift: tshiftstate; x, y: integer);
+
+
+constructor TOnurScreen.Create(Aowner:TComponent);
 begin
+  inherited Create(Aowner);
+  parent             := TWinControl(Aowner);
+  ControlStyle       := ControlStyle + [csClickEvents, csCaptureMouse,
+    csDoubleClicks, csParentBackground];
+  Width   := 1920;
+  Height  := 1080;
+  fbitmap := TBGRABitmap.Create(self.Width,self.Height);
+end;
+
+destructor TOnurScreen.Destroy;
+begin
+   FreeAndNil(fbitmap);
+  inherited Destroy;
+end;
+
+procedure TOnurScreen.paint;
+begin
+  inherited paint;
+  fBitmap.Draw(canvas,0,0,false);
+end;
+
+procedure TOnurScreen.PutImage(x,y:integer;a:Tbgrabitmap);
+var
+checkersSize:integer;
+begin
+  fBitmap.SetSize(0,0);
+  fBitmap.SetSize(Width,Height);
+  checkersSize :=6;
+  fBitmap.DrawCheckers(rect(floor(self.Left), floor(Top),
+          ceil(Width), ceil(Height)), CSSWhite, CSSSilver,
+          checkersSize, checkersSize);
+
+
+
+  fBitmap.PutImage(0, 0, a, dmLinearBlend, 255);
+  if (rectlange.Width>0) and (rectlange.Height>0) then
+  begin
+   fbitmap.PenStyle := psDot;  //bitmap.Canvas.Rectangle(rectlange);
+   fBitmap.RectangleWithin(rectlange,CSSRed,1,BGRAPixelTransparent);
+  end;
+
+  Invalidate;
+end;
+
+procedure TOnurScreen.MouseDown(Button:TMouseButton;Shift:TShiftState;X,Y:
+  Integer);
+begin
+  inherited MouseDown(Button,Shift,X,Y);
   if (button = mbleft) then
   begin
     rectlange.left := x;
     rectlange.Top  := y;
     aktif          := True;
   end;
+
 end;
 
-procedure Tskinsbuildier.mainpicturemousemove(Sender: TObject;
-  shift: tshiftstate; x, y: integer);
+procedure TOnurScreen.MouseMove(Shift:TShiftState;X,Y:Integer);
 begin
+  inherited MouseMove(Shift,X,Y);
   curPos         := Point(x, y);
-  label6.Caption := 'X= ' + IntToStr(x) + ' --  Y=' + IntToStr(y);
+  skinsbuildier.label6.Caption := 'X= ' + IntToStr(x) + ' --  Y=' + IntToStr(y);
 
   if (aktif) then
   begin
     rectlange.Right  := x;
     rectlange.Bottom := y;
-    mainpicture.RedrawBitmap;
+    PutImage(0,0,mainimg);
   end;
-
-  zoomTimerTimer;
+ skinsbuildier.zoomTimerTimer;
 end;
 
-procedure Tskinsbuildier.mainpicturemouseup(Sender: TObject;
-  button: tmousebutton; shift: tshiftstate; x, y: integer);
-//var
-//  i:integer;
+procedure TOnurScreen.MouseUp(Button:TMouseButton;Shift:TShiftState;X,Y:Integer);
 begin
+  inherited MouseUp(Button,Shift,X,Y);
+
   aktif := False;
   rectlange.Right := x;
   rectlange.Bottom := y;
 
   if x<rectlange.left then
-  begin
    rectlange:= Rect(x,rectlange.top,rectlange.left,rectlange.bottom);
-   //i:=rectlange.left;
-  // rectlange.left:=rectlange.Right;
-  // rectlange.Right:=i;
-  end;
+
   if y<rectlange.top then
-  begin
    rectlange:= Rect(rectlange.left,y,rectlange.Right,rectlange.top);
-   //i:=rectlange.left;
-  // rectlange.left:=rectlange.Right;
-  // rectlange.Right:=i;
+
+  //if changeskininfo = False Then exit;
+
+  PutImage(0,0,mainimg);
+
+
+  if (rectlange.Width>0) and (rectlange.Height>0)  then
+  begin
+  //  if TreeView1.Selected.Level < 0 then   exit;
+    skinsbuildier.PropEdit.Cells[1, 2] := IntToStr(rectlange.Left);
+    skinsbuildier.PropEdit.Cells[1, 3] := IntToStr(rectlange.top);
+    skinsbuildier.PropEdit.Cells[1, 4] := IntToStr(rectlange.Right);
+    skinsbuildier.PropEdit.Cells[1, 5] := IntToStr(rectlange.bottom);
   end;
+  aktif := False;
+end;
 
+constructor TOnurZoomScreen.Create(Aowner:TComponent);
+begin
+  inherited Create(Aowner);
+  parent             := TWinControl(Aowner);
+  ControlStyle       := ControlStyle + [csClickEvents, csCaptureMouse,
+    csDoubleClicks, csParentBackground];
+  Width:=250;
+  Height:=250;
+  fbitmap:=TBGRABitmap.Create(self.Width,self.Height);
+end;
 
+destructor TOnurZoomScreen.Destroy;
+begin
+  FreeAndNil(fbitmap);
+  inherited Destroy;
+end;
 
-  mainpicture.RedrawBitmap;
-  PropEdit.Cells[1, 2] := IntToStr(rectlange.Left);
-  PropEdit.Cells[1, 3] := IntToStr(rectlange.top);
-  PropEdit.Cells[1, 4] := IntToStr(rectlange.Right);
-  PropEdit.Cells[1, 5] := IntToStr(rectlange.bottom);
+procedure TOnurZoomScreen.paint;
+begin
+ inherited paint;
+ fBitmap.Draw(canvas,0,0,false);
+end;
 
-  //if list.Row>0 then
-  //UpdateOcustomControlu(gg, rectlange);
+procedure TOnurZoomScreen.PutImage(x,y:integer;a:Tbgrabitmap);
+var
+  Xshift, Yshift: integer;
+  c: TBGRAPixel;
+begin
+ Xshift            := (Width) div 2;
+ Yshift            := (Height) div 2;
+ c                 := ColorToBGRA(skinsbuildier.ColorBox1.Selected);//ColorToRGB(ColorBox1.Selected));
+ cropimg.PenStyle  := psSolid;//psdot;
+ cropimg.DrawPolyLineAntialias(
+    [PointF(Xshift, Yshift - 20), PointF(Xshift, Yshift + 20),
+    PointF(Xshift, Yshift), PointF(Xshift - 20, Yshift),
+    PointF(Xshift + 20, Yshift)], c, 2);
+
+ fBitmap.SetSize(0,0);
+ fBitmap.SetSize(a.Width,a.Height);
+ fBitmap.PutImage(0, 0, a, dmLinearBlend, 255);
+ Invalidate;
+end;
+
+procedure TOnurZoomScreen.MouseDown(Button:TMouseButton;Shift:TShiftState;X,Y:
+  Integer);
+begin
+  inherited MouseDown(Button,Shift,X,Y);
+end;
+
+procedure TOnurZoomScreen.MouseMove(Shift:TShiftState;X,Y:Integer);
+begin
+  inherited MouseMove(Shift,X,Y);
+end;
+
+procedure TOnurZoomScreen.MouseUp(Button:TMouseButton;Shift:TShiftState;X,Y:
+  Integer);
+begin
+  inherited MouseUp(Button,Shift,X,Y);
 end;
 
 
