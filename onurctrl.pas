@@ -2086,10 +2086,6 @@ begin
 end;
 
 
-
-
-
-
 // -----------------------------------------------------------------------------
 { TONURGraphicControl }
 // -----------------------------------------------------------------------------
@@ -2444,8 +2440,6 @@ begin
         FreeAndNil(a);
       end;
     end;
-
-
   end
   else
   begin
@@ -2476,9 +2470,8 @@ begin
 inherited Resize;
   if Skindata <> nil then SetSkindata(Skindata);
 //  inherited Resize;
-//  Writeln('CUSTOM CONTROL RESİZE');
+//  Writeln('CUSTOM CONTROL RESIZE');
 //  if Skindata <> nil then SetSkindata(Skindata);
-
 end;
 
 

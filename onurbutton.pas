@@ -2637,15 +2637,15 @@ begin
   DrawPartnormal(FNormalb.Croprect,FBGNormal,skindata.Fimage,b,alpha);
   DrawPartnormal(FNormalBr.Croprect,FBGNormal,skindata.Fimage,br,alpha);
 
-  DrawPartstrechRegion(FNormalL.Croprect,FBGNormal,self.skindata.Fimage,FNormalL.Croprect.Width,ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),l,alpha);
-  DrawPartstrechRegion(FNormalR.Croprect,FBGNormal,self.skindata.Fimage,FNormalR.Croprect.Width,ClientHeight-(FNormalTR.Croprect.Height+FNormalBR.Croprect.Height),r,alpha);
-  DrawPartstrechRegion(FNormalC.Croprect,FBGNormal,self.skindata.Fimage,ClientWidth-(FNormalL.Croprect.Width+FNormalR.Croprect.Width),ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),c,alpha);
+//  DrawPartstrechRegion(FNormalL.Croprect,FBGNormal,self.skindata.Fimage,FNormalL.Croprect.Width,ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),l,alpha);
+//  DrawPartstrechRegion(FNormalR.Croprect,FBGNormal,self.skindata.Fimage,FNormalR.Croprect.Width,ClientHeight-(FNormalTR.Croprect.Height+FNormalBR.Croprect.Height),r,alpha);
+//  DrawPartstrechRegion(FNormalC.Croprect,FBGNormal,self.skindata.Fimage,ClientWidth-(FNormalL.Croprect.Width+FNormalR.Croprect.Width),ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),c,alpha);
 
- // DrawPartnormal(FNormalL.Croprect,FBGNormal,skindata.Fimage,l,alpha);
- // DrawPartnormal(FNormalR.Croprect,FBGNormal,skindata.Fimage,r,alpha);
- // DrawPartnormal(FNormalC.Croprect,FBGNormal,skindata.Fimage,c,alpha);
+  DrawPartnormal(FNormalL.Croprect,FBGNormal,skindata.Fimage,l,alpha);
+  DrawPartnormal(FNormalR.Croprect,FBGNormal,skindata.Fimage,r,alpha);
+  DrawPartnormal(FNormalC.Croprect,FBGNormal,skindata.Fimage,c,alpha);
 
- // BGRAReplace(FBGNormal,FBGNormal.Resample(clientWidth,clientHeight));
+  BGRAReplace(FBGNormal,FBGNormal.Resample(clientWidth,clientHeight));
 
 
 
@@ -2668,11 +2668,8 @@ begin
   DrawPartnormal(FHoverbL.Croprect,FBGHover,skindata.Fimage,bl,alpha);
   DrawPartnormal(FHoverb.Croprect,FBGHover,skindata.Fimage,b,alpha);
   DrawPartnormal(FHoverBr.Croprect,FBGHover,skindata.Fimage,br,alpha);
-
   DrawPartnormal(FHoverL.Croprect,FBGHover,skindata.Fimage,l,alpha);
   DrawPartnormal(FHoverR.Croprect,FBGHover,skindata.Fimage,r,alpha);
-
-
   DrawPartnormal(FHoverC.Croprect,FBGHover,skindata.Fimage,c,alpha);
 
   BGRAReplace(FBGHover,FBGHover.Resample(clientWidth,clientHeight));
@@ -4307,26 +4304,31 @@ end;
 
 procedure TONURCheckbox.CMHittest(var msg: TCMHIttest);
 begin
-  inherited;
+ { inherited;
   if PtInRegion(CreateRectRgn(0, 0, self.Width, self.Height), msg.XPos, msg.YPos) then
     msg.Result := HTCLIENT
   else
-    msg.Result := HTNOWHERE;
+    msg.Result := HTNOWHERE; }
 end;
 
 constructor TONURCheckbox.Create(AOwner: TComponent);
 begin
   inherited Create(aowner);
-  skinname      := 'checkbox';
-  fcheckwidth   := 12;
+  skinname          := 'checkbox';
+  fcheckwidth       := 12;
   fcaptiondirection := ocright;
-  obenter       := TONURCUSTOMCROP.Create('NORMALHOVER');
-  obleave       := TONURCUSTOMCROP.Create('NORMAL');
-  obdown        := TONURCUSTOMCROP.Create('PRESSED');
-  obcheckleaves := TONURCUSTOMCROP.Create('CHECK');
-  obcheckenters := TONURCUSTOMCROP.Create('CHECKHOVER');
-  obdisableoff  := TONURCUSTOMCROP.Create('DISABLENORMAL');
-  obdisableon   := TONURCUSTOMCROP.Create('DISABLECHECK');
+  Fstate            := obsnormal;
+  FChecked          := False;
+  Captionvisible    := False;
+  textx             := 10;
+  Texty             := 10;
+  obenter           := TONURCUSTOMCROP.Create('NORMALHOVER');
+  obleave           := TONURCUSTOMCROP.Create('NORMAL');
+  obdown            := TONURCUSTOMCROP.Create('PRESSED');
+  obcheckleaves     := TONURCUSTOMCROP.Create('CHECK');
+  obcheckenters     := TONURCUSTOMCROP.Create('CHECKHOVER');
+  obdisableoff      := TONURCUSTOMCROP.Create('DISABLENORMAL');
+  obdisableon       := TONURCUSTOMCROP.Create('DISABLECHECK');
 
 
 
@@ -4339,11 +4341,7 @@ begin
   Customcroplist.Add(obdisableoff);
 
 
-  Fstate := obsnormal;
-  FChecked := False;
-  Captionvisible := False;
-  textx:=10;
-  Texty:=10;
+
 end;
 
 destructor TONURCheckbox.Destroy;
@@ -4438,6 +4436,8 @@ begin
 
 
 
+
+
     case fCaptionDirection of
       ocup:
       begin
@@ -4470,14 +4470,9 @@ begin
         fbuttoncenter := (self.clientHeight div 2) - (fcheckwidth div 2);
         Fclientrect := Rect(0, fbuttoncenter, fcheckwidth, fbuttoncenter + fcheckwidth);
       end;
-
     end;
+
     DrawPartnormal(DR, Self, Fclientrect, alpha);
-
-
-
-
-
   end
   else
   begin
