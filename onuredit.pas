@@ -72,6 +72,7 @@ type
     FHintTextStyle: TFontStyles;
 
 
+    procedure DrawText(a:TBGRABitmap);
     function GetCaretPos: TPoint;
     function getcharcase: ToCharCase;
     function getcurrentline: string;
@@ -358,6 +359,7 @@ type
 
   TONUREdit = class(TONURCustomEdit)
   private
+    fback,fhback:TBGRABitmap;
     Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
     FTop, FBottom, FCenter: TONURCUSTOMCROP;
     Fhleft, FhTopleft, FhBottomleft, FhRight, FhTopRight, FhBottomRight,
@@ -698,7 +700,7 @@ begin
   Result := Round(Abs(GetFontData(Control.Font.Handle).Height) * 72 / Control.Font.PixelsPerInch) + IncAmount;
 end;
 
-function VisibleText(const aVisibleText: TCaption; const APasswordChar: char): TCaption;
+function VisibleText(const aVisibleText: string; const APasswordChar: char): string;
 begin
   if aPasswordChar = #0 then
     Result := aVisibleText
@@ -752,10 +754,85 @@ begin
   inherited Destroy;
 end;
 
+procedure TONURCustomEdit.DrawText(a:TBGRABitmap);
+var
+
+  caretrect: Trect;
+  lTextLeftSpacing,lTextRightSpacing,
+  lTextBottomSpacing, lTextTopSpacing,lTextCenter:integer;
+  lTextCenterSp: integer;
+
+  TextWidth: Integer;
+  X1, X2: Integer;
+  DrawCaretX: Integer;
+  NewText:string;
+begin
+  NewText:=Text;
+
+    if Fcharcase=ecUppercase then
+     NewText:=UTF8UpperString(NewText)
+    else
+     NewText:=UTF8LowerCase(NewText);
+
+    NewText:=VisibleText(NewText,FPasswordChar);
+
+    TextWidth := GetTextWidthCache(EPaintCache.TEXT, Copy(NewText, 1, FCarets.CaretPos.x))+lTextRightSpacing;
+
+
+    if (TextWidth >ClientWidth-(lTextLeftSpacing+lTextRightSpacing)) then //-(lTextRightSpacing)) then
+     FDrawOffsetX := -((TextWidth) - GetAvailableWidth())
+    else
+     FDrawOffsetX := lTextLeftSpacing;
+
+    // Selection
+    if HasSelection() then
+    begin
+      if (FSelectingStartX.x > FSelectingEndX.x) then
+      begin
+        X1 := FSelectingEndX.x;
+        X2 := FSelectingStartX.x;
+      end else
+      if (FSelectingStartX.x < FSelectingEndX.x) then
+      begin
+        X1 := FSelectingStartX.x;
+        X2 := FSelectingEndX.x;
+      end else
+      begin
+        X1 := FSelectingStartX.x;
+        X2 := FSelectingStartX.x + 1;
+      end;
+
+      X1 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_START, Copy(NewText, 1, FSelectingStartX.x));
+      X2 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_END,   Copy(NewText, 1, FSelectingEndX.x));
+
+//      a.Canvas.Brush.Color := clblue;//FColorSelection;
+//      a.Canvas.FillRect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing);
+      a.FillRect(Rect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing),CSSBlue);
+    end;
+
+    yaziyazBGRA(a.CanvasBGRA,self.font,Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing),NewText,self.Alignment);
+
+    if Fcarets.visible then
+    begin
+      if (Text = '') then
+       DrawCaretX := lTextLeftSpacing  //TONURCustomCrop(self.Customcroplist[6]).Width
+      else
+       DrawCaretX := (FDrawOffsetX + (TextWidth-lTextLeftSpacing));// - 1;
+
+
+
+      caretrect:=Rect( DrawCaretX, lTextTopSpacing, DrawCaretX+FCarets.Width, ClientHeight-lTextBottomSpacing );
+
+  //    self.Skindata.Fimage.canvas.Brush.Color := FCarets.Color;     //color or image
+  //    self.Skindata.Fimage.canvas.FillRect(caretrect);
+      a.FillRect(caretrect,ColorToBGRA(FCarets.Color),dmset);
+    end;
+
+end;
 
 procedure TONURCustomEdit.Paint;
 var
-  //  gradienrect1, gradienrect2, Selrect,
+
   caretrect: Trect;
   lTextLeftSpacing,lTextRightSpacing,
   lTextBottomSpacing, lTextTopSpacing,lTextCenter:integer;
@@ -771,19 +848,15 @@ begin
     Exit;
   if not Visible then Exit;
 
-  inherited Paint;
+  DrawText(self.resim);
 
+  //inherited Paint;
+ {
   lTextTopSpacing    := TONURCustomCrop(self.Customcroplist[1]).Croprect.Height;
   lTextBottomSpacing := TONURCustomCrop(self.Customcroplist[4]).Croprect.Height;
   lTextLeftSpacing   := TONURCustomCrop(self.Customcroplist[6]).Croprect.Width;
   lTextRightSpacing  := TONURCustomCrop(self.Customcroplist[7]).Croprect.Width;
-//  lTextCenter        := TONURCustomCrop(self.Customcroplist[8]).Croprect.Height;
 
- // WriteLn(lTextTopSpacing,'---',lTextBottomSpacing);
- { if Lines.Count = 0 then lControlText := ''
-  else
-    lControlText := Lines.Strings[Fcarets.CaretPos.Y];
-}
 
 
  if (Text <> '') then
@@ -798,9 +871,6 @@ begin
     NewText:=VisibleText(NewText,FPasswordChar);
 
 
-
- //   WriteLn(Canvas.TextWidth(NewText),'  ',Canvas.TextFitInfo(NewText,ClientWidth ),'  ',GetTextWidthCache(EPaintCache.TEXT, Copy(NewText, 1, FCarets.CaretPos.x)));
-  //  TextWidth := Canvas.TextWidth(NewText)+lTextRightSpacing;//
 
     TextWidth := GetTextWidthCache(EPaintCache.TEXT, Copy(NewText, 1, FCarets.CaretPos.x))+lTextRightSpacing;
 
@@ -835,15 +905,19 @@ begin
       X1 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_START, Copy(NewText, 1, FSelectingStartX.x));
       X2 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_END,   Copy(NewText, 1, FSelectingEndX.x));
 
-      Canvas.Brush.Color := clblue;//FColorSelection;
-      Canvas.FillRect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing);
+      self.Skindata.Fimage.Canvas.Brush.Color := clblue;//FColorSelection;
+      self.Skindata.Fimage.Canvas.FillRect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing);
     end;
+   }
+//    self.Skindata.Fimage.
 
-    Canvas.TextRect(Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, lTextTopSpacing, newText);
+//    yaziyazBGRA(self.Skindata.Fimage.CanvasBGRA,self.font,Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing),NewText,self.Alignment);
+
+   // Canvas.TextRect(Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, lTextTopSpacing, newText);
   //Canvas.TextRect(Rect(lTextLeftSpacing,lTextCenter-lTextCenterSp, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing), FDrawOffsetX, 1, newText);
 
 //  canvas.TextRect(ClientRect, FDrawOffsetX, lTextTopSpacing, newText);
-  end;
+ // end;
 
 
 
@@ -851,23 +925,27 @@ begin
 {  caretrect := Rect(lCaretPixelPos, lLineTop, lCaretPixelPos +
     FCarets.Width, lLineTop + lCaptionHeight);
  }
-  if (Text = '') then
-    DrawCaretX := lTextLeftSpacing//TONURCustomCrop(self.Customcroplist[6]).Width
-  else
-   DrawCaretX := (FDrawOffsetX + (TextWidth-lTextLeftSpacing));// - 1;
 
 
-
- caretrect:=Rect( DrawCaretX, lTextTopSpacing, DrawCaretX+FCarets.Width, ClientHeight-lTextBottomSpacing );
-
-
+ {
 
   if Fcarets.visible then
   begin
-    canvas.Brush.Color := FCarets.Color;     //color or image
-    canvas.FillRect(caretrect);
+    if (Text = '') then
+     DrawCaretX := lTextLeftSpacing  //TONURCustomCrop(self.Customcroplist[6]).Width
+    else
+     DrawCaretX := (FDrawOffsetX + (TextWidth-lTextLeftSpacing));// - 1;
+
+
+
+    caretrect:=Rect( DrawCaretX, lTextTopSpacing, DrawCaretX+FCarets.Width, ClientHeight-lTextBottomSpacing );
+
+    self.Skindata.Fimage.canvas.Brush.Color := FCarets.Color;     //color or image
+    self.Skindata.Fimage.canvas.FillRect(caretrect);
   end;
 
+   }
+  inherited Paint;
 end;
 
 
@@ -1618,6 +1696,7 @@ constructor TONUREdit.Create(AOwner: TComponent);
 begin
  inherited Create(AOwner);
  skinname              := 'edit';
+
  FTop                  := TONURCUSTOMCROP.Create('TOP');
  FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
  FCenter               := TONURCUSTOMCROP.Create('CENTER');
@@ -1658,22 +1737,26 @@ begin
   Customcroplist.Add(FhRight);
   Customcroplist.Add(FhCenter);
 
-  Self.Height    := 30;
-  Self.Width     := 80;
+  Self.Height        := 30;
+  Self.Width         := 80;
   resim.SetSize(Width, Height);
-  Captionvisible := False;
-  fState         := obsnormal;
+  fback              := TBGRABitmap.Create(Width,Height);
+  fhback             := TBGRABitmap.create(Width,Height);
+  Captionvisible     := False;
+  fState             := obsnormal;
 end;
 
 destructor TONUREdit.Destroy;
 var
   i: byte;
 begin
+
   for i := 0 to Customcroplist.Count - 1 do
     TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
 
   Customcroplist.Clear;
-
+  FreeAndNil(fback);
+  FreeAndNil(fhback);
   inherited Destroy;
 end;
 
@@ -1692,29 +1775,80 @@ end;
 
 procedure TONUREdit.Resizing;
 begin
-  FTopleft.Targetrect := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
-  FTopRight.Targetrect := Rect(self.clientWidth - FTopRight.Croprect.Width,
-    0, self.clientWidth, FTopRight.Croprect.Height);
-  ftop.Targetrect := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -
-    FTopRight.Croprect.Width, FTop.Croprect.Height);
-  FBottomleft.Targetrect := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,
-    FBottomleft.Croprect.Width, self.ClientHeight);
-  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width,
-    self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
-  FBottom.Targetrect := Rect(FBottomleft.Croprect.Width, self.clientHeight -
-    FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
-  Fleft.Targetrect := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width,
-    self.clientHeight - FBottomleft.Croprect.Height);
-  FRight.Targetrect := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height,
-    self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
-  FCenter.Targetrect := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth -
-    FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
+  FTopleft.Targetrect     := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Croprect.Width, 0, self.clientWidth, FTopRight.Croprect.Height);
+  ftop.Targetrect         := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -  FTopRight.Croprect.Width, FTop.Croprect.Height);
+  FBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,FBottomleft.Croprect.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width,self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect      := Rect(FBottomleft.Croprect.Width, self.clientHeight - FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+  Fleft.Targetrect        := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width, self.clientHeight - FBottomleft.Croprect.Height);
+  FRight.Targetrect       := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height, self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+  FCenter.Targetrect      := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth - FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
+
+  FBack.SetSize(0, 0);
+  FBack.SetSize(self.ClientWidth, self.ClientHeight);
+
+  //ORTA CENTER
+  DrawPartnormal(FCenter.Croprect,FBack,Skindata.fimage, fcenter.Targetrect, alpha);
+  //SOL ÜST TOPLEFT
+  DrawPartnormal(FTopleft.Croprect, FBack,Skindata.fimage, FTopleft.Targetrect, alpha);
+  //SAĞ ÜST TOPRIGHT
+  DrawPartnormal(FTopRight.Croprect, FBack,Skindata.fimage, FTopRight.Targetrect, alpha);
+  //UST TOP
+  DrawPartnormal(FTop.Croprect, FBack,Skindata.fimage,FTop.Targetrect, alpha);
+  // SOL ALT BOTTOMLEFT
+  DrawPartnormal(FBottomleft.Croprect, FBack,Skindata.fimage,FBottomleft.Targetrect, alpha);
+  //SAĞ ALT BOTTOMRIGHT
+  DrawPartnormal(FBottomRight.Croprect, FBack,Skindata.fimage, FBottomRight.Targetrect, alpha);
+  //ALT BOTTOM
+  DrawPartnormal(FBottom.Croprect, FBack,Skindata.fimage, FBottom.Targetrect, alpha);
+  // SOL ORTA CENTERLEFT
+  DrawPartnormal(Fleft.Croprect, FBack,Skindata.fimage, Fleft.Targetrect, alpha);
+  // SAĞ ORTA CENTERRIGHT
+  DrawPartnormal(FRight.Croprect, FBack,Skindata.fimage, FRight.Targetrect, alpha);
+
+
+
+
+  FhTopleft.Targetrect     := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FhTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Croprect.Width, 0, self.clientWidth, FTopRight.Croprect.Height);
+  fhtop.Targetrect         := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -  FTopRight.Croprect.Width, FTop.Croprect.Height);
+  FhBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,FBottomleft.Croprect.Width, self.ClientHeight);
+  FhBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width,self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+  FhBottom.Targetrect      := Rect(FBottomleft.Croprect.Width, self.clientHeight - FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+  Fhleft.Targetrect        := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width, self.clientHeight - FBottomleft.Croprect.Height);
+  FhRight.Targetrect       := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height, self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+  FhCenter.Targetrect      := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth - FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
+
+  FhBack.SetSize(0, 0);
+  FhBack.SetSize(self.ClientWidth, self.ClientHeight);
+
+  //ORTA CENTER
+  DrawPartnormal(FhCenter.Croprect,FhBack,Skindata.fimage, fhcenter.Targetrect, alpha);
+  //SOL ÜST TOPLEFT
+  DrawPartnormal(FhTopleft.Croprect, FhBack,Skindata.fimage, FhTopleft.Targetrect, alpha);
+  //SAĞ ÜST TOPRIGHT
+  DrawPartnormal(FhTopRight.Croprect, FhBack,Skindata.fimage, FhTopRight.Targetrect, alpha);
+  //UST TOP
+  DrawPartnormal(FhTop.Croprect, FhBack,Skindata.fimage,FhTop.Targetrect, alpha);
+  // SOL ALT BOTTOMLEFT
+  DrawPartnormal(FhBottomleft.Croprect, FhBack,Skindata.fimage,FhBottomleft.Targetrect, alpha);
+  //SAĞ ALT BOTTOMRIGHT
+  DrawPartnormal(FhBottomRight.Croprect, FhBack,Skindata.fimage, FhBottomRight.Targetrect, alpha);
+  //ALT BOTTOM
+  DrawPartnormal(FhBottom.Croprect, FhBack,Skindata.fimage, FhBottom.Targetrect, alpha);
+  // SOL ORTA CENTERLEFT
+  DrawPartnormal(Fhleft.Croprect, FhBack,Skindata.fimage, Fhleft.Targetrect, alpha);
+  // SAĞ ORTA CENTERRIGHT
+  DrawPartnormal(FhRight.Croprect, FhBack,Skindata.fimage, FhRight.Targetrect, alpha);
+
+
 
 end;
 
 procedure TONUREdit.paint;
-var
-  tl,tc,tr,bl,bc,br,l,r,c:Trect;
+//var
+//  tl,tc,tr,bl,bc,br,l,r,c:Trect;
 begin
 
   if not Visible then Exit;
@@ -1726,7 +1860,10 @@ begin
   begin
 
      if (fState = obshover) and (FhCenter.croprect.width>0) and (Enabled) then
-     begin
+     resim.PutImage(0,0,fhback,dmDrawWithTransparency)
+     else
+     resim.PutImage(0,0,fback,dmDrawWithTransparency)
+    { begin
         tl := FhTopleft.Croprect;
         tr := FhTopRight.Croprect;
         tc := fhtop.Croprect;
@@ -1748,25 +1885,8 @@ begin
         r  := FRight.Croprect;
         c  := FCenter.Croprect;
      end;
+    }
 
-    //TOPLEFT   //SOLÜST
-    DrawPartnormal(tl, self, FTopleft.Targetrect, alpha);
-    //TOPRIGHT //SAĞÜST
-    DrawPartnormal(tr, self, FTopRight.Targetrect, alpha);
-    //TOP  //ÜST
-    DrawPartnormal(tc, self, ftop.Targetrect, alpha);
-    //BOTTOMLEFT // SOLALT
-    DrawPartnormal(Bl, self, FBottomleft.Targetrect, alpha);
-    //BOTTOMRIGHT  //SAĞALT
-    DrawPartnormal(br, self, FBottomRight.Targetrect, alpha);
-    //BOTTOM  //ALT
-    DrawPartnormal(bc, self, FBottom.Targetrect, alpha);
-    //CENTERLEFT // SOLORTA
-    DrawPartnormal(l, self, Fleft.Targetrect, alpha);
-    //CENTERRIGHT // SAĞORTA
-    DrawPartnormal(r, self, FRight.Targetrect, alpha);
-    //CENTER //ORTA
-    DrawPartnormal(c, self, fcenter.Targetrect, alpha);
   end
   else
   begin
@@ -2270,7 +2390,7 @@ begin
   fState          := obsnormal;
 //  Text            := '';
   Text            := '0';
-  Caption         := '0';
+//  Caption         := '0';
   NumberOnly      := True;
   Fbuttonwidth    := 11;
   Fbuttonheight   := 11;
@@ -2392,7 +2512,7 @@ begin
     if Value = 0 then
     begin
       Text := '0';
-      Caption := '0';
+     // Caption := '0';
     end;
 
 

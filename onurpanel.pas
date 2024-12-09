@@ -918,6 +918,8 @@ procedure TONURGraphicPanel.Resizing;
 begin
   if not Assigned(Skindata) then exit;
 
+  //WriteLn('Resizing TONURGraphicPanel');
+
   FTopleft.Targetrect     := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
   FTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Croprect.Width, 0, self.clientWidth, FTopRight.Croprect.Height);
   FTop.Targetrect         := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -  FTopRight.Croprect.Width, FTop.Croprect.Height);

@@ -53,6 +53,7 @@ uses
     property Anchors;
     property AutoSize;
     property BidiMode;
+    property Caption;
     property ClientHeight;
     property ClientWidth;
     property Color;
@@ -134,6 +135,7 @@ uses
     property Anchors;
     property AutoSize;
     property BidiMode;
+    property Caption;
     property ClientHeight;
     property ClientWidth;
     property Color;
@@ -213,6 +215,7 @@ uses
     property Anchors;
     property AutoSize;
     property BidiMode;
+    property Caption;
     property ClientHeight;
     property ClientWidth;
     property Color;
@@ -284,6 +287,7 @@ uses
     property Anchors;
     property AutoSize;
     property BidiMode;
+    property Caption;
     property ClientHeight;
     property ClientWidth;
     property Color;
@@ -516,6 +520,7 @@ uses
     property Anchors;
     property AutoSize;
     property BidiMode;
+    property Caption;
     property ClientHeight;
     property ClientWidth;
     property Constraints;
@@ -591,6 +596,7 @@ uses
     property Anchors;
     property AutoSize;
     property BidiMode;
+    property Caption;
     property ClientHeight;
     property ClientWidth;
     property Constraints;
@@ -824,7 +830,6 @@ uses
     property AutoSize;
     property BorderSpacing;
     property BidiMode;
-    property Caption;
     property ClientHeight;
     property ClientWidth;
     property Color;

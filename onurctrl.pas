@@ -134,8 +134,8 @@ type
     falpha: byte;
 
     function GetSkindata: TONURImg;
-    //    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
-    //    procedure CreateParams(var Params: TCreateParams);
+    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+    procedure CreateParams(var Params: TCreateParams);
     procedure SetAlignment(const Value: TAlignment);
     function GetTransparent: boolean;
     procedure SetTransparent(NewTransparent: boolean);
@@ -171,7 +171,7 @@ type
     property AutoSize;
     property BorderSpacing;
     property BidiMode;
-    property Caption;
+    //property Caption;
     property ClientHeight;
     property ClientWidth;
     property Color;
@@ -255,7 +255,7 @@ type
     property Anchors;
     property AutoSize;
     property BidiMode;
-    property Caption;
+   // property Caption;
     property ChildSizing;
     property ClientHeight;
     property ClientWidth;
@@ -2124,12 +2124,12 @@ end;
 
 
 // -----------------------------------------------------------------------------
-{procedure TONURGraphicControl.WMEraseBkgnd(var Message: TWMEraseBkgnd);
+procedure TONURGraphicControl.WMEraseBkgnd(var Message: TWMEraseBkgnd);
 begin
   SetBkMode(Message.dc, 1);
   Message.Result := 1;
 end;
-}
+
 
 function TONURGraphicControl.GetSkindata: TONURImg;
 begin
@@ -2139,12 +2139,12 @@ end;
 // -----------------------------------------------------------------------------
 
 // -----------------------------------------------------------------------------
-{procedure TONURGraphicControl.CreateParams(var Params: TCreateParams);
+procedure TONURGraphicControl.CreateParams(var Params: TCreateParams);
 begin
   params.exstyle := params.exstyle or WS_EX_TRANSPARENT or WS_EX_LAYERED or
     WS_CLIPCHILDREN;
 end;
-}
+
 
 // -----------------------------------------------------------------------------
 procedure TONURGraphicControl.SetAlignment(const Value: TAlignment);
