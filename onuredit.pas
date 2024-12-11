@@ -53,24 +53,29 @@ type
   { TONURCustomEdit }
   TONURCustomEdit= class(TONURCustomControl)
   private
-    FPasswordChar : char;
-    FNumbersOnly  : boolean;
-    Fcharcase: ToCharCase;
-    FEchoMode: TOEchoMode;
-    FLines: TStrings;
-    FOnChange: TNotifyEvent;
-    FReadOnly: boolean;
-    FCarets: TOnurCaret;
-    FDrawOffsetX: Integer;
-    fMultiLine: boolean;
-    FSelecting: Boolean;
-    FSelectingStartX: Point;//Integer;
-    FSelectingEndX: Point;//Integer;
+    FPasswordChar      : char;
+    FNumbersOnly       : boolean;
+    Fcharcase          : ToCharCase;
+    FEchoMode          : TOEchoMode;
+    FLines             : TStrings;
+    FOnChange          : TNotifyEvent;
+    FReadOnly          : boolean;
+    FCarets            : TOnurCaret;
+    FDrawOffsetX       : Integer;
+    fMultiLine         : boolean;
+    FSelecting         : Boolean;
+    FSelectingStartX   : Point;
+    FSelectingEndX     : Point;
 
-    FHintText: String;
-    FHintTextColor: TColor;
-    FHintTextStyle: TFontStyles;
-
+    lTextLeftSpacing   : integer;
+    lTextRightSpacing  : integer;
+    lTextBottomSpacing : integer;
+    lTextTopSpacing    : integer;
+    lTextCenterWidth   : integer;
+    lTextCenterSp      : integer;
+    FHintText          : String;
+    FHintTextColor     : TColor;
+    FHintTextStyle     : TFontStyles;
 
     procedure DrawText(a:TBGRABitmap);
     function GetCaretPos: TPoint;
@@ -81,6 +86,7 @@ type
     function getnumberonly: boolean;
     function GetPasswordChar: char;
     function GetReadOnly: boolean;
+    function Getcaretcolor:Tcolor;
   //  function GetSelStartX: integer;
     function GetText: string;
     procedure LinesChanged(Sender: TObject);
@@ -94,7 +100,8 @@ type
     procedure SetPasswordChar(AValue: char);
     procedure SetReadOnly(AValue: boolean);
 //    procedure SetSelStartX(AValue: integer);
-
+    procedure SetSkindata(Aimg:TONURImg);override;
+    procedure SetCaretcolor(AValue:Tcolor);
   protected
   type
     {$SCOPEDENUMS ON}
@@ -105,17 +112,6 @@ type
       Str: String;
       Width: Integer;
     end;
-
-
-
-    {
-    FCaretTimer: TTimer;
-    FCaretX: Integer;
-    FCaretFlash: Integer;
-
-    }
-
-
 
     procedure WMSetFocus(var Message: TLMSetFocus); message LM_SETFOCUS;
     procedure WMKillFocus(var Message: TLMKillFocus); message LM_KILLFOCUS;
@@ -131,13 +127,14 @@ type
     function CharIndexAtXY(X, Y: Integer): Integer;
     function CalculateHeight: Integer;
 
-    function GetAvailableWidth: Integer;
+  //  function GetAvailableWidth: Integer;
     function GetSelectedText: String;
 
     procedure AddCharAtCursor(C: TUtf8Char);
     procedure AddStringAtCursor(Str: String; ADeleteSelection: Boolean = False);
     procedure DeleteCharAtCursor;
     procedure DeleteSelection;
+    procedure DelCharAtCursor;
 
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Integer); override;
@@ -170,18 +167,16 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Clear;
-
-
-
    published
     property Alpha;
-    property Text: string read GetText write SetText stored False;
-    property PasswordChar: char read GetPasswordChar write SetPasswordChar default #0;
-    property ReadOnly: boolean read GetReadOnly write SetReadOnly default False;
-    property NumberOnly :boolean read getnumberonly write setnumberonly;
-    property CharCase: ToCharCase read GetCharCase write SetCharCase;
-    property EchoMode : TOEchoMode read getechomode write setechomode;
-    property OnChange: TNotifyEvent read FOnChange write FOnChange;
+    property CaretColor   : Tcolor       read Getcaretcolor   write Setcaretcolor default clred;
+    property Text         : string       read GetText         write SetText stored False;
+    property PasswordChar : char         read GetPasswordChar write SetPasswordChar default #0;
+    property ReadOnly     : boolean      read GetReadOnly     write SetReadOnly default False;
+    property NumberOnly   : boolean      read getnumberonly   write setnumberonly;
+    property CharCase     : ToCharCase   read GetCharCase     write SetCharCase;
+    property EchoMode     : TOEchoMode   read getechomode     write setechomode;
+    property OnChange     : TNotifyEvent read FOnChange       write FOnChange;
     property Skindata;
     property Action;
     property Align;
@@ -705,7 +700,7 @@ begin
   if aPasswordChar = #0 then
     Result := aVisibleText
   else
-    Result := StringOfChar(aPasswordChar, UTF8Length(aVisibleText));
+    Result := StringOfChar(aPasswordChar, Length(aVisibleText));
 
 end;
 
@@ -717,34 +712,39 @@ end;
 constructor TONURCustomEdit.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  TabStop  := True;
-  Cursor   := crIBeam;
-  ControlStyle := ControlStyle - [csAcceptsControls] +
-    [ csClickEvents, csCaptureMouse, csDoubleClicks,
-    csRequiresKeyboardInput];
+  TabStop        := True;
+  Cursor         := crIBeam;
+  ControlStyle   := ControlStyle - [csAcceptsControls] +
+    [ csClickEvents, csCaptureMouse, csDoubleClicks,csRequiresKeyboardInput];
 
-  FLines := TStringList.Create;
-//  FVisibleTextStart := Point(1, 0);
-  FPasswordChar := #0;
-  FCarets := TOnurCaret.Create(self);
-  FCarets.Color:=clred;
-  Self.Height := 30;
-  Self.Width := 80;
+  FLines         := TStringList.Create;
+  FPasswordChar  := #0;
+  FCarets        := TOnurCaret.Create(self);
+  FCarets.Color  := clred;
+  Self.Height    := 30;
+  Self.Width     := 80;
   resim.SetSize(Width, Height);
   Captionvisible := False;
-  FSelecting:=false;
+  FSelecting     := False;
+
+  lTextTopSpacing    := 3;
+  lTextBottomSpacing := 3;
+  lTextLeftSpacing   := 3;
+  lTextRightSpacing  := 3;
+  lTextCenterWidth   := Self.ClientWidth-6;
+
   if self is TONURMemo then
   begin
     MultiLine := True;
     TStringList(FLines).OnChange := @LinesChanged;
   end;
   doexit;
-
 end;
 
 procedure TONURCustomEdit.Clear;
 begin
-
+ FLines.Clear;
+ FCarets.CaretPos := Point(0,0);
 end;
 
 destructor TONURCustomEdit.Destroy;
@@ -758,90 +758,94 @@ procedure TONURCustomEdit.DrawText(a:TBGRABitmap);
 var
 
   caretrect: Trect;
-  lTextLeftSpacing,lTextRightSpacing,
-  lTextBottomSpacing, lTextTopSpacing,lTextCenter:integer;
-  lTextCenterSp: integer;
+ // lTextLeftSpacing,lTextRightSpacing,
+ // lTextBottomSpacing, lTextTopSpacing,
+// lTextCenter:integer;
+//  lTextCenterSp: integer;
 
   TextWidth: Integer;
   X1, X2: Integer;
   DrawCaretX: Integer;
   NewText:string;
+  stl: TTextStyle;
+  re:TRect;
 begin
-  NewText:=Text;
+
+    NewText:=Text;
 
     if Fcharcase=ecUppercase then
-     NewText:=UTF8UpperString(NewText)
-    else
-     NewText:=UTF8LowerCase(NewText);
+     NewText := UTF8UpperString(NewText)
+    else if Fcharcase=ecLowerCase then
+     NewText := UTF8LowerCase(NewText);
 
-    NewText:=VisibleText(NewText,FPasswordChar);
+    NewText   := VisibleText(NewText,FPasswordChar);
+    TextWidth := GetTextWidthCache(EPaintCache.TEXT, UTF8Copy(NewText, 1, FCarets.CaretPos.x))+lTextRightSpacing;
+ //  TextWidth := self.resim.TextSize(NewText).cx;//
 
-    TextWidth := GetTextWidthCache(EPaintCache.TEXT, Copy(NewText, 1, FCarets.CaretPos.x))+lTextRightSpacing;
 
 
-    if (TextWidth >ClientWidth-(lTextLeftSpacing+lTextRightSpacing)) then //-(lTextRightSpacing)) then
-     FDrawOffsetX := -((TextWidth) - GetAvailableWidth())
+
+    if (TextWidth > lTextCenterWidth{ClientWidth-(lTextLeftSpacing+lTextRightSpacing)}) then //-(lTextRightSpacing)) then
+     FDrawOffsetX := -(TextWidth - lTextCenterWidth)
     else
      FDrawOffsetX := lTextLeftSpacing;
+
+
 
     // Selection
     if HasSelection() then
     begin
-      if (FSelectingStartX.x > FSelectingEndX.x) then
-      begin
-        X1 := FSelectingEndX.x;
-        X2 := FSelectingStartX.x;
-      end else
-      if (FSelectingStartX.x < FSelectingEndX.x) then
-      begin
-        X1 := FSelectingStartX.x;
-        X2 := FSelectingEndX.x;
-      end else
-      begin
-        X1 := FSelectingStartX.x;
-        X2 := FSelectingStartX.x + 1;
-      end;
-
-      X1 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_START, Copy(NewText, 1, FSelectingStartX.x));
-      X2 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_END,   Copy(NewText, 1, FSelectingEndX.x));
-
-//      a.Canvas.Brush.Color := clblue;//FColorSelection;
-//      a.Canvas.FillRect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing);
-      a.FillRect(Rect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing),CSSBlue);
+      X1 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_START, UTF8Copy(NewText, 1, FSelectingStartX.x));
+      X2 := FDrawOffsetX + GetTextWidthCache(EPaintCache.SEL_END,   UTF8Copy(NewText, 1, FSelectingEndX.x));
+      a.FillRect(Rect(X1, lTextTopSpacing, X2, ClientHeight-lTextBottomSpacing),colortobgra(fcarets.color));
     end;
 
-    yaziyazBGRA(a.CanvasBGRA,self.font,Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing),NewText,self.Alignment);
+
+  //  yaziyazBGRA(a.CanvasBGRA,self.font,Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing),NewText,Alignment);
+    stl.Alignment           := self.Alignment;
+    stl.Wordbreak           := false;
+    stl.Layout              := tlCenter;
+ //   a.CanvasBGRA.Font.color := self.font.color;
+ //   a.TextRect(Rect(lTextLeftSpacing,lTextCenter-lTextCenterSp, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing),{ FDrawOffsetX}0, 0, newText,stl,colortobgra(self.font.color));
+    re:=Rect(lTextLeftSpacing,lTextTopSpacing,{lTextCenter-lTextCenterSp,} lTextLeftSpacing+lTextCenterWidth+lTextRightSpacing{ClientWidth-(lTextRightSpacing)}, ClientHeight-lTextBottomSpacing);
+    //DrawPartnormaltext(re,self,re,255,NewText,stl,colortobgra(self.font.color));
+    //a.CanvasBGRA.TextRect(Re, FDrawOffsetX, 0, newText,stl);
+    a.TextRect(RE,FDrawOffsetX,0,newtext,stl,colortobgra(self.font.color));
+ //   canvas.TextRect(Re, FDrawOffsetX, 0, newText,stl);
+ //   a.TextOut(FDrawOffsetX,0,newtext,colortobgra(self.font.color));
 
     if Fcarets.visible then
     begin
       if (Text = '') then
        DrawCaretX := lTextLeftSpacing  //TONURCustomCrop(self.Customcroplist[6]).Width
       else
-       DrawCaretX := (FDrawOffsetX + (TextWidth-lTextLeftSpacing));// - 1;
+       DrawCaretX := FDrawOffsetX + (TextWidth-1)-lTextLeftSpacing;
 
+
+     //  writeln(DrawCaretX,'   ',FDrawOffsetX,'   ',TextWidth,'   ',fcarets.CaretPos.x,'  ',ChartoCaretWidth(CaretPos.X));
 
 
       caretrect:=Rect( DrawCaretX, lTextTopSpacing, DrawCaretX+FCarets.Width, ClientHeight-lTextBottomSpacing );
 
   //    self.Skindata.Fimage.canvas.Brush.Color := FCarets.Color;     //color or image
   //    self.Skindata.Fimage.canvas.FillRect(caretrect);
-      a.FillRect(caretrect,ColorToBGRA(FCarets.Color),dmset);
+      a.FillRect(caretrect,ColorToBGRA(FCarets.Color),dmDrawWithTransparency);
     end;
 
 end;
 
 procedure TONURCustomEdit.Paint;
-var
+//var
 
-  caretrect: Trect;
-  lTextLeftSpacing,lTextRightSpacing,
-  lTextBottomSpacing, lTextTopSpacing,lTextCenter:integer;
-  lTextCenterSp: integer;
+  //caretrect: Trect;
+  //lTextLeftSpacing,lTextRightSpacing,
+//  lTextBottomSpacing, lTextTopSpacing,lTextCenter:integer;
+ // lTextCenterSp: integer;
 
-  TextWidth: Integer;
-  X1, X2: Integer;
-  DrawCaretX: Integer;
-  NewText:string;
+//  TextWidth: Integer;
+//  X1, X2: Integer;
+//  DrawCaretX: Integer;
+//  NewText:string;
 begin
 
   if csDesigning in ComponentState then
@@ -849,6 +853,7 @@ begin
   if not Visible then Exit;
 
   DrawText(self.resim);
+   inherited Paint;
 
   //inherited Paint;
  {
@@ -945,7 +950,7 @@ begin
   end;
 
    }
-  inherited Paint;
+
 end;
 
 
@@ -993,7 +998,6 @@ begin
   if FLines = AValue then Exit;
   FLines.Assign(AValue);
   DoChange();
-  //  paint;
   Invalidate;
 end;
 
@@ -1012,6 +1016,22 @@ end;
 procedure TONURCustomEdit.SetReadOnly(AValue: boolean);
 begin
   if FReadOnly <> avalue then FReadOnly := avalue;
+end;
+
+procedure TONURCustomEdit.SetSkindata(Aimg:TONURImg);
+begin
+  inherited SetSkindata(Aimg);
+  lTextTopSpacing    := TONURCustomCrop(self.Customcroplist[1]).Croprect.Height;
+  lTextBottomSpacing := TONURCustomCrop(self.Customcroplist[4]).Croprect.Height;
+  lTextLeftSpacing   := TONURCustomCrop(self.Customcroplist[6]).Croprect.Width;
+  lTextRightSpacing  := TONURCustomCrop(self.Customcroplist[7]).Croprect.Width;
+  lTextCenterWidth   := TONURCustomCrop(self.Customcroplist[8]).Croprect.Width;
+end;
+
+procedure TONURCustomEdit.SetCaretcolor(AValue:Tcolor);
+begin
+if FCarets.Color=AValue then exit;
+FCarets.Color:=AValue;
 end;
 
 
@@ -1054,11 +1074,15 @@ begin
   Result := FReadOnly;
 end;
 
+function TONURCustomEdit.Getcaretcolor:Tcolor;
+begin
+result:=FCarets.Color;
+end;
+
 function TONURCustomEdit.getnumberonly: boolean;
 begin
   Result := FNumbersOnly;
 end;
-
 
 
 function TONURCustomEdit.GetText: string;
@@ -1076,19 +1100,12 @@ begin
   Result := FPasswordChar;
 end;
 
-
-
-
 procedure TONURCustomEdit.SetCaretPost(AValue: TPoint);
 begin
   FCarets.CaretPos.X := AValue.X;
   FCarets.CaretPos.Y := AValue.Y;
   Invalidate;
-
 end;
-
-
-
 
 
 procedure tonURcustomedit.doenter;
@@ -1105,96 +1122,88 @@ begin
 end;
 
 procedure TONURCustomEdit.KeyDown(var Key: Word; Shift: TShiftState);
-var
-  caretoldpos:integer;
 begin
   inherited KeyDown(Key, Shift);
 
    if (ssCtrl in Shift) then
-    case Key of
-      VK_A:
-        begin
-          SelectAll();
+   case Key of
+     VK_A:
+       begin
+         SelectAll();
+         Key := 0;
+       end;
 
-          Key := 0;
-        end;
+     VK_V:
+       begin
+         AddStringAtCursor(Clipboard.AsText, True);
+         Key := 0;
+       end;
 
-      VK_V:
-        begin
-          AddStringAtCursor(Clipboard.AsText, True);
+     VK_C:
+       begin
+         Clipboard.AsText := GetSelectedText();
+         Key := 0;
+       end;
+   end;
 
-          Key := 0;
-        end;
+   case Key of
+     VK_BACK:
+       begin
+         if HasSelection() then
+           DeleteSelection()
+         else
+           DeleteCharAtCursor();
+         Key := 0;
+       end;
 
-      VK_C:
-        begin
-          Clipboard.AsText := GetSelectedText();
+     VK_LEFT:
+       begin
+         SetCaretPos(FCarets.CaretPos.x-1);
+         Key := 0;
+       end;
 
-          Key := 0;
-        end;
-    end;
+     VK_RIGHT:
+       begin
+         SetCaretPos(FCarets.CaretPos.x+1);
 
-  case Key of
-    VK_BACK:
-      begin
-        if HasSelection() then
-          DeleteSelection()
-        else
-          DeleteCharAtCursor();
-
-        Key := 0;
-      end;
-
-    VK_LEFT:
-      begin
-        SetCaretPos(FCarets.CaretPos.x-1);
-        Key := 0;
-      end;
-
-    VK_RIGHT:
-      begin
-        SetCaretPos(FCarets.CaretPos.x+1);
-
-        Key := 0;
-      end;
-    VK_HOME:
-      begin
-        ClearSelection;
-        if [ssShift] = Shift then
-        begin
+         Key := 0;
+       end;
+     VK_HOME:
+       begin
+         ClearSelection;
+         if [ssShift] = Shift then
+         begin
             FSelectingStartX.X := 0;
             FSelectingEndX.X := FCarets.CaretPos.X;
-        end;
-        FCarets.CaretPos.X := 0;
+         end;
+         FCarets.CaretPos.X := 0;
 
-      Invalidate;
-      end;
+         Invalidate;
+       end;
 
-    VK_END:
-    begin
-      //if FCarets.CaretPos.X < lOldTextLength then
-      begin
-        ClearSelection;
-        caretoldpos:=GetAvailableWidth;
+      VK_END:
+       begin
+        //if FCarets.CaretPos.X < lOldTextLength then
+         begin
+           ClearSelection;
+          // caretoldpos := GetAvailableWidth;
 
-       // WriteLn(caretoldpos);
-        // Selecting to the right
-        if [ssShift] = Shift then
+           if [ssShift] = Shift then
+           begin
+             FSelectingStartX.X := FCarets.CaretPos.X;
+             FSelectingEndX.X   := lTextCenterWidth;//caretoldpos;
+           end;
+
+          FCarets.CaretPos.X :=  lTextCenterWidth;//caretoldpos;
+          Invalidate;
+        {end
+        // if we are not moving, at least deselect
+        else if (FSelLength <> 0) and ([ssShift] <> Shift) then
         begin
-           FSelectingStartX.X := FCarets.CaretPos.X;
-           FSelectingEndX.X := caretoldpos;
+          FSelLength := 0;
+          Invalidate;}
         end;
-
-        FCarets.CaretPos.X :=  caretoldpos;
-        Invalidate;
-      {end
-      // if we are not moving, at least deselect
-      else if (FSelLength <> 0) and ([ssShift] <> Shift) then
-      begin
-        FSelLength := 0;
-        Invalidate;}
       end;
-    end;
    {  VK_UP:
     begin
       if not MultiLine then Exit;
@@ -1222,37 +1231,42 @@ begin
       end;
     end;
      }
-    VK_DOWN:
-    begin
-       if not MultiLine then Exit;
-      if FCarets.CaretPos.Y < FLines.Count - 1 then
+      VK_DOWN:
       begin
-      {// Selecting to the right
-      if [ssShift] = Shift then
-      begin
-        if FSelLength = 0 then FSelStart.X := FCaretPos.X;
-        Inc(FSelLength);
-      end
-      // Normal move to the right
-      else}
+         if not MultiLine then Exit;
+        if FCarets.CaretPos.Y < FLines.Count - 1 then
+        begin
+        {// Selecting to the right
+        if [ssShift] = Shift then
+        begin
+          if FSelLength = 0 then FSelStart.X := FCaretPos.X;
+          Inc(FSelLength);
+        end
+        // Normal move to the right
+        else}
 
-        //FSelLength := 0;
+          //FSelLength := 0;
 
-        Inc(FCarets.CaretPos.Y{FCaretPos.Y});
+          Inc(FCarets.CaretPos.Y{FCaretPos.Y});
 
-        FCarets.Active := True;
-        Invalidate;
-      end
-      // if we are not moving, at least deselect
-      else if ([ssShift] <> Shift) then
-      begin
-      //  FSelLength := 0;
-        Invalidate;
+          FCarets.Active := True;
+          Invalidate;
+        end
+        // if we are not moving, at least deselect
+        else if ([ssShift] <> Shift) then
+        begin
+        //  FSelLength := 0;
+          Invalidate;
+        end;
       end;
-    end;
-    VK_DELETE:
+
+      VK_DELETE:
       begin
-        DeleteSelection();
+
+        if HasSelection then
+         DeleteSelection()
+        else
+         DelCharAtCursor;
 
         Key := 0;
       end;
@@ -1337,7 +1351,8 @@ end;
 }
 procedure TONURCustomEdit.UTF8KeyPress(var UTF8Key: TUTF8Char);
 var
-  lLeftText, lRightText, lOldText, NewText: string;
+//  lLeftText, lRightText, lOldText,
+NewTexti: string;
 begin
   inherited UTF8KeyPress(UTF8Key);
 
@@ -1377,10 +1392,10 @@ begin
 
 
   Inc(FCarets.CaretPos.X);
-  NewText := Text;
-  UTF8Insert(UTF8Key, NewText, FCarets.CaretPos.X);
+  NewTexti := Text;
+  UTF8Insert(UTF8Key, NewTexti, FCarets.CaretPos.X);
 
-  Text := NewText;
+  Text := NewTexti;
 
 
 
@@ -1395,8 +1410,8 @@ begin
   if (Pos < 0) then
     FCarets.CaretPos.x := 0
   else
-  if (Pos > Length(Text)) then
-    FCarets.CaretPos.X := Length(Text)
+  if (Pos > UTF8Length(Text)) then
+    FCarets.CaretPos.X := UTF8Length(Text)
   else
     FCarets.CaretPos.X := Pos;
 
@@ -1416,6 +1431,7 @@ begin
   SetFocus;
 
   I := CharIndexAtXY(X, Y);
+
 
   SetCaretPos(I);
   FCarets.Active := True;
@@ -1504,8 +1520,12 @@ begin
   if (Str <> FTextWidthCache[Cache].Str) then
   begin
     FTextWidthCache[Cache].Str := Str;
-    FTextWidthCache[Cache].Width := Canvas.TextWidth(Str);
+    FTextWidthCache[Cache].Width := self.resim.TextSize(str).cx;//Canvas.TextWidth(Str);
   end;
+
+
+  //EPaintCache.TEXT, Copy(NewText, 1, FCarets.CaretPos.x))
+
 
   Result := FTextWidthCache[Cache].Width;
 end;
@@ -1513,7 +1533,7 @@ end;
 procedure TONURCustomEdit.SelectAll;
 begin
   FSelectingStartX.x := 0;
-  FSelectingEndx.X   := Length(Text);
+  FSelectingEndx.X   := UTF8Length(Text);
 
   Invalidate();
 end;
@@ -1534,17 +1554,19 @@ begin
   Result := GetSelectionLen > 0;
 end;
 
+
 function TONURCustomEdit.CharIndexAtXY(X, Y: Integer): Integer;
 var
   I, Test: Integer;
   W: Integer;
 begin
-  Result := Length(Text);
+  Result := UTF8Length(Text);
 
   Test := FDrawOffsetX;
-  for I := 1 to Length(Text) do
+
+  for I := 1 to UTF8Length(Text) do
   begin
-    W := Canvas.TextWidth(Text[I]);
+    W :=resim.TextSize(Text[I]).cx;//Canvas.TextWidth(Text[I]);      // writeln(w,'   ',resim.TextSize(Text[I]).cx);
     Test += W;
     if ((Test-(W div 2)) >= X) then
     begin
@@ -1559,19 +1581,16 @@ function TONURCustomEdit.CalculateHeight: Integer;
 begin
   with TBitmap.Create() do
   try
-    Canvas.Font := Self.Font;
-    Canvas.Font.Size := GetFontSize(Self, 1);
+    self.resim.FontName   := Self.Font.name;
+    self.resim.FontHeight := GetFontSize(Self, 1);
 
-    Result := Canvas.TextHeight('Çİ');
+    Result :=resim.TextSize('Çİ').cy;//; Canvas.TextHeight('Çİ');
   finally
     Free();
   end;
 end;
 
-function TONURCustomEdit.GetAvailableWidth: Integer;
-begin
-  Result := ClientWidth;
-end;
+
 
 function TONURCustomEdit.GetSelectedText: String;
 begin
@@ -1584,77 +1603,86 @@ end;
 
 procedure TONURCustomEdit.AddCharAtCursor(C: TUtf8Char);
 var
-  NewText: String;
-  i:integer;
+  NewTexti: String;
 begin
-  //if (Ord(C) < 32) then
- //   Exit;
-
-  WriteLn(c);
   if HasSelection then
     DeleteSelection();
 
   Inc(FCarets.CaretPos.X);
-  NewText := Text;
-  UTF8Insert(C, NewText, FCarets.CaretPos.X);
-
-  Text := NewText;
-  //Canvas.TextFitInfo(lVisibleText, lAvailableWidth);
-
+  NewTexti := Text;
+  UTF8Insert(C, NewTexti, FCarets.CaretPos.X);
+  Text := NewTexti;
 end;
 
 procedure TONURCustomEdit.AddStringAtCursor(Str: String;
   ADeleteSelection: Boolean);
 var
-  NewText: String;
+  NewTexti: String;
 begin
   if ADeleteSelection then
     DeleteSelection();
 
-  NewText := Text;
+  NewTexti := Text;
 
-  Insert(Str, NewText, FCarets.CaretPos.X + 1);
+  UTF8Insert(Str, NewTexti, FCarets.CaretPos.X + 1);
   Inc(FCarets.CaretPos.X, Length(Str));
 
-  Text := NewText;
+  Text := NewTexti;
 
 end;
 
 procedure TONURCustomEdit.DeleteCharAtCursor;
 var
-  NewText: String;
+  NewTexti: String;
 begin
   if (FCarets.CaretPos.X >= 1) and (FCarets.CaretPos.X <= Length(Text)) then
   begin
-    NewText := Text;
+    NewTexti := Text;
 
-    Delete(NewText, FCarets.CaretPos.X, 1);
+    UTF8Delete(NewTexti, FCarets.CaretPos.X, 1);
     Dec(FCarets.CaretPos.X);
 
-    Text := NewText;
+    Text := NewTexti;
   end;
-
 end;
 
 procedure TONURCustomEdit.DeleteSelection;
 var
-  NewText: String;
+  NewTexti: String;
 begin
   if HasSelection() then
   begin
-    NewText := Text;
+    NewTexti := Text;
 
     if (FSelectingStartX.x > FSelectingEndX.x) then
-      Delete(NewText, FSelectingEndX.x + 1, GetSelectionLen())
+      UTF8Delete(NewTexti, FSelectingEndX.x + 1, GetSelectionLen())
     else
-      Delete(NewText, FSelectingStartX.x + 1, GetSelectionLen());
+      UTF8Delete(NewTexti, FSelectingStartX.x + 1, GetSelectionLen());
 
     if (FSelectingEndX.x > FSelectingStartX.x) then
       SetCaretPos(FCarets.CaretPos.X - GetSelectionLen());
-    Text := NewText;
+    Text := NewTexti;
     ClearSelection();
   end;
 
+end;
+
+
+procedure TONURCustomEdit.DelCharAtCursor;
+var
+  NewTexti: String;
+begin
+  if (FCarets.CaretPos.X < Length(Text)) then
+  begin
+    NewTexti := Text;
+
+    UTF8Delete(NewTexti, FCarets.CaretPos.X, 1);
+
+    if (FCarets.CaretPos.X > Length(Text)) then
+    Dec(FCarets.CaretPos.X);
+
+    Text := NewTexti;
+  end;
 end;
 
 
