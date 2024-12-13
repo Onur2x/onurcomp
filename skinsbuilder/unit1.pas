@@ -179,7 +179,7 @@ var
   aktif, changeskininfo,
   progressok : boolean;
   rectlange: Trect;
-  mainimg, cropimg: TBGRABitmap;
+ // mainimg{, cropimg}: TBGRABitmap;
   curPos: TPoint;
   skn: TIniFile;
   fselect : integer; // for propedit selected row
@@ -246,7 +246,7 @@ begin
   rectlange.Right      := ab.Croprect.Right;
   rectlange.top        := ab.Croprect.top;
   rectlange.bottom     := ab.Croprect.bottom; //mainpicture.DiscardBitmap;
-  mainscren.PutImage(0,0,mainimg);
+  mainscren.PutImage(0,0,ONImg1.Fimage);
 end;
 
 function croptostring(Crp: TONURCUSTOMCROP): string;
@@ -489,9 +489,9 @@ begin
   FreeAndNil(mainscren);
 
   //  writeskin;
-  FreeAndNil(mainimg);
+ // FreeAndNil(mainimg);
 //  FreeAndNil(tempimg);
-  FreeAndNil(cropimg);
+ // FreeAndNil(cropimg);
 
 end;
 
@@ -499,8 +499,8 @@ procedure Tskinsbuildier.formcreate(Sender: TObject);
 begin
   ONImg1.formactive(false);
   aktif            := False;
-  mainimg          := TBGRABitmap.Create(1920, 1080);
-  cropimg          := TBGRABitmap.Create(10, 10);
+ // mainimg          := TBGRABitmap.Create(1920, 1080);
+//  cropimg          := TBGRABitmap.Create(10, 10);
 
   mainscren        := TOnurScreen.Create(self);
   mainscren.Parent := ScrollBox1;
@@ -818,9 +818,9 @@ begin
   ONURStringGrid1.ColWidths[1]:=50;
   ONURStringGrid1.ColWidths[2]:=100;
   ONURStringGrid1.ColWidths[3]:=250;
-  mainimg.Assign(ONImg1.Fimage);
+//  mainimg.Assign(ONImg1.Fimage);
 //  mainpicture.DiscardBitmap;
-  mainscren.PutImage(0,0,mainimg);
+  mainscren.PutImage(0,0,ONImg1.Fimage);
 
 
   {
@@ -872,6 +872,7 @@ var
   y:TObject;
 begin
 
+  s:='';
 
   if TreeView1.Selected.Level = 0 then
   begin
@@ -887,13 +888,19 @@ begin
     if (TObject(objlist[TreeView1.Selected.Index]).ClassName<>'TONURMainMenu') and (TObject(objlist[TreeView1.Selected.Index]).ClassName<>'TONURPopupMenu') then
     begin
      gg := Tcontrol(objlist[TreeView1.Selected.Index]);
+     if not(gg is Tform) then
+     gg.Visible := True;
+    end;
+    {if (TObject(objlist[TreeView1.Selected.Index]).ClassName<>'TONURMainMenu') and (TObject(objlist[TreeView1.Selected.Index]).ClassName<>'TONURPopupMenu') then
+    begin
+     gg := Tcontrol(objlist[TreeView1.Selected.Index]);
      gg.Visible := True;
     end else
     begin
     /// y:=TObject(objlist[TreeView1.Selected.Index]);
     // gg:=Tcontrol(y as TONURMainMenu);
    //  ShowMessage('OK');
-    end;
+    end;   }
 
   end
   else
@@ -919,19 +926,22 @@ begin
           begin
             oncrop := TONURCUSTOMCROP(TONURCustomControl(gg).Customcroplist[TreeView1.Selected.Index]);
             s := TONURCustomControl(gg).Skinname;
+
+         // end else
+         // begin
+              if gg is TONURNavMenuButton then
+              begin
+                ONURNavButton1.Visible:=true;
+                ONURNavButton2.Visible:=true;
+              end;
+
+              if gg is TONURPageControl then
+              begin
+                ONPage1.Visible:=true;
+                ONPage2.Visible:=true;
+              end;
+
           end;
-        end;
-
-        if gg is TONURNavMenuButton then
-        begin
-          ONURNavButton1.Visible:=true;
-          ONURNavButton2.Visible:=true;
-        end;
-
-        if gg is TONURPageControl then
-        begin
-          ONPage1.Visible:=true;
-          ONPage2.Visible:=true;
         end;
       end;
 
@@ -948,39 +958,39 @@ begin
       PropEdit.Cells[1, 1] := s;
 
 
-      if oncrop.Croprect.Left>0 then
-      PropEdit.Cells[1, 2] := IntToStr(oncrop.Croprect.Left)
-      else
-      PropEdit.Cells[1, 2] := '0';
+      if Assigned(oncrop) then
+      begin
+        if oncrop.Croprect.Left>0 then
+        PropEdit.Cells[1, 2] := IntToStr(oncrop.Croprect.Left)
+        else
+        PropEdit.Cells[1, 2] := '0';
 
-       if oncrop.Croprect.top>0 then
-      PropEdit.Cells[1, 3] := IntToStr(oncrop.Croprect.top)
-      else
-      PropEdit.Cells[1, 3] := '0';
+         if oncrop.Croprect.top>0 then
+        PropEdit.Cells[1, 3] := IntToStr(oncrop.Croprect.top)
+        else
+        PropEdit.Cells[1, 3] := '0';
 
-       if oncrop.Croprect.Right>0 then
-      PropEdit.Cells[1, 4] := IntToStr(oncrop.Croprect.Right)
-      else
-      PropEdit.Cells[1, 4] := '0';
+         if oncrop.Croprect.Right>0 then
+        PropEdit.Cells[1, 4] := IntToStr(oncrop.Croprect.Right)
+        else
+        PropEdit.Cells[1, 4] := '0';
 
-      if oncrop.Croprect.Bottom>0 then
-      PropEdit.Cells[1, 5] := IntToStr(oncrop.Croprect.Bottom)
-      else
-      PropEdit.Cells[1, 5] := '0';
+        if oncrop.Croprect.Bottom>0 then
+        PropEdit.Cells[1, 5] := IntToStr(oncrop.Croprect.Bottom)
+        else
+        PropEdit.Cells[1, 5] := '0';
 
-      if ColorToString(oncrop.Fontcolor)<>'clnone' then
-      PropEdit.Cells[1, 6] := ColorToString(oncrop.Fontcolor)
-      else
-      PropEdit.Cells[1, 5] := 'clnone';
+        if ColorToString(oncrop.Fontcolor)<>'clnone' then
+        PropEdit.Cells[1, 6] := ColorToString(oncrop.Fontcolor)
+        else
+        PropEdit.Cells[1, 5] := 'clnone';
 
-      rectlange := oncrop.Croprect;
+        rectlange := oncrop.Croprect;
+      end;
+
       //mainpicture.DiscardBitmap;//RedrawBitmap;
-      mainscren.PutImage(0,0,mainimg);
+      mainscren.PutImage(0,0,ONImg1.Fimage);
       notwriting           := false;
-    end else
-    begin
-
-
     end;
 
   end;
@@ -988,7 +998,7 @@ end;
 
 procedure Tskinsbuildier.TreeView1Click(Sender:TObject);
 begin
- TreeView1Change(sender,TreeView1.Selected);
+ //TreeView1Change(sender,TreeView1.Selected);
 end;
 
 
@@ -999,9 +1009,9 @@ begin
   if opd.Execute then
   begin
     //image1.Picture.LoadFromFile(opd.FileName);
-    mainimg.LoadFromFile(opd.FileName);
+  //  mainimg.LoadFromFile(opd.FileName);
     ONImg1.Picture.LoadFromFile(opd.FileName);
-    mainscren.PutImage(0,0,mainimg);
+    mainscren.PutImage(0,0,ONImg1.Fimage);
   end;
 end;
 
@@ -1024,9 +1034,10 @@ begin
     infoedit.Cells[1, 8] := IntToStr(ONImg1.Opacity);
     changeskininfo := True;
 
-    mainimg.Assign(ONImg1.Fimage);
+   // mainimg.Assign(ONImg1.Fimage);
 
-    mainscren.PutImage(0,0,mainimg);
+    mainscren.PutImage(0,0,ONImg1.Fimage);
+
   //  mainpicture.DiscardBitmap;//RedrawBitmap;
   //  Repaint;
   end;
@@ -1069,15 +1080,17 @@ procedure Tskinsbuildier.zoomTimerTimer;
 var
   srcRect: TRect;
   oo: integer;
+  cropimgi:TBGRABitmap;
 begin
   if PtInRect(mainscren.ClientRect, curPos) then
   begin
-    cropimg.SetSize(0,0);
+   // cropimg.SetSize(0,0);
     oo      := trackbar1.Position;
     srcRect := Rect(curPos.x - oo, curPos.y - oo, curPos.x + oo, curPos.y + oo);
-    cropimg := mainscren.Bitmap.GetPart(srcRect);
-    BGRAReplace(cropimg, cropimg.Resample(zoomx.clientWidth, zoomx.clientHeight, rmSimpleStretch));
-    zoomx.PutImage(0,0,cropimg);
+    cropimgi := mainscren.Bitmap.GetPart(srcRect);
+    BGRAReplace(cropimgi, cropimgi.Resample(zoomx.clientWidth, zoomx.clientHeight, rmSimpleStretch));
+    zoomx.PutImage(0,0,cropimgi);
+    FreeAndNil(cropimgi);
   end;
 end;
 
@@ -1089,8 +1102,8 @@ begin
   parent             := TWinControl(Aowner);
   ControlStyle       := ControlStyle + [csClickEvents, csCaptureMouse,
     csDoubleClicks, csParentBackground];
-  Width   := 1920;
-  Height  := 1080;
+  self.Width   := 1920;
+  self.Height  := 1080;
   fbitmap := TBGRABitmap.Create(self.Width,self.Height);
 end;
 
@@ -1104,6 +1117,7 @@ procedure TOnurScreen.paint;
 begin
   inherited paint;
   fBitmap.Draw(canvas,0,0,false);
+
 end;
 
 procedure TOnurScreen.PutImage(x,y:integer;a:Tbgrabitmap);
@@ -1111,22 +1125,22 @@ var
 checkersSize:integer;
 begin
   fBitmap.SetSize(0,0);
-  fBitmap.SetSize(Width,Height);
-  checkersSize :=6;
+  fBitmap.SetSize(a.Width,a.Height);
+  checkersSize := 6;
+
   fBitmap.DrawCheckers(rect(floor(self.Left), floor(Top),
-          ceil(Width), ceil(Height)), CSSWhite, CSSSilver,
+          ceil(self.Width), ceil(self.Height)), CSSWhite, CSSSilver,
           checkersSize, checkersSize);
 
+  fBitmap.PutImage(0, 0, a, dmLinearBlend);
 
-
-  fBitmap.PutImage(0, 0, a, dmLinearBlend, 255);
   if (rectlange.Width>0) and (rectlange.Height>0) then
   begin
    fbitmap.PenStyle := psDot;  //bitmap.Canvas.Rectangle(rectlange);
    fBitmap.RectangleWithin(rectlange,CSSRed,1,BGRAPixelTransparent);
   end;
 
-  Invalidate;
+  self.Invalidate;
 end;
 
 procedure TOnurScreen.MouseDown(Button:TMouseButton;Shift:TShiftState;X,Y:
@@ -1152,7 +1166,7 @@ begin
   begin
     rectlange.Right  := x;
     rectlange.Bottom := y;
-    PutImage(0,0,mainimg);
+    PutImage(0,0,skinsbuildier.ONImg1.Fimage);
   end;
  skinsbuildier.zoomTimerTimer;
 end;
@@ -1173,7 +1187,7 @@ begin
 
   //if changeskininfo = False Then exit;
 
-  PutImage(0,0,mainimg);
+  PutImage(0,0,skinsbuildier.ONImg1.Fimage);
 
 
   if (rectlange.Width>0) and (rectlange.Height>0)  then
@@ -1193,8 +1207,8 @@ begin
   parent             := TWinControl(Aowner);
   ControlStyle       := ControlStyle + [csClickEvents, csCaptureMouse,
     csDoubleClicks, csParentBackground];
-  Width:=250;
-  Height:=250;
+  self.Width:=250;
+  self.Height:=250;
   fbitmap:=TBGRABitmap.Create(self.Width,self.Height);
 end;
 
@@ -1208,6 +1222,7 @@ procedure TOnurZoomScreen.paint;
 begin
  inherited paint;
  fBitmap.Draw(canvas,0,0,false);
+
 end;
 
 procedure TOnurZoomScreen.PutImage(x,y:integer;a:Tbgrabitmap);
@@ -1215,19 +1230,23 @@ var
   Xshift, Yshift: integer;
   c: TBGRAPixel;
 begin
- Xshift            := (Width) div 2;
- Yshift            := (Height) div 2;
+ Xshift            := (self.Width) div 2;
+ Yshift            := (self.Height) div 2;
  c                 := ColorToBGRA(skinsbuildier.ColorBox1.Selected);//ColorToRGB(ColorBox1.Selected));
- cropimg.PenStyle  := psSolid;//psdot;
- cropimg.DrawPolyLineAntialias(
+ fBitmap.SetSize(0,0);
+ fBitmap.SetSize(a.Width,a.Height);
+
+ fBitmap.PutImage(0, 0, a, dmLinearBlend, 255);
+
+ fBitmap.PenStyle  := psSolid;//psdot;
+ fBitmap.DrawPolyLineAntialias(
     [PointF(Xshift, Yshift - 20), PointF(Xshift, Yshift + 20),
     PointF(Xshift, Yshift), PointF(Xshift - 20, Yshift),
     PointF(Xshift + 20, Yshift)], c, 2);
 
- fBitmap.SetSize(0,0);
- fBitmap.SetSize(a.Width,a.Height);
- fBitmap.PutImage(0, 0, a, dmLinearBlend, 255);
- Invalidate;
+
+
+ self.Invalidate;
 end;
 
 procedure TOnurZoomScreen.MouseDown(Button:TMouseButton;Shift:TShiftState;X,Y:

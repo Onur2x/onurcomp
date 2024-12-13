@@ -15,7 +15,6 @@ object testfrm: Ttestfrm
     Width = 160
     Skindata = ONURImg1
     Skinname = 'listbox'
-    Caption = 'ONURListBox1'
     ClientHeight = 214
     ClientWidth = 160
     DoubleBuffered = True
@@ -172,7 +171,6 @@ object testfrm: Ttestfrm
     Width = 80
     Skindata = ONURImg1
     Skinname = 'edit'
-    Caption = 'ONUREdit1'
     DoubleBuffered = True
     Font.Color = clWhite
     Font.Height = -13
@@ -183,9 +181,6 @@ object testfrm: Ttestfrm
     TabOrder = 4
     TabStop = True
     UseDockManager = False
-    NumberOnly = False
-    CharCase = ecNormal
-    EchoMode = emNormal
   end
   object ONURMemo1: TONURMemo
     Cursor = crIBeam
@@ -195,7 +190,6 @@ object testfrm: Ttestfrm
     Width = 150
     Skindata = ONURImg1
     Skinname = 'memo'
-    Caption = 'ONURMemo1'
     DoubleBuffered = True
     Font.Color = clWhite
     Font.Height = -13
@@ -206,9 +200,6 @@ object testfrm: Ttestfrm
     TabOrder = 5
     TabStop = True
     UseDockManager = False
-    NumberOnly = False
-    CharCase = ecNormal
-    EchoMode = emNormal
     Lines.Strings = (
       'ONURMemo1'
     )
@@ -221,7 +212,6 @@ object testfrm: Ttestfrm
     Width = 80
     Skindata = ONURImg1
     Skinname = 'spinedit'
-    Caption = 'ONURSpinEdit1'
     DoubleBuffered = True
     Font.Color = clWhite
     Font.Height = -13
@@ -232,9 +222,6 @@ object testfrm: Ttestfrm
     TabOrder = 6
     TabStop = True
     UseDockManager = False
-    NumberOnly = True
-    CharCase = ecNormal
-    EchoMode = emNormal
     Value = 0
     MaxValue = 0
     MinValue = 0
@@ -249,7 +236,6 @@ object testfrm: Ttestfrm
     Width = 150
     Skindata = ONURImg1
     Skinname = 'combobox'
-    Caption = 'ONURComboBox1'
     DoubleBuffered = True
     Font.Color = clWhite
     Font.Height = -13
@@ -274,7 +260,6 @@ object testfrm: Ttestfrm
     Width = 160
     Skindata = ONURImg1
     Skinname = 'contentslider'
-    Caption = 'ONURContentSlider1'
     ClientHeight = 214
     ClientWidth = 160
     DoubleBuffered = True
@@ -295,7 +280,6 @@ object testfrm: Ttestfrm
     Width = 160
     Skindata = ONURImg1
     Skinname = 'columlist'
-    Caption = 'ONURColumList1'
     ClientHeight = 213
     ClientWidth = 160
     DoubleBuffered = True
@@ -459,7 +443,6 @@ object testfrm: Ttestfrm
     Transparent = False
     Skindata = ONURImg1
     Skinname = 'swich'
-    Caption = 'ONURSwich1'
     Font.Color = clWhite
     Font.Height = -13
     Font.Name = 'calibri'
@@ -544,7 +527,6 @@ object testfrm: Ttestfrm
     Transparent = False
     Skindata = ONURImg1
     Skinname = 'led'
-    Caption = 'ONURLed1'
     Font.Color = clWhite
     Font.Height = -13
     Font.Name = 'calibri'
@@ -750,7 +732,6 @@ object testfrm: Ttestfrm
     Width = 472
     Skindata = ONURImg1
     Skinname = 'stringrid'
-    Caption = 'ONURStringGrid1'
     ClientHeight = 152
     ClientWidth = 472
     DoubleBuffered = True
@@ -770,7 +751,5 @@ object testfrm: Ttestfrm
   object ONURImg1: TONURImg
     MColor = 'clnone'
     Opacity = 255
-    Left = 845
-    Top = 79
   end
 end
