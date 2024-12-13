@@ -802,17 +802,13 @@ begin
 
 
   //  yaziyazBGRA(a.CanvasBGRA,self.font,Rect(lTextLeftSpacing,lTextTopSpacing, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing),NewText,Alignment);
-    stl.Alignment           := self.Alignment;
-    stl.Wordbreak           := false;
+    //stl.Alignment           := self.Alignment;
+   // stl.Wordbreak           := false;
     stl.Layout              := tlCenter;
- //   a.CanvasBGRA.Font.color := self.font.color;
- //   a.TextRect(Rect(lTextLeftSpacing,lTextCenter-lTextCenterSp, ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing),{ FDrawOffsetX}0, 0, newText,stl,colortobgra(self.font.color));
-    re:=Rect(lTextLeftSpacing,lTextTopSpacing,{lTextCenter-lTextCenterSp,} lTextLeftSpacing+lTextCenterWidth+lTextRightSpacing{ClientWidth-(lTextRightSpacing)}, ClientHeight-lTextBottomSpacing);
-    //DrawPartnormaltext(re,self,re,255,NewText,stl,colortobgra(self.font.color));
-    //a.CanvasBGRA.TextRect(Re, FDrawOffsetX, 0, newText,stl);
+    re:=Rect(lTextLeftSpacing,lTextTopSpacing,{lTextCenter-lTextCenterSp,} {lTextLeftSpacing+lTextCenterWidth+lTextRightSpacing}ClientWidth-(lTextRightSpacing), ClientHeight-lTextBottomSpacing);
+    a.FontName:=self.font.name;
+    a.FontHeight:=Self.font.size;
     a.TextRect(RE,FDrawOffsetX,0,newtext,stl,colortobgra(self.font.color));
- //   canvas.TextRect(Re, FDrawOffsetX, 0, newText,stl);
- //   a.TextOut(FDrawOffsetX,0,newtext,colortobgra(self.font.color));
 
     if Fcarets.visible then
     begin
@@ -822,13 +818,7 @@ begin
        DrawCaretX := FDrawOffsetX + (TextWidth-1)-lTextLeftSpacing;
 
 
-     //  writeln(DrawCaretX,'   ',FDrawOffsetX,'   ',TextWidth,'   ',fcarets.CaretPos.x,'  ',ChartoCaretWidth(CaretPos.X));
-
-
-      caretrect:=Rect( DrawCaretX, lTextTopSpacing, DrawCaretX+FCarets.Width, ClientHeight-lTextBottomSpacing );
-
-  //    self.Skindata.Fimage.canvas.Brush.Color := FCarets.Color;     //color or image
-  //    self.Skindata.Fimage.canvas.FillRect(caretrect);
+      caretrect:=Rect(DrawCaretX, re.Top {lTextTopSpacing}, DrawCaretX+FCarets.Width,re.bottom {ClientHeight-lTextBottomSpacing} );
       a.FillRect(caretrect,ColorToBGRA(FCarets.Color),dmDrawWithTransparency);
     end;
 

@@ -993,7 +993,7 @@ begin
      resim.PutImage(0,0,fback,dmDrawWithTransparency);
 
     /////////// DRAW TO BUTTON ///////////
-     FAutoHideScrollBar:=true;
+    // FAutoHideScrollBar:=true;
 
 
 

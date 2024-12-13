@@ -2635,17 +2635,13 @@ begin
 
 
   // NORMAL BUTTON IMAGE
+ // DrawPartstrechRegion(FNormalTL.rect,FBGNormal,skindata.fimage,
   DrawPartnormal(FNormalTL.Croprect,FBGNormal,skindata.Fimage,tl,alpha);
   DrawPartnormal(FNormalT.Croprect,FBGNormal,skindata.Fimage,t,alpha);
   DrawPartnormal(FNormalTr.Croprect,FBGNormal,skindata.Fimage,tr,alpha);
   DrawPartnormal(FNormalbL.Croprect,FBGNormal,skindata.Fimage,bl,alpha);
   DrawPartnormal(FNormalb.Croprect,FBGNormal,skindata.Fimage,b,alpha);
   DrawPartnormal(FNormalBr.Croprect,FBGNormal,skindata.Fimage,br,alpha);
-
-//  DrawPartstrechRegion(FNormalL.Croprect,FBGNormal,self.skindata.Fimage,FNormalL.Croprect.Width,ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),l,alpha);
-//  DrawPartstrechRegion(FNormalR.Croprect,FBGNormal,self.skindata.Fimage,FNormalR.Croprect.Width,ClientHeight-(FNormalTR.Croprect.Height+FNormalBR.Croprect.Height),r,alpha);
-//  DrawPartstrechRegion(FNormalC.Croprect,FBGNormal,self.skindata.Fimage,ClientWidth-(FNormalL.Croprect.Width+FNormalR.Croprect.Width),ClientHeight-(FNormalTL.Croprect.Height+FNormalBl.Croprect.Height),c,alpha);
-
   DrawPartnormal(FNormalL.Croprect,FBGNormal,skindata.Fimage,l,alpha);
   DrawPartnormal(FNormalR.Croprect,FBGNormal,skindata.Fimage,r,alpha);
   DrawPartnormal(FNormalC.Croprect,FBGNormal,skindata.Fimage,c,alpha);
