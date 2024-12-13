@@ -1983,12 +1983,13 @@ begin
    Affine.Translate(tWidth div 2, tHeight div 2);
 
    temp.SetSize(0,0);
-   temp.SetSize(tWidth, tHeight);
+   temp.SetSize(tWidth-2, tHeight-2);
 
    Temp.Fill(affine,dmDrawWithTransparency);
 
-   resim.BlendImage(self.clientWidth div 2-(tWidth div 2) ,self.clientHeight div 2- tHeight div 2,temp,boLinearBlend);// Fill(affine);
+ //  resim.BlendImage(self.clientWidth div 2-(tWidth div 2) ,self.clientHeight div 2- tHeight div 2,temp,boLinearBlend);// Fill(affine);
 
+   resim.PutImage(self.clientWidth div 2 -(tWidth div 2) ,self.clientHeight div 2- tHeight div 2,temp,dmDrawWithTransparency);
    affine.free;
    temp.Free;
 

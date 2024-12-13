@@ -72,7 +72,11 @@ type
     Fopacity: byte;
     FRes: TPicture;
     List: TStringList;
-    // fparent     : TForm;
+    fparent     : TForm;
+
+
+    Fleft, FTopleft, FBottomleft, FRight, FTopRight,
+    FBottomRight, FTop, FBottom, FCenter: TONURCUSTOMCROP;
 
     skinread,fformactive: boolean;
     Frmain, tempbitmap: TBGRABitmap;
@@ -94,24 +98,28 @@ type
     procedure Setopacity(Avalue: byte);
     procedure Setcolor(colr: string);
     procedure resize(Sender: TObject);
+    procedure setWindowState(a:TWindowState);
+    function  getWindowState: TWindowState;
   public
     Fimage: TBGRABitmap;
     Blend, ThemeStyle, Skinname, Version, Author, Email,
     Homepage, Comment, Screenshot: string;
-    Fleft, FTopleft, FBottomleft, FRight, FTopRight,
-    FBottomRight, FTop, FBottom, FCenter: TONURCUSTOMCROP;
+
     Customcroplist: TList;
-    Fparent: TForm;
+   // Fparent: TForm;
 
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure ReadSkinsComp(Com: TComponent);
+
+
     procedure Loadskin(FileName: string; const Resource: boolean = False);
     procedure GetSkinInfo(const FileName: string; const Resource: boolean = False);
     procedure Saveskin(filename: string);
     procedure Refresh;
     procedure formactive(xx:boolean);
     property SkinFilename :string read ffilename;
+    property WindowState:TWindowState read getWindowState write setWindowState;
   published
 
     property MColor: string read GetColor write Setcolor;
@@ -1226,6 +1234,17 @@ begin
 
 end;
 
+procedure TONURImg.setWindowState(a:TWindowState);
+begin
+ if fparent.WindowState<>a then
+  fparent.WindowState:=a;
+end;
+
+function TONURImg.getWindowState:TWindowState;
+begin
+ result:=fparent.WindowState;
+end;
+
 
 procedure TONURImg.Colorbgrabitmap;
 var
@@ -1561,6 +1580,7 @@ begin
     FreeAndNil(skn);
   end;
 end;
+
 
 procedure TONURImg.Refresh;
 var

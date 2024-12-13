@@ -1110,10 +1110,10 @@ begin
     OBTNMinimize : Application.Minimize; //Skindata.Fparent.WindowState:=wsma;
     OBTNMaximize :
     begin
-      if Skindata.Fparent.WindowState<>wsMaximized then
-      Skindata.Fparent.WindowState:=wsMaximized
+      if Skindata.WindowState<>wsMaximized then
+      Skindata.WindowState:=wsMaximized
       else
-      Skindata.Fparent.WindowState:=wsNormal;
+      Skindata.WindowState:=wsNormal;
 
       Skindata.Refresh;
     end;
