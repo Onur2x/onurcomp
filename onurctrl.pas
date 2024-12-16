@@ -9,7 +9,7 @@ interface
 uses
   Windows, SysUtils, Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, BGRABitmap, BGRABitmapTypes,BGRACanvas,
-  types, LazUTF8, Zipper, Dialogs;
+  types, LazUTF8, Zipper, Dialogs,LMessages;
 
 type
   TONURButtonState = (obshover, obspressed, obsnormal);
@@ -128,9 +128,85 @@ type
     property LoadSkins: string read ffilename write Setloadskin;//Loadskin;
   end;
 
-
-
-
+ { TONURWinControl = class(TWinControl)
+  private
+   FSkindata: TONURImg;
+   FAlignment: TAlignment;
+   Fkind: TONURkindstate;
+   Fskinname: string;
+   falpha: byte;
+   Fcanvas : TControlCanvas;
+   function GetSkindata: TONURImg;
+   procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+   procedure CreateParams(var Params: TCreateParams);
+   procedure SetAlignment(const Value: TAlignment);
+   function GetTransparent: boolean;
+   procedure SetTransparent(NewTransparent: boolean);
+   function Getkind: Tonurkindstate;
+   procedure setalpha(val: byte);
+   procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
+  public
+    { Public declarations }
+    Captionvisible: boolean;
+    resim: TBGRABitmap;
+    Customcroplist: TFPList;//TList;
+    Backgroundbitmaped: boolean;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+ //   procedure Paint; override;
+  protected
+    procedure Resize; override;
+    procedure SetKind(AValue: TONURkindstate); virtual;
+    procedure SetSkindata(Aimg: TONURImg); virtual;
+    procedure Setskinname(Avalue: string); virtual;
+    property Kind: TONURkindstate read Getkind
+      write Setkind default oHorizontal;
+  published
+    property Align;
+    property Alignment: TAlignment read FAlignment
+      write SetAlignment default taCenter;
+    property Alpha: byte read falpha write setalpha default 255;
+    property Transparent: boolean read GetTransparent
+      write SetTransparent default True;
+    property Skindata: TONURImg read GetSkindata write SetSkindata;
+    property Skinname: string read fskinname write Setskinname;
+    property Anchors;
+    property AutoSize;
+    property BorderSpacing;
+    property BidiMode;
+    //property Caption;
+    property ClientHeight;
+    property ClientWidth;
+    property Color;
+    property Constraints;
+    property DragCursor;
+    property DragKind;
+    property DragMode;
+    property Enabled;
+    property Font;
+    property ParentBidiMode;
+    property ParentColor;
+    property ParentFont;
+    property ParentShowHint;
+    property PopupMenu;
+    property ShowHint;
+    property Visible;
+    property OnClick;
+    property OnContextPopup;
+    property OnDblClick;
+    property OnEndDock;
+    property OnEndDrag;
+    property OnMouseEnter;
+    property OnMouseLeave;
+    property OnMouseDown;
+    property OnMouseMove;
+    property OnMouseUp;
+    property OnMouseWheel;
+    property OnMouseWheelDown;
+    property OnMouseWheelUp;
+    property OnResize;
+  end;
+  }
   { TONURGraphicControl }
 
   TONURGraphicControl = class(TGraphicControl)
@@ -388,7 +464,7 @@ implementation
 
 
 uses //onuredit, onurbar, onurbutton, onurpage, onurlist,   onurpanel,
-onurmenu,
+onurmenu,onurbutton,
   inifiles,BGRAGrayscaleMask;
 
 procedure Register;
@@ -1072,6 +1148,45 @@ end;
 
 
 
+procedure cropparse(Crp: TONURCustomCrop; val: string);
+var
+  myst: TStringList;
+begin
+  if val.Length > 0 then
+  begin
+    myst := TStringList.Create;
+    try
+      myst.Delimiter     := ',';
+      myst.DelimitedText := val;
+    {  Crp.Croprect.LEFT           := StrToIntDef(myst.Strings[0], 2);
+      Crp.Croprect.TOP            := StrToIntDef(myst.Strings[1], 2);
+      Crp.Croprect.RIGHT          := StrToIntDef(myst.Strings[2], 4);
+      Crp.Croprect.BOTTOM         := StrToIntDef(myst.Strings[3], 4);
+     }
+
+      Crp.Croprect       := Rect(StrToIntDef(myst.Strings[0], 2),StrToIntDef(myst.Strings[1], 4),StrToIntDef(myst.Strings[2], 4),StrToIntDef(myst.Strings[3], 4));
+
+      if Crp.Croprect.IsEmpty then
+      Crp.Croprect       := Rect(0,0,1,1);
+
+      Crp.Fontcolor      := StringToColorDef(myst.Strings[4], clNone);
+    finally
+      myst.Free;
+    end;
+  end;
+end;
+
+function croptostring(Crp: TONURCustomCrop): string;
+begin
+ // Result := '';
+  //if Crp <> nil then
+  Result := IntToStr(Crp.Croprect.LEFT) + ',' + IntToStr(Crp.Croprect.TOP) + ',' +
+      IntToStr(Crp.Croprect.RIGHT) + ',' + IntToStr(Crp.Croprect.BOTTOM) + ',' +
+      ColorToString(Crp.Fontcolor);
+end;
+
+
+
 { TONURCUSTOMCROP }
  {
 function TONURCustomCrop.Croprect: Trect;
@@ -1447,42 +1562,7 @@ begin
   SendMessage(self.fparent.Handle, WM_SYSCOMMAND, $F012, 0);
 end;
 
-procedure cropparse(Crp: TONURCustomCrop; val: string);
-var
-  myst: TStringList;
-begin
-  if val.Length > 0 then
-  begin
-    myst := TStringList.Create;
-    try
-      myst.Delimiter     := ',';
-      myst.DelimitedText := val;
-    {  Crp.Croprect.LEFT           := StrToIntDef(myst.Strings[0], 2);
-      Crp.Croprect.TOP            := StrToIntDef(myst.Strings[1], 2);
-      Crp.Croprect.RIGHT          := StrToIntDef(myst.Strings[2], 4);
-      Crp.Croprect.BOTTOM         := StrToIntDef(myst.Strings[3], 4);
-     }
 
-      Crp.Croprect       := Rect(StrToIntDef(myst.Strings[0], 2),StrToIntDef(myst.Strings[1], 4),StrToIntDef(myst.Strings[2], 4),StrToIntDef(myst.Strings[3], 4));
-
-      if Crp.Croprect.IsEmpty then
-      Crp.Croprect       := Rect(0,0,1,1);
-
-      Crp.Fontcolor      := StringToColorDef(myst.Strings[4], clNone);
-    finally
-      myst.Free;
-    end;
-  end;
-end;
-
-function croptostring(Crp: TONURCustomCrop): string;
-begin
- // Result := '';
-  //if Crp <> nil then
-  Result := IntToStr(Crp.Croprect.LEFT) + ',' + IntToStr(Crp.Croprect.TOP) + ',' +
-      IntToStr(Crp.Croprect.RIGHT) + ',' + IntToStr(Crp.Croprect.BOTTOM) + ',' +
-      ColorToString(Crp.Fontcolor);
-end;
 
 
 
@@ -1535,6 +1615,38 @@ begin
         end;
       end;
 
+      if (com is TdenemeButton) then
+      with (TdenemeButton(com)) do
+      begin
+        for a := 0 to Customcroplist.Count - 1 do
+        begin
+          cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+       //   writeln(ReadString(TdenemeButton(com).skinname,TONURCustomCrop(TdenemeButton(com).Customcroplist[a]).Cropname,'YOK'));
+        end;
+      end;
+
+       if (com is TDenemeEdit) then
+      with (TDenemeEdit(com)) do
+      begin
+        for a := 0 to Customcroplist.Count - 1 do
+        begin
+          cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+       //   writeln(ReadString(TdenemeButton(com).skinname,TONURCustomCrop(TdenemeButton(com).Customcroplist[a]).Cropname,'YOK'));
+        end;
+      end;
+
+      if (com is TDenemeCheckBox) then
+      with (TDenemeCheckBox(com)) do
+      begin
+        for a := 0 to Customcroplist.Count - 1 do
+        begin
+          cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+       //   writeln(ReadString(TdenemeButton(com).skinname,TONURCustomCrop(TdenemeButton(com).Customcroplist[a]).Cropname,'YOK'));
+        end;
+      end;
+
+
+
       if (com is TONURCustomControl) and (TONURCustomControl(com).Skindata = Self) then
       begin
         with (TONURCustomControl(com)) do
@@ -1553,6 +1665,8 @@ begin
 
           end;
       end;
+
+
 
       if (com is TONURPopupMenu) and (TONURPopupMenu(com).Skindata = Self) then
       begin
@@ -1814,12 +1928,12 @@ begin
       //   begin
 
       // skin info
-      Skinname := ReadString('GENERAL', 'SKINNAME', 'DEFAULT');
-      version := ReadString('GENERAL', 'VERSION', '1.0');
-      author := ReadString('GENERAL', 'AUTHOR', 'SKIN CODER');
-      email := ReadString('GENERAL', 'EMAIL', 'mail@mail.com');
-      homepage := ReadString('GENERAL', 'HOMEPAGE', 'www.lazarus-ide.com');
-      comment := ReadString('GENERAL', 'COMMENT', 'SKIN COMMENT');
+      Skinname   := ReadString('GENERAL', 'SKINNAME', 'DEFAULT');
+      version    := ReadString('GENERAL', 'VERSION', '1.0');
+      author     := ReadString('GENERAL', 'AUTHOR', 'SKIN CODER');
+      email      := ReadString('GENERAL', 'EMAIL', 'mail@mail.com');
+      homepage   := ReadString('GENERAL', 'HOMEPAGE', 'www.lazarus-ide.com');
+      comment    := ReadString('GENERAL', 'COMMENT', 'SKIN COMMENT');
       screenshot := ReadString('GENERAL', 'SCREENSHOT', '');
 
       // skin info finish
@@ -1887,20 +2001,59 @@ begin
         if (fparent.Components[i] is TONURCustomControl) and
           (TONURCustomControl(fparent.Components[i]).Skindata = Self) then
         begin
-          with (TONURCustomControl(fparent.Components[i])) do
 
+          with (TONURCustomControl(fparent.Components[i])) do
+          begin
             for a := 0 to Customcroplist.Count - 1 do
               cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
 
+           Skindata:=self;
+          end;
         end;
 
         if (fparent.Components[i] is TONURGraphicControl) and
           (TONURGraphicControl(fparent.Components[i]).Skindata = Self) then
         begin
           with (TONURGraphicControl(fparent.Components[i])) do
+          begin
              for a := 0 to Customcroplist.Count - 1 do
               cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+           Skindata:=self;
+          end;
+        end;
 
+
+        if (fparent.Components[i] is TdenemeButton) and
+          (TdenemeButton(fparent.Components[i]).Skindata = Self) then
+        begin
+          with (TdenemeButton(fparent.Components[i])) do
+          begin
+             for a := 0 to Customcroplist.Count - 1 do
+              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+           Skindata:=self;
+          end;
+        end;
+
+        if (fparent.Components[i] is TDenemeEdit) and
+          (TDenemeEdit(fparent.Components[i]).Skindata = Self) then
+        begin
+          with (TDenemeEdit(fparent.Components[i])) do
+          begin
+             for a := 0 to Customcroplist.Count - 1 do
+              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+           Skindata:=self;
+          end;
+        end;
+
+        if (fparent.Components[i] is TDenemeCheckBox) and
+          (TDenemeCheckBox(fparent.Components[i]).Skindata = Self) then
+        begin
+          with (TDenemeCheckBox(fparent.Components[i])) do
+          begin
+             for a := 0 to Customcroplist.Count - 1 do
+              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+           Skindata:=self;
+          end;
         end;
 
 
@@ -2135,7 +2288,12 @@ begin
 end;
 
 destructor TONURGraphicControl.Destroy;
+var
+i:byte;
 begin
+  for i:=0 to Customcroplist.Count-1 do
+   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+
   if Assigned(resim) then
   FreeAndNil(resim);
   Customcroplist.Free;

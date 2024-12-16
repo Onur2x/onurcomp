@@ -5,12 +5,122 @@ unit onurbutton;
 interface
 
 uses
-  Windows, SysUtils, Classes, Controls, Graphics, ExtCtrls, BGRABitmap, BGRABitmapTypes,ComponentEditors, PropEdits, onurctrl;
+  Types,Windows,StdCtrls,LMessages,SysUtils,Classes,Controls,Graphics,ExtCtrls,
+  BGRABitmap,BGRABitmapTypes,ComponentEditors,PropEdits,onurctrl;
 
   type
   //SYSTEM BUTTON -- close minimize help tray etc..
 
    TONURButtonType       = (OBTNClose, OBTNMinimize,OBTNMaximize, OBTNHelp);
+
+
+
+   TDenemeCheckBox = class(TCheckBox)
+   private
+    obenter, obleave, obdown, obdisableON,obdisableoff, obcheckenters, obcheckleaves: TONURCUSTOMCROP;
+    Fstate: TONURButtonState;
+    Fskindata    : TONURImg;
+    resim       : TBGRABitmap;
+   protected
+    procedure SetSkindata(Aimg: TONURImg);
+    procedure MouseEnter; override;
+    procedure MouseLeave; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
+    public
+    Customcroplist     : TFPList;
+    alpha              : byte;
+    skinname           : string;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+   // procedure Paint; override;
+   published
+    property Skindata :TONURImg read Fskindata write SetSkindata;
+   end;
+
+   TdenemeButton = class(TButton)
+   private
+    FNormalTL,FNormalTR,FNormalT,
+    FNormalBL,FNormalBR,FNormalB,
+    FNormalL,FNormalR,FNormalC,
+
+    FHoverTL,FHoverTR,FHoverT,
+    FHoverBL,FHoverBR,FHoverB,
+    FHoverL,FHoverR,FHoverC,
+
+    FPressTL,FPressTR,FPressT,
+    FPressBL,FPressBR,FPressB,
+    FPressL,FPressR,FPressC,
+
+    FDisableTL,FDisableTR,FDisableT,
+    FDisableBL,FDisableBR,FDisableB,
+    FDisableL,FDisableR,FDisableC : TONURCUSTOMCROP;
+
+    Fstate: TONURButtonState;
+    Fskindata    : TONURImg;
+    Fresim,FBGDisable,FBGHover,FBGNormal,FBGPress:TBGRABitmap;
+
+
+   protected
+    procedure SetSkindata(Aimg: TONURImg);
+     procedure MouseEnter; override;
+    procedure MouseLeave; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
+    public
+    Customcroplist     : TFPList;
+    alpha              : byte;
+    skinname           : string;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+   // procedure Paint; override;
+   published
+    property Skindata :TONURImg read Fskindata write SetSkindata;
+   end;
+
+   TDenemeEdit = class(TEdit)
+   private
+    resim,fback,fhback:TBGRABitmap;
+   // obenter, obleave, obdown, obdisableON,obdisableoff, obcheckenters, obcheckleaves: TONURCUSTOMCROP;
+    Fleft, FTopleft, FBottomleft, FRight, FTopRight, FBottomRight,
+    FTop, FBottom, FCenter: TONURCUSTOMCROP;
+    Fhleft, FhTopleft, FhBottomleft, FhRight, FhTopRight, FhBottomRight,
+    FhTop, FhBottom, FhCenter: TONURCUSTOMCROP;
+    Fstate: TONURButtonState;
+    Fskindata    : TONURImg;
+    FCanvas: TCanvas;
+    procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
+   protected
+    procedure SetSkindata(Aimg: TONURImg);
+    procedure MouseLeave; override;
+    procedure MouseEnter; override;
+    procedure WndProc(var Message: TMessage); override;
+    procedure Paint; virtual;
+    procedure PaintWindow(DC: HDC); override;
+    property Canvas: TCanvas read FCanvas;
+  {  procedure MouseEnter; override;
+    procedure MouseLeave; override;
+    procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;
+    procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
+      X: integer; Y: integer); override;  }
+
+    public
+    Customcroplist     : TFPList;
+    alpha              : byte;
+    skinname           : string;
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+   // procedure Paint; override;
+   published
+    property Skindata :TONURImg read Fskindata write SetSkindata;
+   end;
 
    { TONURsystemButton }
 
@@ -914,6 +1024,9 @@ begin
   RegisterComponents('ONUR', [TONURNormalLabel]);
   RegisterComponents('ONUR', [TONURLed]);
 
+  RegisterComponents('ONUR', [TdenemeButton]);
+  RegisterComponents('ONUR', [TDenemeCheckBox]);
+
   RegisterClasses([TONURNavMenuButton, TONURNavButton]);
   RegisterNoIcon([TONURNavButton]);
 
@@ -1073,6 +1186,1101 @@ procedure TONURButtonActiveButtonProperty.GetValues(Proc: TGetStrProc);
           (TONURNavButton(Component).ButtonControl = GetComponent(0)) then
           Proc(Component.Name);
       end;
+end;
+
+procedure TDenemeCheckBox.SetSkindata(Aimg:TONURImg);
+begin
+ if (Aimg <> nil) then
+ begin
+    fSkindata := nil;
+    fSkindata := Aimg;
+
+    Skindata.ReadskinsComp(self);
+   // Invalidate;
+ end
+ else
+ begin
+    FSkindata := nil;
+ end;
+
+end;
+
+procedure TDenemeCheckBox.MouseEnter;
+begin
+  inherited MouseEnter;
+  fstate := obshover;
+//  Invalidate;
+end;
+
+procedure TDenemeCheckBox.MouseLeave;
+begin
+  inherited MouseLeave;
+  fstate := obsnormal;
+//  Invalidate;
+end;
+
+procedure TDenemeCheckBox.MouseDown(Button:TMouseButton;Shift:TShiftState;X:
+  integer;Y:integer);
+begin
+  inherited MouseDown(Button,Shift,X,Y);
+  if Button = mbLeft then
+  begin
+   // checked := not fchecked;
+    fState := obspressed;
+//    if Assigned(FOnChange) then FOnChange(Self);
+ //   Invalidate;
+  end;
+end;
+
+procedure TDenemeCheckBox.MouseUp(Button:TMouseButton;Shift:TShiftState;X:
+  integer;Y:integer);
+begin
+  inherited MouseUp(Button,Shift,X,Y);
+  fstate := obshover;
+//  Invalidate;
+end;
+
+procedure TDenemeCheckBox.WMPaint(var Msg:TLMPaint);
+const
+  SPACEs: Integer = 2;
+var
+  txtW, txtH, txtX, BtnWidth: Integer;
+  PS     : TPaintStruct;
+  canv   : TControlCanvas; //    DC,MemDC: HDC;
+  DR, rc : TRect;
+begin
+  inherited;
+
+  if not Assigned(resim) then exit;
+  if resim.Width<0 then exit;
+  if not Visible then exit;
+
+  txtW:= resim.canvas.TextWidth(Caption);
+  txtH:= resim.canvas.TextHeight(Caption);
+  BtnWidth:=20;
+
+  if BiDiMode in [bdRightToLeft, bdRightToLeftReadingOnly] then
+    txtX:= self.clientWidth - BtnWidth - SPACEs - txtW
+  else
+    txtX:= BtnWidth + SPACEs;
+   // SetBkMode(canv.Handle,TRANSPARENT);
+
+
+        if (Skindata <> nil) and not (csDesigning in ComponentState) then
+        begin
+          resim.SetSize(0,0);
+          resim.SetSize(clientWidth,clientHeight);
+
+
+
+
+
+
+          if Enabled = True then
+          begin
+            if Checked = True then
+            begin
+              case Fstate of
+                obsNormal:
+                begin
+                  DR :=obcheckleaves.Croprect;
+                  Self.Font.Color := obcheckleaves.Fontcolor;
+                end;
+                obshover:
+                begin
+                  DR :=obcheckenters.Croprect;
+                  Self.Font.Color := obcheckenters.Fontcolor;
+                end;
+                obspressed:
+                begin
+                  DR := obdown.Croprect;
+                  Self.Font.Color := obdown.Fontcolor;
+                end;
+              end;
+            end
+            else
+            begin
+              case Fstate of
+                obsNormal:
+                begin
+                  DR := obleave.Croprect;
+                  Self.Font.Color := obleave.Fontcolor;
+                end;
+                obshover:
+                begin
+                  DR := obenter.Croprect;
+                  Self.Font.Color := obenter.Fontcolor;
+                end;
+                obspressed:
+                begin
+                  DR := obdown.Croprect;
+                  Self.Font.Color := obdown.Fontcolor;
+                end;
+              end;
+            end;
+          end
+          else
+          begin
+            if Checked = True then
+            begin
+                DR := obdisableon.Croprect;
+                Self.Font.Color := obdisableon.Fontcolor;
+            end else
+            begin
+                DR := obdisableoff.Croprect;
+                Self.Font.Color := obdisableoff.Fontcolor;
+            end;
+          end;
+
+         DrawPartnormal(DR, Self.skindata.fimage,self.resim, rect({txtX}0,0,BtnWidth,self.ClientHeight), alpha);
+
+        end else
+        begin
+          if Checked = True then
+           resim.Rectangle(rect(0{txtX},0,BtnWidth,self.ClientHeight),bgrablack,bgra(155, 155, 155),dmset)
+          else
+           resim.Rectangle(rect(0{txtX},0,BtnWidth,self.ClientHeight),bgrablack,BGRAPixelTransparent,dmset);
+
+        end;
+       // canv.TextRect(ClientRect,0,0,caption,[tfSingleLine, tfVerticalCenter, tfCenter, tfEndEllipsis]);
+      //  DrawText(canv.Handle,Pchar(Caption),Length(Caption),rc,DT_CENTER or DT_VCENTER or DT_SINGLELINE);
+
+        try
+
+           canv := TControlCanvas.Create;
+       //    writeln('YES');
+           canv.Control := Self;
+
+         //   resim.Canvas.Brush.Style:=bsClear;
+
+           // StateImages.Draw(canv,0,0,Ord(Self.Checked)); // checkbox
+        //    resim.canvas.TextOut(txtX, (Height - txtH) div 2 + 1, Caption);
+
+          //  resim.SaveToFile('C:\lazarus\components\paketler\ONUR\onurcomp\backup\aa.png');
+
+          //  resim.Draw(canv,0,0);
+
+
+             if Msg.DC = 0 then
+              canv.Handle := BeginPaint(Handle, PS)
+            else
+              canv.Handle := Msg.DC;
+
+
+            resim.Canvas.Brush.Style:=bsClear;
+
+           // StateImages.Draw(canv,0,0,Ord(Self.Checked)); // checkbox
+            //resim.canvas.TextOut(Txtlft,TxtTop, text);
+            rc:=ClientRect;
+            DrawText(resim.Canvas.Handle,Pchar(Caption),Length(Caption),rc,DT_LEFT or DT_VCENTER or DT_SINGLELINE);
+
+          //  resim.canvas.TextOut(txtX, (Height - txtH) div 2 + 1, Caption);
+            resim.SaveToFile('C:\lazarus\components\paketler\ONUR\onurcomp\backup\aa.png');
+
+            resim.Draw(canv,0,0);
+
+            canv.Handle := 0;
+            if Msg.DC = 0 then EndPaint(Handle, PS);
+
+        finally
+         canv.Free;
+        end;
+
+end;
+
+constructor TDenemeCheckBox.Create(AOwner:TComponent);
+begin
+  inherited Create(AOwner);
+  skinname          := 'checkbox';
+  alpha             := 255;
+  Fstate            := obsNormal;
+  Resim             := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  Customcroplist    := TFPList.create;
+//  crop              := True;
+  obenter           := TONURCUSTOMCROP.Create('NORMALHOVER');
+  obleave           := TONURCUSTOMCROP.Create('NORMAL');
+  obdown            := TONURCUSTOMCROP.Create('PRESSED');
+  obcheckleaves     := TONURCUSTOMCROP.Create('CHECK');
+  obcheckenters     := TONURCUSTOMCROP.Create('CHECKHOVER');
+  obdisableoff      := TONURCUSTOMCROP.Create('DISABLENORMAL');
+  obdisableon       := TONURCUSTOMCROP.Create('DISABLECHECK');
+
+  Customcroplist.Add(obleave);
+  Customcroplist.Add(obenter);
+  Customcroplist.Add(obdown);
+  Customcroplist.Add(obcheckleaves);
+  Customcroplist.Add(obcheckenters);
+  Customcroplist.Add(obdisableon);
+  Customcroplist.Add(obdisableoff);
+end;
+
+destructor TDenemeCheckBox.Destroy;
+var
+i:byte;
+begin
+  for i:=0 to Customcroplist.count-1 do
+   TONURCustomCrop(Customcroplist[i]).free;
+
+  Customcroplist.Clear;
+  FreeAndNil(Customcroplist);
+  FreeAndNil(Resim);
+  inherited Destroy;
+end;
+
+
+
+procedure TdenemeButton.SetSkindata(Aimg:TONURImg);
+var
+  tl,t,tr,bl,b,br,l,r,c:Trect;
+begin
+ if (Aimg <> nil) then
+  begin
+    fSkindata := nil;
+    fSkindata := Aimg;
+
+    Skindata.ReadskinsComp(self);
+
+  end
+  else
+  begin
+    FSkindata := nil;
+  end;
+
+  FBGNormal.SetSize(0,0);
+  FBGHover.SetSize(0,0);
+  FBGPress.SetSize(0,0);
+  FBGDisable.SetSize(0,0);
+
+
+  if Fskindata=nil then exit;
+
+  FBGNormal.SetSize(FNormalTL.Croprect.Width+FNormalT.Croprect.Width+FNormalTR.Croprect.Width,FNormalTL.Croprect.Height+FNormalL.Croprect.Height+FNormalBL.Croprect.Height);
+  FBGHover.SetSize(FHoverTL.Croprect.Width+FHoverT.Croprect.Width+FHoverTR.Croprect.Width,FHoverTL.Croprect.Height+FHoverL.Croprect.Height+FHoverBL.Croprect.Height);
+  FBGPress.SetSize(FPressTL.Croprect.Width+FPressT.Croprect.Width+FPressTR.Croprect.Width,FPressTL.Croprect.Height+FPressL.Croprect.Height+FPressBL.Croprect.Height);
+  FBGDisable.SetSize(FDisableTL.Croprect.Width+FDisableT.Croprect.Width+FDisableTR.Croprect.Width,FDisableTL.Croprect.Height+FDisableL.Croprect.Height+FDisableBL.Croprect.Height);
+
+
+  //RECT LOAD
+  tl := Rect(0,0,FNormalTL.Croprect.Width,FNormalTL.Croprect.Height);
+  t  := Rect(FNormalTL.Croprect.Width,0,FNormalTL.Croprect.Width+FNormalT.Croprect.Width,FNormalT.Croprect.Height);
+  tr := Rect(FNormalTL.Croprect.Width+FNormalT.Croprect.Width,0,FNormalTL.Croprect.Width+FNormalT.Croprect.Width+FNormalTR.Croprect.Width,FNormalTR.Croprect.Height);
+  bl := Rect(0,FBGNormal.Height-FNormalbl.Croprect.Height,FNormalbl.Croprect.Width,FBGNormal.Height);
+  b  := Rect(FNormalBL.Croprect.Width,FBGNormal.Height-FNormalB.Croprect.Height,FBGNormal.Width-(FNormalBR.Croprect.Width),FBGNormal.Height);
+  br := Rect(FBGNormal.Width-FNormalBR.Croprect.Width,FBGNormal.Height-FNormalBR.Croprect.Height,FBGNormal.Width,FBGNormal.Height);
+  l  := Rect(0,FNormalTL.Croprect.Height,FNormalL.Croprect.Width,FNormalTL.Croprect.Height+FNormalL.Croprect.Height);
+  r  := Rect(FBGNormal.Width-FNormalR.Croprect.Width,FNormalTR.Croprect.Height,FBGNormal.Width, FBGNormal.Height- FNormalBR.Croprect.Height);
+  c  := Rect(FNormalL.Croprect.Width,FNormalT.Croprect.Height,FBGNormal.Width-FNormalR.Croprect.Width,FBGNormal.Height-FNormalB.Croprect.Height);
+
+  /// LOAD FORM SKIN IMAGE TO NORMAL BUTTON IMAGE
+
+
+  // NORMAL BUTTON IMAGE
+ // DrawPartstrechRegion(FNormalTL.rect,FBGNormal,fSkindata.fimage,
+  DrawPartnormal(FNormalTL.Croprect,FBGNormal,fSkindata.Fimage,tl,alpha);
+  DrawPartnormal(FNormalT.Croprect,FBGNormal,fSkindata.Fimage,t,alpha);
+  DrawPartnormal(FNormalTr.Croprect,FBGNormal,fSkindata.Fimage,tr,alpha);
+  DrawPartnormal(FNormalbL.Croprect,FBGNormal,fSkindata.Fimage,bl,alpha);
+  DrawPartnormal(FNormalb.Croprect,FBGNormal,fSkindata.Fimage,b,alpha);
+  DrawPartnormal(FNormalBr.Croprect,FBGNormal,fSkindata.Fimage,br,alpha);
+  DrawPartnormal(FNormalL.Croprect,FBGNormal,fSkindata.Fimage,l,alpha);
+  DrawPartnormal(FNormalR.Croprect,FBGNormal,fSkindata.Fimage,r,alpha);
+  DrawPartnormal(FNormalC.Croprect,FBGNormal,fSkindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGNormal,FBGNormal.Resample(clientWidth,clientHeight));
+
+
+
+  //RECT LOAD
+  tl := Rect(0,0,FHoverTL.Croprect.Width,FHoverTL.Croprect.Height);
+  t  := Rect(FHoverTL.Croprect.Width,0,FHoverTL.Croprect.Width+FHoverT.Croprect.Width,FHoverT.Croprect.Height);
+  tr := Rect(FHoverTL.Croprect.Width+FHoverT.Croprect.Width,0,FHoverTL.Croprect.Width+FHoverT.Croprect.Width+FHoverTR.Croprect.Width,FHoverTR.Croprect.Height);
+  bl := Rect(0,FBGHover.Height-FHoverbl.Croprect.Height,FHoverbl.Croprect.Width,FBGHover.Height);
+  b  := Rect(FHoverBL.Croprect.Width,FBGHover.Height-FHoverB.Croprect.Height,FBGHover.Width-(FHoverBR.Croprect.Width),FBGHover.Height);
+  br := Rect(FBGHover.Width-FHoverBR.Croprect.Width,FBGHover.Height-FHoverBR.Croprect.Height,FBGHover.Width,FBGHover.Height);
+  l  := Rect(0,FHoverTL.Croprect.Height,FHoverL.Croprect.Width,FHoverTL.Croprect.Height+FHoverL.Croprect.Height);
+  r  := Rect(FBGHover.Width-FHoverR.Croprect.Width,FHoverTR.Croprect.Height,FBGHover.Width, FBGHover.Height- FHoverBR.Croprect.Height);
+  c  := Rect(FHoverL.Croprect.Width,FHoverT.Croprect.Height,FBGHover.Width-FHoverR.Croprect.Width,FBGHover.Height-FHoverB.Croprect.Height);
+
+
+  // HOVER BUTTON IMAGE
+  DrawPartnormal(FHoverTL.Croprect,FBGHover,fSkindata.Fimage,tl,alpha);
+  DrawPartnormal(FHoverT.Croprect,FBGHover,fSkindata.Fimage,t,alpha);
+  DrawPartnormal(FHoverTr.Croprect,FBGHover,fSkindata.Fimage,tr,alpha);
+  DrawPartnormal(FHoverbL.Croprect,FBGHover,fSkindata.Fimage,bl,alpha);
+  DrawPartnormal(FHoverb.Croprect,FBGHover,fSkindata.Fimage,b,alpha);
+  DrawPartnormal(FHoverBr.Croprect,FBGHover,fSkindata.Fimage,br,alpha);
+  DrawPartnormal(FHoverL.Croprect,FBGHover,fSkindata.Fimage,l,alpha);
+  DrawPartnormal(FHoverR.Croprect,FBGHover,fSkindata.Fimage,r,alpha);
+  DrawPartnormal(FHoverC.Croprect,FBGHover,fSkindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGHover,FBGHover.Resample(clientWidth,clientHeight));
+
+
+
+  //RECT LOAD
+  tl := Rect(0,0,FPressTL.Croprect.Width,FPressTL.Croprect.Height);
+  t  := Rect(FPressTL.Croprect.Width,0,FPressTL.Croprect.Width+FPressT.Croprect.Width,FPressT.Croprect.Height);
+  tr := Rect(FPressTL.Croprect.Width+FPressT.Croprect.Width,0,FPressTL.Croprect.Width+FPressT.Croprect.Width+FPressTR.Croprect.Width,FPressTR.Croprect.Height);
+  bl := Rect(0,FBGPress.Height-FPressbl.Croprect.Height,FPressbl.Croprect.Width,FBGPress.Height);
+  b  := Rect(FPressBL.Croprect.Width,FBGPress.Height-FPressB.Croprect.Height,FBGPress.Width-(FPressBR.Croprect.Width),FBGPress.Height);
+  br := Rect(FBGPress.Width-FPressBR.Croprect.Width,FBGPress.Height-FPressBR.Croprect.Height,FBGPress.Width,FBGPress.Height);
+  l  := Rect(0,FPressTL.Croprect.Height,FPressL.Croprect.Width,FPressTL.Croprect.Height+FPressL.Croprect.Height);
+  r  := Rect(FBGPress.Width-FPressR.Croprect.Width,FPressTR.Croprect.Height,FBGPress.Width, FBGPress.Height- FPressBR.Croprect.Height);
+  c  := Rect(FPressL.Croprect.Width,FPressT.Croprect.Height,FBGPress.Width-FPressR.Croprect.Width,FBGPress.Height-FPressB.Croprect.Height);
+
+
+
+ // HOVER BUTTON IMAGE
+  DrawPartnormal(FPressTL.Croprect,FBGPress,fSkindata.Fimage,tl,alpha);
+  DrawPartnormal(FPressT.Croprect,FBGPress,fSkindata.Fimage,t,alpha);
+  DrawPartnormal(FPressTr.Croprect,FBGPress,fSkindata.Fimage,tr,alpha);
+  DrawPartnormal(FPressbL.Croprect,FBGPress,fSkindata.Fimage,bl,alpha);
+  DrawPartnormal(FPressb.Croprect,FBGPress,fSkindata.Fimage,b,alpha);
+  DrawPartnormal(FPressBr.Croprect,FBGPress,fSkindata.Fimage,br,alpha);
+  DrawPartnormal(FPressL.Croprect,FBGPress,fSkindata.Fimage,l,alpha);
+  DrawPartnormal(FPressR.Croprect,FBGPress,fSkindata.Fimage,r,alpha);
+  DrawPartnormal(FPressC.Croprect,FBGPress,fSkindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGPress,FBGPress.Resample(clientWidth,clientHeight));
+
+ //RECT LOAD
+  tl := Rect(0,0,FDisableTL.Croprect.Width,FDisableTL.Croprect.Height);
+  t  := Rect(FDisableTL.Croprect.Width,0,FDisableTL.Croprect.Width+FDisableT.Croprect.Width,FDisableT.Croprect.Height);
+  tr := Rect(FDisableTL.Croprect.Width+FDisableT.Croprect.Width,0,FDisableTL.Croprect.Width+FDisableT.Croprect.Width+FDisableTR.Croprect.Width,FDisableTR.Croprect.Height);
+  bl := Rect(0,FBGDisable.Height-FDisablebl.Croprect.Height,FDisablebl.Croprect.Width,FBGDisable.Height);
+  b  := Rect(FDisableBL.Croprect.Width,FBGDisable.Height-FDisableB.Croprect.Height,FBGDisable.Width-(FDisableBR.Croprect.Width),FBGDisable.Height);
+  br := Rect(FBGDisable.Width-FDisableBR.Croprect.Width,FBGDisable.Height-FDisableBR.Croprect.Height,FBGDisable.Width,FBGDisable.Height);
+  l  := Rect(0,FDisableTL.Croprect.Height,FDisableL.Croprect.Width,FDisableTL.Croprect.Height+FDisableL.Croprect.Height);
+  r  := Rect(FBGDisable.Width-FDisableR.Croprect.Width,FDisableTR.Croprect.Height,FBGDisable.Width, FBGDisable.Height- FDisableBR.Croprect.Height);
+  c  := Rect(FDisableL.Croprect.Width,FDisableT.Croprect.Height,FBGDisable.Width-FDisableR.Croprect.Width,FBGDisable.Height-FDisableB.Croprect.Height);
+
+
+
+ // PRESS BUTTON IMAGE
+  DrawPartnormal(FDisableTL.Croprect,FBGDisable,fSkindata.Fimage,tl,alpha);
+  DrawPartnormal(FDisableT.Croprect,FBGDisable,fSkindata.Fimage,t,alpha);
+  DrawPartnormal(FDisableTr.Croprect,FBGDisable,fSkindata.Fimage,tr,alpha);
+  DrawPartnormal(FDisablebL.Croprect,FBGDisable,fSkindata.Fimage,bl,alpha);
+  DrawPartnormal(FDisableb.Croprect,FBGDisable,fSkindata.Fimage,b,alpha);
+  DrawPartnormal(FDisableBr.Croprect,FBGDisable,fSkindata.Fimage,br,alpha);
+  DrawPartnormal(FDisableL.Croprect,FBGDisable,fSkindata.Fimage,l,alpha);
+  DrawPartnormal(FDisableR.Croprect,FBGDisable,fSkindata.Fimage,r,alpha);
+  DrawPartnormal(FDisableC.Croprect,FBGDisable,fSkindata.Fimage,c,alpha);
+
+  BGRAReplace(FBGDisable,FBGDisable.Resample(clientWidth,clientHeight));
+
+
+
+// Invalidate;
+end;
+
+procedure TdenemeButton.MouseEnter;
+begin
+  if (csDesigning in ComponentState) then    exit;
+  if (Enabled=false) or (Fstate = obshover) then  Exit;
+  inherited MouseEnter;
+  Fstate := obshover;
+  Invalidate;
+end;
+
+procedure TdenemeButton.MouseLeave;
+begin
+   if (csDesigning in ComponentState) then
+  exit;
+  if (Enabled=false) or (Fstate = obsnormal) then
+  Exit;
+  inherited MouseLeave;
+  Fstate := obsnormal;
+  Invalidate;
+end;
+
+procedure TdenemeButton.MouseDown(Button:TMouseButton;Shift:TShiftState;X:
+  integer;Y:integer);
+begin
+  if (csDesigning in ComponentState) then
+  exit;
+  if (Enabled=false) or (Fstate = obspressed) then
+  Exit;
+  inherited MouseDown(Button, Shift, X, Y);
+  if Button = mbLeft then
+  begin
+    Fstate := obspressed;
+    Invalidate;
+  end;
+end;
+
+procedure TdenemeButton.MouseUp(Button:TMouseButton;Shift:TShiftState;X:integer;
+  Y:integer);
+begin
+  inherited MouseUp(Button, Shift, X, Y);
+  Fstate := obsnormal;
+  Invalidate;
+end;
+
+procedure TdenemeButton.WMPaint(var Msg:TLMPaint);
+var
+//  tl,t,tr,bl,b,br,l,r,c:Trect;
+    //PS : TPaintStruct;
+    canv : TControlCanvas;
+ //    DC,MemDC: HDC;
+     rc:TRect;
+  x, y: integer;
+  hdc1, SpanRgn: hdc;//integer;
+  WindowRgn: HRGN;
+  p: PBGRAPixel;
+
+begin
+  inherited;
+  if not Assigned(fresim) then exit;
+  if fresim.Width<0 then exit;
+  if not Visible then exit;
+
+
+      try
+
+        if (Skindata <> nil) and not (csDesigning in ComponentState) then
+        begin
+          fresim.SetSize(0,0);
+          fresim.SetSize(clientWidth,clientHeight);
+
+          if Enabled = True then
+          begin
+            case Fstate of
+                  obsNormal  : begin fresim.PutImage(0,0,FBGNormal,dmDrawWithTransparency); self.font.Color:=FNormalC.Fontcolor end;
+                  obshover   : begin fresim.PutImage(0,0,FBGHover,dmDrawWithTransparency); self.font.Color:=FHoverC.Fontcolor end;
+                  obspressed : begin fresim.PutImage(0,0,FBGPress,dmDrawWithTransparency); self.font.Color:=FPressC.Fontcolor end;
+                  else
+                  begin fresim.PutImage(0,0,FBGNormal,dmDrawWithTransparency); self.font.Color:=FNormalC.Fontcolor end;
+            end;
+          end else
+          begin
+            fresim.PutImage(0,0,FBGDisable,dmDrawWithTransparency); self.font.Color:=FDisableC.Fontcolor;
+          end;
+        end
+        else
+        begin
+          fresim.SetSize(0,0);
+          fresim.SetSize(self.Width, Self.Height);
+          case Fstate of
+            obsNormal:
+            fresim.GradientFill(0, 0, Width, Height, BGRA(40, 40, 40), BGRA(80, 80, 80), gtLinear,
+              PointF(0, 0), PointF(0, Height), dmSet);
+
+            obshover:
+            fresim.GradientFill(0, 0, Width, Height, BGRA(90, 90, 90), BGRA(120, 120, 120), gtLinear,
+              PointF(0, 0), PointF(0, Height), dmSet);
+            obspressed:
+            fresim.GradientFill(0, 0, Width, Height, BGRA(20, 20, 20), BGRA(40, 40, 40), gtLinear,
+              PointF(0, 0), PointF(0, Height), dmSet);
+          end;
+        end;
+
+         canv := TControlCanvas.Create;
+       //  writeln('YES');
+         canv.Control := Self;
+
+        if fresim.Width>0 then
+        begin
+           WindowRgn := CreateRectRgn(0, 0, fresim.Width, fresim.Height);
+
+            for Y := 0 to fresim.Height - 1 do
+            begin
+              p := fresim.Scanline[Y];
+              for X := fresim.Width - 1 downto 0 do
+              begin
+
+                if p^.Alpha < 20 then//<255 then
+                begin
+                  p^ := BGRAPixelTransparent;
+                  SpanRgn := CreateRectRgn(x, y, x + 1, y + 1);
+                  CombineRgn(WindowRgn, WindowRgn, SpanRgn, RGN_DIFF);
+                  DeleteObject(SpanRgn);
+                end;
+                Inc(p);
+              end;
+            end;
+
+            fresim.InvalidateBitmap;
+
+
+            SetWindowRgn(self.Handle, WindowRgn, True);
+            hdc1 := GetDC(self.Handle);
+            ReleaseDC(self.Handle, hdc1);
+            DeleteObject(WindowRgn);
+            DeleteObject(hdc1);
+
+            rc:=ClientRect;
+            fresim.Canvas.Brush.Style:=bsClear;
+            DrawText(fresim.Canvas.Handle,Pchar(Caption),Length(Caption),rc,DT_CENTER or DT_VCENTER or DT_SINGLELINE);
+
+
+
+            fresim.Draw(canv,0,0);
+        end;
+       // canv.TextRect(ClientRect,0,0,caption,[tfSingleLine, tfVerticalCenter, tfCenter, tfEndEllipsis]);
+      //  DrawText(canv.Handle,Pchar(Caption),Length(Caption),rc,DT_CENTER or DT_VCENTER or DT_SINGLELINE);
+      finally
+        canv.Free;
+      end;
+
+
+
+
+//  inherited WMPaint;
+end;
+
+constructor TdenemeButton.Create(AOwner:TComponent);
+begin
+  inherited Create(AOwner);
+  self.Width              := 100;
+  self.Height             := 30;
+  alpha                   := 255;
+  Fstate                  := obsNormal;
+  FResim                  := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+//  crop                    := True;
+  fresim.SetSize(self.Width, self.Height);
+  Customcroplist          := TFPList.Create;
+
+
+  skinname                := 'cropbutton';
+  FNormalTL               := TONURCUSTOMCROP.Create('NORMALTOPLEFT');
+  FNormalTR               := TONURCUSTOMCROP.Create('NORMALTOPRIGHT');
+  FNormalT                := TONURCUSTOMCROP.Create('NORMALTOP');
+  FNormalBL               := TONURCUSTOMCROP.Create('NORMALBOTTOMLEFT');
+  FNormalBR               := TONURCUSTOMCROP.Create('NORMALBOTTOMRIGHT');
+  FNormalB                := TONURCUSTOMCROP.Create('NORMALBOTTOM');
+  FNormalL                := TONURCUSTOMCROP.Create('NORMALLEFT');
+  FNormalR                := TONURCUSTOMCROP.Create('NORMALRIGHT');
+  FNormalC                := TONURCUSTOMCROP.Create('NORMALCENTER');
+
+  FHoverTL                := TONURCUSTOMCROP.Create('HOVERTOPLEFT');
+  FHoverTR                := TONURCUSTOMCROP.Create('HOVERTOPRIGHT');
+  FHoverT                 := TONURCUSTOMCROP.Create('HOVERTOP');
+  FHoverBL                := TONURCUSTOMCROP.Create('HOVERBOTTOMLEFT');
+  FHoverBR                := TONURCUSTOMCROP.Create('HOVERBOTTOMRIGHT');
+  FHoverB                 := TONURCUSTOMCROP.Create('HOVERBOTTOM');
+  FHoverL                 := TONURCUSTOMCROP.Create('HOVERLEFT');
+  FHoverR                 := TONURCUSTOMCROP.Create('HOVERRIGHT');
+  FHoverC                 := TONURCUSTOMCROP.Create('HOVERCENTER');
+
+  FPressTL                := TONURCUSTOMCROP.Create('PRESSTOPLEFT');
+  FPressTR                := TONURCUSTOMCROP.Create('PRESSTOPRIGHT');
+  FPressT                 := TONURCUSTOMCROP.Create('PRESSTOP');
+  FPressBL                := TONURCUSTOMCROP.Create('PRESSBOTTOMLEFT');
+  FPressBR                := TONURCUSTOMCROP.Create('PRESSBOTTOMRIGHT');
+  FPressB                 := TONURCUSTOMCROP.Create('PRESSBOTTOM');
+  FPressL                 := TONURCUSTOMCROP.Create('PRESSLEFT');
+  FPressR                 := TONURCUSTOMCROP.Create('PRESSRIGHT');
+  FPressC                 := TONURCUSTOMCROP.Create('PRESSCENTER');
+
+  FDisableTL              := TONURCUSTOMCROP.Create('DISABLETOPLEFT');
+  FDisableTR              := TONURCUSTOMCROP.Create('DISABLETOPRIGHT');
+  FDisableT               := TONURCUSTOMCROP.Create('DISABLETOP');
+  FDisableBL              := TONURCUSTOMCROP.Create('DISABLEBOTTOMLEFT');
+  FDisableBR              := TONURCUSTOMCROP.Create('DISABLEBOTTOMRIGHT');
+  FDisableB               := TONURCUSTOMCROP.Create('DISABLEBOTTOM');
+  FDisableL               := TONURCUSTOMCROP.Create('DISABLELEFT');
+  FDisableR               := TONURCUSTOMCROP.Create('DISABLERIGHT');
+  FDisableC               := TONURCUSTOMCROP.Create('DISABLECENTER');
+
+
+
+  FBGDisable              := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGHover                := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGNormal               := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+  FBGPress                := TBGRABitmap.Create(self.ClientWidth,self.ClientHeight);
+
+
+
+  Customcroplist.Add(FNormalTL);
+  Customcroplist.Add(FNormalTR);
+  Customcroplist.Add(FNormalT);
+  Customcroplist.Add(FNormalBL);
+  Customcroplist.Add(FNormalBR);
+  Customcroplist.Add(FNormalB);
+  Customcroplist.Add(FNormalL);
+  Customcroplist.Add(FNormalR);
+  Customcroplist.Add(FNormalC);
+
+  Customcroplist.Add(FHoverTL);
+  Customcroplist.Add(FHoverTR);
+  Customcroplist.Add(FHoverT);
+  Customcroplist.Add(FHoverBL);
+  Customcroplist.Add(FHoverBR);
+  Customcroplist.Add(FHoverB);
+  Customcroplist.Add(FHoverL);
+  Customcroplist.Add(FHoverR);
+  Customcroplist.Add(FHoverC);
+
+  Customcroplist.Add(FPressTL);
+  Customcroplist.Add(FPressTR);
+  Customcroplist.Add(FPressT);
+  Customcroplist.Add(FPressBL);
+  Customcroplist.Add(FPressBR);
+  Customcroplist.Add(FPressB);
+  Customcroplist.Add(FPressL);
+  Customcroplist.Add(FPressR);
+  Customcroplist.Add(FPressC);
+
+  Customcroplist.Add(FDisableTL);
+  Customcroplist.Add(FDisableTR);
+  Customcroplist.Add(FDisableT);
+  Customcroplist.Add(FDisableBL);
+  Customcroplist.Add(FDisableBR);
+  Customcroplist.Add(FDisableB);
+  Customcroplist.Add(FDisableL);
+  Customcroplist.Add(FDisableR);
+  Customcroplist.Add(FDisableC);
+end;
+
+destructor TdenemeButton.Destroy;
+var
+i:byte;
+begin
+  for i:=0 to Customcroplist.Count-1 do
+   TONURCUSTOMCROP(Customcroplist.Items[i]).free;
+//  Customcroplist.Clear;
+  FreeAndNil(FBGDisable);
+  FreeAndNil(FBGHover);
+  FreeAndNil(FBGNormal);
+  FreeAndNil(FBGPress);
+  FreeAndNil(Fresim);
+  FreeAndNil(Customcroplist);
+  inherited Destroy;
+
+end;
+
+procedure TDenemeEdit.SetSkindata(Aimg:TONURImg);
+begin
+    if (Aimg <> nil) then
+  begin
+    fSkindata := nil;
+    fSkindata := Aimg;
+    Skindata.ReadskinsComp(self);
+ //   Invalidate;
+  end
+  else
+  begin
+    FSkindata := nil;
+  end;
+  if Fskindata=nil then exit;
+
+  FTopleft.Targetrect     := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Croprect.Width, 0, self.clientWidth, FTopRight.Croprect.Height);
+  ftop.Targetrect         := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -  FTopRight.Croprect.Width, FTop.Croprect.Height);
+  FBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,FBottomleft.Croprect.Width, self.ClientHeight);
+  FBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width,self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+  FBottom.Targetrect      := Rect(FBottomleft.Croprect.Width, self.clientHeight - FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+  Fleft.Targetrect        := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width, self.clientHeight - FBottomleft.Croprect.Height);
+  FRight.Targetrect       := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height, self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+  FCenter.Targetrect      := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth - FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
+
+  FBack.SetSize(0, 0);
+  FBack.SetSize(self.ClientWidth, self.ClientHeight);
+  //ORTA CENTER
+  DrawPartnormal(FCenter.Croprect,FBack,Aimg.fimage, fcenter.Targetrect, alpha);
+  //SOL ÜST TOPLEFT
+  DrawPartnormal(FTopleft.Croprect, FBack,Aimg.fimage, FTopleft.Targetrect, alpha);
+  //SAĞ ÜST TOPRIGHT
+  DrawPartnormal(FTopRight.Croprect, FBack,Aimg.fimage, FTopRight.Targetrect, alpha);
+  //UST TOP
+  DrawPartnormal(FTop.Croprect, FBack,Aimg.fimage,FTop.Targetrect, alpha);
+  // SOL ALT BOTTOMLEFT
+  DrawPartnormal(FBottomleft.Croprect, FBack,Aimg.fimage,FBottomleft.Targetrect, alpha);
+  //SAĞ ALT BOTTOMRIGHT
+  DrawPartnormal(FBottomRight.Croprect, FBack,Aimg.fimage, FBottomRight.Targetrect, alpha);
+  //ALT BOTTOM
+  DrawPartnormal(FBottom.Croprect, FBack,Aimg.fimage, FBottom.Targetrect, alpha);
+  // SOL ORTA CENTERLEFT
+  DrawPartnormal(Fleft.Croprect, FBack,Aimg.fimage, Fleft.Targetrect, alpha);
+  // SAĞ ORTA CENTERRIGHT
+  DrawPartnormal(FRight.Croprect, FBack,Aimg.fimage, FRight.Targetrect, alpha);
+
+
+
+
+  FhTopleft.Targetrect     := Rect(0, 0, FTopleft.Croprect.Width, FTopleft.Croprect.Height);
+  FhTopRight.Targetrect    := Rect(self.clientWidth - FTopRight.Croprect.Width, 0, self.clientWidth, FTopRight.Croprect.Height);
+  fhtop.Targetrect         := Rect(FTopleft.Croprect.Width, 0, self.clientWidth -  FTopRight.Croprect.Width, FTop.Croprect.Height);
+  FhBottomleft.Targetrect  := Rect(0, self.ClientHeight - FBottomleft.Croprect.Height,FBottomleft.Croprect.Width, self.ClientHeight);
+  FhBottomRight.Targetrect := Rect(self.clientWidth - FBottomRight.Croprect.Width,self.clientHeight - FBottomRight.Croprect.Height, self.clientWidth, self.clientHeight);
+  FhBottom.Targetrect      := Rect(FBottomleft.Croprect.Width, self.clientHeight - FBottom.Croprect.Height, self.clientWidth - FBottomRight.Croprect.Width, self.clientHeight);
+  Fhleft.Targetrect        := Rect(0, FTopleft.Croprect.Height, Fleft.Croprect.Width, self.clientHeight - FBottomleft.Croprect.Height);
+  FhRight.Targetrect       := Rect(self.clientWidth - FRight.Croprect.Width, FTopRight.Croprect.Height, self.clientWidth, self.clientHeight - FBottomRight.Croprect.Height);
+  FhCenter.Targetrect      := Rect(Fleft.Croprect.Width, FTop.Croprect.Height, self.clientWidth - FRight.Croprect.Width, self.clientHeight - FBottom.Croprect.Height);
+
+  FhBack.SetSize(0, 0);
+  FhBack.SetSize(self.ClientWidth, self.ClientHeight);
+
+  //ORTA CENTER
+  DrawPartnormal(FhCenter.Croprect,FhBack,Aimg.fimage, fhcenter.Targetrect, alpha);
+  //SOL ÜST TOPLEFT
+  DrawPartnormal(FhTopleft.Croprect, FhBack,Aimg.fimage, FhTopleft.Targetrect, alpha);
+  //SAĞ ÜST TOPRIGHT
+  DrawPartnormal(FhTopRight.Croprect, FhBack,Aimg.fimage, FhTopRight.Targetrect, alpha);
+  //UST TOP
+  DrawPartnormal(FhTop.Croprect, FhBack,Aimg.fimage,FhTop.Targetrect, alpha);
+  // SOL ALT BOTTOMLEFT
+  DrawPartnormal(FhBottomleft.Croprect, FhBack,Aimg.fimage,FhBottomleft.Targetrect, alpha);
+  //SAĞ ALT BOTTOMRIGHT
+  DrawPartnormal(FhBottomRight.Croprect, FhBack,Aimg.fimage, FhBottomRight.Targetrect, alpha);
+  //ALT BOTTOM
+  DrawPartnormal(FhBottom.Croprect, FhBack,Aimg.fimage, FhBottom.Targetrect, alpha);
+  // SOL ORTA CENTERLEFT
+  DrawPartnormal(Fhleft.Croprect, FhBack,Aimg.fimage, Fhleft.Targetrect, alpha);
+  // SAĞ ORTA CENTERRIGHT
+  DrawPartnormal(FhRight.Croprect, FhBack,Aimg.fimage, FhRight.Targetrect, alpha);
+
+//  Invalidate;
+end;
+
+procedure TDenemeEdit.MouseLeave;
+begin
+if csDesigning in ComponentState then
+    Exit;
+  if not Enabled then
+    Exit;
+  if FhCenter.croprect.width<1 then exit;
+  fState := obsnormal;
+  inherited MouseLeave;
+
+end;
+
+procedure TDenemeEdit.MouseEnter;
+begin
+  if csDesigning in ComponentState then  Exit;
+  if not Enabled then                    Exit;
+  if FhCenter.croprect.width<1 then    Exit;
+
+  fState:=obshover;
+  inherited MouseEnter;
+end;
+
+procedure TDenemeEdit.WndProc(var Message:TMessage);
+begin
+ inherited WndProc(Message);
+  with Message do
+    case Msg of
+      CM_MOUSEENTER, CM_MOUSELEAVE, WM_LBUTTONUP, WM_LBUTTONDOWN,
+      WM_KEYDOWN, WM_KEYUP,
+      WM_SETFOCUS, WM_KILLFOCUS,
+      CM_FONTCHANGED, CM_TEXTCHANGED:
+      begin
+        Invalidate;
+      end;
+   end;
+end;
+
+procedure TDenemeEdit.Paint;
+
+ var
+  R: TRect;
+  I: Integer;
+  S: String;
+
+  x, y: integer;
+  hdc1, SpanRgn: hdc;//integer;
+  WindowRgn: HRGN;
+  p: PBGRAPixel;
+begin
+
+  resim.Canvas.Brush.Assign(Self.Brush);
+  resim.Canvas.Font.Assign(Self.Font);
+
+  resim.SetSize(0, 0);
+
+  resim.SetSize(ClientWidth, ClientHeight);
+  resim.Fill(BGRAPixelTransparent,dmset);
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+  begin
+
+     if (fState = obshover) and (FhCenter.croprect.width>0) and (Enabled) then
+     begin
+       resim.PutImage(0,0,fhback,dmDrawWithTransparency);
+       self.font.Color:=FhCenter.Fontcolor;
+     end
+     else
+     begin
+       resim.PutImage(0,0,fback,dmDrawWithTransparency);
+       self.font.Color:=FCenter.Fontcolor;
+     end;
+
+     if resim.Width>0 then
+     begin
+        WindowRgn := CreateRectRgn(0, 0, resim.Width, resim.Height);
+
+        for Y := 0 to resim.Height - 1 do
+        begin
+          p := resim.Scanline[Y];
+          for X := resim.Width - 1 downto 0 do
+          begin
+
+           // if p^.Alpha < 20 then//<255 then
+            if p^ = BGRAPixelTransparent then//<255 then
+
+            begin
+           //   p^ := BGRAPixelTransparent;
+              SpanRgn := CreateRectRgn(x, y, x + 1, y + 1);
+              CombineRgn(WindowRgn, WindowRgn, SpanRgn, RGN_DIFF);
+              DeleteObject(SpanRgn);
+            end;
+            Inc(p);
+          end;
+        end;
+
+        resim.InvalidateBitmap;
+
+
+        SetWindowRgn(self.Handle, WindowRgn, True);
+        hdc1 := GetDC(self.Handle);
+        ReleaseDC(self.Handle, hdc1);
+        DeleteObject(WindowRgn);
+        DeleteObject(hdc1);
+      end;
+
+
+  end
+  else
+  begin
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
+
+  end;
+
+
+  resim.Canvas.Brush.Style:=bsClear;
+  R := ClientRect;
+//  Inc(R.Left, 1);
+ // Inc(R.Top, 1);
+ //WSSetText(text);
+  //RealSetText(text);
+  DrawText(resim.Canvas.Handle, PChar(Text),Length(text), R,  DT_VCENTER and DT_SINGLELINE);
+  AdjustSize;
+ { for I := 1 to Length(Text) do
+  begin
+   // if Text[I] in ['0'..'9'] then
+   //   Canvas.Font.Color := clRed
+  //  else
+   //   Canvas.Font.Color := clGreen;
+    S := Text[I];
+    DrawText(resim.Canvas.Handle, PChar(S), -1, R, DT_LEFT or DT_NOPREFIX or
+      DT_WORDBREAK);
+    Inc(R.Left,resim.Canvas.TextWidth(S));
+  end;
+  }
+  resim.Draw(Canvas,0,0);
+end;
+
+procedure TDenemeEdit.PaintWindow(DC:HDC);
+begin
+ FCanvas.Lock;
+  try
+    FCanvas.Handle := DC;
+    try
+     // TControlCanvas(FCanvas).UpdateTextFlags;
+      Paint;
+    finally
+      FCanvas.Handle := 0;
+    end;
+  finally
+    FCanvas.Unlock;
+  end;
+ // inherited PaintWindow(DC);
+end;
+
+procedure TDenemeEdit.WMPaint(var Msg:TLMPaint);
+var
+canv : TControlCanvas;
+ PS: TPaintStruct;
+ Txtlft,TxtTop:integer;
+ rc:TRect;
+
+   x, y: integer;
+  hdc1, SpanRgn: hdc;//integer;
+  WindowRgn: HRGN;
+  p: PBGRAPixel;
+begin
+  ControlState := ControlState+[csCustomPaint];
+  inherited;
+{
+  if not Assigned(resim) then exit;
+  if resim.Width<0 then exit;
+  if not Visible then exit;
+
+
+
+  resim.SetSize(0, 0);
+
+  resim.SetSize(ClientWidth, ClientHeight);
+  resim.Fill(BGRAPixelTransparent,dmset);
+  if (Skindata <> nil) and not (csDesigning in ComponentState) then
+  begin
+
+     if (fState = obshover) and (FhCenter.croprect.width>0) and (Enabled) then
+     begin
+       resim.PutImage(0,0,fhback,dmDrawWithTransparency);
+       self.font.Color:=FhCenter.Fontcolor;
+       Txtlft := Fhleft.Targetrect.Width;
+       TxtTop := Fhtop.Targetrect.Height;
+     end
+     else
+     begin
+       resim.PutImage(0,0,fback,dmDrawWithTransparency);
+       self.font.Color:=FCenter.Fontcolor;
+       Txtlft := Fleft.Targetrect.Width;
+       TxtTop := Ftop.Targetrect.Height;
+     end;
+
+     if resim.Width>0 then
+     begin
+        WindowRgn := CreateRectRgn(0, 0, resim.Width, resim.Height);
+
+        for Y := 0 to resim.Height - 1 do
+        begin
+          p := resim.Scanline[Y];
+          for X := resim.Width - 1 downto 0 do
+          begin
+
+           // if p^.Alpha < 20 then//<255 then
+            if p^ = BGRAPixelTransparent then//<255 then
+
+            begin
+           //   p^ := BGRAPixelTransparent;
+              SpanRgn := CreateRectRgn(x, y, x + 1, y + 1);
+              CombineRgn(WindowRgn, WindowRgn, SpanRgn, RGN_DIFF);
+              DeleteObject(SpanRgn);
+            end;
+            Inc(p);
+          end;
+        end;
+
+        resim.InvalidateBitmap;
+
+
+        SetWindowRgn(self.Handle, WindowRgn, True);
+        hdc1 := GetDC(self.Handle);
+        ReleaseDC(self.Handle, hdc1);
+        DeleteObject(WindowRgn);
+        DeleteObject(hdc1);
+      end;
+
+
+  end
+  else
+  begin
+    resim.Fill(BGRA(190, 208, 190, alpha), dmSet);
+
+  end;
+
+
+
+
+       try
+
+           canv := TControlCanvas.Create;
+          // writeln('EDITTTTTTtt');
+           canv.Control := Self;
+           if Msg.DC = 0 then
+              canv.Handle := BeginPaint(Handle, PS)
+            else
+              canv.Handle := Msg.DC;
+
+
+            resim.Canvas.Brush.Style:=bsClear;
+
+           // StateImages.Draw(canv,0,0,Ord(Self.Checked)); // checkbox
+            //resim.canvas.TextOut(Txtlft,TxtTop, text);
+            rc:=ClientRect;
+            DrawText(resim.Canvas.Handle,Pchar(Caption),Length(Caption),rc,DT_LEFT or DT_VCENTER or DT_SINGLELINE);
+
+
+       //     resim.SaveToFile('C:\lazarus\components\paketler\ONUR\onurcomp\backup\aa.png');
+
+            resim.Draw(canv,0,0);
+           // RealSetText(Text);
+            canv.Handle := 0;
+            if Msg.DC = 0 then EndPaint(Handle, PS);
+        finally
+         canv.Free;
+        end;
+      }
+    ControlState := ControlState-[csCustomPaint];
+end;
+
+constructor TDenemeEdit.Create(AOwner:TComponent);
+begin
+  inherited Create(AOwner);
+  Customcroplist        := TFPList.Create;
+  skinname              := 'edit';
+  BorderStyle           := bsNone;
+//  BorderWidth           := 1;
+  alpha                 := 255;
+  FTop                  := TONURCUSTOMCROP.Create('TOP');
+  FBottom               := TONURCUSTOMCROP.Create('BOTTOM');
+  FCenter               := TONURCUSTOMCROP.Create('CENTER');
+  FRight                := TONURCUSTOMCROP.Create('RIGHT');
+  FTopRight             := TONURCUSTOMCROP.Create('TOPRIGHT');
+  FBottomRight          := TONURCUSTOMCROP.Create('BOTTOMRIGHT');
+  Fleft                 := TONURCUSTOMCROP.Create('LEFT');
+  FTopleft              := TONURCUSTOMCROP.Create('TOPLEFT');
+  FBottomleft           := TONURCUSTOMCROP.Create('BOTTOMLEFT');
+
+  FhTop                 := TONURCUSTOMCROP.Create('HOVERTOP');
+  FhBottom              := TONURCUSTOMCROP.Create('HOVERBOTTOM');
+  FhCenter              := TONURCUSTOMCROP.Create('HOVERCENTER');
+  FhRight               := TONURCUSTOMCROP.Create('HOVERRIGHT');
+  FhTopRight            := TONURCUSTOMCROP.Create('HOVERTOPRIGHT');
+  FhBottomRight         := TONURCUSTOMCROP.Create('HOVERBOTTOMRIGHT');
+  Fhleft                := TONURCUSTOMCROP.Create('HOVERLEFT');
+  FhTopleft             := TONURCUSTOMCROP.Create('HOVERTOPLEFT');
+  FhBottomleft          := TONURCUSTOMCROP.Create('HOVERBOTTOMLEFT');
+
+  Customcroplist.Add(FTopleft);
+  Customcroplist.Add(FTop);
+  Customcroplist.Add(FTopRight);
+  Customcroplist.Add(FBottomleft);
+  Customcroplist.Add(FBottom);
+  Customcroplist.Add(FBottomRight);
+  Customcroplist.Add(Fleft);
+  Customcroplist.Add(FRight);
+  Customcroplist.Add(FCenter);
+
+  Customcroplist.Add(FhTopleft);
+  Customcroplist.Add(FhTop);
+  Customcroplist.Add(FhTopRight);
+  Customcroplist.Add(FhBottomleft);
+  Customcroplist.Add(FhBottom);
+  Customcroplist.Add(FhBottomRight);
+  Customcroplist.Add(Fhleft);
+  Customcroplist.Add(FhRight);
+  Customcroplist.Add(FhCenter);
+
+  Self.Height        := 30;
+  Self.Width         := 80;
+  resim              := TBGRABitmap.Create(Width,Height);
+  fback              := TBGRABitmap.Create(Width,Height);
+  fhback             := TBGRABitmap.create(Width,Height);
+
+  fState             := obsnormal;
+  FCanvas            := TControlCanvas.Create;
+  TControlCanvas(FCanvas).Control := Self;
+
+end;
+
+destructor TDenemeEdit.Destroy;
+var
+  i: byte;
+begin
+
+  for i := 0 to Customcroplist.Count - 1 do
+    TONURCUSTOMCROP(Customcroplist.Items[i]).Free;
+
+
+  Customcroplist.Clear;
+  FreeAndNil(fback);
+  FreeAndNil(fhback);
+  FreeAndNil(resim);
+  FreeAndNil(FCanvas);
+  inherited Destroy;
 end;
 
 
