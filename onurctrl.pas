@@ -418,6 +418,9 @@ procedure DrawPartnormaltext(ARect: TRect; Target: TOnURCustomControl;
 procedure DrawPartnormaltext(t:TONURCustomControl;ARect: TRect; Target: TBGRABitmap;
   ATargetRect: TRect; Opaque: byte; txt: string; Txtalgn: TAlignment; colorr: TBGRAPixel);
 
+procedure DrawPartnormaltext(t:TONURImg;ARect:TRect;Target:TBGRABitmap;ATargetRect:TRect;
+  Opaque:byte;txt:string;Txtalgn:TAlignment;colorr:TBGRAPixel);
+
 procedure DrawPartstrechRegion(ARect: TRect; Target: TOnURCustomControl;
   NewWidth, NewHeight: integer; ATargetRect: TRect; Opaque: byte);
 
@@ -1115,8 +1118,36 @@ begin
     end;
     FreeAndNil(partial);
   end;
-
 end;
+
+
+
+procedure DrawPartnormaltext(t:TONURImg;ARect:TRect;Target:TBGRABitmap;
+  ATargetRect:TRect;Opaque:byte;txt:string;Txtalgn:TAlignment;colorr:TBGRAPixel)
+  ;
+var
+  partial: TBGRACustomBitmap;
+begin
+  if (ARect.Width = 0) and (ARect.Height = 0) then
+   Target.Fill(BGRA(190, 208, 190), dmSet)
+  else
+  begin
+    partial := t.Fimage.GetPart(ARect);
+
+    if partial <> nil then
+    begin
+      target.StretchPutImage(ATargetRect, partial, dmDrawWithTransparency, Opaque);
+      ATargetRect.left := ATargetRect.left + 1;
+      ATargetRect.right := ATargetRect.right - 1;
+      ATargetRect.top := ATargetRect.top + 1;
+      ATargetRect.bottom := ATargetRect.bottom - 1;
+      ATargetRect.Left:=ATargetRect.Left+10;
+      Target.TextRect(ATargetRect, txt, Txtalgn, tlCenter, colorr);
+    end;
+    FreeAndNil(partial);
+  end;
+end;
+
 
 procedure DrawPartnormali(t:TOnURCustomControl;ARect:TRect;Target:TBGRABitmap;x,
   y,w,h:integer;Opaque:byte;txt:string;Txtalgn:TAlignment;colorr:TBGRAPixel);
@@ -1615,33 +1646,48 @@ begin
         end;
       end;
 
-      if (com is TdenemeButton) then
-      with (TdenemeButton(com)) do
+      if (com is TdenemeButton) and (TdenemeButton(com).Skindata = Self)  then
       begin
-        for a := 0 to Customcroplist.Count - 1 do
+        with (TdenemeButton(com)) do
         begin
+          for a := 0 to Customcroplist.Count - 1 do
           cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
-       //   writeln(ReadString(TdenemeButton(com).skinname,TONURCustomCrop(TdenemeButton(com).Customcroplist[a]).Cropname,'YOK'));
         end;
       end;
 
-       if (com is TDenemeEdit) then
-      with (TDenemeEdit(com)) do
+      if (com is TDenemeEdit) and (TDenemeEdit(com).Skindata = Self)  then
       begin
-        for a := 0 to Customcroplist.Count - 1 do
+        with (TDenemeEdit(com)) do
         begin
-          cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
-       //   writeln(ReadString(TdenemeButton(com).skinname,TONURCustomCrop(TdenemeButton(com).Customcroplist[a]).Cropname,'YOK'));
+          for a := 0 to Customcroplist.Count - 1 do
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
         end;
       end;
 
-      if (com is TDenemeCheckBox) then
-      with (TDenemeCheckBox(com)) do
+      if (com is TDenemeMemo) and (TDenemeMemo(com).Skindata = Self) then
       begin
-        for a := 0 to Customcroplist.Count - 1 do
+        with (TDenemeMemo(com)) do
         begin
-          cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
-       //   writeln(ReadString(TdenemeButton(com).skinname,TONURCustomCrop(TdenemeButton(com).Customcroplist[a]).Cropname,'YOK'));
+          for a := 0 to Customcroplist.Count - 1 do
+           cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+        end;
+      end;
+
+      if (com is TDenemeListbox) and (TDenemeListbox(com).Skindata = Self)  then
+      begin
+        with (TDenemeListbox(com)) do
+        begin
+          for a := 0 to Customcroplist.Count - 1 do
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+        end;
+      end;
+
+      if (com is TDenemeCheckBox) and (TDenemeCheckBox(com).Skindata = Self) then
+      begin
+        with (TDenemeCheckBox(com)) do
+        begin
+          for a := 0 to Customcroplist.Count - 1 do
+            cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname, TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
         end;
       end;
 
@@ -2018,7 +2064,7 @@ begin
           begin
              for a := 0 to Customcroplist.Count - 1 do
               cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
-           Skindata:=self;
+       //    Skindata:=self;
           end;
         end;
 
@@ -2030,7 +2076,7 @@ begin
           begin
              for a := 0 to Customcroplist.Count - 1 do
               cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
-           Skindata:=self;
+       //    Skindata:=self;
           end;
         end;
 
@@ -2041,9 +2087,32 @@ begin
           begin
              for a := 0 to Customcroplist.Count - 1 do
               cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
-           Skindata:=self;
+       //    Skindata:=self;
           end;
         end;
+
+        if (fparent.Components[i] is TDenemeListbox) and
+          (TDenemeListbox(fparent.Components[i]).Skindata = Self) then
+        begin
+          with (TDenemeListbox(fparent.Components[i])) do
+          begin
+             for a := 0 to Customcroplist.Count - 1 do
+              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+       //    Skindata:=self;
+          end;
+        end;
+
+        if (fparent.Components[i] is TDenemeMemo) and
+          (TDenemeMemo(fparent.Components[i]).Skindata = Self) then
+        begin
+          with (TDenemeMemo(fparent.Components[i])) do
+          begin
+             for a := 0 to Customcroplist.Count - 1 do
+              cropparse(TONURCustomCrop(Customcroplist[a]), ReadString(Skinname,  TONURCustomCrop(Customcroplist[a]).cropname, '0,0,1,1,clblack'));
+        //   Skindata:=self;
+          end;
+        end;
+
 
         if (fparent.Components[i] is TDenemeCheckBox) and
           (TDenemeCheckBox(fparent.Components[i]).Skindata = Self) then
