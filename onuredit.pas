@@ -6,7 +6,7 @@ unit onuredit;
 interface
 
 uses
-  LCLType, Windows, SysUtils, LMessages, Forms, Classes,
+  {$IFDEF WINDOWS}Windows,{$ELSE}unix,LCLType,LCLIntf, {$ENDIF} SysUtils, LMessages, Forms, Classes,
   Controls, Graphics, ExtCtrls, BGRABitmap, BGRABitmapTypes, onurctrl, Types;
 
 type
@@ -64,8 +64,8 @@ type
     FDrawOffsetX       : Integer;
     fMultiLine         : boolean;
     FSelecting         : Boolean;
-    FSelectingStartX   : Point;
-    FSelectingEndX     : Point;
+    FSelectingStartX   : TPoint;
+    FSelectingEndX     : TPoint;
 
     lTextLeftSpacing   : integer;
     lTextRightSpacing  : integer;

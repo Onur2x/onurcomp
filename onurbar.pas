@@ -6,7 +6,8 @@ unit onurbar;
 interface
 
 uses
-  Windows, Classes, Controls, Graphics,BGRABitmap, BGRABitmapTypes, onurctrl;
+ {$IFDEF WINDOWS}
+  Windows,{$ELSE}unix,LCLIntf, {$ENDIF}LMessages,Classes, Controls, Graphics,BGRABitmap, BGRABitmapTypes, onurctrl;
 
 type
 
@@ -190,8 +191,8 @@ type
     function MaxMin: integer;
     function CalculatePosition(const Value: integer): integer;
     function GetPosition: integer;
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: TLmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: TLmessage); message CM_MOUSELEAVE;
     procedure SetMax(const Value: integer);
     procedure SetMin(const Value: integer);
     function SliderFromPosition(const Value: integer): integer;
@@ -285,7 +286,7 @@ type
     procedure SetSkindata(Aimg: TONURImg);override;
     procedure Resize; override;
     procedure Resizing;
-    procedure cmonmouseleave(var messages: tmessage);
+    procedure cmonmouseleave(var messages: TLmessage);
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState; X,
       Y: Integer); override;
     procedure MouseMove(Shift: TShiftState; X, Y: Integer); override;
@@ -1163,7 +1164,7 @@ begin
   Result := CalculatePosition(SliderFromPosition(FPosition));
 end;
 
-procedure TONURTrackBar.CMonmouseenter(var Messages: Tmessage);
+procedure TONURTrackBar.CMonmouseenter(var Messages: TLmessage);
 begin
   if (not FIsPressed) and (Enabled) and (FState<>obshover) then
   begin
@@ -1172,7 +1173,7 @@ begin
   end;
 end;
 
-procedure TONURTrackBar.CMonmouseleave(var Messages: Tmessage);
+procedure TONURTrackBar.CMonmouseleave(var Messages: TLmessage);
 begin
   if Enabled then
   begin
@@ -1813,7 +1814,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURKnob.cmonmouseleave(var messages: tmessage);
+procedure TONURKnob.cmonmouseleave(var messages: TLMessage);
 begin
 //  fstate := obsnormal;
 //  FClick:= False;

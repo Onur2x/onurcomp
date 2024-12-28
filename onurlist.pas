@@ -6,7 +6,8 @@ unit onurlist;
 interface
 
 uses
-  Windows, SysUtils, LMessages, Forms,  Classes, Types,
+  {$IFDEF WINDOWS}
+  Windows,{$ELSE}unix, LCLIntf,LCLType,{$ENDIF} SysUtils, LMessages, Forms,  Classes, Types,
   Controls, Graphics, ExtCtrls,  BGRABitmap, BGRABitmapTypes,
   Dialogs, onurctrl,onurbar,onuredit,StdCtrls,grids;
 
@@ -423,8 +424,8 @@ type
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: TLMessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: TLMessage); message CM_MOUSELEAVE;
     procedure SetSkindata(Aimg: TONURImg); override;
     procedure Resize; override;
     procedure Resizing;
@@ -675,7 +676,7 @@ type
     function GetItemAt(Pos: TPoint): integer;
     procedure VScrollBarChange(Sender: TObject);
     procedure HScrollBarChange(Sender: TObject);
-    procedure CNKeyDown(var Message: TWMKeyDown); message CN_KEYDOWN;
+    procedure CNKeyDown(var Message: TLMKeyDown); message CN_KEYDOWN;
 
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
@@ -1479,7 +1480,7 @@ begin
  if Visible=false then exit;
  if FColumns.Count > 0 then
  begin
-   initialtime := Windows.GetTickCount;
+   initialtime := GetTickCount;
    x:=0;
    y:=0;
    for i:=0 to fColumns.Count-1 do
@@ -1514,7 +1515,7 @@ begin
     i:=i+FColumns[x].Width;
    end;
 
- elapsedtime := Windows.GetTickCount - initialtime;
+ elapsedtime := GetTickCount - initialtime;
  //WriteLn( 'Time elapsed: ' + IntToStr(elapsedtime) + ' miliseconds');
 
  end;
@@ -2220,7 +2221,7 @@ end;
 
 
 
-procedure TONURColumList.CNKeyDown(var Message: TWMKeyDown);
+procedure TONURColumList.CNKeyDown(var Message: TLMKeyDown);
 var
   x: integer;
 begin
@@ -5168,7 +5169,7 @@ begin
   end;
 end;
 
-procedure TONURComboBox.CMonmouseenter(var Messages: Tmessage);
+procedure TONURComboBox.CMonmouseenter(var Messages: TLMessage);
 var
   aPnt: TPoint;
 begin
@@ -5193,7 +5194,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURComboBox.CMonmouseleave(var Messages: Tmessage);
+procedure TONURComboBox.CMonmouseleave(var Messages: TLMessage);
 begin
   if csDesigning in ComponentState then
     Exit;

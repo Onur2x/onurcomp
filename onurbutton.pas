@@ -5,7 +5,8 @@ unit onurbutton;
 interface
 
 uses
-  LCLType,Types,Windows,StdCtrls,LMessages,SysUtils,Classes,Controls,Graphics,ExtCtrls,
+  LCLType,Types,{$IFDEF WINDOWS}
+  Windows,{$ELSE}unix, LCLIntf, {$ENDIF}StdCtrls,LMessages,SysUtils,Classes,Controls,Graphics,ExtCtrls,
   BGRABitmap,BGRABitmapTypes,ComponentEditors,PropEdits,onurctrl;
 
   type
@@ -22,7 +23,7 @@ uses
     Fskindata    : TONURImg;
     resim       : TBGRABitmap;
     FCanvas: TCanvas;
-    procedure WMEraseBkGnd(var Message:TWMEraseBkGnd);
+    procedure WMEraseBkGnd(var Message:TLMEraseBkGnd);
     procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
    protected
     procedure SetSkindata(Aimg: TONURImg);
@@ -32,7 +33,7 @@ uses
       X: integer; Y: integer); override;
     procedure MouseUp(Button: TMouseButton; Shift: TShiftState;
       X: integer; Y: integer); override;
-     procedure WndProc(var Message: TMessage); override;
+     procedure WndProc(var Message: TLMessage); override;
     procedure Paint; virtual;
     procedure PaintWindow(DC: HDC); override;
     property Canvas: TCanvas read FCanvas;
@@ -68,7 +69,7 @@ uses
     Fstate: TONURButtonState;
     Fskindata    : TONURImg;
     Fresim,FBGDisable,FBGHover,FBGNormal,FBGPress:TBGRABitmap;
-    procedure WMEraseBkGnd(var Message:TWMEraseBkGnd);
+    procedure WMEraseBkGnd(var Message:TLMEraseBkGnd);
 
 
    protected
@@ -102,13 +103,13 @@ uses
     Fstate: TONURButtonState;
     Fskindata    : TONURImg;
     FCanvas: TCanvas;
-    procedure WMEraseBkGnd(var Message:TWMEraseBkGnd);
+    procedure WMEraseBkGnd(var Message:TLMEraseBkGnd);
     procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
    protected
     procedure SetSkindata(Aimg: TONURImg);
     procedure MouseLeave; override;
     procedure MouseEnter; override;
-    procedure WndProc(var Message: TMessage); override;
+    procedure WndProc(var Message: TLMessage); override;
     procedure Paint; virtual;
     procedure PaintWindow(DC: HDC); override;
     property Canvas: TCanvas read FCanvas;
@@ -143,13 +144,13 @@ uses
     Fstate: TONURButtonState;
     Fskindata    : TONURImg;
     FCanvas: TCanvas;
-    procedure WMEraseBkGnd(var Message:TWMEraseBkGnd);
+    procedure WMEraseBkGnd(var Message:TLMEraseBkGnd);
     procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
    protected
     procedure SetSkindata(Aimg: TONURImg);
     procedure MouseLeave; override;
     procedure MouseEnter; override;
-    procedure WndProc(var Message: TMessage); override;
+    procedure WndProc(var Message: TLMessage); override;
     procedure Paint; virtual;
     procedure PaintWindow(DC: HDC); override;
     property Canvas: TCanvas read FCanvas;
@@ -212,14 +213,14 @@ uses
     Fstate: TONURButtonState;
     Fskindata    : TONURImg;
     procedure CreateParams(var Params:TCreateParams); override;
-    procedure WMEraseBkGnd(var Message:TWMEraseBkGnd);
+    procedure WMEraseBkGnd(var Message:TLMEraseBkGnd);
     procedure WMPaint(var Msg: TLMPaint); message LM_PAINT;
 
    protected
     procedure SetSkindata(Aimg: TONURImg);
     procedure MouseLeave; override;
     procedure MouseEnter; override;
-    procedure WndProc(var Message: TMessage); override;
+    procedure WndProc(var Message: TLMessage); override;
     procedure Paint; virtual;
     procedure PaintWindow(DC: HDC); override;
   {  procedure MouseEnter; override;
@@ -642,8 +643,8 @@ uses
     foncap,foffcap:string;
     FOnChange: TNotifyEvent;
     procedure SetChecked(Value: boolean);
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: TLmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: TLmessage); message CM_MOUSELEAVE;
     protected
     procedure SetSkindata(Aimg: TONURImg); override;
     procedure Resize; override;
@@ -713,8 +714,8 @@ uses
     procedure SetCheckWidth(AValue: integer);
     procedure SetCaptionmod(const val: TONURCapDirection);
     function GetCaptionmod: TONURCapDirection;
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: TLmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: TLmessage); message CM_MOUSELEAVE;
     procedure CMHittest(var msg: TCMHIttest);
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
@@ -790,8 +791,8 @@ uses
     procedure SetCaptionmod(const val: TONURCapDirection);
     function GetCaptionmod: TONURCapDirection;
     procedure deaktifdigerleri;  /// for radiobutton
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: TLmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: TLmessage); message CM_MOUSELEAVE;
     procedure CMHittest(var msg: TCMHIttest);
   protected
     procedure SetSkindata(Aimg: TONURImg); override;
@@ -914,7 +915,7 @@ uses
     property OnMouseUp;
   end;
 
-
+  {$IFDEF WINDOWS}
    { TOnThreadTimerClass }
 
   TOnThreadTimerClass = class(TThread)
@@ -951,7 +952,7 @@ uses
     property OnTimer: TNotifyEvent read GetOnTimer write SetOnTimer;
   end;
 
-
+  {$ENDIF}
   TTextDirection = (tdLeftToRight, tdRightToLeft);
   TTextStylee = (tsPingPong, tsScroll);
 
@@ -966,7 +967,7 @@ uses
     fbilink    : boolean;
     fbilinki   : boolean;
     fblinktimer: TTimer;
-    FTimer     : TOnThreadTimer;
+    FTimer     : {$IFDEF WINDOWS} TOnThreadTimer{$ELSE}TTimer{$ENDIF};
     FDirection : TTextDirection;
     FStyle     : TTextStylee;
     FWait      : byte;
@@ -1358,14 +1359,14 @@ begin
 //  Invalidate;
 end;
 
-procedure TDenemeCheckBox.WndProc(var Message:TMessage);
+procedure TDenemeCheckBox.WndProc(var Message:TLMessage);
 begin
   inherited WndProc(Message);
    with Message do
     case Msg of
-      CM_MOUSEENTER, CM_MOUSELEAVE, WM_LBUTTONUP, WM_LBUTTONDOWN,
-      WM_KEYDOWN, WM_KEYUP,
-      WM_SETFOCUS, WM_KILLFOCUS,
+      CM_MOUSEENTER, CM_MOUSELEAVE, LM_LBUTTONUP, LM_LBUTTONDOWN,
+      LM_KEYDOWN, LM_KEYUP,
+      LM_SETFOCUS, LM_KILLFOCUS,
       CM_FONTCHANGED, CM_TEXTCHANGED:
       begin
         Invalidate;
@@ -1379,7 +1380,7 @@ const
 var
   txtW, txtH, txtX, BtnWidth: Integer;
   DR, rc : TRect;
-  lStyle:LONG;
+//  lStyle:LONG;
 begin
 
   if not Assigned(resim) then exit;
@@ -1494,7 +1495,7 @@ begin
         // Perform(WM_ERASEBKGND, Canvas.Handle, 0);
          resim.canvas.TextOut(txtX, (Height - txtH) div 2 + 1, Caption);
 //         resim.Canvas.TextOut(BtnWidth, (Canvas.Height - Canvas.TextHeight(Self.Caption)) div 2, Self.Caption);
-         SetBkMode(Handle, TRANSPARENT);//Ord(TRANSPARENT));
+       //  SetBkMode(Handle, TRANSPARENT);//Ord(TRANSPARENT));
 //         lStyle := GetWindowLong(Handle, GWL_EXSTYLE);
 //         SetWindowLong(Handle, GWL_EXSTYLE, lStyle and WS_EX_TRANSPARENT);
          resim.Draw(Canvas,0,0);
@@ -1520,7 +1521,7 @@ begin
  // inherited PaintWindow(DC);
 end;
 
-procedure TDenemeCheckBox.WMEraseBkGnd(var Message: TWMEraseBkGnd);
+procedure TDenemeCheckBox.WMEraseBkGnd(var Message: TLMEraseBkGnd);
 begin
   Message.Result := - 1;
 end;
@@ -1768,7 +1769,7 @@ begin
   Invalidate;
 end;
 
-procedure TdenemeButton.WMEraseBkGnd(var Message: TWMEraseBkGnd);
+procedure TdenemeButton.WMEraseBkGnd(var Message: TLMEraseBkGnd);
 begin
   Message.Result := - 1;
 end;
@@ -2112,14 +2113,14 @@ begin
   inherited MouseEnter;
 end;
 
-procedure TDenemeEdit.WndProc(var Message:TMessage);
+procedure TDenemeEdit.WndProc(var Message:TLMessage);
 begin
  inherited WndProc(Message);
   with Message do
     case Msg of
-      CM_MOUSEENTER, CM_MOUSELEAVE, WM_LBUTTONUP, WM_LBUTTONDOWN,
-      WM_KEYDOWN, WM_KEYUP,
-      WM_SETFOCUS, WM_KILLFOCUS,
+      CM_MOUSEENTER, CM_MOUSELEAVE, LM_LBUTTONUP, LM_LBUTTONDOWN,
+      LM_KEYDOWN, LM_KEYUP,
+      LM_SETFOCUS, LM_KILLFOCUS,
       CM_FONTCHANGED, CM_TEXTCHANGED:
       begin
         Invalidate;
@@ -2127,7 +2128,7 @@ begin
    end;
 end;
 
-procedure TDenemeEdit.WMEraseBkGnd(var Message: TWMEraseBkGnd);
+procedure TDenemeEdit.WMEraseBkGnd(var Message: TLMEraseBkGnd);
 begin
   Message.Result := - 1;
 end;
@@ -2558,21 +2559,21 @@ begin
   inherited MouseEnter;
 end;
 
-procedure TDenemeMemo.WndProc(var Message:TMessage);
+procedure TDenemeMemo.WndProc(var Message:TLMessage);
 begin
 inherited WndProc(Message);
   with Message do
     case Msg of
-      CM_MOUSEENTER, CM_MOUSELEAVE, WM_LBUTTONUP, WM_LBUTTONDOWN,
-      WM_KEYDOWN, WM_KEYUP,
-      WM_SETFOCUS, WM_KILLFOCUS,
+      CM_MOUSEENTER, CM_MOUSELEAVE, LM_LBUTTONUP, LM_LBUTTONDOWN,
+      LM_KEYDOWN, LM_KEYUP,
+      LM_SETFOCUS, LM_KILLFOCUS,
       CM_FONTCHANGED, CM_TEXTCHANGED:
       begin
         Invalidate;
       end;
    end;
 end;
-procedure TDenemeMemo.WMEraseBkGnd(var Message: TWMEraseBkGnd);
+procedure TDenemeMemo.WMEraseBkGnd(var Message: TLMEraseBkGnd);
 begin
   Message.Result := - 1;
 end;
@@ -2967,14 +2968,14 @@ begin
   inherited MouseEnter;
 end;
 
-procedure TDenemeListbox.WndProc(var Message:TMessage);
+procedure TDenemeListbox.WndProc(var Message:TLMessage);
 begin
   inherited WndProc(Message);
   with Message do
     case Msg of
-      CM_MOUSEENTER, CM_MOUSELEAVE, WM_LBUTTONUP, WM_LBUTTONDOWN,
-      WM_KEYDOWN, WM_KEYUP,
-      WM_SETFOCUS, WM_KILLFOCUS,
+      CM_MOUSEENTER, CM_MOUSELEAVE, LM_LBUTTONUP, LM_LBUTTONDOWN,
+      LM_KEYDOWN, LM_KEYUP,
+      LM_SETFOCUS, LM_KILLFOCUS,
       CM_FONTCHANGED, CM_TEXTCHANGED:
       begin
        Paint;
@@ -2983,7 +2984,7 @@ begin
    end;
 end;
 
-procedure TDenemeListbox.WMEraseBkGnd(var Message:TWMEraseBkGnd);
+procedure TDenemeListbox.WMEraseBkGnd(var Message:TLMEraseBkGnd);
 begin
 SetBkMode(Message.DC, TRANSPARENT);
 Message.Result := 1;
@@ -2994,7 +2995,7 @@ begin
  ControlState := ControlState+[csCustomPaint];
 
  inherited;
- LMDrawListItem;
+ //LMDrawListItem;
  ControlState := ControlState-[csCustomPaint];
 end;
 
@@ -3150,6 +3151,7 @@ begin
    if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
+  resim.Fill(BGRAPixelTransparent);
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
@@ -3319,13 +3321,13 @@ begin
   //
 end;
 
-procedure TONURRadioButton.CMonmouseenter(var Messages: Tmessage);
+procedure TONURRadioButton.CMonmouseenter(var Messages: TLmessage);
 begin
   fstate := obshover;
   Invalidate;
 end;
 
-procedure TONURRadioButton.CMonmouseleave(var Messages: Tmessage);
+procedure TONURRadioButton.CMonmouseleave(var Messages: TLmessage);
 begin
  fstate := obsnormal;
   Invalidate;
@@ -3361,10 +3363,10 @@ end;
 procedure TONURRadioButton.CMHittest(var msg: TCMHIttest);
 begin
   inherited;
-   if PtInRegion(CreateRectRgn(0, 0, self.Width, self.Height), msg.XPos, msg.YPos) then
+ {  if PtInRegion(CreateRectRgn(0, 0, self.Width, self.Height), msg.XPos, msg.YPos) then
     msg.Result := HTCLIENT
   else
-    msg.Result := HTNOWHERE;
+    msg.Result := HTNOWHERE;   }
 end;
 
 constructor TONURRadioButton.Create(AOwner: TComponent);
@@ -3393,6 +3395,7 @@ begin
   Customcroplist.Add(obcheckenters);
   Customcroplist.Add(obdisableON);
   Customcroplist.Add(obdisableOFF);
+  Captionvisible := false;
 
 end;
 
@@ -3406,11 +3409,12 @@ procedure TONURRadioButton.Paint;
 var
   DR: TRect;
   fbuttoncenter,a,b: integer;
+  stylef:TTextStyle;
 begin
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
-
+  resim.Fill(BGRAPixelTransparent);
 
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
@@ -3558,8 +3562,14 @@ begin
      resim.EllipseInRect(Fclientrect,bgrablack,BGRAPixelTransparent,dmset);
   end;
 
-
-  yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
+  stylef.Alignment       := tacenter;
+  stylef.Wordbreak       := false;
+  stylef.Layout          := tlCenter;
+  stylef.SingleLine      := true;
+  resim.FontName         := self.font.name;
+  resim.FontHeight       := self.font.size;
+  resim.TextRect(Rect(textx,Texty,textx+resim.TextSize(Caption).cx,Texty+resim.TextSize(Caption).cy),0,0,caption,stylef,colortobgra(self.font.color));
+ // yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
 
   inherited paint;
 
@@ -3571,7 +3581,7 @@ begin
 end;
 
 
-
+ {$IFDEF WINDOWS}
 { TOnThreadTimerClass }
 
 procedure TOnThreadTimerClass.Call;
@@ -3585,6 +3595,7 @@ begin
   try
     while not Terminated do
     begin
+
       WaitForSingleObject(self.Handle, FInterval);
       Synchronize(@Call);
     end;
@@ -3646,7 +3657,7 @@ begin
   inherited Destroy;
 end;
 
-
+{$ENDIF}
 { TONURNormalLabel }
 
 function TONURNormalLabel.GetTextDefaultPos: smallint;
@@ -3695,7 +3706,7 @@ begin
     FAnimate := True;
     SetText(FText);
     FreeTimer;
-    ftimer := TOnThreadTimer.Create(Self);
+    ftimer := {$IFDEF WINDOWS} TOnThreadTimer.Create(Self){$ELSE}TTimer.Create(Self){$ENDIF};
     FTimer.Interval := ftimerinterval;//100;
     FTimer.OnTimer := @TimerEvent;
     if not (csDesigning in ComponentState) then
@@ -3994,6 +4005,7 @@ begin
   if not Visible then exit;
   resim.SetSize(0,0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
+  resim.Fill(BGRAPixelTransparent);
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
     try
@@ -4367,6 +4379,7 @@ begin
     resim.SetSize(0,0);
 
     resim.Setsize((Length(self.Caption) * CharWidth),self.ClientHeight);
+    resim.Fill(BGRAPixelTransparent);
     tempbitmap.SetSize(0,0);
 
     tempbitmap.SetSize(fclientp.Croprect.Width, fclientp.Croprect.Height);
@@ -4381,6 +4394,7 @@ begin
  begin
    resim.SetSize(0,0);
    resim.Setsize((Length(self.Caption) * CharWidth),self.ClientHeight);
+   resim.Fill(BGRAPixelTransparent);
    FBitmap.SetSize(0,0);
 
    tempbitmap.SetSize(0,0);
@@ -4876,6 +4890,7 @@ begin
   begin
     resim.SetSize(0,0);
     resim.SetSize(clientWidth,clientHeight);
+    resim.Fill(BGRAPixelTransparent);
 
     if Enabled = True then
     begin
@@ -5375,6 +5390,7 @@ begin
   begin
     resim.SetSize(0,0);
     resim.SetSize(clientWidth,clientHeight);
+    resim.Fill(BGRAPixelTransparent);
 
     if Enabled = True then
     begin
@@ -5655,6 +5671,7 @@ begin
 
      resim.SetSize(0, 0);
      resim.SetSize(self.ClientWidth, self.ClientHeight);
+     resim.Fill(BGRAPixelTransparent);
 
      if (Skindata <> nil) and not (csDesigning in ComponentState) then
      begin
@@ -5936,6 +5953,7 @@ begin
 
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
+  resim.Fill(BGRAPixelTransparent);
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) and Assigned(FButtonControl) then
   begin
@@ -6011,7 +6029,7 @@ end;
 
 
 
-procedure TONURSwich.CMonmouseenter(var Messages: Tmessage);
+procedure TONURSwich.CMonmouseenter(var Messages: TLmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -6021,7 +6039,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURSwich.CMonmouseleave(var Messages: Tmessage);
+procedure TONURSwich.CMonmouseleave(var Messages: TLmessage);
 begin
   if csDesigning in ComponentState then
     Exit;
@@ -6120,6 +6138,7 @@ begin
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, self.ClientHeight);
+  resim.Fill(BGRAPixelTransparent);
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
@@ -6242,13 +6261,13 @@ begin
 end;
 
 
-procedure TONURCheckbox.CMonmouseenter(var Messages: Tmessage);
+procedure TONURCheckbox.CMonmouseenter(var Messages: TLmessage);
 begin
   fstate := obshover;
   Invalidate;
 end;
 
-procedure TONURCheckbox.CMonmouseleave(var Messages: Tmessage);
+procedure TONURCheckbox.CMonmouseleave(var Messages: TLmessage);
 begin
   fstate := obsnormal;
   Invalidate;
@@ -6318,7 +6337,7 @@ begin
   Customcroplist.Add(obcheckenters);
   Customcroplist.Add(obdisableon);
   Customcroplist.Add(obdisableoff);
-
+  Captionvisible:=false;
 
 
 end;
@@ -6348,12 +6367,14 @@ procedure TONURCheckbox.Paint;
 var
   DR: TRect;
   fbuttoncenter,a,b: integer;
+  stylef:TTextStyle;
 begin
 
 
   if not Visible then Exit;
   resim.SetSize(0, 0);
   resim.SetSize(self.ClientWidth, Self.ClientHeight);
+  resim.Fill(BGRAPixelTransparent);
 
   if (Skindata <> nil) and not (csDesigning in ComponentState) then
   begin
@@ -6506,7 +6527,14 @@ begin
 
   end;
 
-  yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
+  stylef.Alignment       := tacenter;
+  stylef.Wordbreak       := false;
+  stylef.Layout          := tlCenter;
+  stylef.SingleLine      := true;
+  resim.FontName         := self.font.name;
+  resim.FontHeight       := self.font.size;
+  resim.TextRect(Rect(textx,Texty,textx+resim.TextSize(Caption).cx,Texty+resim.TextSize(Caption).cy),0,0,caption,stylef,colortobgra(self.font.color));
+ //  yaziyazBGRA(resim.CanvasBGRA,self.font,Rect(textx,Texty,textx+resim.CanvasBGRA.TextWidth(Caption),Texty+resim.CanvasBGRA.TextHeight(Caption)),caption,taCenter);
 
 
   inherited paint;

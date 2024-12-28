@@ -7,7 +7,8 @@ unit onurctrl;
 interface
 
 uses
-  Windows, SysUtils, Forms, LCLType, LCLIntf, Classes,
+  {$IFDEF WINDOWS}
+  Windows,{$ELSE}unix, {$ENDIF}SysUtils, Forms, LCLType, LCLIntf, Classes,
   Controls, Graphics, BGRABitmap, BGRABitmapTypes,BGRACanvas,
   types, LazUTF8, Zipper, Dialogs,LMessages;
 
@@ -218,7 +219,7 @@ type
     falpha: byte;
 
     function GetSkindata: TONURImg;
-    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+    procedure WMEraseBkgnd(var Message: TlMEraseBkgnd); message LM_ERASEBKGND;
     procedure CreateParams(var Params: TCreateParams);
     procedure SetAlignment(const Value: TAlignment);
     function GetTransparent: boolean;
@@ -309,7 +310,7 @@ type
     procedure SetAlignment(const Value: TAlignment);
 
     procedure setalpha(val: byte);
-    procedure WMEraseBkgnd(var Message: TWMEraseBkgnd); message WM_ERASEBKGND;
+    procedure WMEraseBkgnd(var Message: TLMEraseBkgnd); message LM_ERASEBKGND;
      procedure CreateParams(var Params: TCreateParams);
   public
     { Public declarations }
@@ -571,14 +572,7 @@ begin
 
 end;
 
-function GetTempDirOLD: string;
-var
-  lng: DWORD;
-begin
-  SetLength(Result, MAX_PATH);
-  lng := GetTempPath(MAX_PATH, PChar(Result));
-  SetLength(Result, lng);
-end;
+
 
 procedure yaziyaz(TT: TCanvas; TF: TFont; re: TRect; Fcap: string; asd: TAlignment);
 // For caption
@@ -1523,12 +1517,10 @@ begin
 
   if ThemeStyle = 'modern' then        // if Theme style modern region corner
   begin
+    {$IFDEF WINDOWS}
     WindowRgn := CreateRectRgn(0, 0, frmain.Width, frmain.Height);
 
-
   //  CropBGRA(frmain);
-
-
 
     for Y := 0 to frmain.Height - 1 do
     begin
@@ -1542,12 +1534,6 @@ begin
           SpanRgn := CreateRectRgn(x, y, x + 1, y + 1);
           CombineRgn(WindowRgn, WindowRgn, SpanRgn, RGN_DIFF);
           DeleteObject(SpanRgn);
-       { end
-        else
-        begin
-          p^.Red := p^.Red * (p^.Alpha + 1) shr 8;
-          p^.Green := p^.Green * (p^.Alpha + 1) shr 8;
-          p^.Blue := p^.Blue * (p^.Alpha + 1) shr 8;   }
         end;
         Inc(p);
       end;
@@ -1564,6 +1550,7 @@ begin
     ReleaseDC(self.fparent.Handle, hdc1);
     DeleteObject(WindowRgn);
     DeleteObject(hdc1);
+    {$ENDIF}
   end;
 
 end;
@@ -1590,7 +1577,7 @@ procedure TONURImg.mousedwn(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: integer);
 begin
   ReleaseCapture;
-  SendMessage(self.fparent.Handle, WM_SYSCOMMAND, $F012, 0);
+  SendMessage(self.fparent.Handle, LM_SYSCOMMAND, $F012, 0);
 end;
 
 
@@ -2033,6 +2020,7 @@ begin
         if fformactive then
         begin
          CropToimgForm(Fimage); // for crop Tform
+
          Self.fparent.OnPaint := @pant;
         end;
       end;
@@ -2371,7 +2359,7 @@ end;
 
 
 // -----------------------------------------------------------------------------
-procedure TONURGraphicControl.WMEraseBkgnd(var Message: TWMEraseBkgnd);
+procedure TONURGraphicControl.WMEraseBkgnd(var Message: TLMEraseBkgnd);
 begin
   SetBkMode(Message.dc, 1);
   Message.Result := 1;
@@ -2388,7 +2376,7 @@ end;
 // -----------------------------------------------------------------------------
 procedure TONURGraphicControl.CreateParams(var Params: TCreateParams);
 begin
-  params.exstyle := params.exstyle or WS_EX_TRANSPARENT or WS_EX_LAYERED or
+  params.exstyle := params.exstyle or WS_EX_TRANSPARENT or {$IFDEF WINDOWS} WS_EX_LAYERED or{$ENDIF}
     WS_CLIPCHILDREN;
 end;
 
@@ -2499,6 +2487,7 @@ begin
   if Captionvisible then
     yaziyazBGRA(resim.CanvasBGRA, self.Font, self.ClientRect, Caption, Alignment);
   // yaziyaz(self.Canvas, self.Font, self.ClientRect, Caption, Alignment);
+
   resim.Draw(self.canvas, 0, 0, False);
 end;
 
@@ -2546,7 +2535,7 @@ end;
 
 
 // -----------------------------------------------------------------------------
-procedure TONURCustomControl.WMEraseBkgnd(var Message: TWMEraseBkgnd);
+procedure TONURCustomControl.WMEraseBkgnd(var Message: TLMEraseBkgnd);
 begin
   SetBkMode(Message.dc, TRANSPARENT);
   Message.Result := 1;
@@ -2560,7 +2549,7 @@ end;
 procedure TONURCustomControl.CreateParams(var Params: TCreateParams);
 begin
   inherited CreateParams(Params);
-  params.exstyle := params.exstyle or WS_EX_TRANSPARENT or WS_EX_LAYERED or
+  params.exstyle := params.exstyle or WS_EX_TRANSPARENT or {$IFDEF WINDOWS} WS_EX_LAYERED or{$ENDIF}
     WS_CLIPCHILDREN;
 end;
 

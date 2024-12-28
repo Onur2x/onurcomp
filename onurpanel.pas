@@ -6,7 +6,8 @@ unit onurpanel;
 interface
 
 uses
-  Windows, SysUtils, Classes, Controls, Graphics, BGRABitmap, BGRABitmapTypes, onurctrl;
+  {$IFDEF WINDOWS}
+  Windows,{$ELSE}unix, LMessages,LCLIntf,LCLType,{$ENDIF} SysUtils, Classes, Controls, Graphics, BGRABitmap, BGRABitmapTypes, onurctrl;
 
 type
   { TONPanel }
@@ -130,8 +131,8 @@ type
     procedure Setminheight(const Avalue: integer);
     procedure Setnormalheight(const Avalue: integer);
     procedure ResizePanel();
-    procedure CMonmouseenter(var Messages: Tmessage); message CM_MOUSEENTER;
-    procedure CMonmouseleave(var Messages: Tmessage); message CM_MOUSELEAVE;
+    procedure CMonmouseenter(var Messages: TLmessage); message CM_MOUSEENTER;
+    procedure CMonmouseleave(var Messages: TLmessage); message CM_MOUSELEAVE;
   protected
     procedure MouseMove(Shift: TShiftState; X, Y: integer); override;
     procedure MouseDown(Button: TMouseButton; Shift: TShiftState;
@@ -464,7 +465,7 @@ begin
   Invalidate;
 end;
 
-procedure TONURCollapExpandPanel.CMonmouseenter(var Messages: Tmessage);
+procedure TONURCollapExpandPanel.CMonmouseenter(var Messages: TLmessage);
 var
   aPnt: TPoint;
 begin
@@ -479,7 +480,7 @@ begin
   end;
 end;
 
-procedure TONURCollapExpandPanel.CMonmouseleave(var Messages: Tmessage);
+procedure TONURCollapExpandPanel.CMonmouseleave(var Messages: TLmessage);
 begin
   if Fstate = obsnormal then exit;
   if Enabled = False then exit;
