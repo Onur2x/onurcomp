@@ -5,7 +5,7 @@ unit Unit1;
 interface
 
 uses
-  Windows,Classes,SysUtils,Forms,Controls,Graphics,
+ {$IFDEF WINDOWS} Windows,{$ELSE}linux,LMessages,LCLType,LCLIntf,{$ENDIF}Classes,SysUtils,Forms,Controls,Graphics,
   Dialogs,ExtCtrls,StdCtrls,ExtDlgs,onurctrl,onurbutton,
   onurbar,onuredit,onurpanel,onurlist,onurpage,onurmenu,BGRABitmap,BGRABitmapTypes,
   ColorBox,ComCtrls,Spin,ValEdit,inifiles,Types,Grids;
@@ -1060,8 +1060,12 @@ end;
 procedure Tskinsbuildier.ONHeaderPanel2MouseDown(Sender: TObject;
   Button: TMouseButton; Shift: TShiftState; X, Y: integer);
 begin
+  {$IFDEF WINDOWS}
   ReleaseCapture;
   SendMessage(self.Handle, WM_SYSCOMMAND, $F012, 0);
+  {$ENDIF}
+  ReleaseCapture;
+  SendMessage(self.handle,LM_SYSCOMMAND,$F012, 0);
 end;
 
 procedure Tskinsbuildier.ONlabel1Click(Sender: TObject);

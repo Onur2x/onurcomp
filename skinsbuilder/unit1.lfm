@@ -10,7 +10,6 @@ object skinsbuildier: Tskinsbuildier
   Color = 5393738
   Constraints.MaxHeight = 1090
   Constraints.MaxWidth = 1920
-  DesignTimePPI = 120
   Font.Color = clBlack
   Font.Height = -15
   Font.Name = 'Calibri'
@@ -81,7 +80,7 @@ object skinsbuildier: Tskinsbuildier
       TabOrder = 0
       object Label1: TLabel
         Left = 1
-        Height = 18
+        Height = 16
         Top = 40
         Width = 35
         Caption = 'Zoom'
@@ -90,7 +89,7 @@ object skinsbuildier: Tskinsbuildier
       end
       object TrackBar1: TTrackBar
         Left = 50
-        Height = 32
+        Height = 37
         Top = 4
         Width = 260
         Frequency = 20
@@ -109,33 +108,33 @@ object skinsbuildier: Tskinsbuildier
       end
       object Label2: TLabel
         Left = 52
-        Height = 18
+        Height = 16
         Top = 40
-        Width = 14
+        Width = 15
         Caption = '2x'
         ParentColor = False
       end
       object Label3: TLabel
         Left = 115
-        Height = 18
+        Height = 16
         Top = 40
-        Width = 14
+        Width = 15
         Caption = '4x'
         ParentColor = False
       end
       object Label4: TLabel
         Left = 180
-        Height = 18
+        Height = 16
         Top = 40
-        Width = 14
+        Width = 15
         Caption = '6x'
         ParentColor = False
       end
       object Label5: TLabel
         Left = 245
-        Height = 18
+        Height = 16
         Top = 40
-        Width = 14
+        Width = 15
         Caption = '8x'
         ParentColor = False
       end
@@ -152,9 +151,9 @@ object skinsbuildier: Tskinsbuildier
       end
       object Label15: TLabel
         Left = 290
-        Height = 18
+        Height = 16
         Top = 40
-        Width = 21
+        Width = 23
         Caption = '10x'
         ParentColor = False
       end
@@ -182,7 +181,7 @@ object skinsbuildier: Tskinsbuildier
       end
       object Label16: TLabel
         Left = 30
-        Height = 18
+        Height = 16
         Top = 10
         Width = 72
         Caption = 'Arrow color'
@@ -440,8 +439,8 @@ object skinsbuildier: Tskinsbuildier
         Font.Style = [fsBold]
         ParentFont = False
         Visible = False
-        Position = 1
-        Percentage = 0
+        Position = 0
+        Percentage = 100
         Kind = oVertical
         Max = 100
         Min = 0
@@ -718,6 +717,7 @@ object skinsbuildier: Tskinsbuildier
         TabOrder = 7
         UseDockManager = False
         Visible = False
+        AutoHideScrollbar = False
         Items.Strings = (
           'TEST 1'
           'TEST 2'
@@ -742,7 +742,6 @@ object skinsbuildier: Tskinsbuildier
         )
         ItemIndex = -1
         ItemHeight = 20
-        Selectedcolor = clBlue
       end
       object ONCropButton1: TONURCropButton
         Left = 80
@@ -856,13 +855,13 @@ object skinsbuildier: Tskinsbuildier
         Caption = 'ONPageControl1'
         object ONPage2: TONURPage
           Left = 0
-          Height = 620
-          Top = 38
+          Height = 628
+          Top = 30
           Width = 306
           Align = alClient
           Skindata = ONImg1
           Skinname = 'pagecontrol'
-          ClientHeight = 620
+          ClientHeight = 628
           ClientWidth = 306
           DoubleBuffered = True
           Font.Color = clWhite
@@ -875,11 +874,11 @@ object skinsbuildier: Tskinsbuildier
           TabOrder = 2
           UseDockManager = False
           Visible = False
-          Buttonwidth = 108
+          Buttonwidth = 87
           Caption = 'ONPage2'
           object Label24: TLabel
             Left = 65
-            Height = 15
+            Height = 14
             Top = 70
             Width = 79
             Caption = 'PAGE 2 ACTIVE'
@@ -888,13 +887,13 @@ object skinsbuildier: Tskinsbuildier
         end
         object ONPage1: TONURPage
           Left = 0
-          Height = 620
-          Top = 38
+          Height = 628
+          Top = 30
           Width = 306
           Align = alClient
           Skindata = ONImg1
           Skinname = 'pagecontrol'
-          ClientHeight = 620
+          ClientHeight = 628
           ClientWidth = 306
           DoubleBuffered = True
           Font.Color = clWhite
@@ -906,11 +905,11 @@ object skinsbuildier: Tskinsbuildier
           ParentFont = False
           TabOrder = 1
           UseDockManager = False
-          Buttonwidth = 108
+          Buttonwidth = 87
           Caption = 'ONPage1'
           object Label25: TLabel
             Left = 100
-            Height = 15
+            Height = 14
             Top = 160
             Width = 79
             Caption = 'PAGE 1 ACTIVE'
