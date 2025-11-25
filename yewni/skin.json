@@ -1,0 +1,191 @@
+{
+  "name": "ONUR Complete Skin",
+  "version": "1.0",
+  "author": "ONUR",
+  "description": "28 bileşen için kapsamlı skin paketi",
+  "atlas": "skin.png",
+  "elements": {
+  "Button": {
+    "Normal": { "rect": "0,0,100,32", "margin": "8,8,8,8" },
+    "Hover": { "rect": "100,0,100,32", "margin": "8,8,8,8" },
+    "Pressed": { "rect": "200,0,100,32", "margin": "8,8,8,8" },
+    "Disabled": { "rect": "300,0,100,32", "margin": "8,8,8,8" }
+  },
+
+  "CropButton": {
+    "Normal": { "rect": "0,32,64,64", "margin": "0,0,0,0" },
+    "Hover": { "rect": "64,32,64,64", "margin": "0,0,0,0" },
+    "Pressed": { "rect": "128,32,64,64", "margin": "0,0,0,0" }
+  },
+
+  "SystemButton": {
+    "Close_Normal": { "rect": "0,96,32,32", "margin": "0,0,0,0" },
+    "Close_Hover": { "rect": "32,96,32,32", "margin": "0,0,0,0" },
+    "Close_Pressed": { "rect": "64,96,32,32", "margin": "0,0,0,0" },
+    "Minimize_Normal": { "rect": "96,96,32,32", "margin": "0,0,0,0" },
+    "Minimize_Hover": { "rect": "128,96,32,32", "margin": "0,0,0,0" },
+    "Minimize_Pressed": { "rect": "160,96,32,32", "margin": "0,0,0,0" },
+    "Maximize_Normal": { "rect": "192,96,32,32", "margin": "0,0,0,0" },
+    "Maximize_Hover": { "rect": "224,96,32,32", "margin": "0,0,0,0" },
+    "Maximize_Pressed": { "rect": "256,96,32,32", "margin": "0,0,0,0" }
+  },
+
+  "ToggleButton": {
+    "Track_Off": { "rect": "0,128,60,30", "margin": "15,8,15,8" },
+    "Track_On": { "rect": "60,128,60,30", "margin": "15,8,15,8" },
+    "Thumb": { "rect": "120,128,26,26", "margin": "0,0,0,0" }
+  },
+
+  "IconButton": {
+    "Normal": { "rect": "0,158,120,40", "margin": "8,8,8,8" },
+    "Hover": { "rect": "120,158,120,40", "margin": "8,8,8,8" },
+    "Pressed": { "rect": "240,158,120,40", "margin": "8,8,8,8" }
+  },
+
+  "CheckBox": {
+    "Unchecked": { "rect": "0,198,20,20", "margin": "0,0,0,0" },
+    "Checked": { "rect": "20,198,20,20", "margin": "0,0,0,0" },
+    "Grayed": { "rect": "40,198,20,20", "margin": "0,0,0,0" }
+  },
+
+  "RadioButton": {
+    "Unchecked": { "rect": "60,198,20,20", "margin": "0,0,0,0" },
+    "Checked": { "rect": "80,198,20,20", "margin": "0,0,0,0" }
+  },
+
+  "FloatingButton": {
+    "Normal": { "rect": "0,218,56,56", "margin": "0,0,0,0" },
+    "Hover": { "rect": "56,218,56,56", "margin": "0,0,0,0" },
+    "Pressed": { "rect": "112,218,56,56", "margin": "0,0,0,0" }
+  },
+
+  "SplitButton": {
+    "Main_Normal": { "rect": "0,274,90,32", "margin": "8,8,0,8" },
+    "Main_Hover": { "rect": "90,274,90,32", "margin": "8,8,0,8" },
+    "Main_Pressed": { "rect": "180,274,90,32", "margin": "8,8,0,8" },
+    "Dropdown_Normal": { "rect": "270,274,30,32", "margin": "0,8,8,8" },
+    "Dropdown_Hover": { "rect": "300,274,30,32", "margin": "0,8,8,8" },
+    "Dropdown_Pressed": { "rect": "330,274,30,32", "margin": "0,8,8,8" }
+  },
+
+  "SegmentedButton": {
+    "Background": { "rect": "0,306,200,40", "margin": "8,8,8,8" },
+    "Selected": { "rect": "200,306,60,36", "margin": "6,6,6,6" }
+  },
+
+  "BadgeButton": {
+    "Button_Normal": { "rect": "0,346,100,40", "margin": "8,8,8,8" },
+    "Button_Hover": { "rect": "100,346,100,40", "margin": "8,8,8,8" },
+    "Button_Pressed": { "rect": "200,346,100,40", "margin": "8,8,8,8" }
+  },
+
+  "RippleButton": {
+    "Normal": { "rect": "0,386,120,40", "margin": "8,8,8,8" },
+    "Hover": { "rect": "120,386,120,40", "margin": "8,8,8,8" },
+    "Pressed": { "rect": "240,386,120,40", "margin": "8,8,8,8" }
+  },
+
+  "Panel": {
+    "Background": { "rect": "0,426,200,150", "margin": "10,10,10,10" },
+    "Caption": { "rect": "200,426,200,30", "margin": "5,5,5,5" }
+  },
+
+  "GroupBox": {
+    "Border": { "rect": "0,576,200,150", "margin": "10,30,10,10" },
+    "CheckBox_Unchecked": { "rect": "200,576,16,16", "margin": "0,0,0,0" },
+    "CheckBox_Checked": { "rect": "216,576,16,16", "margin": "0,0,0,0" }
+  },
+
+  "CollapsiblePanel": {
+    "Header_Collapsed": { "rect": "0,726,200,40", "margin": "5,5,5,5" },
+    "Header_Expanded": { "rect": "200,726,200,40", "margin": "5,5,5,5" },
+    "Body": { "rect": "0,766,200,100", "margin": "10,10,10,10" },
+    "Icon_Collapsed": { "rect": "200,766,16,16", "margin": "0,0,0,0" },
+    "Icon_Expanded": { "rect": "216,766,16,16", "margin": "0,0,0,0" }
+  },
+
+  "Card": {
+    "Normal": { "rect": "0,866,250,150", "margin": "8,8,8,8" },
+    "Hover": { "rect": "250,866,250,150", "margin": "8,8,8,8" }
+  },
+
+  "ProgressBar": {
+    "Background": { "rect": "0,1016,200,20", "margin": "5,5,5,5" },
+    "Fill": { "rect": "0,1036,200,20", "margin": "5,5,5,5" },
+    "Marquee": { "rect": "0,1056,50,20", "margin": "5,5,5,5" }
+  },
+
+  "LoadingBar": {
+    "Background": { "rect": "200,1016,200,4", "margin": "0,0,0,0" },
+    "Bar": { "rect": "200,1020,50,4", "margin": "0,0,0,0" }
+  },
+
+  "ScrollBar": {
+    "Track_Normal": { "rect": "0,1076,200,20", "margin": "5,5,5,5" },
+    "Track_Hover": { "rect": "0,1096,200,20", "margin": "5,5,5,5" },
+    "Thumb_Normal": { "rect": "200,1076,40,20", "margin": "5,5,5,5" },
+    "Thumb_Hover": { "rect": "240,1076,40,20", "margin": "5,5,5,5" },
+    "Thumb_Pressed": { "rect": "280,1076,40,20", "margin": "5,5,5,5" },
+    "LeftBtn_Normal": { "rect": "0,1116,20,20", "margin": "0,0,0,0" },
+    "LeftBtn_Hover": { "rect": "20,1116,20,20", "margin": "0,0,0,0" },
+    "LeftBtn_Pressed": { "rect": "40,1116,20,20", "margin": "0,0,0,0" },
+    "RightBtn_Normal": { "rect": "60,1116,20,20", "margin": "0,0,0,0" },
+    "RightBtn_Hover": { "rect": "80,1116,20,20", "margin": "0,0,0,0" },
+    "RightBtn_Pressed": { "rect": "100,1116,20,20", "margin": "0,0,0,0" }
+  },
+
+  "SliderBar": {
+    "Track": { "rect": "0,1136,200,4", "margin": "2,0,2,0" },
+    "Thumb": { "rect": "200,1136,20,20", "margin": "0,0,0,0" }
+  },
+
+  "TrackBar": {
+    "Track": { "rect": "0,1156,200,4", "margin": "2,0,2,0" },
+    "Thumb": { "rect": "200,1156,20,30", "margin": "0,0,0,0" },
+    "Tick": { "rect": "220,1156,2,5", "margin": "0,0,0,0" }
+  },
+
+  "RangeBar": {
+    "Track": { "rect": "0,1186,200,4", "margin": "2,0,2,0" },
+    "Range": { "rect": "0,1190,200,4", "margin": "2,0,2,0" },
+    "ThumbLow": { "rect": "200,1186,20,20", "margin": "0,0,0,0" },
+    "ThumbHigh": { "rect": "220,1186,20,20", "margin": "0,0,0,0" }
+  },
+
+  "SwitchBar": {
+    "Track_Off": { "rect": "0,1206,60,20", "margin": "10,5,10,5" },
+    "Track_On": { "rect": "60,1206,60,20", "margin": "10,5,10,5" },
+    "Thumb": { "rect": "120,1206,16,16", "margin": "0,0,0,0" }
+  },
+
+  "MeterBar": {
+    "Segment_Green": { "rect": "0,1226,10,8", "margin": "0,0,0,0" },
+    "Segment_Yellow": { "rect": "10,1226,10,8", "margin": "0,0,0,0" },
+    "Segment_Red": { "rect": "20,1226,10,8", "margin": "0,0,0,0" },
+    "Segment_Off": { "rect": "30,1226,10,8", "margin": "0,0,0,0" }
+  },
+
+  "TimeBar": {
+    "Track": { "rect": "0,1234,400,4", "margin": "0,0,0,0" },
+    "Buffer": { "rect": "0,1238,400,4", "margin": "0,0,0,0" },
+    "Progress": { "rect": "0,1242,400,4", "margin": "0,0,0,0" },
+    "Thumb": { "rect": "400,1234,12,12", "margin": "0,0,0,0" }
+  },
+
+  "GaugeBar": {
+    "Background": { "rect": "0,1246,200,200", "margin": "0,0,0,0" },
+    "ValueArc": { "rect": "200,1246,200,200", "margin": "0,0,0,0" },
+    "Needle": { "rect": "400,1246,100,100", "margin": "0,0,0,0" }
+  },
+
+  "Knob": {
+    "Base": { "rect": "0,1446,60,60", "margin": "0,0,0,0" },
+    "Indicator": { "rect": "60,1446,4,20", "margin": "0,0,0,0" }
+  },
+
+  "ProgressRing": {
+    "Background": { "rect": "100,1446,100,100", "margin": "0,0,0,0" },
+    "Fill": { "rect": "200,1446,100,100", "margin": "0,0,0,0" }
+  }
+}
+}
